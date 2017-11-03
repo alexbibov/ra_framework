@@ -2,6 +2,7 @@
 #define OX_WRAPPER_OPTIX_CONTEXT_H
 
 #include <string>
+#include <memory>
 
 #include "optix.h"
 #include "optix_program.h"
@@ -10,24 +11,14 @@
 namespace ox_wrapper {
 
 //! Simple wrapper over the OptiX context
-class OptiXContext
+class OptiXContext final
 {
+    friend class HasContractWithOptiXContext;
+
 public:
 
     OptiXContext(uint32_t num_entry_points = 1U);
-    virtual ~OptiXContext();
-
-    RTcontext native() const;
-
-    /*! Validates the OptiX context and all of the OptiX objects associated with it
-    for correctness and returns 'true' if the context is valid and 'false' otherwise.
-    In order to obtain descriptive message containing the details regarding why the 
-    OptiX state may be invalid use getValidationDescription()
-    */
-    bool validate() const;
-
-    //! Returns human readable message describing validation results of the OptiX state
-    std::string getValidationDescription() const;
+    ~OptiXContext() = default;
 
     //! Creates new OptiX program
     OptiXProgram createProgram(std::string const& source, OptiXProgram::Source source_type, std::string const& program_name) const;
@@ -53,14 +44,38 @@ public:
         return OptiXBuffer<T>{ *this, buffer_kind, width, height, depth };
     }
 
+    //! Returns 'true' in case if OptiX context is NOT in error state; returns 'false' otherwise
+    operator bool() const;
+
+    //! Returns 'true' in case if OptiX context IS in erroneous state; returns 'false' otherwise
+    bool hasErrors() const;
+
+private:
+    //! Logs out OptiX error message based on error code. If supplied value is RT_SUCCESS, the function has no effect
+    void logError(RTresult error_code) const;
+
 private:
 
-    RTcontext m_optix_context;
-    mutable RTresult m_validation_result;
-    bool m_is_context_valid;
-
-    RTcontext get_native_context() const;
+    std::shared_ptr<RTcontext> m_optix_context;
+    mutable RTresult m_error_state;
 };
+
+
+class HasContractWithOptiXContext
+{
+public:
+    OptiXContext const& context() const;
+
+protected:
+    HasContractWithOptiXContext(OptiXContext const& optix_context_wrapper);
+
+    RTcontext nativeOptiXContextHandle() const;
+    void logOptiXContextError(RTresult error_code) const;
+
+private:
+    OptiXContext m_optix_context_wrapper;
+};
+
 
 }
 

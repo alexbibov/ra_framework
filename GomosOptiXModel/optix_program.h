@@ -17,26 +17,22 @@ namespace ox_wrapper {
 class OptiXContext;
 
 //! Generic wrapper over OptiX program object
-class OptiXProgram {
+class OptiXProgram : public HasContractWithOptiXContext
+{
     friend class OptiXContext;
 
 public:
-
     enum class Source { string, file };
 
 protected:
-
-    OptiXProgram(OptiXContext const& optix_context, std::string const& source, 
-        Source source_type, std::string const& program_name);
+    OptiXProgram(OptiXContext const& optix_context,
+        std::string const& source, Source source_type, std::string const& program_name);
     
 public:
 
-    virtual ~OptiXProgram();
+    virtual ~OptiXProgram() = default;
 
     OptiXContext const& getOptiXContext() const;
-
-    RTprogram native() const;
-
 
     void declareVariable(std::string const& name, float value);
     void declareVariable(std::string const& name, float2 const& value);
@@ -102,9 +98,8 @@ public:
     }
 
 private:
-    OptiXContext const& m_optix_context;
     std::string m_program_name;
-    RTprogram m_optix_program;
+    std::shared_ptr<RTprogram> m_optix_program;
     std::map<HashedString, RTvariable> m_program_variable_cache;
 
     void declare_variable_object(std::string const& name);

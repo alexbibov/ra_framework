@@ -171,7 +171,6 @@
     <ClInclude Include="datetime.h" />
     <ClInclude Include="optix_geometry.h" />
     <ClInclude Include="optix_material.h" />
-    <ClInclude Include="optix_shared_resource.h" />
     <ClInclude Include="ox_wrapper_fwd.h" />
     <ClInclude Include="gomos_ray_generator.h" />
     <ClInclude Include="hashed_string.h" />

@@ -1,52 +1,32 @@
 #include "optix_context.h"
-#include "log.h"
+#include "ox_exception.h"
 
 using namespace ox_wrapper;
 
-OptiXContext::OptiXContext(uint32_t num_entry_points/* = 1U*/)
+OptiXContext::OptiXContext(uint32_t num_entry_points/* = 1U*/):
+    m_error_state{ false }
 {
-    RTresult optix_rc = rtContextCreate(&m_optix_context);
+    RTcontext context_handle;
+    RTresult optix_rc = rtContextCreate(&context_handle);
 
     if (optix_rc == RT_ERROR_NO_DEVICE)
     {
-        Log::retrieve()->out("OptiX is not supported by the GPU installed in the host system", LogMessageType::error);
-        throw std::runtime_error("OptiX is not supported");
+        throw OxException{ "OptiX is not supported by the GPU installed in the host system" };
     }
 
     if (optix_rc == RT_ERROR_INVALID_VALUE)
     {
-        Log::retrieve()->out("OptiX context cannot be initialized: invalid value", LogMessageType::error);
-        throw std::runtime_error("invalid value");
+        throw OxException{ "OptiX context cannot be initialized: invalid value" };
     }
 
-    if (!(m_is_context_valid = validate()))
-        Log::retrieve()->out("The OptiX context is invalid: " + getValidationDescription(), LogMessageType::error);
+    logError(rtContextValidate(context_handle));
+    logError(rtContextSetEntryPointCount(context_handle, num_entry_points));
 
-    LOG_OPTIX_ERROR(m_optix_context, rtContextSetEntryPointCount(m_optix_context, num_entry_points));
-}
-
-OptiXContext::~OptiXContext()
-{
-    LOG_OPTIX_ERROR(m_optix_context, rtContextDestroy(m_optix_context));
-}
-
-RTcontext OptiXContext::native() const
-{
-    return m_optix_context;
-}
-
-bool OptiXContext::validate() const
-{
-    m_validation_result = rtContextValidate(m_optix_context);
-    return m_validation_result == RT_SUCCESS;
-}
-
-std::string OptiXContext::getValidationDescription() const
-{
-    char const* error_string;
-    rtContextGetErrorString(m_optix_context, m_validation_result, &error_string);
-
-    return error_string;
+    m_optix_context.reset(context_handle,
+        [](RTcontext h) -> void
+    {
+        LOG_OPTIX_ERROR(h, rtContextDestroy(h));
+    });
 }
 
 OptiXProgram OptiXContext::createProgram(std::string const& source, OptiXProgram::Source source_type, std::string const& program_name) const
@@ -54,7 +34,39 @@ OptiXProgram OptiXContext::createProgram(std::string const& source, OptiXProgram
     return OptiXProgram{ *this, source, source_type, program_name };
 }
 
-RTcontext OptiXContext::get_native_context() const
+void OptiXContext::logError(RTresult error_code) const
 {
-    return m_optix_context;
+    if ((m_error_state = error_code) != RT_SUCCESS)
+        LOG_OPTIX_ERROR(*m_optix_context, error_code);
+}
+
+OptiXContext::operator bool() const
+{
+    return !hasErrors();
+}
+
+bool OptiXContext::hasErrors() const
+{
+    return m_error_state != RT_SUCCESS;
+}
+
+OptiXContext const& HasContractWithOptiXContext::context() const
+{
+    return m_optix_context_wrapper;
+}
+
+HasContractWithOptiXContext::HasContractWithOptiXContext(OptiXContext const& optix_context_wrapper):
+    m_optix_context_wrapper{ optix_context_wrapper }
+{
+
+}
+
+RTcontext HasContractWithOptiXContext::nativeOptiXContextHandle() const
+{
+    return *m_optix_context_wrapper.m_optix_context;
+}
+
+void HasContractWithOptiXContext::logOptiXContextError(RTresult error_code) const
+{
+    m_optix_context_wrapper.logError(error_code);
 }
