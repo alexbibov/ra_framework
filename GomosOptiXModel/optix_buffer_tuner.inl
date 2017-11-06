@@ -1,4 +1,5 @@
-template<typename T> struct OptiXBufferTuner<T>
+
+template<typename T> struct OptiXBufferTuner
 {
     inline static RTbuffer create_buffer(OptiXBuffer<T> const& optix_buffer_wrapper, OptiXBufferKind buffer_kind)
     {

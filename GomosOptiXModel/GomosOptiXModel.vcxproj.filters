@@ -42,10 +42,22 @@
     <ClCompile Include="atmospheric_layer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="optix_scene_section.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_exception.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="optix_geometry_group.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="has_contract_with_optix_context.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="optix_ray_generator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="optix_scene_section.cpp">
+    <ClCompile Include="has_contract_with_optix_program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,9 +107,6 @@
     <ClInclude Include="optix_scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="optix_ray_generator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="optix_geometry_group.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -108,6 +117,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="optix_material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="has_contract_with_optix_context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="optix_ray_generator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="has_contract_with_optix_program.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -3,6 +3,7 @@
 
 #include "ox_wrapper_fwd.h"
 #include "optix.h"
+#include "optix_program.h"
 
 #include <string>
 
@@ -31,9 +32,9 @@ private:
     static uint64_t material_id_counter;
 
     uint64_t material_id;
-    std::string name;
-    OptiXProgram hit_shader;
-    OptiXProgram miss_shader;
+    std::string m_name;
+    OptiXProgram m_hit_shader;
+    OptiXProgram m_miss_shader;
     RTmaterial m_native_material;
 };
 

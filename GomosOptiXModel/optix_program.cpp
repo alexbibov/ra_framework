@@ -1,5 +1,6 @@
 #include "optix_program.h"
 #include "optix_context.h"
+#include "ox_exception.h"
 
 using namespace ox_wrapper;
 
@@ -20,16 +21,11 @@ OptiXProgram::OptiXProgram(OptiXContext const& optix_context,
         break;
     }
 
-    m_optix_program.reset(native_handle, 
+    m_native_optix_program.reset(native_handle, 
         [this](RTprogram h) -> void
     {
         logOptiXContextError(rtProgramDestroy(h));
     });
-}
-
-OptiXContext const& OptiXProgram::getOptiXContext() const
-{
-    return m_optix_context;
 }
 
 void OptiXProgram::declareVariable(std::string const& name, float value)
@@ -548,10 +544,10 @@ void OptiXProgram::declare_variable_object(std::string const& name)
     {
         RTvariable new_variable{ nullptr };
         RTresult optix_rc;
-        logOptiXContextError(optix_rc = rtProgramDeclareVariable(*m_optix_program, name.c_str(), &new_variable));
+        logOptiXContextError(optix_rc = rtProgramDeclareVariable(m_native_optix_program.get(), name.c_str(), &new_variable));
 
         if (optix_rc != RT_SUCCESS)
-            throw OxException{ R"**(Unable to create OptiX variable for program ")**" + m_program_name + R"**(")**" };
+            throw OxException{ (R"**(Unable to create OptiX variable for program ")**" + m_program_name + R"**(")**").c_str() };
 
         m_program_variable_cache.insert(std::make_pair(HashedString{ name }, new_variable));;
     }

@@ -4,16 +4,17 @@
 namespace ox_wrapper {
 
 class OptiXContext;
+class HasContractWithOptiXContext;
 class OptiXProgram;
+class HasContractWithOptiXProgram;
 template<typename T> class OptiXBuffer;
 class OptiXScene;
 class OptiXSceneSection;
 class OptiXGeometryGroup;
-class OptiXGeometryGroupSelector;
+class OptiXVariableGeometryGroup;
 class OptiXGeometry;
 class OptiXTransform;
 class OptiXMaterial;
-class OptiXAccelerationStructure;
 class OptiXRayGenerator;
 }
 

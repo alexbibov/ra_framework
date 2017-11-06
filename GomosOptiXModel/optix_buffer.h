@@ -1,11 +1,13 @@
 #ifndef OX_WRAPPER_OPTIX_BUFFER_H
 #define OX_WRAPPER_OPTIX_BUFFER_H
 
+#include <memory>
+
 #include "optix.h"
 #include "log.h"
 #include "../CUDA/v9.0/include/vector_types.h"
-
-#include <memory>
+#include "ox_wrapper_fwd.h"
+#include "has_contract_with_optix_context.h"
 
 
 namespace ox_wrapper {
@@ -30,10 +32,12 @@ struct bufferId
     int native;
 };
 
+template<typename T> class OptiXBufferAttorney;
+
 template<typename T>
-class OptiXBuffer : public HasContractWithOptiXContext
+class OptiXBuffer final : public HasContractWithOptiXContext
 {
-    friend class OptiXContext;
+    friend class OptiXBufferAttorney<OptiXContext>;
 
 public:
 
@@ -42,58 +46,92 @@ public:
     bufferId getId() const
     {
         bufferId rv;
-        logOptiXContextError(rtBufferGetId(*m_native_optix_buffer, &rv.native));
+        logOptiXContextError(rtBufferGetId(m_native_optix_buffer.get(), &rv.native));
         return rv;
     }
 
 private:
-
-    template<typename T> struct OptiXBufferTuner;
     #include "optix_buffer_tuner.inl"
     using my_tuner_type = OptiXBufferTuner<T>;
 
-
-private:
 
     OptiXBuffer(OptiXContext const& optix_context,
         OptiXBufferKind buffer_kind, size_t width) :
         HasContractWithOptiXContext{ optix_context }
     {
-        my_tuner_type::create_buffer(*this, buffer_kind);
-        logOptiXContextError(rtBufferSetSize1D(*m_native_optix_buffer, width));
+        m_native_optix_buffer.reset(my_tuner_type::create_buffer(*this, buffer_kind),
+            [](RTbuffer b) -> void
+        {
+            logOptiXContextError(rtBufferDestroy(b));
+        });
+        logOptiXContextError(rtBufferSetSize1D(m_native_optix_buffer.get(), width));
     }
 
     OptiXBuffer(OptiXContext const& optix_context,
         OptiXBufferKind buffer_kind, size_t width, size_t height) :
         HasContractWithOptiXContext{ optix_context }
     {
-        my_tuner_type::create_buffer(*this, buffer_kind);
-        logOptiXContextError(rtBufferSetSize2D(*m_native_optix_buffer, width, height));
+        m_native_optix_buffer.reset(my_tuner_type::create_buffer(*this, buffer_kind),
+            [](RTbuffer b) -> void
+        {
+            logOptiXContextError(rtBufferDestroy(b));
+        });
+        logOptiXContextError(rtBufferSetSize2D(m_native_optix_buffer.get(), width, height));
     }
 
     OptiXBuffer(OptiXContext const& optix_context,
         OptiXBufferKind buffer_kind, size_t width, size_t height, size_t depth) :
         HasContractWithOptiXContext{ optix_context }
     {
-        my_tuner_type::create_buffer(*this, buffer_kind);
-        logOptiXContextError(rtBufferSetSize3D(*m_native_optix_buffer, width, height, depth));
+        m_native_optix_buffer.reset(my_tuner_type::create_buffer(*this, buffer_kind),
+            [](RTbuffer b) -> void
+        {
+            logOptiXContextError(rtBufferDestroy(b));
+        });
+        logOptiXContextError(rtBufferSetSize3D(m_native_optix_buffer.get(), width, height, depth));
     }
 
+public:
     void* map(OptiXBufferMapKind map_kind, unsigned int mipmap_level) const
     {
         void* rv{ nullptr };
-        logOptiXContextError(rtBufferMapEx(*m_native_optix_buffer, static_cast<unsigned>(map_kind), mipmap_level, nullptr, &rv));
+        logOptiXContextError(rtBufferMapEx(m_native_optix_buffer.get(), static_cast<unsigned>(map_kind), mipmap_level, nullptr, &rv));
         return rv;
     }
 
     void unmap(unsigned int mipmap_level)
     {
-        logOptiXContextError(rtBufferUnmapEx(*m_native_optix_buffer, mipmap_level));
+        logOptiXContextError(rtBufferUnmapEx(m_native_optix_buffer.get(), mipmap_level));
     }
 
 private:
-    std::shared_ptr<RTbuffer> m_native_optix_buffer;
+    std::shared_ptr<RTbuffer_api> m_native_optix_buffer;
 };
+
+
+template<> class OptiXBufferAttorney<OptiXContext>
+{
+    friend class OptiXContext;
+
+    template<typename T>
+    static OptiXBuffer<T> createOptiXBuffer(OptiXContext const& optix_context, OptiXBufferKind buffer_kind, size_t width)
+    {
+        return OptiXBuffer<T>{ optix_context, buffer_kind, width };
+    }
+
+    template<typename T>
+    static OptiXBuffer<T> createOptiXBuffer(OptiXContext const& optix_context, OptiXBufferKind buffer_kind, size_t width, size_t height)
+    {
+        return OptiXBuffer<T>{ optix_context, buffer_kind, width, height };
+    }
+
+    template<typename T>
+    static OptiXBuffer<T> createOptiXBuffer(OptiXContext const& optix_context, OptiXBufferKind buffer_kind, size_t width, size_t height, size_t depth)
+    {
+        return OptiXBuffer<T>{ optix_context, buffer_kind, width, height, depth };
+    }
+};
+
 
 }
 
