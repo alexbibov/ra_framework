@@ -26,8 +26,7 @@ public:
 
     uint32_t getNumberOfGeometries() const;
 
-    void beginTransformationGroup(OptiXTransform const& transform);
-    void endTransformationGroup();
+    void defineTransform(mat4x4 const& transformation_matrix);
 
     void addGeometry(OptiXGeometry const& geometry);
 

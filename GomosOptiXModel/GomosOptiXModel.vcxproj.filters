@@ -60,6 +60,9 @@
     <ClCompile Include="has_contract_with_optix_program.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="optix_transform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h">
@@ -129,6 +132,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="has_contract_with_optix_program.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="optix_transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

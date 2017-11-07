@@ -166,6 +166,7 @@
     <ClCompile Include="has_contract_with_optix_program.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="optix_transform.cpp" />
     <ClCompile Include="optix_context.cpp" />
     <ClCompile Include="optix_geometry_group.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -188,6 +189,7 @@
     <ClInclude Include="has_contract_with_optix_program.h" />
     <ClInclude Include="optix_geometry.h" />
     <ClInclude Include="optix_material.h" />
+    <ClInclude Include="optix_transform.h" />
     <ClInclude Include="ox_exception.h" />
     <ClInclude Include="ox_wrapper_fwd.h" />
     <ClInclude Include="gomos_ray_generator.h" />
