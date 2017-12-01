@@ -1,0 +1,52 @@
+#ifndef OX_WRAPPER_RAY_GENERATOR_H
+#define OX_WRAPPER_RAY_GENERATOR_H
+
+#include <cstdint>
+#include "fwd.h"
+#include "contract_with_context.h"
+#include "contract_with_programs.h"
+#include "entity.h"
+
+
+namespace ox_wrapper {
+
+template<typename T>
+class OxRayGeneratorAttorney;
+
+class OxRayGenerator : public OxContractWithOxContext, public OxContractWithOxPrograms, public OxEntity
+{
+    friend class OxRayGeneratorAttorney<OxSceneSection>;
+
+public:
+    OxRayGenerator(OxProgram const& optix_ray_generation_shader, uint32_t numRays_x, uint32_t numRays_y = 1U, uint32_t num_Rays_z = 1U,
+        uint32_t entry_point_index = 0U);
+
+    OxProgram getRayGenerationShader() const;
+
+    // required by OxEntity interface
+    bool isValid() const override;
+
+private:
+    void launch() const;
+
+private:
+    uint32_t m_num_rays_x;
+    uint32_t m_num_rays_y;
+    uint32_t m_num_rays_z;
+    uint32_t m_entry_point_index;
+};
+
+template<>
+class OxRayGeneratorAttorney<OxSceneSection>
+{
+    friend class OxSceneSection;
+
+    static void launchRayGenerator(OxRayGenerator const& parent_ray_generator)
+    {
+        parent_ray_generator.launch();
+    }
+};
+
+};
+
+#endif

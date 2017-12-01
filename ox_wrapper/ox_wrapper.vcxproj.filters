@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="util">
+      <UniqueIdentifier>{9a308853-4f9d-40ca-8428-c475f677b426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ox_wrapper">
+      <UniqueIdentifier>{e554ca93-fd50-4349-b480-c97058f94a47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_3rd_party">
+      <UniqueIdentifier>{c5fb18bb-bd91-405d-8a43-54b74e562cf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_3rd_party\spooky_v2">
+      <UniqueIdentifier>{32c447b7-9ad0-44e9-8821-df3234b88d9d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="util\datetime.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\hashed_string.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="util\log.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SpookyHash\SpookyV2.cpp">
+      <Filter>_3rd_party\spooky_v2</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\context.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\exception.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\geometry.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\geometry_group.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\program.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\ray_generator.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\scene_section.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\transform.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\material.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\contract_with_context.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\contract_with_programs.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\entity.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\material_assembly.cpp" />
+    <ClCompile Include="ox_wrapper\transformable.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="util\datetime.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\hashed_string.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\log.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\matrix_types.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="util\static_vector.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\SpookyHash\SpookyV2.h">
+      <Filter>_3rd_party\spooky_v2</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\buffer.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\constants.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\context.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\exception.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\fwd.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\geometry.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\geometry_group.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\program.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\ray_generator.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\scene.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\scene_section.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\transform.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\material.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\contract_with_context.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\contract_with_programs.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\entity.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\material_assembly.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\transformable.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ox_wrapper\buffer_tuner.inl">
+      <Filter>ox_wrapper</Filter>
+    </None>
+  </ItemGroup>
+</Project>
