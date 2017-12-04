@@ -19,8 +19,8 @@ bool OxScene::isValid() const
     return m_scene_sections.size() > 0;
 }
 
-void ox_wrapper::OxScene::trace() const
+void ox_wrapper::OxScene::trace()
 {
-    for (auto& s : m_scene_sections)
-        OxSceneSectionAttorney<OxScene>::runRayTracingForSceneSection(s);
+    for (auto& ss : m_scene_sections)
+        OxSceneSectionAttorney<OxScene>::runRayTracingForSceneSection(ss);
 }

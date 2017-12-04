@@ -33,6 +33,7 @@ namespace ox_wrapper {
 
     private:
         RTobject getEntryNode() const;
+        bool update();
         void runRayTracing() const;
 
         // required by OxTransformable interface
@@ -52,8 +53,9 @@ namespace ox_wrapper {
     {
         friend class OxScene;
         
-        static void runRayTracingForSceneSection(OxSceneSection const& parent_scene_section)
+        static void runRayTracingForSceneSection(OxSceneSection& parent_scene_section)
         {
+            parent_scene_section.update();
             parent_scene_section.runRayTracing();
         }
     };

@@ -54,7 +54,6 @@
     <ClCompile Include="ox_wrapper\entity.cpp">
       <Filter>ox_wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="ox_wrapper\material_assembly.cpp" />
     <ClCompile Include="ox_wrapper\transformable.cpp">
       <Filter>ox_wrapper</Filter>
     </ClCompile>
@@ -72,6 +71,12 @@
     </ClCompile>
     <ClCompile Include="ox_wrapper\util\log.cpp">
       <Filter>ox_wrapper\util</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\material_assembly.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\shapes\circle.cpp">
+      <Filter>ox_wrapper\shapes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

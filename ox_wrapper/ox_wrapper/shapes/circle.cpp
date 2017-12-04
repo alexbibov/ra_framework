@@ -3,6 +3,7 @@
 #include "../context.h"
 
 using namespace ox_wrapper::shapes;
+using namespace ox_wrapper;
 
 OxCircle::OxCircle(OxContext const& context, OxMaterialAssembly const& material_assembly,
     float position_x, float position_y, float position_z, float radius):

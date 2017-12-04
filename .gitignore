@@ -24,7 +24,8 @@
 *.lai
 *.la
 *.a
-*.lib
+#*.lib
+!_3rd_party/**/*.lib
 
 # Executables
 *.exe
@@ -46,3 +47,5 @@
 
 # Merge originals 
 *.orig
+
+

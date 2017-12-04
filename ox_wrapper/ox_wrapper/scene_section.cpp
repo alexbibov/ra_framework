@@ -172,6 +172,30 @@ RTobject OxSceneSection::getEntryNode() const
         static_cast<RTobject>(m_native_group_handle.get());
 }
 
+bool OxSceneSection::update()
+{
+    bool rv{ false };
+    for (auto& gg : m_geometry_groups)
+    {
+        if (OxGeometryGroupAttorney<OxSceneSection>::updateGeometryGroup(gg) && !rv)
+        {
+            throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
+            rv = true;
+        }
+    }
+
+    for (auto& ss : m_attached_scene_sections)
+    {
+        if (ss.update() && !rv)
+        {
+            throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
+            rv = true;
+        }
+    }
+
+    return rv;
+}
+
 void OxSceneSection::runRayTracing() const
 {
     m_optix_ray_generator.getRayGenerationShader().declareVariable("ox_entry_node", OxObjectHandle{ getEntryNode() });

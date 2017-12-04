@@ -104,18 +104,26 @@ RTobject OxGeometryGroup::getTransformedObject() const
     return m_native_geometry_group.get();
 }
 
-bool OxGeometryGroup::updateGeometryGroup()
+bool OxGeometryGroup::update()
 {
+    bool rv{ false };
     for (auto& g : m_list_of_geometries)
     {
         if (OxGeometryAttorney<OxGeometryGroup>::isGeometryDirty(g))
         {
             throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration.get()));
-            return true;
+            rv = true;
+            break;
         }
     }
 
-    return false;
+    if (rv)
+    {
+        for (auto& g : m_list_of_geometries)
+            OxGeometryAttorney<OxGeometryGroup>::markGeometryClean(g);
+    }
+
+    return rv;
 }
 
 OxGeometryGroup::OxGeometryGroup(OxContext const& optix_context, OxBVHAlgorithm acceleration_structure_construction_algorithm):
