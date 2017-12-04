@@ -104,7 +104,7 @@ RTobject OxGeometryGroup::getTransformedObject() const
     return m_native_geometry_group.get();
 }
 
-bool OxGeometryGroup::update()
+bool OxGeometryGroup::update() const
 {
     bool rv{ false };
     for (auto& g : m_list_of_geometries)

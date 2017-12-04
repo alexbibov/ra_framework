@@ -172,7 +172,7 @@ RTobject OxSceneSection::getEntryNode() const
         static_cast<RTobject>(m_native_group_handle.get());
 }
 
-bool OxSceneSection::update()
+bool OxSceneSection::update() const
 {
     bool rv{ false };
     for (auto& gg : m_geometry_groups)

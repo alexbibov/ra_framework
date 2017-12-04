@@ -46,7 +46,7 @@ private:
      and returns 'true'. If no geometry in the group requires update the function
      has no effect and returns 'false'
     */
-    bool update();
+    bool update() const;
 
 private:
     std::shared_ptr<RTgeometrygroup_api> m_native_geometry_group;
@@ -72,7 +72,7 @@ template<> class OxGeometryGroupAttorney<OxSceneSection>
         return std::make_pair(parent_geometry_group.m_construction_begun, parent_geometry_group.m_construction_finished);
     }
 
-    static bool updateGeometryGroup(OxGeometryGroup& parent_geometry_group)
+    static bool updateGeometryGroup(OxGeometryGroup const& parent_geometry_group)
     {
         return parent_geometry_group.update();
     }

@@ -49,7 +49,7 @@ class OxGeometryAttorney<OxGeometryGroup>
         return parent_geometry.m_native_geometry->second;
     }
 
-    static void markGeometryClean(OxGeometry& parent_geometry)
+    static void markGeometryClean(OxGeometry const& parent_geometry)
     {
         parent_geometry.m_native_geometry->second = false;
     }

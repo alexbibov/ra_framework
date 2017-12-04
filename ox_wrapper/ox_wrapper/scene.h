@@ -16,7 +16,7 @@ public:
     // required by OxEntity interface
     bool isValid() const override;
 
-    void trace();
+    void trace() const;
 
 private:
     std::list<OxSceneSection> m_scene_sections;
