@@ -104,6 +104,20 @@ RTobject OxGeometryGroup::getTransformedObject() const
     return m_native_geometry_group.get();
 }
 
+bool OxGeometryGroup::updateGeometryGroup()
+{
+    for (auto& g : m_list_of_geometries)
+    {
+        if (OxGeometryAttorney<OxGeometryGroup>::isGeometryDirty(g))
+        {
+            throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration.get()));
+            return true;
+        }
+    }
+
+    return false;
+}
+
 OxGeometryGroup::OxGeometryGroup(OxContext const& optix_context, OxBVHAlgorithm acceleration_structure_construction_algorithm):
     OxContractWithOxContext{ optix_context },
     OxTransformable{ optix_context },

@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="util">
-      <UniqueIdentifier>{9a308853-4f9d-40ca-8428-c475f677b426}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ox_wrapper">
       <UniqueIdentifier>{e554ca93-fd50-4349-b480-c97058f94a47}</UniqueIdentifier>
     </Filter>
@@ -13,20 +10,14 @@
     <Filter Include="_3rd_party\spooky_v2">
       <UniqueIdentifier>{32c447b7-9ad0-44e9-8821-df3234b88d9d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ox_wrapper\util">
+      <UniqueIdentifier>{9a308853-4f9d-40ca-8428-c475f677b426}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ox_wrapper\shapes">
+      <UniqueIdentifier>{2f59dfe1-99ed-4275-964a-2402f6c637ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="util\datetime.cpp">
-      <Filter>util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\hashed_string.cpp">
-      <Filter>util</Filter>
-    </ClCompile>
-    <ClCompile Include="util\log.cpp">
-      <Filter>util</Filter>
-    </ClCompile>
-    <ClCompile Include="..\SpookyHash\SpookyV2.cpp">
-      <Filter>_3rd_party\spooky_v2</Filter>
-    </ClCompile>
     <ClCompile Include="ox_wrapper\context.cpp">
       <Filter>ox_wrapper</Filter>
     </ClCompile>
@@ -67,26 +58,23 @@
     <ClCompile Include="ox_wrapper\transformable.cpp">
       <Filter>ox_wrapper</Filter>
     </ClCompile>
+    <ClCompile Include="ox_wrapper\scene.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\_3rd_party\SpookyHash\SpookyV2.cpp">
+      <Filter>_3rd_party\spooky_v2</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\util\datetime.cpp">
+      <Filter>ox_wrapper\util</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\util\hashed_string.cpp">
+      <Filter>ox_wrapper\util</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\util\log.cpp">
+      <Filter>ox_wrapper\util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="util\datetime.h">
-      <Filter>util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\hashed_string.h">
-      <Filter>util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\log.h">
-      <Filter>util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\matrix_types.h">
-      <Filter>util</Filter>
-    </ClInclude>
-    <ClInclude Include="util\static_vector.h">
-      <Filter>util</Filter>
-    </ClInclude>
-    <ClInclude Include="..\SpookyHash\SpookyV2.h">
-      <Filter>_3rd_party\spooky_v2</Filter>
-    </ClInclude>
     <ClInclude Include="ox_wrapper\buffer.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
@@ -141,10 +129,34 @@
     <ClInclude Include="ox_wrapper\transformable.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
+    <ClInclude Include="..\_3rd_party\SpookyHash\SpookyV2.h">
+      <Filter>_3rd_party\spooky_v2</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\shapes\circle.h">
+      <Filter>ox_wrapper\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\util\datetime.h">
+      <Filter>ox_wrapper\util</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\util\hashed_string.h">
+      <Filter>ox_wrapper\util</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\util\log.h">
+      <Filter>ox_wrapper\util</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\util\matrix_types.h">
+      <Filter>ox_wrapper\util</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\util\static_vector.h">
+      <Filter>ox_wrapper\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl">
       <Filter>ox_wrapper</Filter>
+    </None>
+    <None Include="ox_wrapper\shapes\circle.cu">
+      <Filter>ox_wrapper\shapes</Filter>
     </None>
   </ItemGroup>
 </Project>

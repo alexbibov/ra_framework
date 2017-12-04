@@ -3,8 +3,8 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)OptiX SDK 4.0.1/include</IncludePath>
-    <LibraryPath>$(LibraryPath);$(SolutionDir)OptiX SDK 4.0.1/lib64</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)_3rd_party/OptiX SDK 4.0.1/include</IncludePath>
+    <LibraryPath>$(LibraryPath);$(SolutionDir)_3rd_party/OptiX SDK 4.0.1/lib64</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>

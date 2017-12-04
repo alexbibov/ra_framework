@@ -46,11 +46,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="compile_ptx_modules_config.xml">
-      <Filter>OptiX Programs</Filter>
-    </Xml>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="gomos_gpu_kernel.cu">
       <Filter>OptiX Programs</Filter>
     </None>

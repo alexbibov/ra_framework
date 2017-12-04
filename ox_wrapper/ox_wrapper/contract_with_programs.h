@@ -4,7 +4,7 @@
 #include "optix.h"
 #include "fwd.h"
 #include "constants.h"
-#include "../util/static_vector.h"
+#include "util/static_vector.h"
 #include "program.h"
 
 #include <cstdint>

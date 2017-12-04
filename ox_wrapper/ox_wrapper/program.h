@@ -9,9 +9,8 @@
 #include "buffer.h"
 #include "contract_with_context.h"
 #include "entity.h"
-#include "../util/matrix_types.h"
-#include "../util/hashed_string.h"
-#include "../util/log.h"
+#include "util/matrix_types.h"
+#include "util/log.h"
 
 #include "../../CUDA/v9.0/include/vector_types.h"
 
@@ -32,7 +31,7 @@ public:
 
 private:
     OxProgram(OxContext const& optix_context,
-        std::string const& source, Source source_type, std::string const& program_name);
+        std::string const& source, Source source_type, std::string const& entry_point);
     
 public:
 

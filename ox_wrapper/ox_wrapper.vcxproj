@@ -1,14 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
@@ -26,19 +18,6 @@
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
@@ -57,34 +36,26 @@
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\property_sheets\optix.props" />
-  </ImportGroup>
-  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\property_sheets\optix.props" />
-  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\property_sheets\optix.props" />
+    <Import Project="..\property_sheets\_3rd_party.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\property_sheets\optix.props" />
+    <Import Project="..\property_sheets\_3rd_party.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -99,38 +70,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-    </ClCompile>
-    <Link>
-      <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-    </Link>
+    <PreBuildEvent>
+      <Message>python ../compile_ptx_modules.py $(SolutionDir)/GomosOptiXModel/compile_ptx_modules_config.xml</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -149,9 +91,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>python $(SolutionDir)/ox_wrapper/compile_ptx.py $(SolutionDir)/ox_wrapper/config.xml</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\SpookyHash\SpookyV2.cpp" />
+    <ClCompile Include="..\_3rd_party\SpookyHash\SpookyV2.cpp" />
     <ClCompile Include="ox_wrapper\context.cpp" />
     <ClCompile Include="ox_wrapper\entity.cpp" />
     <ClCompile Include="ox_wrapper\exception.cpp" />
@@ -163,15 +108,17 @@
     <ClCompile Include="ox_wrapper\material_assembly.cpp" />
     <ClCompile Include="ox_wrapper\program.cpp" />
     <ClCompile Include="ox_wrapper\ray_generator.cpp" />
+    <ClCompile Include="ox_wrapper\scene.cpp" />
     <ClCompile Include="ox_wrapper\scene_section.cpp" />
+    <ClCompile Include="ox_wrapper\shapes\circle.cpp" />
     <ClCompile Include="ox_wrapper\transform.cpp" />
     <ClCompile Include="ox_wrapper\transformable.cpp" />
-    <ClCompile Include="util\datetime.cpp" />
-    <ClCompile Include="util\hashed_string.cpp" />
-    <ClCompile Include="util\log.cpp" />
+    <ClCompile Include="ox_wrapper\util\datetime.cpp" />
+    <ClCompile Include="ox_wrapper\util\hashed_string.cpp" />
+    <ClCompile Include="ox_wrapper\util\log.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\SpookyHash\SpookyV2.h" />
+    <ClInclude Include="..\_3rd_party\SpookyHash\SpookyV2.h" />
     <ClInclude Include="ox_wrapper\buffer.h" />
     <ClInclude Include="ox_wrapper\constants.h" />
     <ClInclude Include="ox_wrapper\context.h" />
@@ -188,16 +135,18 @@
     <ClInclude Include="ox_wrapper\ray_generator.h" />
     <ClInclude Include="ox_wrapper\scene.h" />
     <ClInclude Include="ox_wrapper\scene_section.h" />
+    <ClInclude Include="ox_wrapper\shapes\circle.h" />
     <ClInclude Include="ox_wrapper\transform.h" />
     <ClInclude Include="ox_wrapper\transformable.h" />
-    <ClInclude Include="util\datetime.h" />
-    <ClInclude Include="util\hashed_string.h" />
-    <ClInclude Include="util\log.h" />
-    <ClInclude Include="util\matrix_types.h" />
-    <ClInclude Include="util\static_vector.h" />
+    <ClInclude Include="ox_wrapper\util\datetime.h" />
+    <ClInclude Include="ox_wrapper\util\hashed_string.h" />
+    <ClInclude Include="ox_wrapper\util\log.h" />
+    <ClInclude Include="ox_wrapper\util\matrix_types.h" />
+    <ClInclude Include="ox_wrapper\util\static_vector.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl" />
+    <None Include="ox_wrapper\shapes\circle.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

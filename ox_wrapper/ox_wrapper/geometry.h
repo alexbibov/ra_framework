@@ -11,8 +11,12 @@
 
 namespace ox_wrapper {
 
+template<typename T> class OxGeometryAttorney;
+
 class OxGeometry : public OxContractWithOxContext, public OxContractWithOxPrograms, public OxEntity
 {
+    friend class OxGeometryAttorney<OxGeometryGroup>;
+
 public:
     OxGeometry(OxProgram const& intersection_shader, 
         OxProgram const& aabb_shader, OxMaterialAssembly const& material_assembly);
@@ -28,10 +32,27 @@ public:
 
 protected:
     void setPrimitiveCount(unsigned int num_primitives);
+    void markDirty();
 
 private:
-    std::shared_ptr<RTgeometry_api> m_native_geometry;
+    std::shared_ptr<std::pair<RTgeometry, bool>> m_native_geometry;
     OxMaterialAssembly const m_material_assembly;
+};
+
+template<> 
+class OxGeometryAttorney<OxGeometryGroup>
+{
+    friend class OxGeometryGroup;
+
+    static bool isGeometryDirty(OxGeometry const& parent_geometry)
+    {
+        return parent_geometry.m_native_geometry->second;
+    }
+
+    static void markGeometryClean(OxGeometry& parent_geometry)
+    {
+        parent_geometry.m_native_geometry->second = false;
+    }
 };
 
 }

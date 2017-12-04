@@ -5,20 +5,20 @@
 using namespace ox_wrapper;
 
 OxProgram::OxProgram(OxContext const& optix_context,
-    std::string const& source, Source source_type, std::string const& program_name):
+    std::string const& source, Source source_type, std::string const& entry_point):
     OxContractWithOxContext{ optix_context }
 {
-    setStringName(program_name.c_str());
+    setStringName(entry_point.c_str());
 
     RTprogram native_handle{};
 
     switch (source_type)
     {
     case Source::string:
-        throwOptiXContextError(rtProgramCreateFromPTXString(nativeOptiXContextHandle(), source.c_str(), program_name.c_str(), &native_handle));
+        throwOptiXContextError(rtProgramCreateFromPTXString(nativeOptiXContextHandle(), source.c_str(), entry_point.c_str(), &native_handle));
         break;
     case Source::file:
-        throwOptiXContextError(rtProgramCreateFromPTXFile(nativeOptiXContextHandle(), source.c_str(), program_name.c_str(), &native_handle));
+        throwOptiXContextError(rtProgramCreateFromPTXFile(nativeOptiXContextHandle(), source.c_str(), entry_point.c_str(), &native_handle));
         break;
     }
 

@@ -174,6 +174,7 @@ RTobject OxSceneSection::getEntryNode() const
 
 void OxSceneSection::runRayTracing() const
 {
+    m_optix_ray_generator.getRayGenerationShader().declareVariable("ox_entry_node", OxObjectHandle{ getEntryNode() });
     OxRayGeneratorAttorney<OxSceneSection>::launchRayGenerator(m_optix_ray_generator);
 }
 

@@ -3,7 +3,7 @@
 
 #include "fwd.h"
 #include "contract_with_context.h"
-#include "../util/matrix_types.h"
+#include "util/matrix_types.h"
 #include "optix.h"
 #include "entity.h"
 

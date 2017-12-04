@@ -1,5 +1,5 @@
 #include "exception.h"
-#include "../util/log.h"
+#include "util/log.h"
 
 using namespace ox_wrapper;
 

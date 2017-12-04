@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "optix.h"
-#include "../util/log.h"
+#include "util/log.h"
 #include "../../CUDA/v9.0/include/vector_types.h"
 #include "fwd.h"
 #include "contract_with_context.h"

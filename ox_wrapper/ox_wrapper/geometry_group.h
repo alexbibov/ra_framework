@@ -5,7 +5,7 @@
 #include "fwd.h"
 #include "contract_with_context.h"
 #include "geometry.h"
-#include "../util/matrix_types.h"
+#include "util/matrix_types.h"
 #include "transformable.h"
 
 #include <cstdint>
@@ -41,6 +41,14 @@ private:
     RTobject getTransformedObject() const override;
 
 private:
+    /*! marks acceleration structure associated with geometry group as "dirty",
+     when this is required by at least one of geometries included into the group
+     and returns 'true'. If no geometry in the group requires update the function
+     has no effect and returns 'false'
+    */
+    bool updateGeometryGroup();
+
+private:
     std::shared_ptr<RTgeometrygroup_api> m_native_geometry_group;
     std::shared_ptr<RTacceleration_api> m_native_acceleration;
     std::list<OxGeometry> m_list_of_geometries;
@@ -62,6 +70,11 @@ template<> class OxGeometryGroupAttorney<OxSceneSection>
     static std::pair<bool, bool> getGeometryGroupConstructionStatus(OxGeometryGroup const& parent_geometry_group)
     {
         return std::make_pair(parent_geometry_group.m_construction_begun, parent_geometry_group.m_construction_finished);
+    }
+
+    static bool updateGeometryGroup(OxGeometryGroup& parent_geometry_group)
+    {
+        return parent_geometry_group.updateGeometryGroup();
     }
 };
 
