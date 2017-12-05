@@ -537,6 +537,186 @@ void OxProgram::setVariableValue(std::string const& name, OxObjectHandle const& 
     }
 }
 
+void OxProgram::getVariableValue(std::string const& name, float* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet1f(native_variable_handle, value));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, float2* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet2f(native_variable_handle, &value->x, &value->y));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, float3* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet3f(native_variable_handle, &value->x, &value->y, &value->z));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, float4* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet4f(native_variable_handle, &value->x, &value->y, &value->z, &value->w));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, int* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet1i(native_variable_handle, value));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, int2* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet2i(native_variable_handle, &value->x, &value->y));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, int3* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet3i(native_variable_handle, &value->x, &value->y, &value->z));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, int4* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet4i(native_variable_handle, &value->x, &value->y, &value->z, &value->w));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, unsigned int* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet1ui(native_variable_handle, value));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, uint2* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet2ui(native_variable_handle, &value->x, &value->y));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, uint3* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet3ui(native_variable_handle, &value->x, &value->y, &value->z));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, uint4* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        logOptiXContextError(rtVariableGet4ui(native_variable_handle, &value->x, &value->y, &value->z, &value->w));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, util::mat2x2* value)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        float m[4];
+        logOptiXContextError(rtVariableGetMatrix2x2fv(native_variable_handle, 0, m));
+        value->_11 = m[0]; value->_12 = m[1];
+        value->_21 = m[2]; value->_22 = m[3];
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to get value of variable \"" + name + "\": variable does not exist", util::LogMessageType::exclamation);
+    }
+}
+
+void OxProgram::getVariableValue(std::string const& name, util::mat2x3* value)
+{
+}
+
+void OxProgram::getVariableValue(std::string const& name, util::mat2x4* value)
+{
+}
+
 
 bool OxProgram::isValid() const
 {
@@ -555,7 +735,7 @@ bool OxProgram::checkVariableExistance(std::string const& name) const
 RTvariable ox_wrapper::OxProgram::fetch_variable(std::string const& name)
 {
     RTvariable rv{ nullptr };
-    rtProgramQueryVariable(m_native_optix_program.get(), name.c_str(), &rv);
+    logOptiXContextError(rtProgramQueryVariable(m_native_optix_program.get(), name.c_str(), &rv));
 
     return rv;
 }
