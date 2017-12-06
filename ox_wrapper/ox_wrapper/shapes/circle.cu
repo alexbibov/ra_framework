@@ -12,7 +12,7 @@ rtDeclareVariable(unsigned int, num_materials, , "number of materials attached t
 rtDeclareVariable(optix::Ray, ray, rtCurrentRay, "currently traversed ray");
 
 
-RT_PROGRAM void intersect(int primitive_id)
+RT_PROGRAM void __ox_intersect__(int primitive_id)
 {
     float2 s{ ray.origin.x, ray.origin.y };
     float2 d{ ray.direction.x, ray.direction.y };
@@ -33,7 +33,7 @@ RT_PROGRAM void intersect(int primitive_id)
     }
 }
 
-RT_PROGRAM void aabb(int primitive_id, float aabb[6])
+RT_PROGRAM void __ox_aabb__(int primitive_id, float aabb[6])
 {
     aabb[0] = center.x - radius;
     aabb[1] = center.y - radius;

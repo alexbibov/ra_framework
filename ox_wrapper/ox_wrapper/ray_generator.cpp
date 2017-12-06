@@ -4,16 +4,23 @@
 using namespace ox_wrapper;
 
 OxRayGenerator::OxRayGenerator(OxProgram const& optix_ray_generation_shader,
-    uint32_t numRays_x/* = 1U*/, uint32_t numRays_y/* = 1U*/, uint32_t num_Rays_z/* = 1U*/,
+    uint32_t num_rays_x/* = 1U*/, uint32_t num_rays_y/* = 1U*/, uint32_t num_rays_z/* = 1U*/,
     uint32_t entry_point_index/* = 0U*/):
     OxContractWithOxContext{ optix_ray_generation_shader.context() },
     OxContractWithOxPrograms{ optix_ray_generation_shader },
-    m_num_rays_x{ numRays_x },
-    m_num_rays_y{ numRays_y },
-    m_num_rays_z{ num_Rays_z },
+    m_num_rays_x{ num_rays_x },
+    m_num_rays_y{ num_rays_y },
+    m_num_rays_z{ num_rays_z },
     m_entry_point_index{ entry_point_index }
 {
     throwOptiXContextError(rtContextSetRayGenerationProgram(nativeOptiXContextHandle(), m_entry_point_index, nativeOptiXProgramHandle()));
+}
+
+void OxRayGenerator::setGeneratorDimensions(uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z)
+{
+    m_num_rays_x = num_rays_x;
+    m_num_rays_y = num_rays_y;
+    m_num_rays_z = num_rays_z;
 }
 
 OxProgram OxRayGenerator::getRayGenerationShader() const

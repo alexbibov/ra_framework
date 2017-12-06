@@ -18,13 +18,16 @@ class OxRayGenerator : public OxContractWithOxContext, public OxContractWithOxPr
     friend class OxRayGeneratorAttorney<OxSceneSection>;
 
 public:
-    OxRayGenerator(OxProgram const& optix_ray_generation_shader, uint32_t numRays_x, uint32_t numRays_y = 1U, uint32_t num_Rays_z = 1U,
+    OxRayGenerator(OxProgram const& optix_ray_generation_shader, uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U,
         uint32_t entry_point_index = 0U);
 
     OxProgram getRayGenerationShader() const;
 
     // required by OxEntity interface
     bool isValid() const override;
+
+protected:
+    void setGeneratorDimensions(uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z);
 
 private:
     void launch() const;

@@ -71,8 +71,18 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PreBuildEvent>
-      <Message>python ../compile_ptx_modules.py $(SolutionDir)/GomosOptiXModel/compile_ptx_modules_config.xml</Message>
+      <Message>
+      </Message>
     </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>python $(SolutionDir)ox_wrapper\compile_ptx.py $(SolutionDir)ox_wrapper/config.xml</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(SolutionDir)ox_wrapper\ox_wrapper\shapes\ptx\circle.ptx;$(SolutionDir)ox_wrapper\ox_wrapper\ray_casters\ptx\parallel_ray_generator.ptx;%(Outputs)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(SolutionDir)ox_wrapper\ox_wrapper\shapes\circle.cu;$(SolutionDir)ox_wrapper\ox_wrapper\ray_casters\parallel_ray_generator.cu;%(Inputs)</Inputs>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -107,6 +117,7 @@
     <ClCompile Include="ox_wrapper\material.cpp" />
     <ClCompile Include="ox_wrapper\material_assembly.cpp" />
     <ClCompile Include="ox_wrapper\program.cpp" />
+    <ClCompile Include="ox_wrapper\ray_casters\parallel_ray_generator.cpp" />
     <ClCompile Include="ox_wrapper\ray_generator.cpp" />
     <ClCompile Include="ox_wrapper\scene.cpp" />
     <ClCompile Include="ox_wrapper\scene_section.cpp" />
@@ -120,6 +131,7 @@
   <ItemGroup>
     <ClInclude Include="..\_3rd_party\SpookyHash\SpookyV2.h" />
     <ClInclude Include="ox_wrapper\buffer.h" />
+    <ClInclude Include="ox_wrapper\commons.h" />
     <ClInclude Include="ox_wrapper\constants.h" />
     <ClInclude Include="ox_wrapper\context.h" />
     <ClInclude Include="ox_wrapper\entity.h" />
@@ -132,10 +144,14 @@
     <ClInclude Include="ox_wrapper\material.h" />
     <ClInclude Include="ox_wrapper\material_assembly.h" />
     <ClInclude Include="ox_wrapper\program.h" />
+    <ClInclude Include="ox_wrapper\ray_casters\fwd.h" />
+    <ClInclude Include="ox_wrapper\ray_casters\parallel_ray_generator.h" />
     <ClInclude Include="ox_wrapper\ray_generator.h" />
+    <ClInclude Include="ox_wrapper\ray_payload.h" />
     <ClInclude Include="ox_wrapper\scene.h" />
     <ClInclude Include="ox_wrapper\scene_section.h" />
     <ClInclude Include="ox_wrapper\shapes\circle.h" />
+    <ClInclude Include="ox_wrapper\shapes\fwd.h" />
     <ClInclude Include="ox_wrapper\transform.h" />
     <ClInclude Include="ox_wrapper\transformable.h" />
     <ClInclude Include="ox_wrapper\util\datetime.h" />
@@ -146,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl" />
+    <None Include="ox_wrapper\ray_casters\parallel_ray_generator.cu" />
     <None Include="ox_wrapper\shapes\circle.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

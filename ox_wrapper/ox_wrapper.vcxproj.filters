@@ -16,6 +16,12 @@
     <Filter Include="ox_wrapper\shapes">
       <UniqueIdentifier>{2f59dfe1-99ed-4275-964a-2402f6c637ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ox_wrapper\ray_casters">
+      <UniqueIdentifier>{8357eda2-87a5-4f48-8376-eec9dc388f6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ox_wrapper\materials">
+      <UniqueIdentifier>{1b23faa6-48c1-422f-a145-3eecb37efa75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ox_wrapper\context.cpp">
@@ -77,6 +83,9 @@
     </ClCompile>
     <ClCompile Include="ox_wrapper\shapes\circle.cpp">
       <Filter>ox_wrapper\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\ray_casters\parallel_ray_generator.cpp">
+      <Filter>ox_wrapper\ray_casters</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +164,21 @@
     <ClInclude Include="ox_wrapper\util\static_vector.h">
       <Filter>ox_wrapper\util</Filter>
     </ClInclude>
+    <ClInclude Include="ox_wrapper\ray_casters\parallel_ray_generator.h">
+      <Filter>ox_wrapper\ray_casters</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\ray_casters\fwd.h">
+      <Filter>ox_wrapper\ray_casters</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\shapes\fwd.h">
+      <Filter>ox_wrapper\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\ray_payload.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\commons.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl">
@@ -162,6 +186,9 @@
     </None>
     <None Include="ox_wrapper\shapes\circle.cu">
       <Filter>ox_wrapper\shapes</Filter>
+    </None>
+    <None Include="ox_wrapper\ray_casters\parallel_ray_generator.cu">
+      <Filter>ox_wrapper\ray_casters</Filter>
     </None>
   </ItemGroup>
 </Project>

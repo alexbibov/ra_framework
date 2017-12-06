@@ -15,10 +15,12 @@ public:
         float position_y = 0.f,
         float radius = 1.f);
 
+    void updatePosition(float2 const& new_position);
     void updatePosition(float new_position_x, float new_position_y);
     void updateRadius(float new_radius);
 
-
+    float2 getPosition() const;
+    float getRadius() const;
 
 private:
     float m_center_x, m_center_y;

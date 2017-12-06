@@ -30,6 +30,18 @@
 	nvcc_options="-arch=compute_50 -use_fast_math" 
 	xcompiler=""/>
 	
+	<module 
+	source="ox_wrapper/ray_casters/parallel_ray_generator.cu" 
+	output="PTX_PARALLEL_RAY_GENERATOR" 
+	nvcc_options="-arch=compute_50 -use_fast_math" 
+	xcompiler=""/>
+	
+	<module 
+	source="ox_wrapper/materials/scattering_material.cu" 
+	output="PTX_SCATTERING_MATERIAL" 
+	nvcc_options="-arch=compute_50 -use_fast_math" 
+	xcompiler=""/>
+	
 
   </modules>
 
