@@ -126,6 +126,7 @@
     <ClCompile Include="ox_wrapper\shapes\circle.cpp" />
     <ClCompile Include="ox_wrapper\transform.cpp" />
     <ClCompile Include="ox_wrapper\transformable.cpp" />
+    <ClCompile Include="ox_wrapper\traverse_backup_buffer.cpp" />
     <ClCompile Include="ox_wrapper\util\datetime.cpp" />
     <ClCompile Include="ox_wrapper\util\hashed_string.cpp" />
     <ClCompile Include="ox_wrapper\util\log.cpp" />
@@ -149,13 +150,14 @@
     <ClInclude Include="ox_wrapper\ray_casters\fwd.h" />
     <ClInclude Include="ox_wrapper\ray_casters\parallel_ray_generator.h" />
     <ClInclude Include="ox_wrapper\ray_generator.h" />
-    <ClInclude Include="ox_wrapper\ray_payload.h" />
+    <ClInclude Include="ox_wrapper\ray_radiance_payload.h" />
     <ClInclude Include="ox_wrapper\scene.h" />
     <ClInclude Include="ox_wrapper\scene_section.h" />
     <ClInclude Include="ox_wrapper\shapes\circle.h" />
     <ClInclude Include="ox_wrapper\shapes\fwd.h" />
     <ClInclude Include="ox_wrapper\transform.h" />
     <ClInclude Include="ox_wrapper\transformable.h" />
+    <ClInclude Include="ox_wrapper\traverse_backup_buffer.h" />
     <ClInclude Include="ox_wrapper\util\datetime.h" />
     <ClInclude Include="ox_wrapper\util\hashed_string.h" />
     <ClInclude Include="ox_wrapper\util\log.h" />

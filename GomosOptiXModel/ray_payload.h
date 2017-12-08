@@ -1,11 +1,11 @@
-#ifndef GOMOS_OPTIX_MODEL_RAY_PAYLOAD_H
-#define GOMOS_OPTIX_MODEL_RAY_PAYLOAD_H
+#ifndef GOMOS_OPTIX_MODEL_RAY_RADIANCE_PAYLOAD_H
+#define GOMOS_OPTIX_MODEL_RAY_RADIANCE_PAYLOAD_H
 
 #include "../CUDA/v9.0/include/vector_types.h"
 
 namespace gomos_optix_model {
 
-struct RayPayload
+struct RayRadiancePayload
 {
     unsigned int index;    // index of the ray being marched
     float intensity;    // intensity carried by the ray

@@ -3,7 +3,7 @@
 
 #include "../ray_generator.h"
 #include "../buffer.h"
-#include "../ray_payload.h"
+#include "../ray_radiance_payload.h"
 
 namespace ox_wrapper { namespace ray_casters {
 
@@ -24,7 +24,7 @@ public:
     float getEmitterRotation() const;
 
 private:
-    OxBuffer<OxRayPayload> m_output_buffer;
+    OxBuffer<OxRayRadiancePayload> m_output_buffer;
     OxBuffer<float> m_spectral_flux_buffer;
 };
 

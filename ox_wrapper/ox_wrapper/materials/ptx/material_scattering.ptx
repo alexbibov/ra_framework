@@ -12,6 +12,7 @@
 
 	// .globl	_Z16__ox_intersect__v
 .global .align 4 .f32 step_size;
+.global .align 4 .u32 max_recursion_depth;
 .global .align 4 .b8 absorption_factor[4];
 .global .align 4 .b8 scattering_factor[4];
 .global .align 4 .b8 phase_function[4];
@@ -20,7 +21,9 @@
 .global .align 4 .f32 intersection_distance;
 .global .align 4 .b8 current_ray[36];
 .global .align 1 .b8 importance_directions_buffer[1];
+.global .align 1 .b8 traverse_backup_buffer[1];
 .global .align 4 .b8 _ZN21rti_internal_typeinfo9step_sizeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
+.global .align 4 .b8 _ZN21rti_internal_typeinfo19max_recursion_depthE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo17absorption_factorE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo17scattering_factorE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo14phase_functionE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
@@ -53,14 +56,16 @@
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_yE;
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_zE;
 .global .align 8 .b8 _ZN21rti_internal_typename9step_sizeE[6] = {102, 108, 111, 97, 116, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename19max_recursion_depthE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename17absorption_factorE[34] = {97, 98, 115, 111, 114, 112, 116, 105, 111, 110, 95, 102, 97, 99, 116, 111, 114, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename17scattering_factorE[34] = {115, 99, 97, 116, 116, 101, 114, 105, 110, 103, 95, 102, 97, 99, 116, 111, 114, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename14phase_functionE[31] = {112, 104, 97, 115, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename25num_importance_directionsE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
-.global .align 16 .b8 _ZN21rti_internal_typename11ray_payloadE[25] = {111, 120, 95, 119, 114, 97, 112, 112, 101, 114, 58, 58, 79, 120, 82, 97, 121, 80, 97, 121, 108, 111, 97, 100, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename11ray_payloadE[33] = {111, 120, 95, 119, 114, 97, 112, 112, 101, 114, 58, 58, 79, 120, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename21intersection_distanceE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename11current_rayE[11] = {111, 112, 116, 105, 120, 58, 58, 82, 97, 121, 0};
 .global .align 4 .u32 _ZN21rti_internal_typeenum9step_sizeE = 4919;
+.global .align 4 .u32 _ZN21rti_internal_typeenum19max_recursion_depthE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum17absorption_factorE = 4920;
 .global .align 4 .u32 _ZN21rti_internal_typeenum17scattering_factorE = 4920;
 .global .align 4 .u32 _ZN21rti_internal_typeenum14phase_functionE = 4920;
@@ -69,6 +74,7 @@
 .global .align 4 .u32 _ZN21rti_internal_typeenum21intersection_distanceE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum11current_rayE = 4919;
 .global .align 1 .b8 _ZN21rti_internal_semantic9step_sizeE[1];
+.global .align 1 .b8 _ZN21rti_internal_semantic19max_recursion_depthE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic17absorption_factorE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic17scattering_factorE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic14phase_functionE[1];
@@ -77,6 +83,7 @@
 .global .align 16 .b8 _ZN21rti_internal_semantic21intersection_distanceE[23] = {114, 116, 73, 110, 116, 101, 114, 115, 101, 99, 116, 105, 111, 110, 68, 105, 115, 116, 97, 110, 99, 101, 0};
 .global .align 16 .b8 _ZN21rti_internal_semantic11current_rayE[13] = {114, 116, 67, 117, 114, 114, 101, 110, 116, 82, 97, 121, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation9step_sizeE[25] = {34, 82, 97, 121, 32, 109, 97, 114, 99, 104, 105, 110, 103, 32, 115, 116, 101, 112, 32, 115, 105, 122, 101, 34, 0};
+.global .align 16 .b8 _ZN23rti_internal_annotation19max_recursion_depthE[53] = {34, 77, 97, 120, 105, 109, 97, 108, 32, 100, 101, 112, 116, 104, 32, 111, 102, 32, 114, 101, 99, 117, 114, 115, 105, 111, 110, 32, 102, 111, 114, 32, 115, 99, 97, 116, 116, 101, 114, 105, 110, 103, 32, 116, 114, 97, 118, 101, 114, 115, 101, 34, 0};
 .global .align 1 .b8 _ZN23rti_internal_annotation17absorption_factorE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation17scattering_factorE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation14phase_functionE[1];

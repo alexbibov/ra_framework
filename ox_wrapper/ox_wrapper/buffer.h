@@ -33,12 +33,13 @@ struct OxBufferId
     int native;
 };
 
-template<typename T> class OptiXBufferAttorney;
+template<typename T> class OxBufferAttorney;
 
 template<typename T>
 class OxBuffer final : public OxContractWithOxContext, public OxEntity
 {
-    friend class OptiXBufferAttorney<OxContext>;
+    friend class OxBufferAttorney<OxContext>;
+    friend class OxBufferAttorney<OxProgram>;
 
 public:
 
@@ -101,14 +102,14 @@ private:
     }
 
 public:
-    void* map(OxBufferMapKind map_kind, unsigned int mipmap_level) const
+    void* map(OxBufferMapKind map_kind, unsigned int mipmap_level = 0U) const
     {
         void* rv{ nullptr };
         throwOptiXContextError(rtBufferMapEx(m_native_optix_buffer.get(), static_cast<unsigned>(map_kind), mipmap_level, nullptr, &rv));
         return rv;
     }
 
-    void unmap(unsigned int mipmap_level)
+    void unmap(unsigned int mipmap_level = 0U) const
     {
         throwOptiXContextError(rtBufferUnmapEx(m_native_optix_buffer.get(), mipmap_level));
     }
@@ -118,7 +119,7 @@ private:
 };
 
 
-template<> class OptiXBufferAttorney<OxContext>
+template<> class OxBufferAttorney<OxContext>
 {
     friend class OxContext;
 
@@ -138,6 +139,17 @@ template<> class OptiXBufferAttorney<OxContext>
     static OxBuffer<T> createOptiXBuffer(OxContext const& optix_context, OxBufferKind buffer_kind, size_t width, size_t height, size_t depth)
     {
         return OxBuffer<T>{ optix_context, buffer_kind, width, height, depth };
+    }
+};
+
+template<> class OxBufferAttorney<OxProgram>
+{
+    friend class OxProgram;
+
+    template<typename T>
+    static RTbuffer getNativeOptiXBufferHandle(OxBuffer<T> const& parent_buffer)
+    {
+        return parent_buffer.m_native_optix_buffer.get();
     }
 };
 

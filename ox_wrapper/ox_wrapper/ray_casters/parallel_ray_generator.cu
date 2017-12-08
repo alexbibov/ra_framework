@@ -3,7 +3,7 @@
 #include <optixu/optixu_vector_functions.h>
 #include <optixu/optixu_math_namespace.h>
 
-#include "ox_wrapper/ray_payload.h"
+#include "ox_wrapper/ray_radiance_payload.h"
 #include "ox_wrapper/commons.h"
 
 
@@ -15,7 +15,7 @@ rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
 
 rtDeclareVariable(optix::uint1, index, rtLaunchIndex, "Thread index");
 
-rtBuffer<ox_wrapper::OxRayPayload, 1> ox_output_buffer;
+rtBuffer<ox_wrapper::OxRayRadiancePayload, 1> ox_output_buffer;
 
 /*! This buffer must be organized as follows: 
  for each generated ray the buffer stores 4*OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED values
@@ -35,7 +35,7 @@ RT_PROGRAM void __ox_generate__(void)
 
     optix::float3 direction{ -s, c };
 
-    optix::Ray ray = optix::make_Ray(origin, direction, OX_RAY_TYPE_DEFAULT, 0.f, RT_DEFAULT_MAX);
+    optix::Ray ray = optix::make_Ray(origin, direction, static_cast<unsigned int>(ox_wrapper::OxRayType::unknown), 0.f, RT_DEFAULT_MAX);
 
 
     optix::float4 radiant_exitance[OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED];
@@ -47,7 +47,7 @@ RT_PROGRAM void __ox_generate__(void)
         radiant_exitance[i].w = ox_init_spectral_flux_buffer[4 * OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED*index.x + 3];
     }
 
-    ox_wrapper::OxRayPayload payload{};
+    ox_wrapper::OxRayRadiancePayload payload{};
     memcpy(payload.radiant_exitance, radiant_exitance, sizeof(optix::float4)*OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED);
     payload.tracing_depth = 0U;
     payload.flags = 0U;

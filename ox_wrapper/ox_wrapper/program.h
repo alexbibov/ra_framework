@@ -134,7 +134,7 @@ public:
     void assignBuffer(std::string const& name, OxBuffer<T> const& buffer)
     {
         RTvariable native_variable_handle = declare_variable_object(name);
-        rtVariableSetObject(native_variable_handle, buffer.native());
+        rtVariableSetObject(native_variable_handle, OxBufferAttorney<OxProgram>::getNativeOptiXBufferHandle(buffer));
     }
 
     bool checkVariableExistance(std::string const& name) const;
