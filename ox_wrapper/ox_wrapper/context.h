@@ -32,21 +32,21 @@ public:
     template<typename T>
     OxBuffer<T> createBuffer(OxBufferKind buffer_kind, size_t width) const
     {
-        return OptiXBufferAttorney<OxContext>::createOptiXBuffer(*this, buffer_kind, width);
+        return OptiXBufferAttorney<OxContext>::createOptiXBuffer<T>(*this, buffer_kind, width);
     }
 
     //! Creates new 2D OptiX buffer
     template<typename T>
     OxBuffer<T> createBuffer(OxBufferKind buffer_kind, size_t width, size_t height) const
     {
-        return OptiXBufferAttorney<OxContext>::createOptiXBuffer(*this, buffer_kind, width, height);
+        return OptiXBufferAttorney<OxContext>::createOptiXBuffer<T>(*this, buffer_kind, width, height);
     }
 
     //! Creates new 3D OptiX buffer
     template<typename T>
     OxBuffer<T> createBuffer(OxBufferKind buffer_kind, size_t width, size_t height, size_t depth) const
     {
-        return OptiXBufferAttorney<OxContext>::createOptiXBuffer(*this, buffer_kind, width, height, depth);
+        return OptiXBufferAttorney<OxContext>::createOptiXBuffer<T>(*this, buffer_kind, width, height, depth);
     }
 
     //! Returns 'true' in case if OptiX context is NOT in error state; returns 'false' otherwise

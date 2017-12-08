@@ -61,7 +61,7 @@ private:
         OxContractWithOxContext{ optix_context }
     {
         m_native_optix_buffer.reset(my_tuner_type::create_buffer(*this, buffer_kind),
-            [](RTbuffer b) -> void
+            [this](RTbuffer b) -> void
         {
             logOptiXContextError(rtBufferDestroy(b));
         });
@@ -73,7 +73,7 @@ private:
         OxContractWithOxContext{ optix_context }
     {
         m_native_optix_buffer.reset(my_tuner_type::create_buffer(*this, buffer_kind),
-            [](RTbuffer b) -> void
+            [this](RTbuffer b) -> void
         {
             logOptiXContextError(rtBufferDestroy(b));
         });
@@ -85,7 +85,7 @@ private:
         OxContractWithOxContext{ optix_context }
     {
         m_native_optix_buffer.reset(my_tuner_type::create_buffer(*this, buffer_kind),
-            [](RTbuffer b) -> void
+            [this](RTbuffer b) -> void
         {
             logOptiXContextError(rtBufferDestroy(b));
         });
@@ -98,11 +98,6 @@ private:
         RTresult res = rtBufferValidate(m_native_optix_buffer.get());
         logOptiXContextError(res);
         return res == RT_SUCCESS;
-    }
-
-    void* nativeOptiXHandle() const override
-    {
-        return m_native_optix_buffer.get();
     }
 
 public:

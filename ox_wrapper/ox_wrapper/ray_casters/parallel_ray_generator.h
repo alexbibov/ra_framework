@@ -2,6 +2,8 @@
 #define OX_WRAPPER_RAY_CASTERS_PARALLEL_RAY_GENERATOR_H
 
 #include "../ray_generator.h"
+#include "../buffer.h"
+#include "../ray_payload.h"
 
 namespace ox_wrapper { namespace ray_casters {
 
@@ -22,6 +24,8 @@ public:
     float getEmitterRotation() const;
 
 private:
+    OxBuffer<OxRayPayload> m_output_buffer;
+    OxBuffer<float> m_spectral_flux_buffer;
 };
 
 }}

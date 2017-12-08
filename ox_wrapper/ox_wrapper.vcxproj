@@ -51,6 +51,8 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);</LibraryPath>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -78,10 +80,10 @@
       <Command>python $(SolutionDir)ox_wrapper\compile_ptx.py $(SolutionDir)ox_wrapper/config.xml</Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Outputs>$(SolutionDir)ox_wrapper\ox_wrapper\shapes\ptx\circle.ptx;$(SolutionDir)ox_wrapper\ox_wrapper\ray_casters\ptx\parallel_ray_generator.ptx;%(Outputs)</Outputs>
+      <Outputs>$(SolutionDir)ox_wrapper\ox_wrapper\shapes\ptx\circle.ptx;$(SolutionDir)ox_wrapper\ox_wrapper\ray_casters\ptx\parallel_ray_generator.ptx;$(SolutionDir)ox_wrapper\ox_wrapper\materials\ptx\scattering_material.ptx;%(Outputs)</Outputs>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Inputs>$(SolutionDir)ox_wrapper\ox_wrapper\shapes\circle.cu;$(SolutionDir)ox_wrapper\ox_wrapper\ray_casters\parallel_ray_generator.cu;%(Inputs)</Inputs>
+      <Inputs>$(SolutionDir)ox_wrapper\ox_wrapper\shapes\circle.cu;$(SolutionDir)ox_wrapper\ox_wrapper\ray_casters\parallel_ray_generator.cu;$(SolutionDir)ox_wrapper\ox_wrapper\materials\scattering_material.cu;%(Inputs)</Inputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -159,11 +161,16 @@
     <ClInclude Include="ox_wrapper\util\log.h" />
     <ClInclude Include="ox_wrapper\util\matrix_types.h" />
     <ClInclude Include="ox_wrapper\util\static_vector.h" />
+    <ClInclude Include="ptx.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl" />
+    <None Include="ox_wrapper\materials\scattering_material.cu" />
     <None Include="ox_wrapper\ray_casters\parallel_ray_generator.cu" />
     <None Include="ox_wrapper\shapes\circle.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="config.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

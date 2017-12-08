@@ -179,6 +179,7 @@
     <ClInclude Include="ox_wrapper\commons.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
+    <ClInclude Include="ptx.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl">
@@ -190,5 +191,11 @@
     <None Include="ox_wrapper\ray_casters\parallel_ray_generator.cu">
       <Filter>ox_wrapper\ray_casters</Filter>
     </None>
+    <None Include="ox_wrapper\materials\scattering_material.cu">
+      <Filter>ox_wrapper\materials</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="config.xml" />
   </ItemGroup>
 </Project>
