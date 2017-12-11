@@ -9,7 +9,7 @@ OxParallelRayGenerator::OxParallelRayGenerator(OxContext const& context, uint32_
     float emitter_position, float emitter_rotation, uint32_t entry_point_index):
     OxRayGenerator{ context.createProgram(PTX_PARALLEL_RAY_GENERATOR, OxProgram::Source::file, OX_SHADER_ENTRY_RAY_GENERATION), num_rays, 1U, 1U, entry_point_index },
     m_output_buffer{ context.createBuffer<OxRayRadiancePayload>(OxBufferKind::output, num_rays) },
-    m_spectral_flux_buffer{ context.createBuffer<float>(OxBufferKind::input, 4 * OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED) }
+    m_spectral_flux_buffer{ context.createBuffer<float2>(OxBufferKind::input, OX_MAX_SPECTRA_PAIRS_SUPPORTED) }
 {
     getRayGenerationShader().setVariableValue("num_rays", num_rays);
     setEmitterSize(emitter_size);

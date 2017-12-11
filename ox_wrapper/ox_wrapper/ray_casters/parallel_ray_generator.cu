@@ -7,26 +7,32 @@
 #include "ox_wrapper/commons.h"
 
 
+rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
+
 rtDeclareVariable(unsigned int, num_rays, , "Number of casted rays");
 rtDeclareVariable(float, emitter_position, , "Position of the emitter");
 rtDeclareVariable(float, emitter_size, , "Size of the emitter");
 rtDeclareVariable(float, emitter_rotation, , "Rotation of the emitter");
-rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
+rtDeclareVariable(unsigned int, num_spectra_supported, , "Number of wavelengths in use");
 
-rtDeclareVariable(optix::uint1, index, rtLaunchIndex, "Thread index");
+rtDeclareVariable(unsigned int, index, rtLaunchIndex, "Thread index");
 
 rtBuffer<ox_wrapper::OxRayRadiancePayload, 1> ox_output_buffer;
 
-/*! This buffer must be organized as follows: 
- for each generated ray the buffer stores 4*OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED values
- each determining spectral exitance for the corresponding part of the spectrum. All 4*OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED
- elements therefore define the radiant exitance and the buffer in total determines the radiant flux of the emitter.
+/*! The buffer is organized as follows:
+ for each element of the emitter the buffer must contain M = MIN(OX_MAX_SPECTRA_PAIRS_SUPPORTED, num_spectra_supported)
+ float2-elements, where each component (x and y) of each of these elements 
+ defines spectral radiant exitance of the corresponding part of the spectrum. 
+ All these values together therefore determine radiant exitance of single emission element of the emitter, 
+ and the whole buffer determines the corresponding radiant flux
 */
-rtBuffer<float, 1> ox_init_spectral_flux_buffer;
+rtBuffer<optix::float2, 1> ox_init_flux_buffer;
+
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 RT_PROGRAM void __ox_generate__(void)
 {
-    optix::float3 origin{ -emitter_size / 2.f + emitter_size / (num_rays - 1) * index.x, 0.f, 0.f };
+    optix::float3 origin{ -emitter_size / 2.f + emitter_size / (num_rays - 1) * index, 0.f, 0.f };
     //float3 direction{ 0.f, 1.f, 0.f };
 
     float c{ cosf(emitter_rotation) }, s{ sinf(emitter_rotation) };
@@ -36,21 +42,15 @@ RT_PROGRAM void __ox_generate__(void)
     optix::float3 direction{ -s, c };
 
     optix::Ray ray = optix::make_Ray(origin, direction, static_cast<unsigned int>(ox_wrapper::OxRayType::unknown), 0.f, RT_DEFAULT_MAX);
-
-
-    optix::float4 radiant_exitance[OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED];
-    for (unsigned int i = 0; i < OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED; ++i)
-    {
-        radiant_exitance[i].x = ox_init_spectral_flux_buffer[4 * OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED*index.x + 0];
-        radiant_exitance[i].y = ox_init_spectral_flux_buffer[4 * OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED*index.x + 1];
-        radiant_exitance[i].z = ox_init_spectral_flux_buffer[4 * OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED*index.x + 2];
-        radiant_exitance[i].w = ox_init_spectral_flux_buffer[4 * OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED*index.x + 3];
-    }
+    
+    unsigned int const ns{ MIN(OX_MAX_SPECTRA_PAIRS_SUPPORTED, num_spectra_supported) };
 
     ox_wrapper::OxRayRadiancePayload payload{};
-    memcpy(payload.radiant_exitance, radiant_exitance, sizeof(optix::float4)*OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED);
+    memcpy(payload.spectral_radiant_exitance, &ox_init_buffer[ns*index], sizeof(optix::float2)*ns);
     payload.tracing_depth = 0U;
-    payload.flags = 0U;
+    payload.aux = 0U;
 
     rtTrace(ox_entry_node, ray, payload);
+
+    ox_output_buffer[index] = payload;
 }

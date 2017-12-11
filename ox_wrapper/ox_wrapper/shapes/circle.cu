@@ -11,13 +11,16 @@ rtDeclareVariable(unsigned int, num_materials, , "number of materials attached t
 
 rtDeclareVariable(optix::Ray, ray, rtCurrentRay, "currently traversed ray");
 
+rtDeclareVariable(optix::float3, normal, attribute attrNormal, "Normal of the surface being hit");
+
 
 RT_PROGRAM void __ox_intersect__(int primitive_id)
 {
     float2 s{ ray.origin.x, ray.origin.y };
     float2 d{ ray.direction.x, ray.direction.y };
-
-    float a{ dot(s - center, s - center) - radius*radius };
+    
+    float2 aux{ s - center };
+    float a{ dot(aux, aux) - radius*radius };
     float b{ dot(s - center, d) };
     float c{ dot(d, d) };
 
@@ -26,6 +29,10 @@ RT_PROGRAM void __ox_intersect__(int primitive_id)
 
     if (rtPotentialIntersection(t))
     {
+        float2 p{ aux + t*d };
+        p /= norm3df(p.x, p.y, 0.f);
+        normal.x = p.x; normal.y = p.y; normal.z = 0.f;
+
         for (unsigned int i = 0; i < num_materials; ++i)
         {
             rtReportIntersection(i);

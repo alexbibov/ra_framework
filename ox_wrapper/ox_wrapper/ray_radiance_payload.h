@@ -8,9 +8,9 @@ namespace ox_wrapper {
 
 struct OxRayRadiancePayload final
 {
-    optix::float4 radiant_exitance[OX_MAX_SPECTRA_QUADRUPLETS_SUPPORTED];
+    optix::float2 spectral_radiant_exitance[OX_MAX_SPECTRA_PAIRS_SUPPORTED];
     unsigned int tracing_depth;
-    unsigned int flags;
+    unsigned int aux;
 };
 
 

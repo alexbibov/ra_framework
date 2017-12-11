@@ -11,8 +11,11 @@
 .address_size 64
 
 	// .globl	_Z16__ox_intersect__v
+.global .align 4 .b8 ox_entry_node[4];
 .global .align 4 .f32 step_size;
 .global .align 4 .u32 max_recursion_depth;
+.global .align 1 .u8 is_scattering_enabled;
+.global .align 4 .u32 num_spectra_supported;
 .global .align 4 .b8 absorption_factor[4];
 .global .align 4 .b8 scattering_factor[4];
 .global .align 4 .b8 phase_function[4];
@@ -20,10 +23,15 @@
 .global .align 16 .b8 ray_payload[80];
 .global .align 4 .f32 intersection_distance;
 .global .align 4 .b8 current_ray[36];
+.global .align 4 .b8 index[12];
+.global .align 4 .b8 normal[12];
 .global .align 1 .b8 importance_directions_buffer[1];
 .global .align 1 .b8 traverse_backup_buffer[1];
+.global .align 4 .b8 _ZN21rti_internal_typeinfo13ox_entry_nodeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo9step_sizeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo19max_recursion_depthE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
+.global .align 4 .b8 _ZN21rti_internal_typeinfo21is_scattering_enabledE[8] = {82, 97, 121, 0, 1, 0, 0, 0};
+.global .align 4 .b8 _ZN21rti_internal_typeinfo21num_spectra_supportedE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo17absorption_factorE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo17scattering_factorE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo14phase_functionE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
@@ -31,6 +39,8 @@
 .global .align 4 .b8 _ZN21rti_internal_typeinfo11ray_payloadE[8] = {82, 97, 121, 0, 80, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo21intersection_distanceE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo11current_rayE[8] = {82, 97, 121, 0, 36, 0, 0, 0};
+.global .align 4 .b8 _ZN21rti_internal_typeinfo5indexE[8] = {82, 97, 121, 0, 12, 0, 0, 0};
+.global .align 4 .b8 _ZN21rti_internal_typeinfo6normalE[8] = {82, 97, 121, 0, 12, 0, 0, 0};
 .global .align 8 .u64 _ZN21rti_internal_register20reg_bitness_detectorE;
 .global .align 8 .u64 _ZN21rti_internal_register24reg_exception_64_detail0E;
 .global .align 8 .u64 _ZN21rti_internal_register24reg_exception_64_detail1E;
@@ -55,8 +65,11 @@
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_xE;
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_yE;
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_zE;
+.global .align 16 .b8 _ZN21rti_internal_typename13ox_entry_nodeE[9] = {114, 116, 79, 98, 106, 101, 99, 116, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename9step_sizeE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename19max_recursion_depthE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
+.global .align 8 .b8 _ZN21rti_internal_typename21is_scattering_enabledE[5] = {98, 111, 111, 108, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename21num_spectra_supportedE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename17absorption_factorE[34] = {97, 98, 115, 111, 114, 112, 116, 105, 111, 110, 95, 102, 97, 99, 116, 111, 114, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename17scattering_factorE[34] = {115, 99, 97, 116, 116, 101, 114, 105, 110, 103, 95, 102, 97, 99, 116, 111, 114, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename14phase_functionE[31] = {112, 104, 97, 115, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};
@@ -64,8 +77,13 @@
 .global .align 16 .b8 _ZN21rti_internal_typename11ray_payloadE[33] = {111, 120, 95, 119, 114, 97, 112, 112, 101, 114, 58, 58, 79, 120, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename21intersection_distanceE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename11current_rayE[11] = {111, 112, 116, 105, 120, 58, 58, 82, 97, 121, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename5indexE[14] = {111, 112, 116, 105, 120, 58, 58, 102, 108, 111, 97, 116, 51, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename6normalE[14] = {111, 112, 116, 105, 120, 58, 58, 102, 108, 111, 97, 116, 51, 0};
+.global .align 4 .u32 _ZN21rti_internal_typeenum13ox_entry_nodeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum9step_sizeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum19max_recursion_depthE = 4919;
+.global .align 4 .u32 _ZN21rti_internal_typeenum21is_scattering_enabledE = 4919;
+.global .align 4 .u32 _ZN21rti_internal_typeenum21num_spectra_supportedE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum17absorption_factorE = 4920;
 .global .align 4 .u32 _ZN21rti_internal_typeenum17scattering_factorE = 4920;
 .global .align 4 .u32 _ZN21rti_internal_typeenum14phase_functionE = 4920;
@@ -73,8 +91,13 @@
 .global .align 4 .u32 _ZN21rti_internal_typeenum11ray_payloadE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum21intersection_distanceE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum11current_rayE = 4919;
+.global .align 4 .u32 _ZN21rti_internal_typeenum5indexE = 4919;
+.global .align 4 .u32 _ZN21rti_internal_typeenum6normalE = 4919;
+.global .align 1 .b8 _ZN21rti_internal_semantic13ox_entry_nodeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic9step_sizeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic19max_recursion_depthE[1];
+.global .align 1 .b8 _ZN21rti_internal_semantic21is_scattering_enabledE[1];
+.global .align 1 .b8 _ZN21rti_internal_semantic21num_spectra_supportedE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic17absorption_factorE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic17scattering_factorE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic14phase_functionE[1];
@@ -82,8 +105,13 @@
 .global .align 16 .b8 _ZN21rti_internal_semantic11ray_payloadE[10] = {114, 116, 80, 97, 121, 108, 111, 97, 100, 0};
 .global .align 16 .b8 _ZN21rti_internal_semantic21intersection_distanceE[23] = {114, 116, 73, 110, 116, 101, 114, 115, 101, 99, 116, 105, 111, 110, 68, 105, 115, 116, 97, 110, 99, 101, 0};
 .global .align 16 .b8 _ZN21rti_internal_semantic11current_rayE[13] = {114, 116, 67, 117, 114, 114, 101, 110, 116, 82, 97, 121, 0};
+.global .align 16 .b8 _ZN21rti_internal_semantic5indexE[14] = {114, 116, 76, 97, 117, 110, 99, 104, 73, 110, 100, 101, 120, 0};
+.global .align 16 .b8 _ZN21rti_internal_semantic6normalE[21] = {97, 116, 116, 114, 105, 98, 117, 116, 101, 32, 97, 116, 116, 114, 78, 111, 114, 109, 97, 108, 0};
+.global .align 16 .b8 _ZN23rti_internal_annotation13ox_entry_nodeE[19] = {34, 83, 99, 101, 110, 101, 32, 101, 110, 116, 114, 121, 32, 110, 111, 100, 101, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation9step_sizeE[25] = {34, 82, 97, 121, 32, 109, 97, 114, 99, 104, 105, 110, 103, 32, 115, 116, 101, 112, 32, 115, 105, 122, 101, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation19max_recursion_depthE[53] = {34, 77, 97, 120, 105, 109, 97, 108, 32, 100, 101, 112, 116, 104, 32, 111, 102, 32, 114, 101, 99, 117, 114, 115, 105, 111, 110, 32, 102, 111, 114, 32, 115, 99, 97, 116, 116, 101, 114, 105, 110, 103, 32, 116, 114, 97, 118, 101, 114, 115, 101, 34, 0};
+.global .align 16 .b8 _ZN23rti_internal_annotation21is_scattering_enabledE[45] = {34, 68, 101, 116, 101, 114, 109, 105, 110, 101, 115, 32, 105, 102, 32, 115, 99, 97, 116, 116, 101, 114, 105, 110, 103, 32, 115, 104, 111, 117, 108, 100, 32, 98, 101, 32, 101, 110, 97, 98, 108, 101, 100, 34, 0};
+.global .align 16 .b8 _ZN23rti_internal_annotation21num_spectra_supportedE[31] = {34, 78, 117, 109, 98, 101, 114, 32, 111, 102, 32, 119, 97, 118, 101, 108, 101, 110, 103, 116, 104, 115, 32, 105, 110, 32, 117, 115, 101, 34, 0};
 .global .align 1 .b8 _ZN23rti_internal_annotation17absorption_factorE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation17scattering_factorE[1];
 .global .align 1 .b8 _ZN23rti_internal_annotation14phase_functionE[1];
@@ -91,14 +119,330 @@
 .global .align 16 .b8 _ZN23rti_internal_annotation11ray_payloadE[22] = {34, 67, 117, 114, 114, 101, 110, 116, 32, 114, 97, 121, 32, 112, 97, 121, 108, 111, 97, 100, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation21intersection_distanceE[58] = {34, 80, 97, 114, 97, 109, 101, 116, 114, 105, 99, 32, 100, 105, 115, 116, 97, 110, 99, 101, 32, 102, 114, 111, 109, 32, 114, 97, 121, 32, 111, 114, 105, 103, 105, 110, 32, 116, 111, 32, 116, 104, 101, 32, 105, 110, 116, 101, 114, 115, 101, 99, 116, 105, 111, 110, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation11current_rayE[26] = {34, 67, 117, 114, 114, 101, 110, 116, 108, 121, 32, 116, 114, 97, 118, 101, 114, 115, 101, 100, 32, 114, 97, 121, 34, 0};
+.global .align 16 .b8 _ZN23rti_internal_annotation5indexE[27] = {34, 73, 110, 100, 101, 120, 32, 111, 102, 32, 116, 104, 101, 32, 99, 117, 114, 114, 101, 110, 116, 32, 114, 97, 121, 34, 0};
+.global .align 16 .b8 _ZN23rti_internal_annotation6normalE[34] = {34, 78, 111, 114, 109, 97, 108, 32, 111, 102, 32, 116, 104, 101, 32, 115, 117, 114, 102, 97, 99, 101, 32, 98, 101, 105, 110, 103, 32, 104, 105, 116, 34, 0};
 
 .visible .entry _Z16__ox_intersect__v(
 
 )
 {
+	.local .align 16 .b8 	__local_depot0[80];
+	.reg .b64 	%SP;
+	.reg .b64 	%SPL;
+	.reg .pred 	%p<5>;
+	.reg .f32 	%f<73>;
+	.reg .b32 	%r<58>;
+	.reg .b64 	%rd<65>;
 
 
+	mov.u64 	%rd64, __local_depot0;
+	cvta.local.u64 	%SP, %rd64;
+	ld.global.f32 	%f1, [current_ray+12];
+	ld.global.f32 	%f11, [normal];
+	ld.global.f32 	%f2, [current_ray+16];
+	ld.global.f32 	%f12, [normal+4];
+	mul.ftz.f32 	%f13, %f12, %f2;
+	fma.rn.ftz.f32 	%f14, %f11, %f1, %f13;
+	ld.global.f32 	%f3, [current_ray+20];
+	ld.global.f32 	%f15, [normal+8];
+	fma.rn.ftz.f32 	%f4, %f15, %f3, %f14;
+	setp.lt.ftz.f32	%p1, %f4, 0f80000000;
+	mov.f32 	%f72, 0f3F800000;
+	@%p1 bra 	BB0_2;
 
+	setp.gt.ftz.f32	%p2, %f4, 0f80000000;
+	selp.f32	%f72, 0fBF800000, 0f00000000, %p2;
+
+BB0_2:
+	ld.global.u32 	%r3, [ray_payload+76];
+	cvt.rn.f32.s32	%f16, %r3;
+	add.ftz.f32 	%f17, %f16, %f72;
+	cvt.rzi.ftz.s32.f32	%r1, %f17;
+	ld.global.f32 	%f18, [intersection_distance];
+	ld.global.f32 	%f19, [current_ray];
+	fma.rn.ftz.f32 	%f7, %f18, %f1, %f19;
+	ld.global.f32 	%f20, [current_ray+4];
+	fma.rn.ftz.f32 	%f8, %f18, %f2, %f20;
+	ld.global.f32 	%f21, [current_ray+8];
+	fma.rn.ftz.f32 	%f9, %f18, %f3, %f21;
+	setp.lt.s32	%p3, %r1, 1;
+	@%p3 bra 	BB0_6;
+
+	ld.global.u32 	%r4, [ray_payload+68];
+	add.s32 	%r2, %r4, 1;
+	st.global.u32 	[ray_payload+68], %r2;
+	ld.global.u32 	%r5, [max_recursion_depth];
+	setp.gt.u32	%p4, %r2, %r5;
+	@%p4 bra 	BB0_5;
+	bra.uni 	BB0_4;
+
+BB0_5:
+	ld.global.f32 	%f65, [current_ray+8];
+	ld.global.f32 	%f64, [current_ray+4];
+	ld.global.f32 	%f63, [current_ray];
+	ld.global.f32 	%f68, [current_ray+20];
+	ld.global.f32 	%f67, [current_ray+16];
+	ld.global.f32 	%f66, [current_ray+12];
+	mov.u64 	%rd63, traverse_backup_buffer;
+	cvta.global.u64 	%rd4, %rd63;
+	mov.u32 	%r41, 1;
+	mov.u32 	%r42, 4;
+	mov.u64 	%rd62, 0;
+	// inline asm
+	call (%rd3), _rt_buffer_get_64, (%rd4, %r41, %r42, %rd62, %rd62, %rd62, %rd62);
+	// inline asm
+	atom.add.u32 	%r43, [%rd3], 1;
+	mul.lo.s32 	%r44, %r43, 9;
+	// inline asm
+	mov.b32 	%r19, %f63;
+	// inline asm
+	add.s32 	%r45, %r44, 1;
+	cvt.u64.u32	%rd11, %r45;
+	// inline asm
+	call (%rd9), _rt_buffer_get_64, (%rd4, %r41, %r42, %rd11, %rd62, %rd62, %rd62);
+	// inline asm
+	st.u32 	[%rd9], %r19;
+	// inline asm
+	mov.b32 	%r22, %f64;
+	// inline asm
+	add.s32 	%r46, %r44, 2;
+	cvt.u64.u32	%rd17, %r46;
+	// inline asm
+	call (%rd15), _rt_buffer_get_64, (%rd4, %r41, %r42, %rd17, %rd62, %rd62, %rd62);
+	// inline asm
+	st.u32 	[%rd15], %r22;
+	// inline asm
+	mov.b32 	%r25, %f65;
+	// inline asm
+	add.s32 	%r47, %r44, 3;
+	cvt.u64.u32	%rd23, %r47;
+	// inline asm
+	call (%rd21), _rt_buffer_get_64, (%rd4, %r41, %r42, %rd23, %rd62, %rd62, %rd62);
+	// inline asm
+	st.u32 	[%rd21], %r25;
+	// inline asm
+	mov.b32 	%r28, %f66;
+	// inline asm
+	add.s32 	%r48, %r44, 4;
+	cvt.u64.u32	%rd29, %r48;
+	// inline asm
+	call (%rd27), _rt_buffer_get_64, (%rd4, %r41, %r42, %rd29, %rd62, %rd62, %rd62);
+	// inline asm
+	st.u32 	[%rd27], %r28;
+	// inline asm
+	mov.b32 	%r31, %f67;
+	// inline asm
+	add.s32 	%r49, %r44, 5;
+	cvt.u64.u32	%rd35, %r49;
+	// inline asm
+	call (%rd33), _rt_buffer_get_64, (%rd4, %r41, %r42, %rd35, %rd62, %rd62, %rd62);
+	// inline asm
+	st.u32 	[%rd33], %r31;
+	// inline asm
+	mov.b32 	%r34, %f68;
+	// inline asm
+	add.s32 	%r50, %r44, 6;
+	cvt.u64.u32	%rd41, %r50;
+	// inline asm
+	call (%rd39), _rt_buffer_get_64, (%rd4, %r41, %r42, %rd41, %rd62, %rd62, %rd62);
+	// inline asm
+	st.u32 	[%rd39], %r34;
+	ld.global.f32 	%f69, [index];
+	cvt.rzi.ftz.u32.f32	%r51, %f69;
+	add.s32 	%r52, %r44, 7;
+	cvt.u64.u32	%rd47, %r52;
+	// inline asm
+	call (%rd45), _rt_buffer_get_64, (%rd4, %r41, %r42, %rd47, %rd62, %rd62, %rd62);
+	// inline asm
+	st.u32 	[%rd45], %r51;
+	ld.global.f32 	%f70, [index+4];
+	cvt.rzi.ftz.u32.f32	%r53, %f70;
+	add.s32 	%r54, %r44, 8;
+	cvt.u64.u32	%rd53, %r54;
+	// inline asm
+	call (%rd51), _rt_buffer_get_64, (%rd4, %r41, %r42, %rd53, %rd62, %rd62, %rd62);
+	// inline asm
+	st.u32 	[%rd51], %r53;
+	ld.global.f32 	%f71, [index+8];
+	cvt.rzi.ftz.u32.f32	%r55, %f71;
+	add.s32 	%r56, %r44, 9;
+	cvt.u64.u32	%rd59, %r56;
+	// inline asm
+	call (%rd57), _rt_buffer_get_64, (%rd4, %r41, %r42, %rd59, %rd62, %rd62, %rd62);
+	// inline asm
+	st.u32 	[%rd57], %r55;
+	bra.uni 	BB0_6;
+
+BB0_4:
+	add.u64 	%rd1, %SP, 0;
+	cvta.to.local.u64 	%rd2, %rd1;
+	ld.global.v4.f32 	{%f31, %f32, %f33, %f34}, [ray_payload];
+	ld.global.v4.f32 	{%f35, %f36, %f37, %f38}, [ray_payload+16];
+	ld.global.v4.f32 	{%f39, %f40, %f41, %f42}, [ray_payload+32];
+	ld.global.v4.f32 	{%f43, %f44, %f45, %f46}, [ray_payload+48];
+	ld.global.v4.u32 	{%r10, %r11, %r12, %r13}, [ray_payload+64];
+	st.local.v4.u32 	[%rd2+64], {%r10, %r11, %r12, %r13};
+	st.local.v4.f32 	[%rd2+48], {%f43, %f44, %f45, %f46};
+	st.local.v4.f32 	[%rd2+32], {%f39, %f40, %f41, %f42};
+	st.local.v4.f32 	[%rd2+16], {%f35, %f36, %f37, %f38};
+	st.local.v4.f32 	[%rd2], {%f31, %f32, %f33, %f34};
+	st.local.u32 	[%rd2+76], %r1;
+	add.s32 	%r57, %r4, 1;
+	st.local.u32 	[%rd2+68], %r57;
+	mov.u32 	%r6, 8388608;
+	// inline asm
+	mov.b32 	%f22, %r6;
+	// inline asm
+	fma.rn.ftz.f32 	%f23, %f22, %f1, %f7;
+	fma.rn.ftz.f32 	%f24, %f22, %f2, %f8;
+	fma.rn.ftz.f32 	%f25, %f22, %f3, %f9;
+	ld.global.f32 	%f30, [step_size];
+	ld.global.f32 	%f28, [current_ray+20];
+	ld.global.f32 	%f27, [current_ray+16];
+	ld.global.f32 	%f26, [current_ray+12];
+	ld.global.u32 	%r7, [ox_entry_node];
+	mov.f32 	%f29, 0f00000000;
+	mov.u32 	%r9, 80;
+	// inline asm
+	call _rt_trace_64, (%r7, %f23, %f24, %f25, %f26, %f27, %f28, %r10, %f29, %f30, %rd1, %r9);
+	// inline asm
+
+BB0_6:
+	ret;
+}
+
+	// .globl	_Z11__ox_miss__v
+.visible .entry _Z11__ox_miss__v(
+
+)
+{
+	.reg .pred 	%p<9>;
+	.reg .b16 	%rs<7>;
+	.reg .f32 	%f<19>;
+	.reg .b32 	%r<20>;
+	.reg .b64 	%rd<10>;
+
+
+	ld.global.u32 	%r5, [ray_payload+76];
+	setp.eq.s32	%p1, %r5, 0;
+	@%p1 bra 	BB1_7;
+
+	ld.global.f32 	%f4, [intersection_distance];
+	ld.global.f32 	%f5, [current_ray+12];
+	ld.global.f32 	%f6, [current_ray+16];
+	ld.global.f32 	%f7, [current_ray+20];
+	ld.global.f32 	%f8, [current_ray];
+	fma.rn.ftz.f32 	%f1, %f4, %f5, %f8;
+	ld.global.f32 	%f9, [current_ray+4];
+	fma.rn.ftz.f32 	%f2, %f4, %f6, %f9;
+	ld.global.f32 	%f10, [current_ray+8];
+	fma.rn.ftz.f32 	%f3, %f4, %f7, %f10;
+	ld.global.u32 	%r7, [num_spectra_supported];
+	setp.eq.s32	%p2, %r7, 0;
+	mov.u32 	%r18, 0;
+	@%p2 bra 	BB1_7;
+
+BB1_2:
+	ld.global.u32 	%r8, [absorption_factor];
+	// inline asm
+	call (%rd1), _rt_callable_program_from_id_64, (%r8);
+	// inline asm
+	// Callseq Start 0
+	{
+	.reg .b32 temp_param_reg;
+	// <end>}
+	.param .align 4 .b8 param0[12];
+	st.param.f32	[param0+0], %f1;
+	st.param.f32	[param0+4], %f2;
+	st.param.f32	[param0+8], %f3;
+	.param .b32 param1;
+	st.param.b32	[param1+0], %r18;
+	.param .align 16 .b8 retval0[16];
+	prototype_0 : .callprototype (.param .align 16 .b8 _[16]) _ (.param .align 4 .b8 _[12], .param .b32 _);
+	call (retval0), 
+	%rd1, 
+	(
+	param0, 
+	param1
+	)
+	, prototype_0;
+	ld.param.f32	%f11, [retval0+0];
+	ld.param.f32	%f12, [retval0+4];
+	ld.param.f32	%f13, [retval0+8];
+	ld.param.f32	%f14, [retval0+12];
+	
+	//{
+	}// Callseq End 0
+	ld.global.u8 	%rs4, [is_scattering_enabled];
+	setp.eq.s16	%p3, %rs4, 0;
+	mov.u16 	%rs6, 0;
+	@%p3 bra 	BB1_4;
+
+	ld.global.u32 	%r9, [scattering_factor];
+	// inline asm
+	call (%rd2), _rt_callable_program_from_id_64, (%r9);
+	// inline asm
+	// Callseq Start 1
+	{
+	.reg .b32 temp_param_reg;
+	// <end>}
+	.param .align 4 .b8 param0[12];
+	st.param.f32	[param0+0], %f1;
+	st.param.f32	[param0+4], %f2;
+	st.param.f32	[param0+8], %f3;
+	.param .b32 param1;
+	st.param.b32	[param1+0], %r18;
+	.param .align 16 .b8 retval0[16];
+	prototype_1 : .callprototype (.param .align 16 .b8 _[16]) _ (.param .align 4 .b8 _[12], .param .b32 _);
+	call (retval0), 
+	%rd2, 
+	(
+	param0, 
+	param1
+	)
+	, prototype_1;
+	ld.param.f32	%f15, [retval0+0];
+	ld.param.f32	%f16, [retval0+4];
+	ld.param.f32	%f17, [retval0+8];
+	ld.param.f32	%f18, [retval0+12];
+	
+	//{
+	}// Callseq End 1
+	ld.global.u8 	%rs6, [is_scattering_enabled];
+
+BB1_4:
+	ld.global.u32 	%r11, [num_importance_directions];
+	setp.eq.s32	%p4, %r11, 0;
+	and.b16  	%rs5, %rs6, 255;
+	setp.eq.s16	%p5, %rs5, 0;
+	or.pred  	%p6, %p5, %p4;
+	mov.u32 	%r19, 0;
+	@%p6 bra 	BB1_6;
+
+BB1_5:
+	cvt.u64.u32	%rd5, %r19;
+	mov.u64 	%rd9, importance_directions_buffer;
+	cvta.global.u64 	%rd4, %rd9;
+	mov.u32 	%r12, 1;
+	mov.u32 	%r13, 12;
+	mov.u64 	%rd8, 0;
+	// inline asm
+	call (%rd3), _rt_buffer_get_64, (%rd4, %r12, %r13, %rd5, %rd8, %rd8, %rd8);
+	// inline asm
+	ld.global.u32 	%r14, [num_importance_directions];
+	add.s32 	%r19, %r19, 1;
+	setp.lt.u32	%p7, %r19, %r14;
+	@%p7 bra 	BB1_5;
+
+BB1_6:
+	add.s32 	%r18, %r18, 1;
+	ld.global.u32 	%r15, [num_spectra_supported];
+	mov.u32 	%r16, 4;
+	min.u32 	%r17, %r16, %r15;
+	setp.lt.u32	%p8, %r18, %r17;
+	@%p8 bra 	BB1_2;
+
+BB1_7:
 	ret;
 }
 

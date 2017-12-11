@@ -25,7 +25,7 @@ public:
 
 private:
     OxBuffer<OxRayRadiancePayload> m_output_buffer;
-    OxBuffer<float> m_spectral_flux_buffer;
+    OxBuffer<float2> m_spectral_flux_buffer;
 };
 
 }}
