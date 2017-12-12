@@ -90,6 +90,12 @@
     <ClCompile Include="ox_wrapper\traverse_backup_buffer.cpp">
       <Filter>ox_wrapper</Filter>
     </ClCompile>
+    <ClCompile Include="ox_wrapper\miss_shader.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\miss_shader_assembly.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ox_wrapper\buffer.h">
@@ -179,11 +185,19 @@
     <ClInclude Include="ox_wrapper\commons.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="ptx.h" />
     <ClInclude Include="ox_wrapper\traverse_backup_buffer.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
     <ClInclude Include="ox_wrapper\ray_radiance_payload.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\miss_shader.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ptx.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\miss_shader_assembly.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
   </ItemGroup>

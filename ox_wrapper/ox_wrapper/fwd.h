@@ -19,6 +19,8 @@ class OxTransformable;
 class OxMaterial;
 class OxMaterialAssembly;
 class OxRayGenerator;
+class OxMissShader;
+class OxMissShaderAssembly;
 }
 
 #endif
