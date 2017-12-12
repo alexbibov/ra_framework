@@ -5,7 +5,7 @@
 #include "fwd.h"
 #include "material.h"
 #include <memory>
-#include <vector>
+#include <set>
 
 
 namespace ox_wrapper {
@@ -20,6 +20,7 @@ class OxMaterialAssembly : public OxContractWithOxContext, public OxEntity
 
 public:
     OxMaterialAssembly(std::initializer_list<OxMaterial> init_list);
+    virtual ~OxMaterialAssembly();
 
     OxMaterial const* getMaterialById(OxEntityID const& id) const;
     OxMaterial const* getMaterialByName(std::string const& name) const;
@@ -28,7 +29,10 @@ public:
     bool isValid() const override;
 
 private:
-    std::vector<OxMaterial> m_materials;
+    class impl;
+    
+private:
+    std::unique_ptr<impl> m_impl;
     std::shared_ptr<RTgeometryinstance_api> m_native_geometry_instance;
 };
 

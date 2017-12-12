@@ -22,6 +22,7 @@ class OxMaterial : public OxContractWithOxContext, public OxContractWithOxProgra
 public:
     OxMaterial(OxProgram const& closest_hit_shader, unsigned int ray_type_index = 0U);
     OxMaterial(OxProgram const& closest_hit_shader, OxProgram const& any_hit_shader, unsigned int ray_type_index = 0U);
+    ~OxMaterial() = default;
 
     OxProgram getClosestHitShader() const;
     OxProgram getAnyHitShader() const;

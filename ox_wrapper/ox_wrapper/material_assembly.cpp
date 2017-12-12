@@ -4,6 +4,36 @@
 
 using namespace ox_wrapper;
 
+
+class OxMaterialAssembly::impl
+{
+public:
+    struct material_comparator { bool operator()(OxMaterial const& m1, OxMaterial const& m2) { m1.rayType() < m2.rayType(); } };
+
+public:
+    impl(std::initializer_list<OxMaterial> init_list, OxMaterialAssembly& parent_object)
+    {
+        unsigned int idx{ 0U };
+        for (auto const& e : init_list)
+        {
+            throwOptiXContextError(rtGeometryInstanceSetMaterial(native_geometry_instance_handle, idx, OxMaterialAttorney<OxMaterialAssembly>::getNativeMaterialHandle(e)));
+
+            if (!m_materials.insert(e).second)
+                util::Log::retrieve()->out("Material \"" + e.getStringName() + "\" cannot be added into material assembly (material for ray type \""
+                    + std::to_string(e.rayType()) + "\" already exists in the assembly", util::LogMessageType::exclamation);
+
+            ++idx;
+        }
+    }
+
+    std::set<OxMaterial, material_comparator> const& materials() const { return m_materials; }
+
+private:
+    std::set<OxMaterial, material_comparator> m_materials;
+
+};
+
+
 OxMaterialAssembly::OxMaterialAssembly(std::initializer_list<OxMaterial> init_list):
     OxContractWithOxContext{ init_list.begin()->context() }
 {
@@ -16,15 +46,11 @@ OxMaterialAssembly::OxMaterialAssembly(std::initializer_list<OxMaterial> init_li
     });
 
     throwOptiXContextError(rtGeometryInstanceSetMaterialCount(native_geometry_instance_handle, static_cast<unsigned int>(init_list.size())));
-    m_materials.reserve(init_list.size());
-    unsigned int idx{ 0U };
-    for (auto const& e : init_list)
-    {
-        throwOptiXContextError(rtGeometryInstanceSetMaterial(native_geometry_instance_handle, idx, OxMaterialAttorney<OxMaterialAssembly>::getNativeMaterialHandle(e)));
-        m_materials.push_back(e);
-        ++idx;
-    }
+    
+    
 }
+
+OxMaterialAssembly::~OxMaterialAssembly() = default;
 
 OxMaterial const* OxMaterialAssembly::getMaterialById(OxEntityID const& id) const
 {
@@ -64,4 +90,9 @@ bool OxMaterialAssembly::isValid() const
     }
 
     return res == RT_SUCCESS && materials_valid;
+}
+
+bool OxMaterialAssembly::compare_materials::operator()(OxMaterial const& m1, OxMaterial const& m2)
+{
+    return m1.rayType() < m2.rayType();
 }
