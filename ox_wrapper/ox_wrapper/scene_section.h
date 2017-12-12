@@ -52,10 +52,14 @@ namespace ox_wrapper {
     template<> class OxSceneSectionAttorney<OxScene>
     {
         friend class OxScene;
+
+        static void updateSceneSection(OxSceneSection const& parent_scene_section)
+        {
+            parent_scene_section.update();
+        }
         
         static void runRayTracingForSceneSection(OxSceneSection const& parent_scene_section)
         {
-            parent_scene_section.update();
             parent_scene_section.runRayTracing();
         }
     };

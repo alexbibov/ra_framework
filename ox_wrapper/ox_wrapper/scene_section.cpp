@@ -193,6 +193,8 @@ bool OxSceneSection::update() const
         }
     }
 
+    OxRayGeneratorAttorney<OxSceneSection>::initRayGenerator(m_optix_ray_generator);
+
     return rv;
 }
 

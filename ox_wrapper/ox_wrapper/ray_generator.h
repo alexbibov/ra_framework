@@ -21,7 +21,12 @@ public:
     OxRayGenerator(OxProgram const& optix_ray_generation_shader, uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U,
         uint32_t entry_point_index = 0U);
 
+    OxRayGenerator(OxProgram const& optix_ray_generation_shader, OxProgram const& optix_miss_shader,
+        uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U,
+        uint32_t entry_point_index = 0U);
+
     OxProgram getRayGenerationShader() const;
+    OxProgram getMissShader() const;
 
     // required by OxEntity interface
     bool isValid() const override;
@@ -30,6 +35,7 @@ protected:
     void setGeneratorDimensions(uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z);
 
 private:
+    void update() const;
     void launch() const;
 
 private:
@@ -43,6 +49,11 @@ template<>
 class OxRayGeneratorAttorney<OxSceneSection>
 {
     friend class OxSceneSection;
+
+    static void updateRayGenerator(OxRayGenerator const& parent_ray_generator)
+    {
+        parent_ray_generator.update();
+    }
 
     static void launchRayGenerator(OxRayGenerator const& parent_ray_generator)
     {

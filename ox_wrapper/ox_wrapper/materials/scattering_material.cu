@@ -11,6 +11,7 @@ rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
 
 rtDeclareVariable(float, step_size, , "Ray marching step size");
 rtDeclareVariable(unsigned int, max_recursion_depth, , "Maximal depth of recursion for scattering traverse");
+rtDeclareVariable(unsigned int, max_scattering_depth, , "Maximal number of steps allowed for scattered rays");
 rtDeclareVariable(unsigned int, num_spectra_supported, , "Number of wavelengths in use");
 rtDeclareVariable(unsigned int, num_importance_directions, , );
 
@@ -42,6 +43,7 @@ rtBuffer<optix::float2, 1> importance_directions_buffer;
 rtBuffer<unsigned int, 1> traverse_backup_buffer;
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
 using namespace optix;
 using namespace ox_wrapper;
@@ -93,12 +95,12 @@ __device__ float2 extract_angles_from_direction(float3 direction)
 
 RT_PROGRAM void __ox_intersect__(void)
 {
-    int scattering_state = static_cast<int>(ray_payload.aux);
-    scattering_state += sign(-dot(normal, current_ray.direction));
-    float3 p{ current_ray.origin + intersection_distance*current_ray.direction };
+    int const dS = sign(-dot(normal, current_ray.direction));
+    ray_payload.aux0 = MAX(0, static_cast<int>(ray_payload.aux0) + dS);
+    float3 const p{ current_ray.origin + intersection_distance*current_ray.direction };
     unsigned int const ns{ MIN(OX_MAX_SPECTRA_PAIRS_SUPPORTED, num_spectra_supported) };
 
-    if (scattering_state > 0)
+    if (dS > 0)    // the ray has entered object
     {
         unsigned int tracing_depth = ray_payload.tracing_depth + 1;
 
@@ -136,17 +138,12 @@ RT_PROGRAM void __ox_miss__(void)
         float3 p{ current_ray.origin + intersection_distance*current_ray.direction };
         float3 p_2{ current_ray.origin + intersection_distance / 2.f*current_ray.direction };
        
-        float2 direction_of_interest = extract_angles_from_direction(current_ray.direction);
-
-        for (unsigned int i = 0U; i < ns; ++i)
+        // Compute scattering component when scattering is enabled
+        if (num_importance_directions)
         {
-            float2 sigma_A = absorption_factor(p_2, i);
-            float2 sigma_S = num_importance_directions ? scattering_factor(p_2, i) : make_float2(0.f, 0.f);
-
-            float2 tau = expf(-(sigma_A + sigma_S)*intersection_distance);
-            
+            float2 direction_of_interest = extract_angles_from_direction(current_ray.direction);
             float2 S[OX_MAX_SPECTRA_PAIRS_SUPPORTED] = {};
-            for (unsigned int j = 0U; num_importance_directions > 0 && j < num_importance_directions; ++j)
+            for (unsigned int j = 0U; j < num_importance_directions; ++j)
             {
                 OxRayRadiancePayload scattered_payload{ ray_payload };
                 ++scattered_payload.trace_depth;
@@ -162,6 +159,16 @@ RT_PROGRAM void __ox_miss__(void)
                 for (unsigned int k = 0; k < ns; ++k)
                     S[k] += scattered_payload.spectral_radiand_exitance[k] * phase_function(p, importance_direction, direction_of_interest) * sin(importance_direction.x);
             }
+        }
+
+        for (unsigned int i = 0U; i < ns; ++i)
+        {
+            float2 sigma_A = absorption_factor(p_2, i);
+            float2 sigma_S = num_importance_directions ? scattering_factor(p_2, i) : make_float2(0.f, 0.f);
+
+            float2 tau = expf(-(sigma_A + sigma_S)*intersection_distance);
+            
+            
         }
     }
 }

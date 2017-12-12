@@ -48,7 +48,7 @@ RT_PROGRAM void __ox_generate__(void)
     ox_wrapper::OxRayRadiancePayload payload{};
     memcpy(payload.spectral_radiant_exitance, &ox_init_buffer[ns*index], sizeof(optix::float2)*ns);
     payload.tracing_depth = 0U;
-    payload.aux = 0U;
+    payload.aux0 = payload.aux1 = payload.aux2 = 0U;
 
     rtTrace(ox_entry_node, ray, payload);
 

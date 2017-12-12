@@ -16,6 +16,8 @@ public:
     // required by OxEntity interface
     bool isValid() const override;
 
+    void update() const;
+
     void trace() const;
 
 private:

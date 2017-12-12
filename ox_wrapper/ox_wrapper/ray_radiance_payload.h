@@ -10,7 +10,9 @@ struct OxRayRadiancePayload final
 {
     optix::float2 spectral_radiant_exitance[OX_MAX_SPECTRA_PAIRS_SUPPORTED];
     unsigned int tracing_depth;
-    unsigned int aux;
+    unsigned int aux0;
+    unsigned int aux1;
+    unsigned int aux2;
 };
 
 

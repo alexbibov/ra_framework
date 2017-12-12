@@ -13,7 +13,18 @@ OxRayGenerator::OxRayGenerator(OxProgram const& optix_ray_generation_shader,
     m_num_rays_z{ num_rays_z },
     m_entry_point_index{ entry_point_index }
 {
-    throwOptiXContextError(rtContextSetRayGenerationProgram(nativeOptiXContextHandle(), m_entry_point_index, nativeOptiXProgramHandle()));
+    
+}
+
+OxRayGenerator::OxRayGenerator(OxProgram const& optix_ray_generation_shader, OxProgram const& optix_miss_shader, 
+    uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z, uint32_t entry_point_index):
+    OxContractWithOxContext{ optix_ray_generation_shader.context() },
+    OxContractWithOxPrograms{ optix_ray_generation_shader, optix_miss_shader },
+    m_num_rays_x{ num_rays_x },
+    m_num_rays_y{ num_rays_y },
+    m_num_rays_z{ num_rays_z },
+    m_entry_point_index{ entry_point_index }
+{
 }
 
 void OxRayGenerator::setGeneratorDimensions(uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z)
@@ -25,14 +36,24 @@ void OxRayGenerator::setGeneratorDimensions(uint32_t num_rays_x, uint32_t num_ra
 
 OxProgram OxRayGenerator::getRayGenerationShader() const
 {
-    return getOxProgramFromDeclarationOffset();
+    return getOxProgramFromDeclarationOffset(0U);
+}
+
+OxProgram OxRayGenerator::getMissShader() const
+{
+    return getOxProgramFromDeclarationOffset(1U);
 }
 
 bool OxRayGenerator::isValid() const
 {
-    RTresult res = rtProgramValidate(nativeOptiXProgramHandle());
+    RTresult res = rtProgramValidate(nativeOptiXProgramHandle(0U));
     logOptiXContextError(res);
     return res == RT_SUCCESS;
+}
+
+void OxRayGenerator::update() const
+{
+    throwOptiXContextError(rtContextSetRayGenerationProgram(nativeOptiXContextHandle(), m_entry_point_index, nativeOptiXProgramHandle(0U)));
 }
 
 void OxRayGenerator::launch() const
