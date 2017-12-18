@@ -96,7 +96,9 @@
     <ClCompile Include="ox_wrapper\miss_shader_assembly.cpp">
       <Filter>ox_wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="ox_wrapper\materials\scattering_material.cpp" />
+    <ClCompile Include="ox_wrapper\materials\scattering_material.cpp">
+      <Filter>ox_wrapper\materials</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ox_wrapper\buffer.h">

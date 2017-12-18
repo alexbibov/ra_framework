@@ -29,13 +29,13 @@ public:
     void setRayMarchingStepSize(float step_size);
 
     OxProgram getAbsorptionProbabilityShader() const;
-    void setAbsorptionProbabilityShader(OxProgram const& absorption_probability_shader) const;
+    void setAbsorptionProbabilityShader(OxProgram const& absorption_probability_shader);
 
     OxProgram getScatteringProbabilityShader() const;
-    void setScatteringProbabilityShader(OxProgram const& scattering_probability_shader) const;
+    void setScatteringProbabilityShader(OxProgram const& scattering_probability_shader);
 
     OxProgram getScatteringPhaseFunctionShader() const;
-    void setScatteringPhaseFunctionShader(OxProgram const& scattering_phase_function_shader) const;
+    void setScatteringPhaseFunctionShader(OxProgram const& scattering_phase_function_shader);
 
     OxMissShaderAssembly const& missShaderAssembly() const;
     OxMaterialAssembly const& materialAssembly() const;

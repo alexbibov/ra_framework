@@ -66,3 +66,10 @@ size_t OxContractWithOxPrograms::getAttachedProgramsCount() const
 {
     return m_programs.size();
 }
+
+void OxContractWithOxPrograms::replaceProgramAtOffset(OxProgram const& program, uint32_t declaration_offset)
+{
+    OxProgram& p = m_programs[declaration_offset];
+    if (p.getId() != program.getId())
+        p = program;
+}

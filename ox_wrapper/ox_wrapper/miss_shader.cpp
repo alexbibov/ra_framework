@@ -28,5 +28,5 @@ bool OxMissShader::isValid() const
 
 void OxMissShader::apply() const
 {
-    throwOptiXContextError(rtContextSetMissProgram(nativeOptiXContextHandle(), m_ray_type, nativeOptiXProgramHandle()));
+    throwOptiXContextError(rtContextSetMissProgram(nativeOptiXContextHandle(), static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle()));
 }

@@ -27,6 +27,8 @@ namespace ox_wrapper {
         OxProgram getOxProgramFromDeclarationOffset(uint32_t declaration_offset = 0U) const;
         size_t getAttachedProgramsCount() const;
 
+        void replaceProgramAtOffset(OxProgram const& program, uint32_t declaration_offset = 0U);
+
     private:
         util::StaticVector<OxProgram, constants::max_programs_in_contract> m_programs;
     };

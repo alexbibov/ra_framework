@@ -15,6 +15,15 @@ struct OxRayRadiancePayload final
     unsigned int aux2;
 };
 
+struct OxRayRadiancePayloadSimple final
+{
+    optix::float2 spectral_radiance;
+    unsigned int tracing_depth;
+    unsigned int aux0;
+    unsigned int aux1;
+    unsigned int aux2;
+};
+
 }
 
 #endif

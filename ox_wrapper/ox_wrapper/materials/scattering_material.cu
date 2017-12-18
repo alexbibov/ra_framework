@@ -11,7 +11,7 @@ rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
 
 rtDeclareVariable(float, step_size, , "Ray marching step size");
 rtDeclareVariable(unsigned int, max_recursion_depth, , "Maximal depth of recursion for scattering traverse");
-rtDeclareVariable(unsigned int, num_spectra_supported, , "Number of wavelengths in use");
+rtDeclareVariable(unsigned int, num_spectra_pairs_supported, , "Number of wavelengths in use");
 rtDeclareVariable(unsigned int, num_importance_directions, , );
 
 typedef rtCallableProgramId<optix::float2(optix::float3, unsigned int)> absorption_factor_program_id_type;
@@ -22,6 +22,7 @@ rtDeclareVariable(scattering_factor_program_id_type, scattering_factor, , );
 rtDeclareVariable(phase_function_program_id_type, phase_function, , );
 
 rtDeclareVariable(ox_wrapper::OxRayRadiancePayload, ray_payload, rtPayload, "Current ray payload");
+rtDeclareVariable(ox_wrapper::OxRayRadiancePayloadSimple, ray_payload_scattered, rtPayload, "Payload of the current scattering ray");
 rtDeclareVariable(float, intersection_distance, rtIntersectionDistance, "Parametric distance from ray origin to the intersection");
 rtDeclareVariable(optix::Ray, current_ray, rtCurrentRay, "Currently traversed ray");
 rtDeclareVariable(optix::float3, index, rtLaunchIndex, "Index of the current ray");
@@ -37,7 +38,7 @@ rtDeclareVariable(optix::float3, normal, attribute attrNormal, "Normal of the su
  radiance value in the given importance direction OUTSIDE of medium (therefore, current design only supports
  cases where spectral radiance outside of medium does not depend on spatial location).
  
- *Here N=min(num_spectra_supported, constants::max_spectra_pairs_supported)
+ *Here N=min(num_spectra_pairs_supported, constants::max_spectra_pairs_supported)
 */
 rtBuffer<optix::float2, 1> importance_directions_buffer;
 
@@ -104,7 +105,7 @@ __device__ float2 extract_angles_from_direction(float3 direction)
 
 __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_interest)
 {
-    unsigned int const ns{ MIN(constants::max_spectra_pairs_supported, num_spectra_supported) };
+    unsigned int const ns{ MIN(constants::max_spectra_pairs_supported, num_spectra_pairs_supported) };
     for (unsigned int i = 0U; i < ns; ++i)
     {
         float2 S = make_float2(0.f, 0.f);
@@ -112,8 +113,8 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
         // scattering component is only calculated when scattering is enabled
         for (unsigned int j = 0U; j < num_importance_directions; ++j)
         {
-            OxRayRadiancePayload scattered_payload;
-            //memset(scattered_payload.spectral_radiance, 0, ns*sizeof(float2));
+            OxRayRadiancePayloadSimple scattered_payload;
+            scattered_payload.spectral_radiance = make_float2(0.f, 0.f);
             scattered_payload.tracing_depth = ray_payload.tracing_depth + 1;
             scattered_payload.aux0 = ray_payload.aux0;
             scattered_payload.aux1 = j * (ns + 1) + 1 + i;
@@ -127,7 +128,7 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
 
             rtTrace(ox_entry_node, scattered_ray, scattered_payload);
 
-            S += scattered_payload.spectral_radiance[i]
+            S += scattered_payload.spectral_radiance
                 * phase_function(p, importance_direction, direction_of_interest, i) * sin(importance_direction.x);
         }
 
@@ -211,21 +212,19 @@ RT_PROGRAM void __ox_miss__(void)
 RT_PROGRAM void __ox_intersect_scattered__(void)
 {
     // this shader is only called when scattered ray exits the domain of the medium
-
-    unsigned int spectrum = ray_payload.aux2;
-    unsigned int idb_offset = ray_payload.aux1;
+    unsigned int idb_offset = ray_payload_scattered.aux1;
 
     float2 incoming_spectral_radiance = importance_directions_buffer[idb_offset];
-    ray_payload.spectral_radiance[spectrum] = incoming_spectral_radiance;
+    ray_payload_scattered.spectral_radiance = incoming_spectral_radiance;
 }
 
 RT_PROGRAM void __ox_miss_scattered__(void)
 {
     // this shader is only invoked from within the medium
 
-    ++ray_payload.tracing_depth;
+    ++ray_payload_scattered.tracing_depth;
 
-    if (ray_payload.tracing_depth <= max_recursion_depth)
+    if (ray_payload_scattered.tracing_depth <= max_recursion_depth)
     {
         float3 p{ current_ray.origin + intersection_distance * current_ray.direction };
         float3 p_2{ current_ray.origin + intersection_distance * .5f * current_ray.direction };
@@ -233,26 +232,26 @@ RT_PROGRAM void __ox_miss_scattered__(void)
         Ray next_scattered_ray_iteration = make_Ray(
             p, current_ray.direction,
             static_cast<unsigned int>(OxRayType::scattered), 0.f, 
-            ray_payload.tracing_depth < max_recursion_depth ? step_size : RT_DEFAULT_MAX);
-        rtTrace(ox_entry_node, next_scattered_ray_iteration, ray_payload);
+            ray_payload_scattered.tracing_depth < max_recursion_depth ? step_size : RT_DEFAULT_MAX);
+        rtTrace(ox_entry_node, next_scattered_ray_iteration, ray_payload_scattered);
 
-        unsigned int spectrum = ray_payload.aux2;
+        unsigned int spectrum = ray_payload_scattered.aux2;
         float2 phi = expf(-absorption_factor(p_2, spectrum) * intersection_distance);
-        ray_payload.spectral_radiance[spectrum] *= phi;
+        ray_payload_scattered.spectral_radiance *= phi;
     }
 }
 
-RT_CALLABLE float2 __ox_scattering_material_default_absorption_factor__(float3 pos, unsigned int spectrum)
+RT_CALLABLE_PROGRAM float2 __ox_scattering_material_default_absorption_factor__(float3 pos, unsigned int spectrum)
 {
     return make_float2(1.f, 1.f);
 }
 
-RT_CALLABLE float2 __ox_scatterin_material_default_scattering_factor__(float3 pos, unsigned int spectrum)
+RT_CALLABLE_PROGRAM float2 __ox_scattering_material_default_scattering_factor__(float3 pos, unsigned int spectrum)
 {
     return make_float2(1.f, 1.f);
 }
 
-RT_CALLABLE float3 __ox_scattering_material_default_phase_funciton__(float3 pos,
+RT_CALLABLE_PROGRAM float2 __ox_scattering_material_default_phase_funciton__(float3 pos,
     float2 incident_direction, float3 scattering_direction, unsigned int spectrum)
 {
     return make_float2(1.f, 1.f) / (4.f*M_PIf);
