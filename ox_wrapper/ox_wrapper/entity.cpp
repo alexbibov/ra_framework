@@ -88,7 +88,7 @@ OxEntity::OxEntity() :
 }
 
 OxEntity::OxEntity(OxEntity const& other):
-    m_id{},
+    m_id{ other.m_id },
     m_string_name{ other.m_string_name }
 {
     ++m_alive_entities;

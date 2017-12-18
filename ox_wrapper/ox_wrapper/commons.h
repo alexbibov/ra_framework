@@ -1,6 +1,0 @@
-#ifndef OX_WRAPPER_COMMONS_H
-#define OX_WRAPPER_COMMONS_H
-
-#define OX_MAX_SPECTRA_PAIRS_SUPPORTED 8
-
-#endif

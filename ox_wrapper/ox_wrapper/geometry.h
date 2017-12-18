@@ -5,6 +5,7 @@
 #include "fwd.h"
 #include "entity.h"
 #include "material_assembly.h"
+#include "util/optional.h"
 
 #include <map>
 #include <list>
@@ -18,10 +19,13 @@ class OxGeometry : public OxContractWithOxContext, public OxContractWithOxProgra
     friend class OxGeometryAttorney<OxGeometryGroup>;
 
 public:
+    OxGeometry(OxProgram const& intersection_shader, OxProgram const& aabb_shader);
+
     OxGeometry(OxProgram const& intersection_shader, 
         OxProgram const& aabb_shader, OxMaterialAssembly const& material_assembly);
 
-    OxMaterialAssembly getMaterialAssembly() const;
+    util::Optional<OxMaterialAssembly> getMaterialAssembly() const;
+    void setMaterialAssembly(OxMaterialAssembly const& material_assembly);
 
     OxProgram getAABBShader() const;
     OxProgram getIntersectionShader() const;
@@ -35,8 +39,11 @@ protected:
     void markDirty();
 
 private:
+    void update(OxObjectHandle top_scene_object) const;
+
+private:
     std::shared_ptr<std::pair<RTgeometry, bool>> m_native_geometry;
-    OxMaterialAssembly const m_material_assembly;
+    util::Optional<OxMaterialAssembly> m_material_assembly;
 };
 
 template<> 
@@ -52,6 +59,11 @@ class OxGeometryAttorney<OxGeometryGroup>
     static void markGeometryClean(OxGeometry const& parent_geometry)
     {
         parent_geometry.m_native_geometry->second = false;
+    }
+
+    static void updateGeometry(OxGeometry const& parent_geometry, OxObjectHandle top_scene_object)
+    {
+        parent_geometry.update(top_scene_object);
     }
 };
 

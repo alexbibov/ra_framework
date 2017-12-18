@@ -10,6 +10,8 @@
 #include <string>
 #include <memory>
 
+#include "ray_payloads.h"
+
 namespace ox_wrapper {
 
 template<typename T>
@@ -20,20 +22,23 @@ class OxMaterial : public OxContractWithOxContext, public OxContractWithOxProgra
     friend class OxMaterialAttorney<OxMaterialAssembly>;
 
 public:
-    OxMaterial(OxProgram const& closest_hit_shader, unsigned int ray_type_index = 0U);
-    OxMaterial(OxProgram const& closest_hit_shader, OxProgram const& any_hit_shader, unsigned int ray_type_index = 0U);
-    ~OxMaterial() = default;
+    OxMaterial(OxProgram const& closest_hit_shader, OxRayType ray_type = OxRayType::unknown);
+    OxMaterial(OxProgram const& closest_hit_shader, OxProgram const& any_hit_shader, OxRayType ray_type = OxRayType::unknown);
+    virtual ~OxMaterial() = default;
 
     OxProgram getClosestHitShader() const;
     OxProgram getAnyHitShader() const;
-    unsigned int rayType() const;
+    OxRayType rayType() const;
 
     // required by OxEntity interface
     bool isValid() const override;
 
 private:
+    void update(OxObjectHandle top_scene_object) const;
+
+private:
     std::shared_ptr<RTmaterial_api> m_native_material;
-    unsigned int const m_ray_type_index;
+    OxRayType m_ray_type;
 };
 
 template<>
@@ -44,6 +49,11 @@ class OxMaterialAttorney<OxMaterialAssembly>
     static RTmaterial getNativeMaterialHandle(OxMaterial const& parent_material)
     {
         return parent_material.m_native_material.get();
+    }
+
+    static void updateMaterial(OxMaterial const& parent_material, OxObjectHandle top_scene_object)
+    {
+        parent_material.update(top_scene_object);
     }
 };
 

@@ -3,8 +3,8 @@
 #include <optixu/optixu_vector_functions.h>
 #include <optixu/optixu_math_namespace.h>
 
-#include "ox_wrapper/ray_radiance_payload.h"
-#include "ox_wrapper/commons.h"
+#include "ox_wrapper/ray_payloads.h"
+#include "ox_wrapper/constants.h"
 
 
 rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
@@ -13,14 +13,14 @@ rtDeclareVariable(unsigned int, num_rays, , "Number of casted rays");
 rtDeclareVariable(float, emitter_position, , "Position of the emitter");
 rtDeclareVariable(float, emitter_size, , "Size of the emitter");
 rtDeclareVariable(float, emitter_rotation, , "Rotation of the emitter");
-rtDeclareVariable(unsigned int, num_spectra_supported, , "Number of wavelengths in use");
+rtDeclareVariable(unsigned int, num_spectra_pairs_supported, , "Number of wavelengths in use");
 
 rtDeclareVariable(unsigned int, index, rtLaunchIndex, "Thread index");
 
 rtBuffer<ox_wrapper::OxRayRadiancePayload, 1> ox_output_buffer;
 
 /*! The buffer is organized as follows:
- for each element of the emitter the buffer must contain M = MIN(OX_MAX_SPECTRA_PAIRS_SUPPORTED, num_spectra_supported)
+ for each element of the emitter the buffer must contain M = MIN(constants::max_spectra_pairs_supported, num_spectra_pairs_supported)
  float2-elements, where each component (x and y) of each of these elements 
  defines spectral radiant exitance of the corresponding part of the spectrum. 
  All these values together therefore determine radiant exitance of single emission element of the emitter, 
@@ -43,10 +43,10 @@ RT_PROGRAM void __ox_generate__(void)
 
     optix::Ray ray = optix::make_Ray(origin, direction, static_cast<unsigned int>(ox_wrapper::OxRayType::unknown), 0.f, RT_DEFAULT_MAX);
     
-    unsigned int const ns{ MIN(OX_MAX_SPECTRA_PAIRS_SUPPORTED, num_spectra_supported) };
+    unsigned int const ns{ MIN(ox_wrapper::constants::max_spectra_pairs_supported, num_spectra_pairs_supported) };
 
     ox_wrapper::OxRayRadiancePayload payload{};
-    memcpy(payload.spectral_radiant_exitance, &ox_init_buffer[ns*index], sizeof(optix::float2)*ns);
+    memcpy(payload.spectral_radiance, &ox_init_flux_buffer[ns*index], sizeof(optix::float2)*ns);
     payload.tracing_depth = 0U;
     payload.aux0 = payload.aux1 = payload.aux2 = 0U;
 

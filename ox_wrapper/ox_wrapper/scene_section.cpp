@@ -172,12 +172,12 @@ RTobject OxSceneSection::getEntryNode() const
         static_cast<RTobject>(m_native_group_handle.get());
 }
 
-bool OxSceneSection::update() const
+bool OxSceneSection::update(OxObjectHandle top_scene_object) const
 {
     bool rv{ false };
     for (auto& gg : m_geometry_groups)
     {
-        if (OxGeometryGroupAttorney<OxSceneSection>::updateGeometryGroup(gg) && !rv)
+        if (OxGeometryGroupAttorney<OxSceneSection>::updateGeometryGroup(gg, top_scene_object) && !rv)
         {
             throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
             rv = true;
@@ -186,7 +186,7 @@ bool OxSceneSection::update() const
 
     for (auto& ss : m_attached_scene_sections)
     {
-        if (ss.update() && !rv)
+        if (ss.update(top_scene_object) && !rv)
         {
             throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
             rv = true;
@@ -204,7 +204,7 @@ void OxSceneSection::runRayTracing() const
     OxRayGeneratorAttorney<OxSceneSection>::launchRayGenerator(m_optix_ray_generator);
 }
 
-RTobject OxSceneSection::getTransformedObject() const
+RTobject OxSceneSection::getObjectToBeTransformed() const
 {
     return m_native_group_handle.get();
 }

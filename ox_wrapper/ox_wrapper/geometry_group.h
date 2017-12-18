@@ -38,15 +38,15 @@ public:
 
 private:
     // required by OxTransformable interface
-    RTobject getTransformedObject() const override;
+    RTobject getObjectToBeTransformed() const override;
 
 private:
     /*! marks acceleration structure associated with geometry group as "dirty",
      when this is required by at least one of geometries included into the group
      and returns 'true'. If no geometry in the group requires update the function
-     has no effect and returns 'false'
+     updates information regarding the scene entry node and returns 'false'
     */
-    bool update() const;
+    bool update(OxObjectHandle top_scene_object) const;
 
 private:
     std::shared_ptr<RTgeometrygroup_api> m_native_geometry_group;
@@ -72,9 +72,9 @@ template<> class OxGeometryGroupAttorney<OxSceneSection>
         return std::make_pair(parent_geometry_group.m_construction_begun, parent_geometry_group.m_construction_finished);
     }
 
-    static bool updateGeometryGroup(OxGeometryGroup const& parent_geometry_group)
+    static bool updateGeometryGroup(OxGeometryGroup const& parent_geometry_group, OxObjectHandle top_scene_object)
     {
-        return parent_geometry_group.update();
+        return parent_geometry_group.update(top_scene_object);
     }
 };
 

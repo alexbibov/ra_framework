@@ -6,7 +6,6 @@
 
 namespace ox_wrapper{
 
-
 class OxEntityID
 {
 public:

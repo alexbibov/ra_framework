@@ -18,7 +18,7 @@ protected:
     RTtransform getNativeOptiXTransformHandle() const;
 
 private:
-    virtual RTobject getTransformedObject() const = 0;
+    virtual RTobject getObjectToBeTransformed() const = 0;
 
 private:
     OxTransform m_transform;

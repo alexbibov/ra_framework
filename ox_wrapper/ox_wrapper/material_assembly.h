@@ -7,6 +7,7 @@
 #include <memory>
 #include <set>
 
+#include "util/optional.h"
 
 namespace ox_wrapper {
 
@@ -20,20 +21,39 @@ class OxMaterialAssembly : public OxContractWithOxContext, public OxEntity
 
 public:
     OxMaterialAssembly(std::initializer_list<OxMaterial> init_list);
-    virtual ~OxMaterialAssembly();
+    virtual ~OxMaterialAssembly() = default;
 
-    OxMaterial const* getMaterialById(OxEntityID const& id) const;
-    OxMaterial const* getMaterialByName(std::string const& name) const;
+    util::Optional<OxMaterial> getMaterialById(OxEntityID const& id) const;
+    util::Optional<OxMaterial> getMaterialByName(std::string const& name) const;
+    util::Optional<OxMaterial> getMaterialByRayType(OxRayType ray_type) const;
 
     // required by OxEntity interface
     bool isValid() const override;
 
 private:
-    class impl;
+    struct material_comparator 
+    {
+        bool operator()(OxMaterial const& m1, OxMaterial const& m2) const;
+    };
+
+    using material_collection = std::set<OxMaterial, material_comparator>;
+
+private:
+    void update(OxObjectHandle top_scene_object) const;
     
 private:
-    std::unique_ptr<impl> m_impl;
+    material_collection m_materials;
     std::shared_ptr<RTgeometryinstance_api> m_native_geometry_instance;
+
+public:
+    material_collection::iterator begin();
+    material_collection::iterator end();
+
+    material_collection::const_iterator cbegin();
+    material_collection::const_iterator cend();
+
+    material_collection::const_iterator begin() const;
+    material_collection::const_iterator end() const;
 };
 
 template<>
@@ -46,6 +66,11 @@ class OxMaterialAssemblyAttorney<OxGeometry>
         parent_material_assembly.throwOptiXContextError(
             rtGeometryInstanceSetGeometry(parent_material_assembly.m_native_geometry_instance.get(),
             native_geometry_handle));
+    }
+
+    static void updateMaterialAssembly(OxMaterialAssembly const& parent_material_assembly, OxObjectHandle top_scene_object)
+    {
+        parent_material_assembly.update(top_scene_object);
     }
 };
 

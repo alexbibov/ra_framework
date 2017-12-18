@@ -96,6 +96,7 @@
     <ClCompile Include="ox_wrapper\miss_shader_assembly.cpp">
       <Filter>ox_wrapper</Filter>
     </ClCompile>
+    <ClCompile Include="ox_wrapper\materials\scattering_material.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ox_wrapper\buffer.h">
@@ -182,9 +183,6 @@
     <ClInclude Include="ox_wrapper\shapes\fwd.h">
       <Filter>ox_wrapper\shapes</Filter>
     </ClInclude>
-    <ClInclude Include="ox_wrapper\commons.h">
-      <Filter>ox_wrapper</Filter>
-    </ClInclude>
     <ClInclude Include="ox_wrapper\traverse_backup_buffer.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
@@ -198,6 +196,15 @@
       <Filter>ox_wrapper</Filter>
     </ClInclude>
     <ClInclude Include="ox_wrapper\miss_shader_assembly.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\util\optional.h">
+      <Filter>ox_wrapper\util</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\materials\scattering_material.h">
+      <Filter>ox_wrapper\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\ray_payloads.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
   </ItemGroup>

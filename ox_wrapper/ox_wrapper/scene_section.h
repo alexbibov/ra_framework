@@ -33,11 +33,11 @@ namespace ox_wrapper {
 
     private:
         RTobject getEntryNode() const;
-        bool update() const;
+        bool update(OxObjectHandle top_scene_object) const;
         void runRayTracing() const;
 
         // required by OxTransformable interface
-        RTobject getTransformedObject() const override;
+        RTobject getObjectToBeTransformed() const override;
 
     private:
         OxRayGenerator const& m_optix_ray_generator;
@@ -55,7 +55,7 @@ namespace ox_wrapper {
 
         static void updateSceneSection(OxSceneSection const& parent_scene_section)
         {
-            parent_scene_section.update();
+            parent_scene_section.update(OxObjectHandle{ parent_scene_section.getEntryNode() });
         }
         
         static void runRayTracingForSceneSection(OxSceneSection const& parent_scene_section)

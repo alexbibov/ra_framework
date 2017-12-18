@@ -2,7 +2,7 @@
 
 using namespace ox_wrapper;
 
-OxMissShader::OxMissShader(OxProgram const& miss_shader, unsigned int ray_type):
+OxMissShader::OxMissShader(OxProgram const& miss_shader, OxRayType ray_type):
     OxContractWithOxContext{ miss_shader.context() },
     OxContractWithOxPrograms{ miss_shader },
     m_ray_type{ ray_type }
@@ -14,7 +14,7 @@ OxProgram OxMissShader::getMissShader() const
     return getOxProgramFromDeclarationOffset();
 }
 
-unsigned int OxMissShader::rayType() const
+OxRayType OxMissShader::rayType() const
 {
     return m_ray_type;
 }

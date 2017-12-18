@@ -200,7 +200,7 @@ void OxProgram::declareVariable(std::string const& name, util::mat4x4 const& val
     throwOptiXContextError(rtVariableSetMatrix4x4fv(new_variable_handle, false, matrix_data));
 }
 
-void OxProgram::declareVariable(std::string const & name, OxObjectHandle const & value)
+void OxProgram::declareVariable(std::string const& name, OxObjectHandle const & value)
 {
     RTvariable new_variable_handle = declare_variable_object(name);
     throwOptiXContextError(rtVariableSetObject(new_variable_handle, static_cast<RTobject>(value.p_native)));

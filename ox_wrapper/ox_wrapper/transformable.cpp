@@ -11,7 +11,7 @@ OxTransformable::OxTransformable(OxContext const& optix_context):
 
 void OxTransformable::applyTransform(OxTransform const& transform)
 {
-    OxTransformAttorney<OxTransformable>::setTransformedObject(transform, getTransformedObject());
+    OxTransformAttorney<OxTransformable>::setTransformedObject(transform, getObjectToBeTransformed());
     m_is_transform_applied = true;
 }
 

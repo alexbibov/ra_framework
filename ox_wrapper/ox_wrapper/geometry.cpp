@@ -3,11 +3,9 @@
 
 using namespace ox_wrapper;
 
-OxGeometry::OxGeometry(OxProgram const& intersection_shader, OxProgram const& aabb_shader, OxMaterialAssembly const& material_assembly):
+OxGeometry::OxGeometry(OxProgram const& intersection_shader, OxProgram const& aabb_shader):
     OxContractWithOxContext{ intersection_shader.context() },
-    OxContractWithOxPrograms{ intersection_shader, aabb_shader },
-    m_native_geometry{ nullptr },
-    m_material_assembly{ material_assembly }
+    OxContractWithOxPrograms{ intersection_shader, aabb_shader }
 {
     RTgeometry native_geometry_handle{ nullptr };
     throwOptiXContextError(rtGeometryCreate(nativeOptiXContextHandle(), &native_geometry_handle));
@@ -16,14 +14,26 @@ OxGeometry::OxGeometry(OxProgram const& intersection_shader, OxProgram const& aa
     {
         logOptiXContextError(rtGeometryDestroy(e->first));
     });
+
     throwOptiXContextError(rtGeometrySetBoundingBoxProgram(native_geometry_handle, nativeOptiXProgramHandle(0U)));
     throwOptiXContextError(rtGeometrySetIntersectionProgram(native_geometry_handle, nativeOptiXProgramHandle(1U)));
-    OxMaterialAssemblyAttorney<OxGeometry>::attachMaterialAssemblyToNativeGeometryHandle(material_assembly, m_native_geometry->first);
 }
 
-OxMaterialAssembly OxGeometry::getMaterialAssembly() const
+OxGeometry::OxGeometry(OxProgram const& intersection_shader, OxProgram const& aabb_shader, OxMaterialAssembly const& material_assembly):
+    OxGeometry{ intersection_shader, aabb_shader }
+{
+    setMaterialAssembly(material_assembly);
+}
+
+util::Optional<OxMaterialAssembly> OxGeometry::getMaterialAssembly() const
 {
     return m_material_assembly;
+}
+
+void OxGeometry::setMaterialAssembly(OxMaterialAssembly const& material_assembly)
+{
+    m_material_assembly = material_assembly;
+    OxMaterialAssemblyAttorney<OxGeometry>::attachMaterialAssemblyToNativeGeometryHandle(material_assembly, m_native_geometry->first);
 }
 
 OxProgram OxGeometry::getAABBShader() const
@@ -46,11 +56,17 @@ bool OxGeometry::isValid() const
 void OxGeometry::setPrimitiveCount(unsigned int num_primitives)
 {
     throwOptiXContextError(rtGeometrySetPrimitiveCount(m_native_geometry->first, num_primitives));
+    markDirty();
 }
 
 void OxGeometry::markDirty()
 {
     m_native_geometry->second = true;
+}
+
+void OxGeometry::update(OxObjectHandle top_scene_object) const
+{
+    OxMaterialAssemblyAttorney<OxGeometry>::updateMaterialAssembly(m_material_assembly, top_scene_object);
 }
 
 unsigned int OxGeometry::getPrimitiveCount() const

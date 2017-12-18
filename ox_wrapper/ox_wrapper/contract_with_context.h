@@ -13,6 +13,9 @@ namespace ox_wrapper {
 
     protected:
         OxContractWithOxContext(OxContext const& optix_context_wrapper);
+        virtual ~OxContractWithOxContext() = default;
+
+        OxContractWithOxContext& operator=(OxContractWithOxContext const& other);
 
         RTcontext nativeOptiXContextHandle() const;
         void logOptiXContextError(RTresult error_code) const;

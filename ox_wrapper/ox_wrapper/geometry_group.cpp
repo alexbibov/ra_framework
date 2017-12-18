@@ -99,22 +99,23 @@ bool OxGeometryGroup::isValid() const
         && (m_construction_begun && m_construction_finished);
 }
 
-RTobject OxGeometryGroup::getTransformedObject() const
+RTobject OxGeometryGroup::getObjectToBeTransformed() const
 {
     return m_native_geometry_group.get();
 }
 
-bool OxGeometryGroup::update() const
+bool OxGeometryGroup::update(OxObjectHandle top_scene_object) const
 {
     bool rv{ false };
     for (auto& g : m_list_of_geometries)
     {
-        if (OxGeometryAttorney<OxGeometryGroup>::isGeometryDirty(g))
+        if (!rv && OxGeometryAttorney<OxGeometryGroup>::isGeometryDirty(g))
         {
             throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration.get()));
             rv = true;
-            break;
         }
+
+        OxGeometryAttorney<OxGeometryGroup>::updateGeometry(g, top_scene_object);
     }
 
     if (rv)

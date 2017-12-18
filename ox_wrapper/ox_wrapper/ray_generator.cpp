@@ -4,10 +4,22 @@
 using namespace ox_wrapper;
 
 
-OxRayGenerator::OxRayGenerator(OxProgram const& optix_ray_generation_shader, OxMissShaderAssembly const& miss_shader_assembly, 
+OxRayGenerator::OxRayGenerator(OxProgram const& ray_generation_shader, 
+    uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z, 
+    uint32_t entry_point_index):
+    OxContractWithOxContext{ ray_generation_shader.context() },
+    OxContractWithOxPrograms{ ray_generation_shader },
+    m_num_rays_x{ num_rays_x },
+    m_num_rays_y{ num_rays_y },
+    m_num_rays_z{ num_rays_z },
+    m_entry_point_index{ entry_point_index }
+{
+}
+
+OxRayGenerator::OxRayGenerator(OxProgram const& ray_generation_shader, OxMissShaderAssembly const& miss_shader_assembly,
     uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z, uint32_t entry_point_index):
-    OxContractWithOxContext{ optix_ray_generation_shader.context() },
-    OxContractWithOxPrograms{ optix_ray_generation_shader },
+    OxContractWithOxContext{ ray_generation_shader.context() },
+    OxContractWithOxPrograms{ ray_generation_shader },
     m_miss_shader_assembly{ miss_shader_assembly },
     m_num_rays_x{ num_rays_x },
     m_num_rays_y{ num_rays_y },
@@ -28,9 +40,14 @@ OxProgram OxRayGenerator::getRayGenerationShader() const
     return getOxProgramFromDeclarationOffset();
 }
 
-OxMissShaderAssembly OxRayGenerator::getMissShaderAssembly() const
+util::Optional<OxMissShaderAssembly> OxRayGenerator::getMissShaderAssembly() const
 {
     return m_miss_shader_assembly;
+}
+
+void OxRayGenerator::setMissShaderAssembly(OxMissShaderAssembly const& miss_shader_assembly)
+{
+    m_miss_shader_assembly = miss_shader_assembly;
 }
 
 bool OxRayGenerator::isValid() const

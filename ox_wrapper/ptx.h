@@ -18,7 +18,7 @@
 #define PTX_PARALLEL_RAY_GENERATOR "ox_wrapper/ray_casters/ptx/parallel_ray_generator.ptx"
 
 // Material
-#define PTX_SCATTERING_MATERIAL "ox_wrapper/materials/ptx/material_scattering.ptx"
+#define PTX_SCATTERING_MATERIAL "ox_wrapper/materials/ptx/scattering_material.ptx"
 
 
 // Standartized shader string names

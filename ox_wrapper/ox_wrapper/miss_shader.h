@@ -6,6 +6,8 @@
 #include "contract_with_programs.h"
 #include "entity.h"
 
+#include "ray_payloads.h"
+
 namespace ox_wrapper {
 
 template<typename T>
@@ -16,10 +18,11 @@ class OxMissShader : public OxContractWithOxContext, public OxContractWithOxProg
     friend class OxMissShaderAttorney<OxMissShaderAssembly>;
 
 public:
-    OxMissShader(OxProgram const& miss_shader, unsigned int ray_type);
+    OxMissShader(OxProgram const& miss_shader, OxRayType ray_type = OxRayType::unknown);
+    virtual ~OxMissShader() = default;
 
     OxProgram getMissShader() const;
-    unsigned int rayType() const;
+    OxRayType rayType() const;
 
     // required by OxEntity interface
     bool isValid() const override;
@@ -28,7 +31,7 @@ private:
     void apply() const;
 
 private:
-    unsigned int const m_ray_type;
+    OxRayType m_ray_type;
 };
 
 template<>

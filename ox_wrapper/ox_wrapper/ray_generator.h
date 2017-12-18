@@ -7,6 +7,7 @@
 #include "contract_with_programs.h"
 #include "entity.h"
 #include "miss_shader_assembly.h"
+#include "util/optional.h"
 
 
 namespace ox_wrapper {
@@ -19,12 +20,19 @@ class OxRayGenerator : public OxContractWithOxContext, public OxContractWithOxPr
     friend class OxRayGeneratorAttorney<OxSceneSection>;
 
 public:
-    OxRayGenerator(OxProgram const& optix_ray_generation_shader, OxMissShaderAssembly const& miss_shader_assembly,
+    OxRayGenerator(OxProgram const& ray_generation_shader, 
+        uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U, 
+        uint32_t entry_point_index = 0U);
+
+    OxRayGenerator(OxProgram const& ray_generation_shader, OxMissShaderAssembly const& miss_shader_assembly,
         uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U,
         uint32_t entry_point_index = 0U);
 
+
     OxProgram getRayGenerationShader() const;
-    OxMissShaderAssembly getMissShaderAssembly() const;
+    util::Optional<OxMissShaderAssembly> getMissShaderAssembly() const;
+
+    void setMissShaderAssembly(OxMissShaderAssembly const& miss_shader_assembly);
 
     // required by OxEntity interface
     bool isValid() const override;
@@ -37,7 +45,7 @@ private:
     void launch() const;
 
 private:
-    OxMissShaderAssembly const m_miss_shader_assembly;
+    util::Optional<OxMissShaderAssembly> m_miss_shader_assembly;
 
     uint32_t m_num_rays_x;
     uint32_t m_num_rays_y;

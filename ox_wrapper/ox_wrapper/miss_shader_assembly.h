@@ -3,8 +3,9 @@
 
 #include "fwd.h"
 #include "miss_shader.h"
+#include "util/optional.h"
 
-#include <vector>
+#include <set>
 
 namespace ox_wrapper {
 
@@ -17,18 +18,38 @@ class OxMissShaderAssembly : public OxContractWithOxContext, public OxEntity
 
 public:
     OxMissShaderAssembly(std::initializer_list<OxMissShader> init_list);
+    virtual ~OxMissShaderAssembly() = default;
 
-    OxMissShader const* getMissShaderById(OxEntityID const& id) const;
-    OxMissShader const* getMissShaderByName(std::string const& name) const;
+    util::Optional<OxMissShader> getMissShaderById(OxEntityID const& id) const;
+    util::Optional<OxMissShader> getMissShaderByName(std::string const& name) const;
+    util::Optional<OxMissShader> getMissShaderByRayType(OxRayType ray_type) const;
 
     // required by OxEntity interface
     bool isValid() const override;
 
 private:
+    struct miss_shader_comparator
+    {
+        bool operator()(OxMissShader const& ms1, OxMissShader const& ms2) const;
+    };
+
+    using miss_shader_collection = std::set<OxMissShader, miss_shader_comparator>;
+
+private:
     void apply() const;
 
 private:
-    std::vector<OxMissShader> m_miss_shader_list;
+    miss_shader_collection m_miss_shader_list;
+
+public:
+    miss_shader_collection::iterator begin();
+    miss_shader_collection::iterator end();
+
+    miss_shader_collection::const_iterator cbegin();
+    miss_shader_collection::const_iterator cend();
+
+    miss_shader_collection::const_iterator begin() const;
+    miss_shader_collection::const_iterator end() const;
 };
 
 template<>

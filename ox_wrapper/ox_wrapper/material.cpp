@@ -3,10 +3,10 @@
 
 using namespace ox_wrapper;
 
-OxMaterial::OxMaterial(OxProgram const& closest_hit_shader, unsigned int ray_type_index/* = 0U*/):
+OxMaterial::OxMaterial(OxProgram const& closest_hit_shader, OxRayType ray_type):
     OxContractWithOxContext{ closest_hit_shader.context() },
     OxContractWithOxPrograms{ closest_hit_shader },
-    m_ray_type_index{ ray_type_index }
+    m_ray_type{ ray_type }
 {
     RTmaterial native_material_handle;
     throwOptiXContextError(rtMaterialCreate(nativeOptiXContextHandle(), &native_material_handle));
@@ -17,13 +17,13 @@ OxMaterial::OxMaterial(OxProgram const& closest_hit_shader, unsigned int ray_typ
         logOptiXContextError(rtMaterialDestroy(m));
     });
 
-    throwOptiXContextError(rtMaterialSetClosestHitProgram(native_material_handle, m_ray_type_index, nativeOptiXProgramHandle(0U)));
+    throwOptiXContextError(rtMaterialSetClosestHitProgram(native_material_handle, static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle(0U)));
 }
 
-OxMaterial::OxMaterial(OxProgram const& closest_hit_shader, OxProgram const& any_hit_shader, unsigned int ray_type_index/* = 0U*/):
+OxMaterial::OxMaterial(OxProgram const& closest_hit_shader, OxProgram const& any_hit_shader, OxRayType ray_type):
     OxContractWithOxContext{ closest_hit_shader.context() },
     OxContractWithOxPrograms{ closest_hit_shader, any_hit_shader },
-    m_ray_type_index{ ray_type_index }
+    m_ray_type{ ray_type }
 {
     RTmaterial native_material_handle;
     throwOptiXContextError(rtMaterialCreate(nativeOptiXContextHandle(), &native_material_handle));
@@ -34,8 +34,8 @@ OxMaterial::OxMaterial(OxProgram const& closest_hit_shader, OxProgram const& any
         logOptiXContextError(rtMaterialDestroy(m));
     });
 
-    throwOptiXContextError(rtMaterialSetClosestHitProgram(native_material_handle, m_ray_type_index, nativeOptiXProgramHandle(0U)));
-    throwOptiXContextError(rtMaterialSetAnyHitProgram(native_material_handle, m_ray_type_index, nativeOptiXProgramHandle(1U)));
+    throwOptiXContextError(rtMaterialSetClosestHitProgram(native_material_handle, static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle(0U)));
+    throwOptiXContextError(rtMaterialSetAnyHitProgram(native_material_handle, static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle(1U)));
 }
 
 OxProgram OxMaterial::getClosestHitShader() const
@@ -48,9 +48,9 @@ OxProgram OxMaterial::getAnyHitShader() const
     return getOxProgramFromDeclarationOffset(1U);
 }
 
-unsigned int OxMaterial::rayType() const
+OxRayType OxMaterial::rayType() const
 {
-    return m_ray_type_index;
+    return m_ray_type;
 }
 
 bool OxMaterial::isValid() const
@@ -69,4 +69,9 @@ bool OxMaterial::isValid() const
     }
 
     return res == RT_SUCCESS && programs_valid;
+}
+
+void OxMaterial::update(OxObjectHandle top_scene_object) const
+{
+    getClosestHitShader().declareVariable("ox_entry_node", top_scene_object);
 }
