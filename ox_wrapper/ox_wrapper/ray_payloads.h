@@ -14,5 +14,6 @@ enum class OxRayType : unsigned int
 }
 
 #include "ray_radiance_payload.h"
+#include "ray_occlusion_payload.h"
 
 #endif

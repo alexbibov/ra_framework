@@ -19,8 +19,8 @@
 .global .align 4 .b8 absorption_factor[4];
 .global .align 4 .b8 scattering_factor[4];
 .global .align 4 .b8 phase_function[4];
-.global .align 8 .b8 ray_payload[80];
-.global .align 8 .b8 ray_payload_scattered[24];
+.global .align 16 .b8 ray_payload[80];
+.global .align 16 .b8 ray_payload_scattered[32];
 .global .align 4 .f32 intersection_distance;
 .global .align 4 .b8 current_ray[36];
 .global .align 4 .b8 index[12];
@@ -36,7 +36,7 @@
 .global .align 4 .b8 _ZN21rti_internal_typeinfo17scattering_factorE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo14phase_functionE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo11ray_payloadE[8] = {82, 97, 121, 0, 80, 0, 0, 0};
-.global .align 4 .b8 _ZN21rti_internal_typeinfo21ray_payload_scatteredE[8] = {82, 97, 121, 0, 24, 0, 0, 0};
+.global .align 4 .b8 _ZN21rti_internal_typeinfo21ray_payload_scatteredE[8] = {82, 97, 121, 0, 32, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo21intersection_distanceE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo11current_rayE[8] = {82, 97, 121, 0, 36, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo5indexE[8] = {82, 97, 121, 0, 12, 0, 0, 0};
@@ -126,7 +126,7 @@
 
 )
 {
-	.local .align 8 .b8 	__local_depot0[24];
+	.local .align 16 .b8 	__local_depot0[32];
 	.reg .b64 	%SP;
 	.reg .b64 	%SPL;
 	.reg .pred 	%p<19>;
@@ -400,10 +400,10 @@ BB0_6:
 
 BB0_8:
 	st.local.v2.f32 	[%rd1], {%f93, %f93};
-	st.local.v2.u32 	[%rd1+16], {%r101, %r99};
+	st.local.v2.u32 	[%rd1+24], {%r101, %r99};
 	ld.global.v2.u32 	{%r38, %r39}, [ray_payload+64];
 	add.s32 	%r42, %r38, 1;
-	st.local.v2.u32 	[%rd1+8], {%r42, %r39};
+	st.local.v2.u32 	[%rd1+16], {%r42, %r39};
 	cvt.u64.u32	%rd5, %r100;
 	mov.u64 	%rd11, importance_directions_buffer;
 	cvta.global.u64 	%rd4, %rd11;
@@ -422,7 +422,7 @@ BB0_8:
 	ld.global.f32 	%f101, [step_size];
 	ld.global.u32 	%r34, [ox_entry_node];
 	mov.u32 	%r35, 2;
-	mov.u32 	%r36, 24;
+	mov.u32 	%r36, 32;
 	// inline asm
 	call _rt_trace_64, (%r34, %f9, %f11, %f13, %f97, %f98, %f99, %r35, %f93, %f101, %rd2, %r36);
 	// inline asm
@@ -628,7 +628,7 @@ BB0_18:
 
 )
 {
-	.local .align 8 .b8 	__local_depot1[24];
+	.local .align 16 .b8 	__local_depot1[32];
 	.reg .b64 	%SP;
 	.reg .b64 	%SPL;
 	.reg .pred 	%p<15>;
@@ -746,10 +746,10 @@ BB1_3:
 
 BB1_5:
 	st.local.v2.f32 	[%rd1], {%f87, %f87};
-	st.local.v2.u32 	[%rd1+16], {%r48, %r46};
+	st.local.v2.u32 	[%rd1+24], {%r48, %r46};
 	ld.global.v2.u32 	{%r34, %r35}, [ray_payload+64];
 	add.s32 	%r38, %r34, 1;
-	st.local.v2.u32 	[%rd1+8], {%r38, %r35};
+	st.local.v2.u32 	[%rd1+16], {%r38, %r35};
 	cvt.u64.u32	%rd5, %r47;
 	mov.u64 	%rd11, importance_directions_buffer;
 	cvta.global.u64 	%rd4, %rd11;
@@ -768,7 +768,7 @@ BB1_5:
 	ld.global.f32 	%f95, [step_size];
 	ld.global.u32 	%r30, [ox_entry_node];
 	mov.u32 	%r31, 2;
-	mov.u32 	%r32, 24;
+	mov.u32 	%r32, 32;
 	// inline asm
 	call _rt_trace_64, (%r30, %f1, %f2, %f3, %f91, %f92, %f93, %r31, %f87, %f95, %rd2, %r32);
 	// inline asm
@@ -969,7 +969,7 @@ BB1_11:
 	.reg .b64 	%rd<8>;
 
 
-	ld.global.u32 	%rd3, [ray_payload_scattered+16];
+	ld.global.u32 	%rd3, [ray_payload_scattered+24];
 	mov.u64 	%rd7, importance_directions_buffer;
 	cvta.global.u64 	%rd2, %rd7;
 	mov.u32 	%r1, 1;
@@ -994,9 +994,9 @@ BB1_11:
 	.reg .b64 	%rd<4>;
 
 
-	ld.global.u32 	%r3, [ray_payload_scattered+8];
+	ld.global.u32 	%r3, [ray_payload_scattered+16];
 	add.s32 	%r1, %r3, 1;
-	st.global.u32 	[ray_payload_scattered+8], %r1;
+	st.global.u32 	[ray_payload_scattered+16], %r1;
 	ld.global.u32 	%r2, [max_recursion_depth];
 	setp.gt.u32	%p1, %r1, %r2;
 	@%p1 bra 	BB3_2;
@@ -1023,11 +1023,11 @@ BB1_11:
 	cvta.global.u64 	%rd1, %rd3;
 	mov.u32 	%r5, 2;
 	mov.f32 	%f7, 0f00000000;
-	mov.u32 	%r6, 24;
+	mov.u32 	%r6, 32;
 	// inline asm
 	call _rt_trace_64, (%r4, %f1, %f2, %f3, %f4, %f5, %f6, %r5, %f7, %f8, %rd1, %r6);
 	// inline asm
-	ld.global.u32 	%r8, [ray_payload_scattered+20];
+	ld.global.u32 	%r8, [ray_payload_scattered+28];
 	ld.global.u32 	%r7, [absorption_factor];
 	// inline asm
 	call (%rd2), _rt_callable_program_from_id_64, (%r7);

@@ -154,7 +154,9 @@
     <ClInclude Include="ox_wrapper\program.h" />
     <ClInclude Include="ox_wrapper\ray_casters\fwd.h" />
     <ClInclude Include="ox_wrapper\ray_casters\parallel_ray_generator.h" />
+    <ClInclude Include="ox_wrapper\ray_casters\recaster_generator.h" />
     <ClInclude Include="ox_wrapper\ray_generator.h" />
+    <ClInclude Include="ox_wrapper\ray_occlusion_payload.h" />
     <ClInclude Include="ox_wrapper\ray_payloads.h" />
     <ClInclude Include="ox_wrapper\ray_radiance_payload.h" />
     <ClInclude Include="ox_wrapper\scene.h" />

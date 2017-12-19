@@ -84,18 +84,18 @@
 
 )
 {
-	.local .align 8 .b8 	__local_depot0[80];
+	.local .align 16 .b8 	__local_depot0[80];
 	.reg .b64 	%SP;
 	.reg .b64 	%SPL;
 	.reg .pred 	%p<5>;
 	.reg .b16 	%rs<2>;
 	.reg .f32 	%f<59>;
 	.reg .b32 	%r<23>;
-	.reg .b64 	%rd<43>;
+	.reg .b64 	%rd<46>;
 
 
-	mov.u64 	%rd42, __local_depot0;
-	cvta.local.u64 	%SP, %rd42;
+	mov.u64 	%rd45, __local_depot0;
+	cvta.local.u64 	%SP, %rd45;
 	add.u64 	%rd22, %SP, 0;
 	cvta.to.local.u64 	%rd2, %rd22;
 	ld.global.f32 	%f5, [emitter_size];
@@ -122,95 +122,79 @@
 	mov.u32 	%r2, 8;
 	min.u32 	%r7, %r2, %r6;
 	mov.u32 	%r8, 0;
-	st.local.v2.u32 	[%rd2+72], {%r8, %r8};
-	st.local.v2.u32 	[%rd2+64], {%r8, %r8};
+	st.local.v4.u32 	[%rd2+64], {%r8, %r8, %r8, %r8};
 	mov.f32 	%f18, 0f00000000;
-	st.local.v2.f32 	[%rd2+56], {%f18, %f18};
-	st.local.v2.f32 	[%rd2+48], {%f18, %f18};
-	st.local.v2.f32 	[%rd2+40], {%f18, %f18};
-	st.local.v2.f32 	[%rd2+32], {%f18, %f18};
-	st.local.v2.f32 	[%rd2+24], {%f18, %f18};
-	st.local.v2.f32 	[%rd2+16], {%f18, %f18};
-	st.local.v2.f32 	[%rd2+8], {%f18, %f18};
-	st.local.v2.f32 	[%rd2], {%f18, %f18};
+	st.local.v4.f32 	[%rd2+48], {%f18, %f18, %f18, %f18};
+	st.local.v4.f32 	[%rd2+32], {%f18, %f18, %f18, %f18};
+	st.local.v4.f32 	[%rd2+16], {%f18, %f18, %f18, %f18};
+	st.local.v4.f32 	[%rd2], {%f18, %f18, %f18, %f18};
 	mul.lo.s32 	%r9, %r7, %r5;
 	cvt.u64.u32	%rd17, %r9;
 	mov.u64 	%rd23, ox_init_flux_buffer;
 	cvta.global.u64 	%rd16, %rd23;
 	mov.u32 	%r1, 1;
-	mov.u64 	%rd40, 0;
+	mov.u64 	%rd43, 0;
 	// inline asm
-	call (%rd15), _rt_buffer_get_64, (%rd16, %r1, %r2, %rd17, %rd40, %rd40, %rd40);
+	call (%rd15), _rt_buffer_get_64, (%rd16, %r1, %r2, %rd17, %rd43, %rd43, %rd43);
 	// inline asm
 	mul.wide.u32 	%rd4, %r7, 8;
-	shr.u64 	%rd5, %rd4, 3;
+	shr.u64 	%rd5, %rd4, 4;
 	setp.eq.s64	%p1, %rd5, 0;
 	@%p1 bra 	BB0_2;
 
 BB0_1:
-	shl.b64 	%rd24, %rd40, 3;
+	shl.b64 	%rd24, %rd43, 4;
 	add.s64 	%rd25, %rd15, %rd24;
-	ld.u64 	%rd26, [%rd25];
-	add.s64 	%rd27, %rd2, %rd24;
-	st.local.u64 	[%rd27], %rd26;
-	add.s64 	%rd40, %rd40, 1;
-	setp.lt.u64	%p2, %rd40, %rd5;
+	ld.v2.u64 	{%rd26, %rd27}, [%rd25];
+	add.s64 	%rd30, %rd2, %rd24;
+	st.local.v2.u64 	[%rd30], {%rd26, %rd27};
+	add.s64 	%rd43, %rd43, 1;
+	setp.lt.u64	%p2, %rd43, %rd5;
 	@%p2 bra 	BB0_1;
 
 BB0_2:
-	and.b64  	%rd10, %rd4, 7;
-	shl.b64 	%rd29, %rd5, 3;
-	add.s64 	%rd11, %rd15, %rd29;
-	add.s64 	%rd12, %rd2, %rd29;
-	mov.u64 	%rd41, 0;
+	and.b64  	%rd10, %rd4, 15;
+	shl.b64 	%rd32, %rd5, 4;
+	add.s64 	%rd11, %rd15, %rd32;
+	add.s64 	%rd12, %rd2, %rd32;
+	mov.u64 	%rd44, 0;
 	setp.eq.s64	%p3, %rd10, 0;
 	@%p3 bra 	BB0_4;
 
 BB0_3:
-	add.s64 	%rd30, %rd11, %rd41;
-	ld.u8 	%rs1, [%rd30];
-	add.s64 	%rd31, %rd12, %rd41;
-	st.local.u8 	[%rd31], %rs1;
-	add.s64 	%rd41, %rd41, 1;
-	setp.lt.u64	%p4, %rd41, %rd10;
+	add.s64 	%rd33, %rd11, %rd44;
+	ld.u8 	%rs1, [%rd33];
+	add.s64 	%rd34, %rd12, %rd44;
+	st.local.u8 	[%rd34], %rs1;
+	add.s64 	%rd44, %rd44, 1;
+	setp.lt.u64	%p4, %rd44, %rd10;
 	@%p4 bra 	BB0_3;
 
 BB0_4:
-	st.local.v2.u32 	[%rd2+72], {%r8, %r8};
-	st.local.v2.u32 	[%rd2+64], {%r8, %r8};
+	st.local.v4.u32 	[%rd2+64], {%r8, %r8, %r8, %r8};
 	ld.global.u32 	%r10, [ox_entry_node];
 	mov.f32 	%f26, 0f6C4ECB8F;
 	mov.u32 	%r14, 80;
 	// inline asm
 	call _rt_trace_64, (%r10, %f2, %f3, %f18, %f4, %f1, %f18, %r8, %f18, %f26, %rd22, %r14);
 	// inline asm
-	ld.global.u32 	%rd35, [index];
-	mov.u64 	%rd39, ox_output_buffer;
-	cvta.global.u64 	%rd34, %rd39;
-	mov.u64 	%rd38, 0;
+	ld.global.u32 	%rd38, [index];
+	mov.u64 	%rd42, ox_output_buffer;
+	cvta.global.u64 	%rd37, %rd42;
+	mov.u64 	%rd41, 0;
 	// inline asm
-	call (%rd33), _rt_buffer_get_64, (%rd34, %r1, %r14, %rd35, %rd38, %rd38, %rd38);
+	call (%rd36), _rt_buffer_get_64, (%rd37, %r1, %r14, %rd38, %rd41, %rd41, %rd41);
 	// inline asm
-	ld.local.v2.f32 	{%f27, %f28}, [%rd2];
-	ld.local.v2.f32 	{%f29, %f30}, [%rd2+8];
-	ld.local.v2.f32 	{%f31, %f32}, [%rd2+16];
-	ld.local.v2.f32 	{%f33, %f34}, [%rd2+24];
-	ld.local.v2.f32 	{%f35, %f36}, [%rd2+32];
-	ld.local.v2.f32 	{%f37, %f38}, [%rd2+40];
-	ld.local.v2.f32 	{%f39, %f40}, [%rd2+48];
-	ld.local.v2.f32 	{%f41, %f42}, [%rd2+56];
-	ld.local.v2.u32 	{%r15, %r16}, [%rd2+64];
-	ld.local.v2.u32 	{%r17, %r18}, [%rd2+72];
-	st.v2.u32 	[%rd33+72], {%r17, %r18};
-	st.v2.u32 	[%rd33+64], {%r15, %r16};
-	st.v2.f32 	[%rd33+56], {%f41, %f42};
-	st.v2.f32 	[%rd33+48], {%f39, %f40};
-	st.v2.f32 	[%rd33+40], {%f37, %f38};
-	st.v2.f32 	[%rd33+32], {%f35, %f36};
-	st.v2.f32 	[%rd33+24], {%f33, %f34};
-	st.v2.f32 	[%rd33+16], {%f31, %f32};
-	st.v2.f32 	[%rd33+8], {%f29, %f30};
-	st.v2.f32 	[%rd33], {%f27, %f28};
+	ld.local.v4.f32 	{%f27, %f28, %f29, %f30}, [%rd2];
+	ld.local.v4.f32 	{%f31, %f32, %f33, %f34}, [%rd2+16];
+	ld.local.v4.f32 	{%f35, %f36, %f37, %f38}, [%rd2+32];
+	ld.local.v4.f32 	{%f39, %f40, %f41, %f42}, [%rd2+48];
+	ld.local.v4.u32 	{%r15, %r16, %r17, %r18}, [%rd2+64];
+	st.v4.u32 	[%rd36+64], {%r15, %r16, %r17, %r18};
+	st.v4.f32 	[%rd36+48], {%f39, %f40, %f41, %f42};
+	st.v4.f32 	[%rd36+32], {%f35, %f36, %f37, %f38};
+	st.v4.f32 	[%rd36+16], {%f31, %f32, %f33, %f34};
+	st.v4.f32 	[%rd36], {%f27, %f28, %f29, %f30};
 	ret;
 }
 

@@ -209,6 +209,12 @@
     <ClInclude Include="ox_wrapper\ray_payloads.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
+    <ClInclude Include="ox_wrapper\ray_casters\recaster_generator.h">
+      <Filter>ox_wrapper\ray_casters</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\ray_occlusion_payload.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl">

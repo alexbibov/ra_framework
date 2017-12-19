@@ -9,19 +9,19 @@ namespace ox_wrapper {
 struct OxRayRadiancePayload final
 {
     optix::float2 spectral_radiance[constants::max_spectra_pairs_supported];
-    unsigned int tracing_depth;
-    unsigned int aux0;
-    unsigned int aux1;
-    unsigned int aux2;
+    optix::uint4 tracing_depth_and_aux;    // depth of tracing recursion (x-component) and three auxiliary parameters (y-, z-, and w- components)
 };
 
 struct OxRayRadiancePayloadSimple final
 {
     optix::float2 spectral_radiance;
-    unsigned int tracing_depth;
-    unsigned int aux0;
-    unsigned int aux1;
-    unsigned int aux2;
+    optix::uint4 tracing_depth_and_aux;    // depth of tracing recursion (x-component) and three auxiliary parameters (y-, z-, and w- components)
+};
+
+struct OxRayRadiancePayloadMonochromatic final
+{
+    float spectral_radiance;
+    optix::uint4 tracing_depth_and_aux;    // depth of tracing recursion (x-component) and three auxiliary parameters (y-, z-, and w- components)
 };
 
 }

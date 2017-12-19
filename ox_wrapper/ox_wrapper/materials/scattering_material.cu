@@ -115,10 +115,12 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
         {
             OxRayRadiancePayloadSimple scattered_payload;
             scattered_payload.spectral_radiance = make_float2(0.f, 0.f);
-            scattered_payload.tracing_depth = ray_payload.tracing_depth + 1;
-            scattered_payload.aux0 = ray_payload.aux0;
-            scattered_payload.aux1 = j * (ns + 1) + 1 + i;
-            scattered_payload.aux2 = i;
+            scattered_payload.tracing_depth_and_aux =
+                make_uint4(
+                    ray_payload.tracing_depth_and_aux.x + 1,
+                    ray_payload.tracing_depth_and_aux.y,
+                    j * (ns + 1) + 1 + i,
+                    i);
 
             float2 importance_direction = importance_directions_buffer[j*(ns + 1)];
             Ray scattered_ray = make_Ray(
@@ -144,13 +146,13 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
 RT_PROGRAM void __ox_intersect__(void)
 {
     int dS = static_cast<int>(sign(-dot(normal, current_ray.direction)));
-    ray_payload.aux0 = MAX(0, static_cast<int>(ray_payload.aux0) + dS);
+    ray_payload.tracing_depth_and_aux.y = MAX(0, static_cast<int>(ray_payload.tracing_depth_and_aux.y) + dS);
     float3 p{ current_ray.origin + intersection_distance*current_ray.direction };
     
     if (dS > 0)    // the ray has entered object
     {
-        ++ray_payload.tracing_depth;
-        if (ray_payload.tracing_depth <= max_recursion_depth)
+        ++ray_payload.tracing_depth_and_aux.x;
+        if (ray_payload.tracing_depth_and_aux.x <= max_recursion_depth)
         {
             Ray subsurface_ray = make_Ray(
                 p + __uint_as_float(0x800000)*current_ray.direction,
@@ -160,9 +162,9 @@ RT_PROGRAM void __ox_intersect__(void)
             rtTrace(ox_entry_node, subsurface_ray, ray_payload);
         }
         
-        if(ray_payload.tracing_depth > max_recursion_depth)
+        if(ray_payload.tracing_depth_and_aux.x > max_recursion_depth)
         {
-            ray_payload.tracing_depth = 0U;
+            ray_payload.tracing_depth_and_aux.x = 0U;
             pack_ray_info(current_ray.origin, current_ray.direction);
         }
     }
@@ -174,8 +176,8 @@ RT_PROGRAM void __ox_intersect__(void)
         update_ray_payload(p, p_2, direction_of_interest);
 
         // we still need to try to keep traversing the ray as there might be more media to discover
-        ++ray_payload.tracing_depth;
-        if (ray_payload.tracing_depth <= max_recursion_depth)
+        ++ray_payload.tracing_depth_and_aux.x;
+        if (ray_payload.tracing_depth_and_aux.x <= max_recursion_depth)
         {
             Ray next_iteration_ray = make_Ray(
                 p + __uint_as_float(0x800000)*current_ray.direction, 
@@ -191,7 +193,7 @@ RT_PROGRAM void __ox_intersect__(void)
 
 RT_PROGRAM void __ox_miss__(void)
 {
-    if (ray_payload.aux0 > 0 && ray_payload.tracing_depth <= max_recursion_depth)    // "miss" has happened inside of a medium
+    if (ray_payload.tracing_depth_and_aux.y > 0 && ray_payload.tracing_depth_and_aux.x <= max_recursion_depth)    // "miss" has happened inside of a medium
     {
         float3 p{ current_ray.origin + intersection_distance * current_ray.direction };
         float3 p_2{ current_ray.origin + intersection_distance * .5f * current_ray.direction };
@@ -199,7 +201,7 @@ RT_PROGRAM void __ox_miss__(void)
 
         update_ray_payload(p, p_2, direction_of_interest);
 
-        ++ray_payload.tracing_depth;
+        ++ray_payload.tracing_depth_and_aux.x;
 
         Ray next_iteration_ray = make_Ray(
             p, current_ray.direction,
@@ -212,7 +214,7 @@ RT_PROGRAM void __ox_miss__(void)
 RT_PROGRAM void __ox_intersect_scattered__(void)
 {
     // this shader is only called when scattered ray exits the domain of the medium
-    unsigned int idb_offset = ray_payload_scattered.aux1;
+    unsigned int idb_offset = ray_payload_scattered.tracing_depth_and_aux.z;
 
     float2 incoming_spectral_radiance = importance_directions_buffer[idb_offset];
     ray_payload_scattered.spectral_radiance = incoming_spectral_radiance;
@@ -222,9 +224,9 @@ RT_PROGRAM void __ox_miss_scattered__(void)
 {
     // this shader is only invoked from within the medium
 
-    ++ray_payload_scattered.tracing_depth;
+    ++ray_payload_scattered.tracing_depth_and_aux.x;
 
-    if (ray_payload_scattered.tracing_depth <= max_recursion_depth)
+    if (ray_payload_scattered.tracing_depth_and_aux.x <= max_recursion_depth)
     {
         float3 p{ current_ray.origin + intersection_distance * current_ray.direction };
         float3 p_2{ current_ray.origin + intersection_distance * .5f * current_ray.direction };
@@ -232,10 +234,10 @@ RT_PROGRAM void __ox_miss_scattered__(void)
         Ray next_scattered_ray_iteration = make_Ray(
             p, current_ray.direction,
             static_cast<unsigned int>(OxRayType::scattered), 0.f, 
-            ray_payload_scattered.tracing_depth < max_recursion_depth ? step_size : RT_DEFAULT_MAX);
+            ray_payload_scattered.tracing_depth_and_aux.x < max_recursion_depth ? step_size : RT_DEFAULT_MAX);
         rtTrace(ox_entry_node, next_scattered_ray_iteration, ray_payload_scattered);
 
-        unsigned int spectrum = ray_payload_scattered.aux2;
+        unsigned int spectrum = ray_payload_scattered.tracing_depth_and_aux.w;
         float2 phi = expf(-absorption_factor(p_2, spectrum) * intersection_distance);
         ray_payload_scattered.spectral_radiance *= phi;
     }

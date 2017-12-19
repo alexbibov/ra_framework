@@ -44,6 +44,21 @@ OxScatteringMaterial::OxScatteringMaterial(
     setScatteringPhaseFunctionShader(scattering_phase_function_shader);
 }
 
+OxScatteringMaterial::OxScatteringMaterial(
+    OxContext const& context,
+    uint32_t num_rays, 
+    uint8_t num_spectra_pairs_supported, 
+    uint32_t max_recursion_depth, 
+    float ray_marching_step_size, 
+    uint32_t num_scattering_integral_importance_directions):
+    OxScatteringMaterial{ num_rays, num_spectra_pairs_supported, max_recursion_depth, ray_marching_step_size, num_scattering_integral_importance_directions,
+                          context.createProgram(PTX_SCATTERING_MATERIAL, OxProgram::Source::file, "__ox_scattering_material_default_absorption_factor__"),
+                          context.createProgram(PTX_SCATTERING_MATERIAL, OxProgram::Source::file, "__ox_scattering_material_default_scattering_factor__"),
+                          context.createProgram(PTX_SCATTERING_MATERIAL, OxProgram::Source::file, "__ox_scattering_material_default_phase_funciton__") }
+
+{
+}
+
 float2* OxScatteringMaterial::mapImportanceDirectionsBuffer() const
 {
     return static_cast<float2*>(m_importance_directions_buffer.map(OxBufferMapKind::read_write));
