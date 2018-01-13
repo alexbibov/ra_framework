@@ -5,15 +5,23 @@
 using namespace ox_wrapper::shapes;
 using namespace ox_wrapper;
 
-OxCircle::OxCircle(OxContext const& context, OxMaterialAssembly const& material_assembly,
-    float position_x, float position_y, float radius):
-    OxGeometry{ 
+OxCircle::OxCircle(OxContext const& context, float position_x, float position_y, float radius):
+    OxGeometry{
     context.createProgram(PTX_CIRCLE, OxProgram::Source::file, OX_SHADER_ENTRY_INTERSECTION),
-    context.createProgram(PTX_CIRCLE, OxProgram::Source::file, OX_SHADER_ENTRY_BOUNDING_BOX),
-    material_assembly }
+    context.createProgram(PTX_CIRCLE, OxProgram::Source::file, OX_SHADER_ENTRY_BOUNDING_BOX)
+    }
 {
+    setPrimitiveCount(1U);
     updatePosition(position_x, position_y);
     updateRadius(radius);
+}
+
+OxCircle::OxCircle(OxContext const& context, OxMaterialAssembly const& material_assembly,
+    float position_x, float position_y, float radius):
+    OxCircle{ context, position_x, position_y, radius }
+{
+    setPrimitiveCount(1U);
+    setMaterialAssembly(material_assembly);
 }
 
 void shapes::OxCircle::updatePosition(float2 const& new_position)

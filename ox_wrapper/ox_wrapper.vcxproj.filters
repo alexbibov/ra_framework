@@ -19,8 +19,11 @@
     <Filter Include="ox_wrapper\ray_casters">
       <UniqueIdentifier>{8357eda2-87a5-4f48-8376-eec9dc388f6b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ox_wrapper\rendering_passes">
+      <UniqueIdentifier>{fa2c063d-34c2-4abb-bc63-c72431a7cd7f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="ox_wrapper\materials">
-      <UniqueIdentifier>{1b23faa6-48c1-422f-a145-3eecb37efa75}</UniqueIdentifier>
+      <UniqueIdentifier>{6dbd5259-8cfa-4b63-9a18-5053a38f87cb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -96,9 +99,25 @@
     <ClCompile Include="ox_wrapper\miss_shader_assembly.cpp">
       <Filter>ox_wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="ox_wrapper\materials\scattering_material.cpp">
-      <Filter>ox_wrapper\materials</Filter>
+    <ClCompile Include="ox_wrapper\ray_casters\recaster_generator.cpp">
+      <Filter>ox_wrapper\ray_casters</Filter>
     </ClCompile>
+    <ClCompile Include="ox_wrapper\rendering_passes\scattering_rendering_pass.cpp">
+      <Filter>ox_wrapper\rendering_passes</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\rendering_passes\rendering_pass.cpp">
+      <Filter>ox_wrapper\rendering_passes</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\buffer.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\util\misc.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\init.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\materials\black_body.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ox_wrapper\buffer.h">
@@ -203,9 +222,6 @@
     <ClInclude Include="ox_wrapper\util\optional.h">
       <Filter>ox_wrapper\util</Filter>
     </ClInclude>
-    <ClInclude Include="ox_wrapper\materials\scattering_material.h">
-      <Filter>ox_wrapper\materials</Filter>
-    </ClInclude>
     <ClInclude Include="ox_wrapper\ray_payloads.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
@@ -214,6 +230,27 @@
     </ClInclude>
     <ClInclude Include="ox_wrapper\ray_occlusion_payload.h">
       <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\rendering_passes\scattering_rendering_pass.h">
+      <Filter>ox_wrapper\rendering_passes</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\rendering_passes\rendering_pass.h">
+      <Filter>ox_wrapper\rendering_passes</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\rendering_passes\fwd.h">
+      <Filter>ox_wrapper\rendering_passes</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\util\misc.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\init.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\materials\fwd.h">
+      <Filter>ox_wrapper\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\materials\black_body.h">
+      <Filter>ox_wrapper\materials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -226,7 +263,13 @@
     <None Include="ox_wrapper\ray_casters\parallel_ray_generator.cu">
       <Filter>ox_wrapper\ray_casters</Filter>
     </None>
-    <None Include="ox_wrapper\materials\scattering_material.cu">
+    <None Include="ox_wrapper\ray_casters\recaster_generator.cu">
+      <Filter>ox_wrapper\ray_casters</Filter>
+    </None>
+    <None Include="ox_wrapper\rendering_passes\scattering_rendering_pass.cu">
+      <Filter>ox_wrapper\rendering_passes</Filter>
+    </None>
+    <None Include="ox_wrapper\materials\black_body.cu">
       <Filter>ox_wrapper\materials</Filter>
     </None>
   </ItemGroup>

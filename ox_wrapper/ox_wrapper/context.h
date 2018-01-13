@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "optix.h"
 #include "program.h"
@@ -18,7 +19,7 @@ class OxContext final : public OxEntity
 
 public:
 
-    OxContext(uint32_t num_entry_points = 1U);
+    OxContext(std::vector<std::string> const& asset_directories, uint32_t num_entry_points = 1U);
     OxContext(OxContext const&) = delete;
     OxContext(OxContext&&) = delete;
     OxContext& operator=(OxContext const&) = delete;
@@ -59,13 +60,7 @@ public:
     bool isValid() const override;
 
 private:
-    //! Logs out OptiX error message based on error code. If supplied value is RT_SUCCESS, the function has no effect
-    void logError(RTresult error_code) const;
-
-    //! If error_code is not RT_SUCCESS, throws the corresponding exception and logs the human-readable message into the log file
-    void throwError(RTresult error_code) const;
-
-private:
+    std::vector<std::string> m_asset_directories;
     RTcontext m_optix_context;
     mutable RTresult m_error_state;
 };

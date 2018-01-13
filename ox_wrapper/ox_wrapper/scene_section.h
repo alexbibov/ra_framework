@@ -10,12 +10,8 @@
 
 namespace ox_wrapper {
 
-    template<typename T> class OxSceneSectionAttorney;
-
     class OxSceneSection final : public OxContractWithOxContext, public OxEntity, public OxTransformable
     {
-        friend class OxSceneSectionAttorney<OxScene>;
-
     public:
         OxSceneSection(OxRayGenerator const& optix_ray_generator, OxBVHAlgorithm acceleration_structure_construction_algorithm);
 
@@ -26,15 +22,18 @@ namespace ox_wrapper {
         void addSceneSection(OxSceneSection const& scene_section);
         void endConstruction();
 
-        //! joins this scene section with another scene section
+        std::list<OxSceneSection> const& sceneSections() const;
+        std::list<OxGeometryGroup> const& geometryGroups() const;
 
         // required by OxEntity interface
         bool isValid() const override;
 
+        void update() const;
+        void trace() const;
+
     private:
         RTobject getEntryNode() const;
-        bool update(OxObjectHandle top_scene_object) const;
-        void runRayTracing() const;
+        bool _update(OxObjectHandle top_scene_object) const;
 
         // required by OxTransformable interface
         RTobject getObjectToBeTransformed() const override;
@@ -47,21 +46,6 @@ namespace ox_wrapper {
         std::list<OxSceneSection> m_attached_scene_sections;
         bool m_construction_begun;
         bool m_construction_finished;
-    };
-
-    template<> class OxSceneSectionAttorney<OxScene>
-    {
-        friend class OxScene;
-
-        static void updateSceneSection(OxSceneSection const& parent_scene_section)
-        {
-            parent_scene_section.update(OxObjectHandle{ parent_scene_section.getEntryNode() });
-        }
-        
-        static void runRayTracingForSceneSection(OxSceneSection const& parent_scene_section)
-        {
-            parent_scene_section.runRayTracing();
-        }
     };
 
 };

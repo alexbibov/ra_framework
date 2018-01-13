@@ -6,6 +6,7 @@
 #include "contract_with_context.h"
 #include "contract_with_programs.h"
 #include "entity.h"
+#include "util/optional.h"
 
 #include <string>
 #include <memory>
@@ -22,12 +23,11 @@ class OxMaterial : public OxContractWithOxContext, public OxContractWithOxProgra
     friend class OxMaterialAttorney<OxMaterialAssembly>;
 
 public:
-    OxMaterial(OxProgram const& closest_hit_shader, OxRayType ray_type = OxRayType::unknown);
-    OxMaterial(OxProgram const& closest_hit_shader, OxProgram const& any_hit_shader, OxRayType ray_type = OxRayType::unknown);
+    OxMaterial(util::Optional<OxProgram> const& closest_hit_shader, util::Optional<OxProgram> const& any_hit_shader, OxRayType ray_type = OxRayType::unknown);
     virtual ~OxMaterial() = default;
 
-    OxProgram getClosestHitShader() const;
-    OxProgram getAnyHitShader() const;
+    util::Optional<OxProgram> getClosestHitShader() const;
+    util::Optional<OxProgram> getAnyHitShader() const;
     OxRayType rayType() const;
 
     // required by OxEntity interface
@@ -39,6 +39,9 @@ private:
 private:
     std::shared_ptr<RTmaterial_api> m_native_material;
     OxRayType m_ray_type;
+
+    int8_t m_closest_hit_program_offset;
+    int8_t m_any_hit_program_offset;
 };
 
 template<>

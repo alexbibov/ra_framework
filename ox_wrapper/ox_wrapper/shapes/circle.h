@@ -10,6 +10,12 @@ class OxCircle : public OxGeometry
 public:
     OxCircle(
         OxContext const& context,
+        float position_x = 0.f,
+        float position_y = 0.f,
+        float radius = 1.f);
+
+    OxCircle(
+        OxContext const& context,
         OxMaterialAssembly const& material_assembly,
         float position_x = 0.f,
         float position_y = 0.f,

@@ -76,7 +76,7 @@ uint8_t ray_casters::OxParallelRayGenerator::getNumberOfSpectraPairsSupported() 
 
 float2* ox_wrapper::ray_casters::OxParallelRayGenerator::mapSpectralFluxBuffer() const
 {
-    return static_cast<float2*>(m_spectral_flux_buffer.map(OxBufferMapKind::read_write));
+    return m_spectral_flux_buffer.map(OxBufferMapKind::read_write);
 }
 
 void ray_casters::OxParallelRayGenerator::unmapSpectralFluxBuffer() const
@@ -86,10 +86,15 @@ void ray_casters::OxParallelRayGenerator::unmapSpectralFluxBuffer() const
 
 OxRayRadiancePayload const* ray_casters::OxParallelRayGenerator::mapOutputbuffer() const
 {
-    return static_cast<OxRayRadiancePayload const*>(m_output_buffer.map(OxBufferMapKind::read));
+    return m_output_buffer.map(OxBufferMapKind::read);
 }
 
 void ray_casters::OxParallelRayGenerator::unmapOutputBuffer() const
 {
     m_output_buffer.unmap();
+}
+
+OxAbstractBuffer const& OxParallelRayGenerator::outputBuffer() const
+{
+    return m_output_buffer;
 }

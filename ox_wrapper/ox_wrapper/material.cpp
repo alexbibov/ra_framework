@@ -3,49 +3,71 @@
 
 using namespace ox_wrapper;
 
-OxMaterial::OxMaterial(OxProgram const& closest_hit_shader, OxRayType ray_type):
-    OxContractWithOxContext{ closest_hit_shader.context() },
-    OxContractWithOxPrograms{ closest_hit_shader },
-    m_ray_type{ ray_type }
+OxMaterial::OxMaterial(util::Optional<OxProgram> const& closest_hit_shader, util::Optional<OxProgram> const& any_hit_shader, OxRayType ray_type):
+    OxContractWithOxContext{ closest_hit_shader.isValid() ? static_cast<OxProgram const&>(closest_hit_shader).context() :
+                             static_cast<OxProgram const&>(any_hit_shader).context() },
+    OxContractWithOxPrograms{ closest_hit_shader.isValid() && any_hit_shader.isValid() ?
+    std::initializer_list<OxProgram>{static_cast<OxProgram const&>(closest_hit_shader), static_cast<OxProgram const&>(any_hit_shader)} :
+    closest_hit_shader.isValid() ? std::initializer_list<OxProgram>{static_cast<OxProgram const&>(closest_hit_shader)} :
+    std::initializer_list<OxProgram>{static_cast<OxProgram const&>(any_hit_shader)} },
+    m_ray_type{ ray_type },
+    m_closest_hit_program_offset{ closest_hit_shader.isValid() ? 0 : -1 },
+    m_any_hit_program_offset{ closest_hit_shader.isValid() && any_hit_shader.isValid() ? 1 : any_hit_shader.isValid() ? 0 : -1 }
 {
     RTmaterial native_material_handle;
-    throwOptiXContextError(rtMaterialCreate(nativeOptiXContextHandle(), &native_material_handle));
+    THROW_OPTIX_ERROR(
+        nativeOptiXContextHandle(),
+        rtMaterialCreate(nativeOptiXContextHandle(), &native_material_handle)
+    );
 
     m_native_material.reset(native_material_handle,
         [this](RTmaterial m) -> void
     {
-        logOptiXContextError(rtMaterialDestroy(m));
+        LOG_OPTIX_ERROR(
+            nativeOptiXContextHandle(),
+            rtMaterialDestroy(m)
+        );
     });
 
-    throwOptiXContextError(rtMaterialSetClosestHitProgram(native_material_handle, static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle(0U)));
-}
-
-OxMaterial::OxMaterial(OxProgram const& closest_hit_shader, OxProgram const& any_hit_shader, OxRayType ray_type):
-    OxContractWithOxContext{ closest_hit_shader.context() },
-    OxContractWithOxPrograms{ closest_hit_shader, any_hit_shader },
-    m_ray_type{ ray_type }
-{
-    RTmaterial native_material_handle;
-    throwOptiXContextError(rtMaterialCreate(nativeOptiXContextHandle(), &native_material_handle));
-
-    m_native_material.reset(native_material_handle,
-        [this](RTmaterial m) -> void
+    if(closest_hit_shader.isValid())
     {
-        logOptiXContextError(rtMaterialDestroy(m));
-    });
+        THROW_OPTIX_ERROR(
+            nativeOptiXContextHandle(),
+            rtMaterialSetClosestHitProgram(native_material_handle, static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle(m_closest_hit_program_offset))
+        );
+    }
 
-    throwOptiXContextError(rtMaterialSetClosestHitProgram(native_material_handle, static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle(0U)));
-    throwOptiXContextError(rtMaterialSetAnyHitProgram(native_material_handle, static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle(1U)));
+    if(any_hit_shader.isValid())
+    {
+        THROW_OPTIX_ERROR(
+            nativeOptiXContextHandle(),
+            rtMaterialSetAnyHitProgram(native_material_handle, static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle(m_any_hit_program_offset))
+        );
+    }
 }
 
-OxProgram OxMaterial::getClosestHitShader() const
+util::Optional<OxProgram> OxMaterial::getClosestHitShader() const
 {
-    return getOxProgramFromDeclarationOffset(0U);
+    if (m_closest_hit_program_offset >= 0) 
+    {
+        return getOxProgramFromDeclarationOffset(m_closest_hit_program_offset);
+    }
+    else
+    {
+        return util::Optional<OxProgram>{};
+    }
 }
 
-OxProgram OxMaterial::getAnyHitShader() const
+util::Optional<OxProgram> OxMaterial::getAnyHitShader() const
 {
-    return getOxProgramFromDeclarationOffset(1U);
+    if (m_any_hit_program_offset >= 0)
+    {
+        return util::Optional<OxProgram>{getOxProgramFromDeclarationOffset(m_any_hit_program_offset)};
+    }
+    else
+    {
+        return util::Optional<OxProgram>{};
+    }
 }
 
 OxRayType OxMaterial::rayType() const
@@ -55,8 +77,8 @@ OxRayType OxMaterial::rayType() const
 
 bool OxMaterial::isValid() const
 {
-    RTresult res = rtMaterialValidate(m_native_material.get());
-    logOptiXContextError(res);
+    RTresult res;
+    LOG_OPTIX_ERROR(nativeOptiXContextHandle(), res = rtMaterialValidate(m_native_material.get()));
 
     bool programs_valid{ true };
     for (size_t i = 0U; i < getAttachedProgramsCount(); ++i)
@@ -73,5 +95,9 @@ bool OxMaterial::isValid() const
 
 void OxMaterial::update(OxObjectHandle top_scene_object) const
 {
-    getClosestHitShader().declareVariable("ox_entry_node", top_scene_object);
+    if (m_closest_hit_program_offset >= 0)
+        getOxProgramFromDeclarationOffset(m_closest_hit_program_offset).declareVariable("ox_entry_node", top_scene_object);
+
+    if (m_any_hit_program_offset >= 0)
+        getOxProgramFromDeclarationOffset(m_any_hit_program_offset).declareVariable("ox_entry_node", top_scene_object);
 }

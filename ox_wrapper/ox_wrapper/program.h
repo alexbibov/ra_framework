@@ -130,12 +130,7 @@ public:
     // required by OxEntity interface
     bool isValid() const override;
 
-    template<typename T>
-    void assignBuffer(std::string const& name, OxBuffer<T> const& buffer)
-    {
-        RTvariable native_variable_handle = declare_variable_object(name);
-        rtVariableSetObject(native_variable_handle, OxBufferAttorney<OxProgram>::getNativeOptiXBufferHandle(buffer));
-    }
+    void assignBuffer(std::string const& name, OxAbstractBuffer const& buffer);
 
     bool checkVariableExistance(std::string const& name) const;
 

@@ -26,13 +26,3 @@ RTcontext OxContractWithOxContext::nativeOptiXContextHandle() const
 {
     return m_optix_context_wrapper_ref.m_optix_context;
 }
-
-void OxContractWithOxContext::logOptiXContextError(RTresult error_code) const
-{
-    m_optix_context_wrapper_ref.logError(error_code);
-}
-
-void OxContractWithOxContext::throwOptiXContextError(RTresult error_code) const
-{
-    m_optix_context_wrapper_ref.throwError(error_code);
-}

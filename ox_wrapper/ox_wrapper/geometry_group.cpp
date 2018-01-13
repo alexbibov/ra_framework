@@ -9,7 +9,7 @@ using namespace ox_wrapper;
 uint32_t OxGeometryGroup::getNumberOfGeometries() const
 {
     unsigned int count;
-    throwOptiXContextError(rtGeometryGroupGetChildCount(m_native_geometry_group.get(), &count));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupGetChildCount(m_native_geometry_group.get(), &count));
     return static_cast<uint32_t>(count);
 }
 
@@ -48,7 +48,7 @@ void OxGeometryGroup::addGeometry(OxGeometry const& geometry)
 
     if (!geometry.isValid())
     {
-        throw OxException{ ("Geometry \"" + geometry.getStringName() + "\" attempted to be added into geometry group \""
+        throw OxException{ ("Geometry \"" + geometry.getStringName() + "\" added into geometry group \""
             + getStringName() + "\" is not valid").c_str(), __FILE__, __FUNCTION__, __LINE__ }; 
     }
 
@@ -65,26 +65,35 @@ void OxGeometryGroup::endConstruction()
         return;
     }
 
-    throwOptiXContextError(rtGeometryGroupSetChildCount(m_native_geometry_group.get(), static_cast<unsigned int>(m_list_of_geometries.size())));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(),
+        rtGeometryGroupSetChildCount(m_native_geometry_group.get(), static_cast<unsigned int>(m_list_of_geometries.size())));
     unsigned int idx{ 0U };
     for (auto const& g : m_list_of_geometries)
     {
-        throwOptiXContextError(rtGeometryGroupSetChild(m_native_geometry_group.get(), idx,
-            OxMaterialAssemblyAttorney<OxGeometryGroup>::getNativeGeometryInstanceHandle(g.getMaterialAssembly())));
+        if(!OxMaterialAssemblyAttorney<OxGeometryGroup>::isDummyMaterialAssembly(g.getMaterialAssembly()))
+        {
+            THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupSetChild(m_native_geometry_group.get(), idx,
+                OxMaterialAssemblyAttorney<OxGeometryGroup>::getNativeGeometryInstanceHandle(g.getMaterialAssembly())));
+        }
         ++idx;
     }
-    throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration.get()));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationMarkDirty(m_native_acceleration.get()));
 
     m_construction_finished = true;
 }
 
+std::list<OxGeometry> const& ox_wrapper::OxGeometryGroup::geometries() const
+{
+    return m_list_of_geometries;
+}
+
 bool OxGeometryGroup::isValid() const
 {
-    RTresult geometry_group_validation_result = rtGeometryGroupValidate(m_native_geometry_group.get());
-    RTresult acceleration_structure_validation_result = rtAccelerationValidate(m_native_acceleration.get());
+    RTresult geometry_group_validation_result;
+    RTresult acceleration_structure_validation_result;
 
-    logOptiXContextError(geometry_group_validation_result);
-    logOptiXContextError(acceleration_structure_validation_result);
+    LOG_OPTIX_ERROR(nativeOptiXContextHandle(), geometry_group_validation_result = rtGeometryGroupValidate(m_native_geometry_group.get()));
+    LOG_OPTIX_ERROR(nativeOptiXContextHandle(), acceleration_structure_validation_result = rtAccelerationValidate(m_native_acceleration.get()));
 
 
     if (m_construction_begun && !m_construction_finished)
@@ -107,11 +116,19 @@ RTobject OxGeometryGroup::getObjectToBeTransformed() const
 bool OxGeometryGroup::update(OxObjectHandle top_scene_object) const
 {
     bool rv{ false };
+    unsigned int idx{ 0U };
     for (auto& g : m_list_of_geometries)
     {
+        if (!OxMaterialAssemblyAttorney<OxGeometryGroup>::isDummyMaterialAssembly(g.getMaterialAssembly()))
+        {
+            THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupSetChild(m_native_geometry_group.get(), idx,
+                OxMaterialAssemblyAttorney<OxGeometryGroup>::getNativeGeometryInstanceHandle(g.getMaterialAssembly())));
+        }
+        ++idx;
+
         if (!rv && OxGeometryAttorney<OxGeometryGroup>::isGeometryDirty(g))
         {
-            throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration.get()));
+            THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationMarkDirty(m_native_acceleration.get()));
             rv = true;
         }
 
@@ -134,20 +151,20 @@ OxGeometryGroup::OxGeometryGroup(OxContext const& optix_context, OxBVHAlgorithm 
     m_construction_finished{ false }
 {
     RTgeometrygroup geometry_group_native_handle;
-    throwOptiXContextError(rtGeometryGroupCreate(nativeOptiXContextHandle(), &geometry_group_native_handle));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupCreate(nativeOptiXContextHandle(), &geometry_group_native_handle));
 
     m_native_geometry_group.reset(geometry_group_native_handle, 
         [this](RTgeometrygroup gg) -> void
     {
-        logOptiXContextError(rtGeometryGroupDestroy(gg));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupDestroy(gg));
     });
 
     RTacceleration acceleration_native;
-    throwOptiXContextError(rtAccelerationCreate(nativeOptiXContextHandle(), &acceleration_native));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationCreate(nativeOptiXContextHandle(), &acceleration_native));
     m_native_acceleration.reset(acceleration_native, 
         [this](RTacceleration a) -> void
     {
-        logOptiXContextError(rtAccelerationDestroy(a));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationDestroy(a));
     });
 
     char const* acceleration_structure_construction_algorithm_name{ nullptr };
@@ -166,6 +183,6 @@ OxGeometryGroup::OxGeometryGroup(OxContext const& optix_context, OxBVHAlgorithm 
         acceleration_structure_construction_algorithm_name = "NoAccel";
         break;
     }
-    throwOptiXContextError(rtAccelerationSetBuilder(acceleration_native, acceleration_structure_construction_algorithm_name));
-    throwOptiXContextError(rtGeometryGroupSetAcceleration(m_native_geometry_group.get(), m_native_acceleration.get()));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationSetBuilder(acceleration_native, acceleration_structure_construction_algorithm_name));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupSetAcceleration(m_native_geometry_group.get(), m_native_acceleration.get()));
 }

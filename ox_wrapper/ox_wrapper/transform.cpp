@@ -8,11 +8,11 @@ OxTransform::OxTransform(OxContext const& optix_context):
     OxContractWithOxContext{ optix_context }
 {
     RTtransform native_handle;
-    throwOptiXContextError(rtTransformCreate(nativeOptiXContextHandle(), &native_handle));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformCreate(nativeOptiXContextHandle(), &native_handle));
     m_native_transform.reset(native_handle, 
         [this](RTtransform t)->void
     {
-        logOptiXContextError(rtTransformDestroy(t));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformDestroy(t));
     });
 
     float t[16] = {
@@ -20,19 +20,19 @@ OxTransform::OxTransform(OxContext const& optix_context):
         0., 1., 0., 0.,
         0., 0., 1., 0.,
         0., 0., 0., 1. };
-    throwOptiXContextError(rtTransformSetMatrix(native_handle, 0, t, t));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformSetMatrix(native_handle, 0, t, t));
 }
 
 OxTransform::OxTransform(OxContext const& optix_context, util::mat4x4 const& transform):
     OxContractWithOxContext{ optix_context }
 {
     RTtransform native_handle;
-    throwOptiXContextError(rtTransformCreate(nativeOptiXContextHandle(), &native_handle));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformCreate(nativeOptiXContextHandle(), &native_handle));
 
     m_native_transform.reset(native_handle,
     [this](RTtransform t)->void
     {
-        logOptiXContextError(rtTransformDestroy(t));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformDestroy(t));
     });
 
 
@@ -42,7 +42,7 @@ OxTransform::OxTransform(OxContext const& optix_context, util::mat4x4 const& tra
         transform._31, transform._32, transform._33, transform._34,
         transform._41, transform._42, transform._43, transform._44,
     };
-    throwOptiXContextError(rtTransformSetMatrix(m_native_transform.get(), 0, t, NULL));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformSetMatrix(m_native_transform.get(), 0, t, NULL));
 }
 
 void OxTransform::setMatrix(util::mat4x4 const& transformation_matrix)
@@ -53,13 +53,13 @@ void OxTransform::setMatrix(util::mat4x4 const& transformation_matrix)
         transformation_matrix._31, transformation_matrix._32, transformation_matrix._33, transformation_matrix._34,
         transformation_matrix._41, transformation_matrix._42, transformation_matrix._43, transformation_matrix._44,
     };
-    throwOptiXContextError(rtTransformSetMatrix(m_native_transform.get(), 0, t, NULL));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformSetMatrix(m_native_transform.get(), 0, t, NULL));
 }
 
 util::mat4x4 ox_wrapper::OxTransform::getMatrix() const
 {
     float t[16];
-    throwOptiXContextError(rtTransformGetMatrix(m_native_transform.get(), 0, t, NULL));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformGetMatrix(m_native_transform.get(), 0, t, NULL));
 
     return util::mat4x4{
         t[0], t[1], t[2], t[3],
@@ -142,14 +142,14 @@ OxTransform& OxTransform::operator*(util::mat4x4 const& transformation_matrix)
         dst13_14_31_32_24_23_42_41[7], dst13_14_31_32_24_23_42_41[6], dst11_12_33_34_22_21_44_43[7], dst11_12_33_34_22_21_44_43[6]
     };
 
-    throwOptiXContextError(rtTransformSetMatrix(m_native_transform.get(), 0, res, NULL));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformSetMatrix(m_native_transform.get(), 0, res, NULL));
 
     return *this;
 }
 
 bool OxTransform::isValid() const
 {
-    RTresult res = rtTransformValidate(m_native_transform.get());
-    logOptiXContextError(res);
+    RTresult res;
+    LOG_OPTIX_ERROR(nativeOptiXContextHandle(), res = rtTransformValidate(m_native_transform.get()));
     return res == RT_SUCCESS;
 }

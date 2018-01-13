@@ -27,14 +27,14 @@ RT_PROGRAM void __ox_intersect__(int primitive_id)
     float D{ sqrt(b*b - a*c) };
     float t{ fminf((-b - D) / a, (-b + D) / a) };
 
-    if (rtPotentialIntersection(t))
+    for (unsigned int i = 0; i < num_materials; ++i)
     {
-        float2 p{ aux + t*d };
-        p /= norm3df(p.x, p.y, 0.f);
-        normal.x = p.x; normal.y = p.y; normal.z = 0.f;
-
-        for (unsigned int i = 0; i < num_materials; ++i)
+        if (rtPotentialIntersection(t))
         {
+            float2 p{ aux + t * d };
+            p /= norm3df(p.x, p.y, 0.f);
+            normal.x = p.x; normal.y = p.y; normal.z = 0.f;
+
             rtReportIntersection(i);
         }
     }

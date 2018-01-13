@@ -18,8 +18,6 @@ namespace ox_wrapper {
         OxContractWithOxContext& operator=(OxContractWithOxContext const& other);
 
         RTcontext nativeOptiXContextHandle() const;
-        void logOptiXContextError(RTresult error_code) const;
-        void throwOptiXContextError(RTresult error_code) const;
 
     private:
         OxContext const& m_optix_context_wrapper_ref;

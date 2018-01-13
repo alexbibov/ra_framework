@@ -21,7 +21,7 @@ public:
     OxMissShader(OxProgram const& miss_shader, OxRayType ray_type = OxRayType::unknown);
     virtual ~OxMissShader() = default;
 
-    OxProgram getMissShader() const;
+    OxProgram getProgram() const;
     OxRayType rayType() const;
 
     // required by OxEntity interface

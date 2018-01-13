@@ -32,7 +32,7 @@ rtBuffer<optix::float2, 1> ox_init_flux_buffer;
 
 RT_PROGRAM void __ox_generate__(void)
 {
-    optix::float3 origin{ -emitter_size / 2.f + emitter_size / (num_rays - 1) * index, 0.f, 0.f };
+    optix::float3 origin{ -emitter_size / 2.f + emitter_size / (num_rays - 1) * index + emitter_position, 0.f, 0.f };
     //float3 direction{ 0.f, 1.f, 0.f };
 
     float c{ cosf(emitter_rotation) }, s{ sinf(emitter_rotation) };

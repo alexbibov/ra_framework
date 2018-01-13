@@ -71,6 +71,18 @@
       <Message>
       </Message>
     </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>python $(SolutionDir)ox_wrapper\compile_ptx.py $(SolutionDir)GomosOptiXModel/config.xml</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(SolutionDir)GomosOptiXModel/shaders/ptx/scattering_shaders.ptx</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(SolutionDir)GomosOptiXModel/shaders/ptx/scattering_shaders.cu</Inputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -86,26 +98,14 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>optix.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>optix.1.lib;ox_library.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="atmospheric_layer.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="atmospheric_layer.h" />
-    <ClInclude Include="constants.h" />
-    <ClInclude Include="gomos_ray_generator.h" />
-    <ClInclude Include="ptx_modules.h" />
-    <ClInclude Include="ray_payload.h" />
-    <ClInclude Include="static_vector.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="gomos_gpu_kernel.cu" />
+    <None Include="shaders\scattering_shaders.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

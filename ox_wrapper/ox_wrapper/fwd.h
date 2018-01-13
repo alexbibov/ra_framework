@@ -8,6 +8,7 @@ class OxContext;
 class OxContractWithOxContext;
 class OxProgram;
 class OxContractWithOxPrograms;
+class OxAbstractBuffer;
 template<typename T> class OxBuffer;
 class OxScene;
 class OxSceneSection;

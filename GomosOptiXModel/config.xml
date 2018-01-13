@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<config>
+
+  <environment>
+    <!-- C++ header file to use for extraction of names of the PTX files.
+  This element is optional. If it is not present then the "output" attributes of the "module"
+  elements (see below) should contain string paths to the desired PTX output. Otherwise they
+  contain the corresponding C-style definition from the header file
+  -->
+    <!--<ppheader>ptx.h</ppheader>-->
+
+    <!-- Path to a C++ compiler supported by CUDA toolchain -->
+    <ccbin>C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin/</ccbin>
+
+    <!-- Path to OptiX SDK -->
+    <OptiX_SDK>../_3rd_party/Optix SDK 4.0.1/include/</OptiX_SDK>
+
+    <!-- List of CUDA modules to compile to PTX -->
+    <modules>
+      <!-- each module entry supports the following attributes:
+    source          name of the input source CUDA C code to compile
+    output          name of the output file to store produced PTX code
+    nvcc_options    compilation options forwarded to NVCC compiler. This attribute is optional
+    xcompiler       compilation options forwareded to the underlying C++ compiler. This attribute is optional
+    -->
+
+      <module
+      source="shaders/scattering_shaders.cu"
+      output="shaders/ptx/scattering_shaders.ptx"
+      nvcc_options="-arch=compute_50 -use_fast_math -m64"
+      xcompiler=""/>
+
+    </modules>
+
+  </environment>
+
+</config>

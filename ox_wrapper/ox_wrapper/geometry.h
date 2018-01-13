@@ -25,7 +25,7 @@ public:
         OxProgram const& aabb_shader, OxMaterialAssembly const& material_assembly);
 
     util::Optional<OxMaterialAssembly> getMaterialAssembly() const;
-    void setMaterialAssembly(OxMaterialAssembly const& material_assembly);
+    void setMaterialAssembly(OxMaterialAssembly const& material_assembly) const;
 
     OxProgram getAABBShader() const;
     OxProgram getIntersectionShader() const;
@@ -42,8 +42,15 @@ private:
     void update(OxObjectHandle top_scene_object) const;
 
 private:
-    std::shared_ptr<std::pair<RTgeometry, bool>> m_native_geometry;
-    util::Optional<OxMaterialAssembly> m_material_assembly;
+    struct geometry_blueprint 
+    {
+        RTgeometry native_handle;
+        bool is_dirty;
+        util::Optional<OxMaterialAssembly> material_assembly;
+    };
+
+private:
+    std::shared_ptr<geometry_blueprint> m_geometry_blueprint;
 };
 
 template<> 
@@ -53,12 +60,12 @@ class OxGeometryAttorney<OxGeometryGroup>
 
     static bool isGeometryDirty(OxGeometry const& parent_geometry)
     {
-        return parent_geometry.m_native_geometry->second;
+        return parent_geometry.m_geometry_blueprint->is_dirty;
     }
 
     static void markGeometryClean(OxGeometry const& parent_geometry)
     {
-        parent_geometry.m_native_geometry->second = false;
+        parent_geometry.m_geometry_blueprint->is_dirty = false;
     }
 
     static void updateGeometry(OxGeometry const& parent_geometry, OxObjectHandle top_scene_object)

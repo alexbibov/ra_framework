@@ -33,6 +33,8 @@ public:
     void addGeometry(OxGeometry const& geometry);
     void endConstruction();
 
+    std::list<OxGeometry> const& geometries() const;
+
     // required by OxEntity interface
     bool isValid() const override;
 

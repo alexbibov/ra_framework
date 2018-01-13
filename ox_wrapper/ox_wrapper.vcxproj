@@ -84,6 +84,7 @@
     </CustomBuildStep>
     <CustomBuildStep>
       <Inputs>$(SolutionDir)ox_wrapper\ox_wrapper\shapes\circle.cu;$(SolutionDir)ox_wrapper\ox_wrapper\ray_casters\parallel_ray_generator.cu;$(SolutionDir)ox_wrapper\ox_wrapper\materials\scattering_material.cu;%(Inputs)</Inputs>
+      <TreatOutputAsContent>true</TreatOutputAsContent>
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -109,6 +110,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\_3rd_party\SpookyHash\SpookyV2.cpp" />
+    <ClCompile Include="ox_wrapper\buffer.cpp" />
     <ClCompile Include="ox_wrapper\context.cpp" />
     <ClCompile Include="ox_wrapper\entity.cpp" />
     <ClCompile Include="ox_wrapper\exception.cpp" />
@@ -116,14 +118,18 @@
     <ClCompile Include="ox_wrapper\geometry_group.cpp" />
     <ClCompile Include="ox_wrapper\contract_with_context.cpp" />
     <ClCompile Include="ox_wrapper\contract_with_programs.cpp" />
+    <ClCompile Include="ox_wrapper\init.cpp" />
     <ClCompile Include="ox_wrapper\material.cpp" />
-    <ClCompile Include="ox_wrapper\materials\scattering_material.cpp" />
+    <ClCompile Include="ox_wrapper\materials\black_body.cpp" />
     <ClCompile Include="ox_wrapper\material_assembly.cpp" />
     <ClCompile Include="ox_wrapper\miss_shader.cpp" />
     <ClCompile Include="ox_wrapper\miss_shader_assembly.cpp" />
     <ClCompile Include="ox_wrapper\program.cpp" />
     <ClCompile Include="ox_wrapper\ray_casters\parallel_ray_generator.cpp" />
+    <ClCompile Include="ox_wrapper\ray_casters\recaster_generator.cpp" />
     <ClCompile Include="ox_wrapper\ray_generator.cpp" />
+    <ClCompile Include="ox_wrapper\rendering_passes\rendering_pass.cpp" />
+    <ClCompile Include="ox_wrapper\rendering_passes\scattering_rendering_pass.cpp" />
     <ClCompile Include="ox_wrapper\scene.cpp" />
     <ClCompile Include="ox_wrapper\scene_section.cpp" />
     <ClCompile Include="ox_wrapper\shapes\circle.cpp" />
@@ -133,6 +139,7 @@
     <ClCompile Include="ox_wrapper\util\datetime.cpp" />
     <ClCompile Include="ox_wrapper\util\hashed_string.cpp" />
     <ClCompile Include="ox_wrapper\util\log.cpp" />
+    <ClCompile Include="ox_wrapper\util\misc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\_3rd_party\SpookyHash\SpookyV2.h" />
@@ -146,8 +153,10 @@
     <ClInclude Include="ox_wrapper\geometry_group.h" />
     <ClInclude Include="ox_wrapper\contract_with_context.h" />
     <ClInclude Include="ox_wrapper\contract_with_programs.h" />
+    <ClInclude Include="ox_wrapper\init.h" />
     <ClInclude Include="ox_wrapper\material.h" />
-    <ClInclude Include="ox_wrapper\materials\scattering_material.h" />
+    <ClInclude Include="ox_wrapper\materials\black_body.h" />
+    <ClInclude Include="ox_wrapper\materials\fwd.h" />
     <ClInclude Include="ox_wrapper\material_assembly.h" />
     <ClInclude Include="ox_wrapper\miss_shader.h" />
     <ClInclude Include="ox_wrapper\miss_shader_assembly.h" />
@@ -159,6 +168,9 @@
     <ClInclude Include="ox_wrapper\ray_occlusion_payload.h" />
     <ClInclude Include="ox_wrapper\ray_payloads.h" />
     <ClInclude Include="ox_wrapper\ray_radiance_payload.h" />
+    <ClInclude Include="ox_wrapper\rendering_passes\fwd.h" />
+    <ClInclude Include="ox_wrapper\rendering_passes\rendering_pass.h" />
+    <ClInclude Include="ox_wrapper\rendering_passes\scattering_rendering_pass.h" />
     <ClInclude Include="ox_wrapper\scene.h" />
     <ClInclude Include="ox_wrapper\scene_section.h" />
     <ClInclude Include="ox_wrapper\shapes\circle.h" />
@@ -170,14 +182,17 @@
     <ClInclude Include="ox_wrapper\util\hashed_string.h" />
     <ClInclude Include="ox_wrapper\util\log.h" />
     <ClInclude Include="ox_wrapper\util\matrix_types.h" />
+    <ClInclude Include="ox_wrapper\util\misc.h" />
     <ClInclude Include="ox_wrapper\util\optional.h" />
     <ClInclude Include="ox_wrapper\util\static_vector.h" />
     <ClInclude Include="ptx.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl" />
-    <None Include="ox_wrapper\materials\scattering_material.cu" />
+    <None Include="ox_wrapper\materials\black_body.cu" />
     <None Include="ox_wrapper\ray_casters\parallel_ray_generator.cu" />
+    <None Include="ox_wrapper\ray_casters\recaster_generator.cu" />
+    <None Include="ox_wrapper\rendering_passes\scattering_rendering_pass.cu" />
     <None Include="ox_wrapper\shapes\circle.cu" />
   </ItemGroup>
   <ItemGroup>

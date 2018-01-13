@@ -1,9 +1,35 @@
 #include "context.h"
 #include "exception.h"
+#include "ray_payloads.h"
+
+#include <fstream>
 
 using namespace ox_wrapper;
 
-OxContext::OxContext(uint32_t num_entry_points/* = 1U*/):
+namespace
+{
+
+std::string getPathAnchor(std::string const& path)
+{
+    if (path.length())
+    {
+        char last_symbol = path[path.length() - 1];
+        if (last_symbol == '/' || last_symbol == '\\')
+            return "";
+
+        size_t anchor_pos = path.find_last_of("/\\");
+        if (anchor_pos == std::string::npos) return path;
+        return std::string(path.begin() + anchor_pos + 1, path.end());
+    }
+    else
+        return "";
+}
+
+}
+
+
+OxContext::OxContext(std::vector<std::string> const& asset_directories, uint32_t num_entry_points/* = 1U*/):
+    m_asset_directories{ asset_directories },
     m_error_state{ RT_SUCCESS }
 {
     RTresult optix_rc = rtContextCreate(&m_optix_context);
@@ -18,30 +44,43 @@ OxContext::OxContext(uint32_t num_entry_points/* = 1U*/):
         throw OxException{ "OptiX context cannot be initialized: invalid value" };
     }
 
+    LOG_OPTIX_ERROR(m_optix_context, rtContextSetEntryPointCount(m_optix_context, num_entry_points));
+    LOG_OPTIX_ERROR(m_optix_context, rtContextSetRayTypeCount(m_optix_context, static_cast<unsigned int>(OxRayType::count)));
     isValid();
-    logError(rtContextSetEntryPointCount(m_optix_context, num_entry_points));
 }
 
 OxContext::~OxContext()
 {
-    logError(rtContextDestroy(m_optix_context));
+    LOG_OPTIX_ERROR(m_optix_context, rtContextDestroy(m_optix_context));
 }
 
 OxProgram OxContext::createProgram(std::string const& source, OxProgram::Source source_type, std::string const& program_name) const
 {
+    if (source_type == OxProgram::Source::file)
+    {
+        std::string anchor = '/' + getPathAnchor(source);
+        std::ifstream ifile;
+
+        std::string target_path;
+        bool asset_found{ false };
+        for (auto const& asset_dir : m_asset_directories)
+        {
+            target_path = asset_dir + anchor;
+            ifile.open(target_path, std::ios::in);
+            if (ifile)
+            {
+                ifile.close();
+                asset_found = true;
+                break;
+            }
+        }
+        if (!asset_found)
+            throw OxException{ ("Unable to locate asset \"" + source + "\"").c_str(), __FILE__, __FUNCTION__, __LINE__ };
+
+        return OxProgramAttorney<OxContext>::createOptiXProgram(*this, target_path, OxProgram::Source::file, program_name);
+    }
+
     return OxProgramAttorney<OxContext>::createOptiXProgram(*this, source, source_type, program_name);
-}
-
-void OxContext::logError(RTresult error_code) const
-{
-    if ((m_error_state = error_code) != RT_SUCCESS)
-        LOG_OPTIX_ERROR(m_optix_context, error_code);
-}
-
-void OxContext::throwError(RTresult error_code) const
-{
-    if ((m_error_state = error_code) != RT_SUCCESS)
-        THROW_OPTIX_ERROR(m_optix_context, error_code);
 }
 
 OxContext::operator bool() const
@@ -56,7 +95,7 @@ bool OxContext::hasErrors() const
 
 bool ox_wrapper::OxContext::isValid() const
 {
-    RTresult res = rtContextValidate(m_optix_context);
-    logError(res);
+    RTresult res;
+    LOG_OPTIX_ERROR(m_optix_context, res = rtContextValidate(m_optix_context));
     return res == RT_SUCCESS;
 }

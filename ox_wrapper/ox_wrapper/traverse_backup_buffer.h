@@ -11,8 +11,11 @@ public:
 
     OxBuffer<unsigned int> getRawBuffer() const;
 
+    unsigned int* getBufferPointer() const;
+
 private:
     OxBuffer<unsigned int> m_raw_buffer;
+    unsigned int* m_p_buffer_contents;
 };
 
 }

@@ -13,19 +13,19 @@ OxSceneSection::OxSceneSection(OxRayGenerator const& optix_ray_generator, OxBVHA
     m_construction_finished{ false }
 {
     RTgroup group_native_handle{ nullptr };
-    throwOptiXContextError(rtGroupCreate(nativeOptiXContextHandle(), &group_native_handle));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGroupCreate(nativeOptiXContextHandle(), &group_native_handle));
     m_native_group_handle.reset(group_native_handle,
         [this](RTgroup group)->void
     {
-        logOptiXContextError(rtGroupDestroy(group));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtGroupDestroy(group));
     });
 
     RTacceleration acceleration_native_handle{ nullptr };
-    throwOptiXContextError(rtAccelerationCreate(nativeOptiXContextHandle(), &acceleration_native_handle));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationCreate(nativeOptiXContextHandle(), &acceleration_native_handle));
     m_native_acceleration_handle.reset(acceleration_native_handle,
         [this](RTacceleration a)->void
     {
-        logOptiXContextError(rtAccelerationDestroy(a));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationDestroy(a));
     });
 
     char const* acceleration_structure_construction_algorithm_name{ nullptr };
@@ -45,8 +45,8 @@ OxSceneSection::OxSceneSection(OxRayGenerator const& optix_ray_generator, OxBVHA
         break;
     }
 
-    throwOptiXContextError(rtAccelerationSetBuilder(acceleration_native_handle, acceleration_structure_construction_algorithm_name));
-    throwOptiXContextError(rtGroupSetAcceleration(group_native_handle, acceleration_native_handle));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationSetBuilder(acceleration_native_handle, acceleration_structure_construction_algorithm_name));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGroupSetAcceleration(group_native_handle, acceleration_native_handle));
 }
 
 OxRayGenerator const& OxSceneSection::rayGenerator() const
@@ -130,35 +130,45 @@ void OxSceneSection::endConstruction()
         return;
     }
 
-    throwOptiXContextError(rtGroupSetChildCount(m_native_group_handle.get(), 
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGroupSetChildCount(m_native_group_handle.get(), 
         static_cast<unsigned int>(m_geometry_groups.size() + m_attached_scene_sections.size())));
 
     uint32_t idx{ 0U };
     for (auto const& gg : m_geometry_groups)
     {
-        throwOptiXContextError(rtGroupSetChild(m_native_group_handle.get(), idx,
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGroupSetChild(m_native_group_handle.get(), idx,
             OxGeometryGroupAttorney<OxSceneSection>::getGeometryGroupNativeHandle(gg)));
         ++idx;
     }
 
     for (auto const& ss : m_attached_scene_sections)
     {
-        throwOptiXContextError(rtGroupSetChild(m_native_group_handle.get(), idx,
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGroupSetChild(m_native_group_handle.get(), idx,
             ss.m_native_group_handle.get()));
         ++idx;
     }
 
-    throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
 
     m_construction_finished = true;
 }
 
+std::list<OxSceneSection> const& OxSceneSection::sceneSections() const
+{
+    return m_attached_scene_sections;
+}
+
+std::list<OxGeometryGroup> const& OxSceneSection::geometryGroups() const
+{
+    return m_geometry_groups;
+}
+
 bool OxSceneSection::isValid() const
 {
-    RTresult group_validation_result = rtGroupValidate(m_native_group_handle.get());
-    RTresult acceleration_validation_result = rtAccelerationValidate(m_native_acceleration_handle.get());
-    logOptiXContextError(group_validation_result);
-    logOptiXContextError(acceleration_validation_result);
+    RTresult group_validation_result;
+    RTresult acceleration_validation_result;
+    LOG_OPTIX_ERROR(nativeOptiXContextHandle(), group_validation_result = rtGroupValidate(m_native_group_handle.get()));
+    LOG_OPTIX_ERROR(nativeOptiXContextHandle(), acceleration_validation_result = rtAccelerationValidate(m_native_acceleration_handle.get()));
 
     return group_validation_result == RT_SUCCESS
         && acceleration_validation_result == RT_SUCCESS
@@ -172,23 +182,23 @@ RTobject OxSceneSection::getEntryNode() const
         static_cast<RTobject>(m_native_group_handle.get());
 }
 
-bool OxSceneSection::update(OxObjectHandle top_scene_object) const
+bool OxSceneSection::_update(OxObjectHandle top_scene_object) const
 {
     bool rv{ false };
     for (auto& gg : m_geometry_groups)
     {
         if (OxGeometryGroupAttorney<OxSceneSection>::updateGeometryGroup(gg, top_scene_object) && !rv)
         {
-            throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
+            THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
             rv = true;
         }
     }
 
     for (auto& ss : m_attached_scene_sections)
     {
-        if (ss.update(top_scene_object) && !rv)
+        if (ss._update(top_scene_object) && !rv)
         {
-            throwOptiXContextError(rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
+            THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
             rv = true;
         }
     }
@@ -198,7 +208,12 @@ bool OxSceneSection::update(OxObjectHandle top_scene_object) const
     return rv;
 }
 
-void OxSceneSection::runRayTracing() const
+void ox_wrapper::OxSceneSection::update() const
+{
+    _update(OxObjectHandle{ getEntryNode() });
+}
+
+void OxSceneSection::trace() const
 {
     m_optix_ray_generator.getRayGenerationShader().declareVariable("ox_entry_node", OxObjectHandle{ getEntryNode() });
     OxRayGeneratorAttorney<OxSceneSection>::launchRayGenerator(m_optix_ray_generator);

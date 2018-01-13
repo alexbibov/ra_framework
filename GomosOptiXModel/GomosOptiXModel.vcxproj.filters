@@ -13,41 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="OptiX Programs">
-      <UniqueIdentifier>{e31f8b2e-9748-403d-951b-546dc074044c}</UniqueIdentifier>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{d08af427-d725-4492-a3d7-a9317f44dcb9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="atmospheric_layer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ptx_modules.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="atmospheric_layer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ray_payload.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gomos_ray_generator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="static_vector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="gomos_gpu_kernel.cu">
-      <Filter>OptiX Programs</Filter>
+    <None Include="shaders\scattering_shaders.cu">
+      <Filter>shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

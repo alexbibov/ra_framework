@@ -20,12 +20,14 @@ class OxMaterialAssembly : public OxContractWithOxContext, public OxEntity
     friend class OxMaterialAssemblyAttorney<OxGeometryGroup>;
 
 public:
+    OxMaterialAssembly();
     OxMaterialAssembly(std::initializer_list<OxMaterial> init_list);
     virtual ~OxMaterialAssembly() = default;
 
     util::Optional<OxMaterial> getMaterialById(OxEntityID const& id) const;
     util::Optional<OxMaterial> getMaterialByName(std::string const& name) const;
     util::Optional<OxMaterial> getMaterialByRayType(OxRayType ray_type) const;
+    size_t getMaterialCount() const;
 
     // required by OxEntity interface
     bool isValid() const override;
@@ -42,6 +44,7 @@ private:
     void update(OxObjectHandle top_scene_object) const;
     
 private:
+    bool m_is_dummy;
     material_collection m_materials;
     std::shared_ptr<RTgeometryinstance_api> m_native_geometry_instance;
 
@@ -63,14 +66,18 @@ class OxMaterialAssemblyAttorney<OxGeometry>
 
     static void attachMaterialAssemblyToNativeGeometryHandle(OxMaterialAssembly const& parent_material_assembly, RTgeometry native_geometry_handle)
     {
-        parent_material_assembly.throwOptiXContextError(
-            rtGeometryInstanceSetGeometry(parent_material_assembly.m_native_geometry_instance.get(),
-            native_geometry_handle));
+        if(parent_material_assembly.getMaterialCount())
+        {
+            THROW_OPTIX_ERROR(parent_material_assembly.nativeOptiXContextHandle(),
+                rtGeometryInstanceSetGeometry(parent_material_assembly.m_native_geometry_instance.get(),
+                    native_geometry_handle));
+        }
     }
 
     static void updateMaterialAssembly(OxMaterialAssembly const& parent_material_assembly, OxObjectHandle top_scene_object)
     {
-        parent_material_assembly.update(top_scene_object);
+        if (parent_material_assembly.getMaterialCount())
+            parent_material_assembly.update(top_scene_object);
     }
 };
 
@@ -82,6 +89,11 @@ class OxMaterialAssemblyAttorney<OxGeometryGroup>
     static RTgeometryinstance getNativeGeometryInstanceHandle(OxMaterialAssembly const& parent_material_assembly)
     {
         return parent_material_assembly.m_native_geometry_instance.get();
+    }
+
+    static bool isDummyMaterialAssembly(OxMaterialAssembly const& parent_material_assembly)
+    {
+        return parent_material_assembly.m_is_dummy;
     }
 };
 

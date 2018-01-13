@@ -9,7 +9,7 @@ OxMissShader::OxMissShader(OxProgram const& miss_shader, OxRayType ray_type):
 {
 }
 
-OxProgram OxMissShader::getMissShader() const
+OxProgram OxMissShader::getProgram() const
 {
     return getOxProgramFromDeclarationOffset();
 }
@@ -21,12 +21,15 @@ OxRayType OxMissShader::rayType() const
 
 bool OxMissShader::isValid() const
 {
-    RTresult res = rtProgramValidate(nativeOptiXProgramHandle());
-    logOptiXContextError(res);
+    RTresult res;
+    LOG_OPTIX_ERROR(nativeOptiXContextHandle(), res = rtProgramValidate(nativeOptiXProgramHandle()));
     return res == RT_SUCCESS;
 }
 
 void OxMissShader::apply() const
 {
-    throwOptiXContextError(rtContextSetMissProgram(nativeOptiXContextHandle(), static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle()));
+    THROW_OPTIX_ERROR(
+        nativeOptiXContextHandle(),
+        rtContextSetMissProgram(nativeOptiXContextHandle(), static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle())
+    );
 }

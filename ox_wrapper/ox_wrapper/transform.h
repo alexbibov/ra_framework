@@ -6,6 +6,7 @@
 #include "util/matrix_types.h"
 #include "optix.h"
 #include "entity.h"
+#include "util/log.h"
 
 #include <memory>
 
@@ -49,7 +50,8 @@ class OxTransformAttorney<OxTransformable>
 
     static void setTransformedObject(OxTransform const& parent_transform, RTobject transformed_object)
     {
-        parent_transform.throwOptiXContextError(rtTransformSetChild(parent_transform.m_native_transform.get(), transformed_object));
+        THROW_OPTIX_ERROR(parent_transform.nativeOptiXContextHandle(),
+            rtTransformSetChild(parent_transform.m_native_transform.get(), transformed_object));
     }
 };
 

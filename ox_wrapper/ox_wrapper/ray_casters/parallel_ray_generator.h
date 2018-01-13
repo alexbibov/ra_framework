@@ -30,6 +30,9 @@ public:
     OxRayRadiancePayload const* mapOutputbuffer() const;
     void unmapOutputBuffer() const;
 
+    // required by OxRayGenerator interface
+    OxAbstractBuffer const& outputBuffer() const override;
+
 private:
     OxBuffer<OxRayRadiancePayload> m_output_buffer;
     OxBuffer<float2> m_spectral_flux_buffer;

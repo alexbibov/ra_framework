@@ -22,11 +22,11 @@ bool OxScene::isValid() const
 void OxScene::update() const
 {
     for (auto& ss : m_scene_sections)
-        OxSceneSectionAttorney<OxScene>::updateSceneSection(ss);
+        ss.update();
 }
 
 void OxScene::trace() const
 {
     for (auto& ss : m_scene_sections)
-        OxSceneSectionAttorney<OxScene>::runRayTracingForSceneSection(ss);
+        ss.trace();
 }

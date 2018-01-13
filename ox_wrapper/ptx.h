@@ -16,17 +16,21 @@
 
 // Ray casters
 #define PTX_PARALLEL_RAY_GENERATOR "ox_wrapper/ray_casters/ptx/parallel_ray_generator.ptx"
+#define PTX_RECASTER_GENERATOR "ox_wrapper/ray_casters/ptx/recaster_ray_generator.ptx"
 
-// Material
-#define PTX_SCATTERING_MATERIAL "ox_wrapper/materials/ptx/scattering_material.ptx"
+// Rendering passes
+#define PTX_SCATTERING_RENDERING_PASS "ox_wrapper/rendering_passes/ptx/scattering_rendering_pass.ptx"
+
+// Materials
+#define PTX_BLACK_BODY_MATERIAL "ox_wrapper/materials/ptx/black_body.ptx"
 
 
-// Standartized shader string names
+// Standardized shader string names
 #define OX_SHADER_ENTRY_INTERSECTION   "__ox_intersect__"
 #define OX_SHADER_ENTRY_BOUNDING_BOX   "__ox_aabb__"
 #define OX_SHADER_ENTRY_RAY_GENERATION "__ox_generate__"
 #define OX_SHADER_ENTRY_CLOSEST_HIT    "__ox_closest_hit__"
-#define OX_SHADER_ENTRY_ANY_HIT        "__ox_any_hit"
+#define OX_SHADER_ENTRY_ANY_HIT        "__ox_any_hit__"
 #define OX_SHADER_ENTRY_MISS           "__ox_miss__"
 #define OX_SHADER_ENTRY_SELECTOR       "__ox_selector__"
 #define OX_SHADER_ENTRY_CALLABLE       "__ox_callable__"

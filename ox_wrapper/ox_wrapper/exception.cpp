@@ -34,7 +34,7 @@ OxException::OxException(char const* description, std::string const& file_name, 
     if (p_log = util::Log::retrieve())
     {
         p_log->out("ox_wrapper has thrown exception at line " + std::to_string(line) + " in function \""
-            + function_name + "\" located at source file \"" + file_name + "\"", util::LogMessageType::error);
+            + function_name + "\" located at source file \"" + file_name + "\" (" + what() + ")", util::LogMessageType::error);
     }
 }
 

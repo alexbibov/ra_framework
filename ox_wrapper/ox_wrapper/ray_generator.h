@@ -32,20 +32,24 @@ public:
     OxProgram getRayGenerationShader() const;
     util::Optional<OxMissShaderAssembly> getMissShaderAssembly() const;
 
-    void setMissShaderAssembly(OxMissShaderAssembly const& miss_shader_assembly);
+    void setMissShaderAssembly(OxMissShaderAssembly const& miss_shader_assembly) const;
 
     // required by OxEntity interface
     bool isValid() const override;
 
+    uint3 getGeneratorDimensions() const;
+    unsigned int numberOfRays() const;
+
+    virtual OxAbstractBuffer const& outputBuffer() const = 0;
+
 protected:
     void setGeneratorDimensions(uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z);
 
-private:
     void update() const;
     void launch() const;
 
 private:
-    util::Optional<OxMissShaderAssembly> m_miss_shader_assembly;
+    std::shared_ptr<util::Optional<OxMissShaderAssembly>> m_p_miss_shader_assembly;
 
     uint32_t m_num_rays_x;
     uint32_t m_num_rays_y;

@@ -5,23 +5,32 @@
 using namespace ox_wrapper;
 
 
+OxMaterialAssembly::OxMaterialAssembly():
+    OxContractWithOxContext{*reinterpret_cast<OxContext const*>(0)},
+    m_is_dummy{ true }
+{
+}
+
 OxMaterialAssembly::OxMaterialAssembly(std::initializer_list<OxMaterial> init_list):
-    OxContractWithOxContext{ init_list.begin()->context() }
+    OxContractWithOxContext{ init_list.begin()->context() },
+    m_is_dummy{ false }
 {
     RTgeometryinstance native_geometry_instance_handle;
-    throwOptiXContextError(rtGeometryInstanceCreate(nativeOptiXContextHandle(), &native_geometry_instance_handle));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryInstanceCreate(nativeOptiXContextHandle(), &native_geometry_instance_handle));
     m_native_geometry_instance.reset(native_geometry_instance_handle,
         [this](RTgeometryinstance gi)->void
     {
-        logOptiXContextError(rtGeometryInstanceDestroy(gi));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryInstanceDestroy(gi));
     });
 
-    throwOptiXContextError(rtGeometryInstanceSetMaterialCount(native_geometry_instance_handle, static_cast<unsigned int>(init_list.size())));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), 
+        rtGeometryInstanceSetMaterialCount(native_geometry_instance_handle, static_cast<unsigned int>(init_list.size())));
     
     unsigned int idx{ 0U };
     for (auto const& e : init_list)
     {
-        throwOptiXContextError(rtGeometryInstanceSetMaterial(native_geometry_instance_handle, idx, OxMaterialAttorney<OxMaterialAssembly>::getNativeMaterialHandle(e)));
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), 
+            rtGeometryInstanceSetMaterial(native_geometry_instance_handle, idx, OxMaterialAttorney<OxMaterialAssembly>::getNativeMaterialHandle(e)));
 
         if (!m_materials.insert(e).second)
             util::Log::retrieve()->out("Material \"" + e.getStringName() + "\" cannot be added into material assembly (material for ray type \""
@@ -64,10 +73,23 @@ util::Optional<OxMaterial> OxMaterialAssembly::getMaterialByRayType(OxRayType ra
     return util::Optional<OxMaterial>();
 }
 
+size_t OxMaterialAssembly::getMaterialCount() const
+{
+    if(!m_is_dummy)
+    {
+        unsigned int rv{};
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryInstanceGetMaterialCount(m_native_geometry_instance.get(), &rv));
+        return rv;
+    }
+    return 0U;
+}
+
 bool OxMaterialAssembly::isValid() const
 {
-    RTresult res = rtGeometryInstanceValidate(m_native_geometry_instance.get());
-    logOptiXContextError(res);
+    if (m_is_dummy) return true;
+
+    RTresult res;
+    LOG_OPTIX_ERROR(nativeOptiXContextHandle(), res = rtGeometryInstanceValidate(m_native_geometry_instance.get()));
     
     bool materials_valid{ true };
     for (auto const& e : m_materials)
