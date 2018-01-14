@@ -35,7 +35,7 @@ private:
 class OxEntity
 {
 public:
-    OxEntityID getId() const;    //! returns unique identifier of the entity
+    OxEntityID getUniqueIdentifier() const;    //! returns unique identifier of the entity
 
     std::string getStringName() const;	//! returns user-friendly string name of the entity
     void setStringName(std::string const& entity_string_name);	//! sets new user-friendly string name for the entity

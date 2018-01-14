@@ -25,7 +25,7 @@ rtDeclareVariable(ox_wrapper::OxRayRadiancePayload, ray_payload, rtPayload, "Cur
 rtDeclareVariable(ox_wrapper::OxRayRadiancePayloadSimple, ray_payload_scattered, rtPayload, "Payload of the current scattering ray");
 rtDeclareVariable(float, intersection_distance, rtIntersectionDistance, "Parametric distance from ray origin to the intersection");
 rtDeclareVariable(optix::Ray, current_ray, rtCurrentRay, "Currently traversed ray");
-rtDeclareVariable(optix::float3, index, rtLaunchIndex, "Index of the current ray");
+rtDeclareVariable(optix::uint3, index, rtLaunchIndex, "Index of the current ray");
 
 rtDeclareVariable(optix::float3, normal, attribute attrNormal, "Normal of the surface being hit");
 
@@ -143,7 +143,7 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
     }
 }
 
-RT_PROGRAM void __ox_intersect__(void)
+RT_PROGRAM void __ox_closest_hit__(void)
 {
     int dS = static_cast<int>(sign(-dot(normal, current_ray.direction)));
     ray_payload.tracing_depth_and_aux.y = MAX(0, static_cast<int>(ray_payload.tracing_depth_and_aux.y) + dS);
@@ -215,7 +215,7 @@ RT_PROGRAM void __ox_miss__(void)
     }
 }
 
-RT_PROGRAM void __ox_intersect_scattered__(void)
+RT_PROGRAM void __ox_closest_hit_scattered__(void)
 {
     // this shader is only called when scattered ray exits the domain of the medium
     unsigned int idb_offset = ray_payload_scattered.tracing_depth_and_aux.z;
@@ -245,20 +245,4 @@ RT_PROGRAM void __ox_miss_scattered__(void)
         float2 phi = expf(-absorption_factor(p_2, spectrum) * intersection_distance);
         ray_payload_scattered.spectral_radiance *= phi;
     }
-}
-
-RT_CALLABLE_PROGRAM float2 __ox_scattering_material_default_absorption_factor__(float3 pos, unsigned int spectrum)
-{
-    return make_float2(1.f, 1.f);
-}
-
-RT_CALLABLE_PROGRAM float2 __ox_scattering_material_default_scattering_factor__(float3 pos, unsigned int spectrum)
-{
-    return make_float2(1.f, 1.f);
-}
-
-RT_CALLABLE_PROGRAM float2 __ox_scattering_material_default_phase_funciton__(float3 pos,
-    float2 incident_direction, float3 scattering_direction, unsigned int spectrum)
-{
-    return make_float2(1.f, 1.f) / (4.f*M_PIf);
 }

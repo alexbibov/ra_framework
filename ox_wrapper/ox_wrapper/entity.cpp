@@ -61,7 +61,7 @@ std::string OxEntityID::toString() const
 
 thread_local uint64_t OxEntity::m_alive_entities = 0;
 
-OxEntityID OxEntity::getId() const
+OxEntityID OxEntity::getUniqueIdentifier() const
 {
     return m_id;
 }

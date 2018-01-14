@@ -9,7 +9,7 @@ using namespace ox_wrapper;
 OxRecasterGenerator::OxRecasterGenerator(
     OxTraverseBackupBuffer const& traverse_backup_buffer, OxBuffer<OxRayRadiancePayload> const& output_buffer, OxRayType recasted_ray_type):
     OxRayGenerator{ output_buffer.context().createProgram(PTX_RECASTER_GENERATOR, OxProgram::Source::file, OX_SHADER_ENTRY_RAY_GENERATION),
-                    static_cast<uint32_t>(traverse_backup_buffer.getRawBuffer().map(OxBufferMapKind::read)[0]) },
+                    static_cast<uint32_t>(traverse_backup_buffer.getBufferPointer()[0]) },
     m_output_buffer{ output_buffer }
 {
     getRayGenerationShader().declareVariable("dimension", static_cast<unsigned int>(output_buffer.getDimension()));

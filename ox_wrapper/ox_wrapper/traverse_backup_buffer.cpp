@@ -11,6 +11,11 @@ OxTraverseBackupBuffer::OxTraverseBackupBuffer(OxContext const& context, size_t 
     // m_raw_buffer.unmap();
 }
 
+OxTraverseBackupBuffer::~OxTraverseBackupBuffer()
+{
+    m_raw_buffer.unmap();
+}
+
 OxBuffer<unsigned int> OxTraverseBackupBuffer::getRawBuffer() const
 {
     return m_raw_buffer;
@@ -19,4 +24,9 @@ OxBuffer<unsigned int> OxTraverseBackupBuffer::getRawBuffer() const
 unsigned int* OxTraverseBackupBuffer::getBufferPointer() const
 {
     return m_p_buffer_contents;
+}
+
+bool OxTraverseBackupBuffer::isValid() const
+{
+    return m_raw_buffer.isValid();
 }

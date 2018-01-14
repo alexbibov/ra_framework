@@ -41,7 +41,7 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
     m_num_scattering_integral_importance_directions{ num_scattering_integral_importance_directions },
     m_surface_material_assembly{
     OxMaterial{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, OX_SHADER_ENTRY_CLOSEST_HIT), util::Optional<OxProgram>{}, OxRayType::unknown },
-    OxMaterial{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_intersect_scattered__"), util::Optional<OxProgram>{}, OxRayType::scattered} },
+    OxMaterial{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_closest_hit_scattered__"), util::Optional<OxProgram>{}, OxRayType::scattered} },
     m_miss_shader_assembly{
     OxMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, OX_SHADER_ENTRY_MISS), OxRayType::unknown},
     OxMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_miss_scattered__"), OxRayType::scattered} },
@@ -81,9 +81,9 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
     float ray_marching_step_size, 
     uint32_t num_scattering_integral_importance_directions):
     OxScatteringRenderingPass{ scene_section, num_spectra_pairs_supported, max_recursion_depth, ray_marching_step_size, num_scattering_integral_importance_directions,
-                               scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_scattering_material_default_absorption_factor__"),
-                               scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_scattering_material_default_scattering_factor__"),
-                               scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_scattering_material_default_phase_funciton__") }
+                               scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG, OxProgram::Source::file, "__ox_scattering_default_absorption_factor__"),
+                               scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG, OxProgram::Source::file, "__ox_scattering_default_scattering_factor__"),
+                               scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG, OxProgram::Source::file, "__ox_scattering_default_phase_function__") }
 {
 }
 
@@ -157,13 +157,13 @@ void OxScatteringRenderingPass::setAbsorptionProbabilityShader(OxProgram const& 
 
     for (auto& ms : m_miss_shader_assembly)
     {
-        ms.getProgram().declareVariable("absorption_factor", OxObjectHandle{ nativeOptiXProgramHandle(0U) });
+        ms.getProgram().setVariableValue("absorption_factor", getOxProgramFromDeclarationOffset(0U).getId());
     }
 
     static_cast<OxProgram&>(
         static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown))
         .getClosestHitShader())
-        .declareVariable("absorption_factor", OxObjectHandle{ nativeOptiXProgramHandle(0U) });
+        .setVariableValue("absorption_factor", getOxProgramFromDeclarationOffset(0U).getId());
 }
 
 OxProgram OxScatteringRenderingPass::getScatteringProbabilityShader() const
@@ -178,9 +178,10 @@ void OxScatteringRenderingPass::setScatteringProbabilityShader(OxProgram const& 
     static_cast<OxProgram&>(
         static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown))
         .getClosestHitShader())
-        .declareVariable("scattering_factor", OxObjectHandle{ nativeOptiXProgramHandle(1U) });
+        .setVariableValue("scattering_factor", getOxProgramFromDeclarationOffset(1U).getId());
+
     static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).
-        getProgram().declareVariable("scattering_factor", OxObjectHandle{ nativeOptiXProgramHandle(1U) });
+        getProgram().setVariableValue("scattering_factor", getOxProgramFromDeclarationOffset(1U).getId());
 }
 
 OxProgram OxScatteringRenderingPass::getScatteringPhaseFunctionShader() const
@@ -194,9 +195,10 @@ void OxScatteringRenderingPass::setScatteringPhaseFunctionShader(OxProgram const
 
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown))
         .getClosestHitShader())
-        .declareVariable("phase_function", OxObjectHandle{ nativeOptiXProgramHandle(2U) });
+        .setVariableValue("phase_function", getOxProgramFromDeclarationOffset(2U).getId());
+
     static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).
-        getProgram().declareVariable("phase_function", OxObjectHandle{ nativeOptiXProgramHandle(2U) });
+        getProgram().setVariableValue("phase_function", getOxProgramFromDeclarationOffset(2U).getId());
 }
 
 void OxScatteringRenderingPass::render() const

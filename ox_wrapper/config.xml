@@ -27,31 +27,37 @@
       <module
       source="ox_wrapper/shapes/circle.cu"
       output="PTX_CIRCLE"
-      nvcc_options="-arch=compute_50 -use_fast_math -m64"
+      nvcc_options="-arch=compute_60 -code=sm_60 -use_fast_math -m64"
       xcompiler=""/>
 
       <module
       source="ox_wrapper/ray_casters/parallel_ray_generator.cu"
       output="PTX_PARALLEL_RAY_GENERATOR"
-      nvcc_options="-arch=compute_50 -use_fast_math -m64"
+      nvcc_options="-arch=compute_60 -code=sm_60 -use_fast_math -m64"
       xcompiler=""/>
       
       <module
       source="ox_wrapper/ray_casters/recaster_generator.cu"
       output="PTX_RECASTER_GENERATOR"
-      nvcc_options="-arch=compute_50 -use_fast_math -m64"
+      nvcc_options="-arch=compute_60 -code=sm_60 -use_fast_math -m64"
       xcompiler=""/>
 
       <module
       source="ox_wrapper/rendering_passes/scattering_rendering_pass.cu"
       output="PTX_SCATTERING_RENDERING_PASS"
-      nvcc_options="-arch=compute_50 -use_fast_math -m64"
+      nvcc_options="-arch=compute_60 -code=sm_60 -use_fast_math -m64"
+      xcompiler=""/>
+
+      <module
+      source="ox_wrapper/rendering_passes/scattering_rendering_pass_default_shader_config.cu"
+      output="PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG"
+      nvcc_options="-arch=compute_60 -code=sm_60 -use_fast_math -m64 -rdc=true"
       xcompiler=""/>
 
       <module
       source="ox_wrapper/materials/black_body.cu"
       output="PTX_BLACK_BODY_MATERIAL"
-      nvcc_options="-arch=compute_50 -use_fast_math -m64"
+      nvcc_options="-arch=compute_60 -code=sm_60 -use_fast_math -m64"
       xcompiler=""/>
     
     </modules>

@@ -20,6 +20,7 @@
 
 // Rendering passes
 #define PTX_SCATTERING_RENDERING_PASS "ox_wrapper/rendering_passes/ptx/scattering_rendering_pass.ptx"
+#define PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG "ox_wrapper/rendering_passes/ptx/scattering_rendering_pass_default_shader_config.ptx"
 
 // Materials
 #define PTX_BLACK_BODY_MATERIAL "ox_wrapper/materials/ptx/black_body.ptx"

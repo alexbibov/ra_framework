@@ -44,7 +44,7 @@ util::Optional<OxMaterial> OxMaterialAssembly::getMaterialById(OxEntityID const&
 {
     for (auto const& e : m_materials)
     {
-        if (e.getId() == id)
+        if (e.getUniqueIdentifier() == id)
             return e;
     }
 

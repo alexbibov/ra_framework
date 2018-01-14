@@ -5,13 +5,17 @@
 
 namespace ox_wrapper {
 
-class OxTraverseBackupBuffer {
+class OxTraverseBackupBuffer : public OxEntity {
 public:
     OxTraverseBackupBuffer(OxContext const& context, size_t max_ray_storage_capacity);
+    ~OxTraverseBackupBuffer();
 
     OxBuffer<unsigned int> getRawBuffer() const;
 
     unsigned int* getBufferPointer() const;
+
+    // required by OxEntity interface
+    bool isValid() const override;
 
 private:
     OxBuffer<unsigned int> m_raw_buffer;

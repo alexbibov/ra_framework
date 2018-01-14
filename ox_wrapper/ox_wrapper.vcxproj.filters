@@ -272,6 +272,9 @@
     <None Include="ox_wrapper\materials\black_body.cu">
       <Filter>ox_wrapper\materials</Filter>
     </None>
+    <None Include="ox_wrapper\rendering_passes\scattering_rendering_pass_default_shader_config.cu">
+      <Filter>ox_wrapper\rendering_passes</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />

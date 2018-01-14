@@ -20,7 +20,7 @@ OxProgram const* ox_wrapper::OxContractWithOxPrograms::getProgramById(OxEntityID
 {
     for (auto& e : m_programs)
     {
-        if (e.getId() == id)
+        if (e.getUniqueIdentifier() == id)
             return &e;
     }
 
@@ -36,7 +36,7 @@ uint32_t OxContractWithOxPrograms::getDeclarationOffsetFromId(OxEntityID const& 
 {
     for (uint32_t i = 0; i < m_programs.size(); ++i)
     {
-        if (m_programs[i].getId() == id)
+        if (m_programs[i].getUniqueIdentifier() == id)
             return i;
     }
     return static_cast<uint32_t>(-1);
@@ -70,6 +70,6 @@ size_t OxContractWithOxPrograms::getAttachedProgramsCount() const
 void OxContractWithOxPrograms::replaceProgramAtOffset(OxProgram const& program, uint32_t declaration_offset)
 {
     OxProgram& p = m_programs[declaration_offset];
-    if (p.getId() != program.getId())
+    if (p.getUniqueIdentifier() != program.getUniqueIdentifier())
         p = program;
 }

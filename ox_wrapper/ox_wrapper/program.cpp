@@ -29,6 +29,14 @@ OxProgram::OxProgram(OxContext const& optix_context,
     });
 }
 
+ProgramId OxProgram::getId() const
+{
+    int id;
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtProgramGetId(m_native_optix_program.get(), &id));
+
+    return ProgramId{ id };
+}
+
 void OxProgram::declareVariable(std::string const& name, float value)
 {
     RTvariable new_variable_handle = declare_variable_object(name);
@@ -537,6 +545,20 @@ void OxProgram::setVariableValue(std::string const& name, OxObjectHandle const& 
     }
 }
 
+void OxProgram::setVariableValue(std::string const& name, ProgramId const& program_id)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet1i(native_variable_handle, program_id.native));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to set program id to variable \"" + name + "\". Variable with this name does not exist",
+            util::LogMessageType::exclamation);
+    }
+}
+
 void OxProgram::getVariableValue(std::string const& name, float* value)
 {
     RTvariable native_variable_handle{};
@@ -872,7 +894,22 @@ bool OxProgram::isValid() const
 void OxProgram::assignBuffer(std::string const& name, OxAbstractBuffer const& buffer)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
-    rtVariableSetObject(native_variable_handle, OxAbstractBufferAttorney<OxProgram>::getNativeOptiXBufferHandle(buffer));
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), 
+        rtVariableSetObject(native_variable_handle, OxAbstractBufferAttorney<OxProgram>::getNativeOptiXBufferHandle(buffer)));
+}
+
+void OxProgram::assignProgram(std::string const & name, OxProgram const & program)
+{
+    RTvariable native_variable_handle{};
+    if (native_variable_handle = fetch_variable(name))
+    {
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(),
+            rtVariableSetObject(native_variable_handle, program.m_native_optix_program.get()));
+    }
+    else
+    {
+        util::Log::retrieve()->out("WARNING: unable to assign program object to variable \"" + name + "\". Variable with this name does not exist", util::LogMessageType::exclamation);
+    }
 }
 
 bool OxProgram::checkVariableExistance(std::string const& name) const

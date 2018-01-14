@@ -19,7 +19,7 @@ util::Optional<OxMissShader> OxMissShaderAssembly::getMissShaderById(OxEntityID 
 {
     for (auto& ms : m_miss_shader_list)
     {
-        if (ms.getId() == id)
+        if (ms.getUniqueIdentifier() == id)
             return ms;
     }
     

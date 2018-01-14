@@ -17,6 +17,11 @@
 
 namespace ox_wrapper {
 
+struct ProgramId
+{
+    int native;
+};
+
 template<typename T>
 class OxProgramAttorney;
 
@@ -36,6 +41,8 @@ private:
 public:
 
     virtual ~OxProgram() = default;
+
+    ProgramId getId() const;
 
     void declareVariable(std::string const& name, float value);
     void declareVariable(std::string const& name, float2 const& value);
@@ -95,7 +102,7 @@ public:
     void setVariableValue(std::string const& name, util::mat4x4 const& value);
 
     void setVariableValue(std::string const& name, OxObjectHandle const& value);
-
+    void setVariableValue(std::string const& name, ProgramId const& program_id);
 
     void getVariableValue(std::string const& name, float* value);
     void getVariableValue(std::string const& name, float2* value);
@@ -131,6 +138,7 @@ public:
     bool isValid() const override;
 
     void assignBuffer(std::string const& name, OxAbstractBuffer const& buffer);
+    void assignProgram(std::string const& name, OxProgram const& program);
 
     bool checkVariableExistance(std::string const& name) const;
 

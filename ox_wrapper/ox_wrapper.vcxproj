@@ -193,6 +193,7 @@
     <None Include="ox_wrapper\ray_casters\parallel_ray_generator.cu" />
     <None Include="ox_wrapper\ray_casters\recaster_generator.cu" />
     <None Include="ox_wrapper\rendering_passes\scattering_rendering_pass.cu" />
+    <None Include="ox_wrapper\rendering_passes\scattering_rendering_pass_default_shader_config.cu" />
     <None Include="ox_wrapper\shapes\circle.cu" />
   </ItemGroup>
   <ItemGroup>

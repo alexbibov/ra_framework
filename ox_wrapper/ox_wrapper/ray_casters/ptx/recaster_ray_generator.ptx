@@ -7,7 +7,7 @@
 //
 
 .version 6.0
-.target sm_50
+.target sm_60
 .address_size 64
 
 	// .globl	_Z15__ox_generate__v
