@@ -5,7 +5,7 @@
 
 using namespace optix;
 
-rtDeclareVariable(optix::float2, center, , "position of center of circle");
+rtDeclareVariable(optix::float2, center, ,);
 rtDeclareVariable(float, radius, , "radius of circle");
 rtDeclareVariable(unsigned int, num_materials, , "number of materials attached to geometry primitive");
 

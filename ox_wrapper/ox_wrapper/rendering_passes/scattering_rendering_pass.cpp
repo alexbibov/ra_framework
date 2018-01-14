@@ -50,17 +50,17 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
     m_importance_directions_buffer{ targetSceneSection().context().createBuffer<float2>(OxBufferKind::input, num_scattering_integral_importance_directions*(1 + num_spectra_pairs_supported)) }
 {
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
-        .declareVariable("num_spectra_pairs_supported", m_num_spectra_pairs_supported);
+        .setVariableValue("num_spectra_pairs_supported", m_num_spectra_pairs_supported);
     static_cast<OxProgram&>(static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).getProgram())
-        .declareVariable("num_spectra_pairs_supported", m_num_spectra_pairs_supported);
+        .setVariableValue("num_spectra_pairs_supported", m_num_spectra_pairs_supported);
 
     setMaxRecursionDepth(max_recursion_depth);
     setRayMarchingStepSize(ray_marching_step_size);
 
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
-        .declareVariable("num_importance_directions", num_scattering_integral_importance_directions);
+        .setVariableValue("num_importance_directions", num_scattering_integral_importance_directions);
     static_cast<OxProgram&>(static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).getProgram())
-        .declareVariable("num_importance_directions", num_scattering_integral_importance_directions);
+        .setVariableValue("num_importance_directions", num_scattering_integral_importance_directions);
     
     setAbsorptionProbabilityShader(absorption_probability_shader);
     setScatteringProbabilityShader(scattering_probability_shader);
@@ -109,12 +109,12 @@ void OxScatteringRenderingPass::setMaxRecursionDepth(uint32_t max_recursion_dept
     for (auto& material : m_surface_material_assembly)
     {
         static_cast<OxProgram&>(material.getClosestHitShader())
-            .declareVariable("max_recursion_depth", max_recursion_depth);
+            .setVariableValue("max_recursion_depth", max_recursion_depth);
     }
 
     for (auto& miss_shader : m_miss_shader_assembly)
     {
-        miss_shader.getProgram().declareVariable("max_recursion_depth", max_recursion_depth);
+        miss_shader.getProgram().setVariableValue("max_recursion_depth", max_recursion_depth);
     }
 }
 
@@ -137,13 +137,13 @@ void OxScatteringRenderingPass::setRayMarchingStepSize(float step_size)
 {
     for (auto& ms : m_miss_shader_assembly)
     {
-        ms.getProgram().declareVariable("step_size", m_ray_marching_step_size);
+        ms.getProgram().setVariableValue("step_size", m_ray_marching_step_size);
     }
 
     static_cast<OxProgram&>(
         static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown))
         .getClosestHitShader())
-        .declareVariable("step_size", m_ray_marching_step_size);
+        .setVariableValue("step_size", m_ray_marching_step_size);
 }
 
 OxProgram OxScatteringRenderingPass::getAbsorptionProbabilityShader() const

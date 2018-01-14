@@ -44,36 +44,6 @@ public:
 
     ProgramId getId() const;
 
-    void declareVariable(std::string const& name, float value);
-    void declareVariable(std::string const& name, float2 const& value);
-    void declareVariable(std::string const& name, float3 const& value);
-    void declareVariable(std::string const& name, float4 const& value);
-
-    void declareVariable(std::string const& name, int value);
-    void declareVariable(std::string const& name, int2 const& value);
-    void declareVariable(std::string const& name, int3 const& value);
-    void declareVariable(std::string const& name, int4 const& value);
-
-    void declareVariable(std::string const& name, unsigned int value);
-    void declareVariable(std::string const& name, uint2 const& value);
-    void declareVariable(std::string const& name, uint3 const& value);
-    void declareVariable(std::string const& name, uint4 const& value);
-
-    void declareVariable(std::string const& name, util::mat2x2 const& value);
-    void declareVariable(std::string const& name, util::mat2x3 const& value);
-    void declareVariable(std::string const& name, util::mat2x4 const& value);
-
-    void declareVariable(std::string const& name, util::mat3x2 const& value);
-    void declareVariable(std::string const& name, util::mat3x3 const& value);
-    void declareVariable(std::string const& name, util::mat3x4 const& value);
-
-    void declareVariable(std::string const& name, util::mat4x2 const& value);
-    void declareVariable(std::string const& name, util::mat4x3 const& value);
-    void declareVariable(std::string const& name, util::mat4x4 const& value);
-
-    void declareVariable(std::string const& name, OxObjectHandle const& value);
-
-
     void setVariableValue(std::string const& name, float value);
     void setVariableValue(std::string const& name, float2 const& value);
     void setVariableValue(std::string const& name, float3 const& value);

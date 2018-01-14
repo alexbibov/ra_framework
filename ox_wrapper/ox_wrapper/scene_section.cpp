@@ -215,7 +215,7 @@ void ox_wrapper::OxSceneSection::update() const
 
 void OxSceneSection::trace() const
 {
-    m_optix_ray_generator.getRayGenerationShader().declareVariable("ox_entry_node", OxObjectHandle{ getEntryNode() });
+    m_optix_ray_generator.getRayGenerationShader().setVariableValue("ox_entry_node", OxObjectHandle{ getEntryNode() });
     OxRayGeneratorAttorney<OxSceneSection>::launchRayGenerator(m_optix_ray_generator);
 }
 

@@ -12,9 +12,9 @@ OxRecasterGenerator::OxRecasterGenerator(
                     static_cast<uint32_t>(traverse_backup_buffer.getBufferPointer()[0]) },
     m_output_buffer{ output_buffer }
 {
-    getRayGenerationShader().declareVariable("dimension", static_cast<unsigned int>(output_buffer.getDimension()));
-    getRayGenerationShader().declareVariable("payload_type", static_cast<unsigned int>(OxRayPayloadType::radiance));
-    getRayGenerationShader().declareVariable("ray_type", static_cast<unsigned int>(recasted_ray_type));
+    getRayGenerationShader().setVariableValue("dimension", static_cast<unsigned int>(output_buffer.getDimension()));
+    getRayGenerationShader().setVariableValue("payload_type", static_cast<unsigned int>(OxRayPayloadType::radiance));
+    getRayGenerationShader().setVariableValue("ray_type", static_cast<unsigned int>(recasted_ray_type));
     getRayGenerationShader().assignBuffer("traverse_backup_buffer", traverse_backup_buffer.getRawBuffer());
     
     switch (output_buffer.getDimension())
@@ -39,9 +39,9 @@ OxRecasterGenerator::OxRecasterGenerator(
     static_cast<uint32_t>(traverse_backup_buffer.getRawBuffer().map(OxBufferMapKind::read)[0]) },
     m_output_buffer{ output_buffer }
 {
-    getRayGenerationShader().declareVariable("dimension", static_cast<unsigned int>(output_buffer.getDimension()));
-    getRayGenerationShader().declareVariable("payload_type", static_cast<unsigned int>(OxRayPayloadType::radiance_simple));
-    getRayGenerationShader().declareVariable("ray_type", static_cast<unsigned int>(recasted_ray_type));
+    getRayGenerationShader().setVariableValue("dimension", static_cast<unsigned int>(output_buffer.getDimension()));
+    getRayGenerationShader().setVariableValue("payload_type", static_cast<unsigned int>(OxRayPayloadType::radiance_simple));
+    getRayGenerationShader().setVariableValue("ray_type", static_cast<unsigned int>(recasted_ray_type));
     getRayGenerationShader().assignBuffer("traverse_backup_buffer", traverse_backup_buffer.getRawBuffer());
 
     switch (output_buffer.getDimension())
@@ -66,9 +66,9 @@ OxRecasterGenerator::OxRecasterGenerator(
     static_cast<uint32_t>(traverse_backup_buffer.getRawBuffer().map(OxBufferMapKind::read)[0]) },
     m_output_buffer{ output_buffer }
 {
-    getRayGenerationShader().declareVariable("dimension", static_cast<unsigned int>(output_buffer.getDimension()));
-    getRayGenerationShader().declareVariable("payload_type", static_cast<unsigned int>(OxRayPayloadType::monochromatic));
-    getRayGenerationShader().declareVariable("ray_type", static_cast<unsigned int>(recasted_ray_type));
+    getRayGenerationShader().setVariableValue("dimension", static_cast<unsigned int>(output_buffer.getDimension()));
+    getRayGenerationShader().setVariableValue("payload_type", static_cast<unsigned int>(OxRayPayloadType::monochromatic));
+    getRayGenerationShader().setVariableValue("ray_type", static_cast<unsigned int>(recasted_ray_type));
     getRayGenerationShader().assignBuffer("traverse_backup_buffer", traverse_backup_buffer.getRawBuffer());
 
     switch (output_buffer.getDimension())
@@ -93,9 +93,9 @@ OxRecasterGenerator::OxRecasterGenerator(
     static_cast<uint32_t>(traverse_backup_buffer.getRawBuffer().map(OxBufferMapKind::read)[0]) },
     m_output_buffer{ output_buffer }
 {
-    getRayGenerationShader().declareVariable("dimension", static_cast<unsigned int>(output_buffer.getDimension()));
-    getRayGenerationShader().declareVariable("payload_type", static_cast<unsigned int>(OxRayPayloadType::occlusion));
-    getRayGenerationShader().declareVariable("ray_type", static_cast<unsigned int>(recasted_ray_type));
+    getRayGenerationShader().setVariableValue("dimension", static_cast<unsigned int>(output_buffer.getDimension()));
+    getRayGenerationShader().setVariableValue("payload_type", static_cast<unsigned int>(OxRayPayloadType::occlusion));
+    getRayGenerationShader().setVariableValue("ray_type", static_cast<unsigned int>(recasted_ray_type));
     getRayGenerationShader().assignBuffer("traverse_backup_buffer", traverse_backup_buffer.getRawBuffer());
 
     switch (output_buffer.getDimension())

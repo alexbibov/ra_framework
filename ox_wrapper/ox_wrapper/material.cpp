@@ -96,8 +96,8 @@ bool OxMaterial::isValid() const
 void OxMaterial::update(OxObjectHandle top_scene_object) const
 {
     if (m_closest_hit_program_offset >= 0)
-        getOxProgramFromDeclarationOffset(m_closest_hit_program_offset).declareVariable("ox_entry_node", top_scene_object);
+        getOxProgramFromDeclarationOffset(m_closest_hit_program_offset).setVariableValue("ox_entry_node", top_scene_object);
 
     if (m_any_hit_program_offset >= 0)
-        getOxProgramFromDeclarationOffset(m_any_hit_program_offset).declareVariable("ox_entry_node", top_scene_object);
+        getOxProgramFromDeclarationOffset(m_any_hit_program_offset).setVariableValue("ox_entry_node", top_scene_object);
 }
