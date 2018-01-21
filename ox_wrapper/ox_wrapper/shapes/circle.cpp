@@ -47,13 +47,13 @@ void OxCircle::updateRadius(float new_radius)
 float2 shapes::OxCircle::getPosition() const
 {
     float2 rv{};
-    getIntersectionShader().getVariableValue("center", &rv);
+    getIntersectionShader().getVariableValue("center", rv);
     return rv;
 }
 
 float shapes::OxCircle::getRadius() const
 {
     float rv{};
-    getIntersectionShader().getVariableValue("radius", &rv);
+    getIntersectionShader().getVariableValue("radius", rv);
     return rv;
 }

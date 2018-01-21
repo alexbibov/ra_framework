@@ -40,7 +40,7 @@ OxMaterialAssembly::OxMaterialAssembly(std::initializer_list<OxMaterial> init_li
     }
 }
 
-util::Optional<OxMaterial> OxMaterialAssembly::getMaterialById(OxEntityID const& id) const
+util::Optional<OxMaterial> OxMaterialAssembly::getMaterialById(OxEntityId const& id) const
 {
     for (auto const& e : m_materials)
     {

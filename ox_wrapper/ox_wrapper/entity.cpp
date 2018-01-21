@@ -2,56 +2,56 @@
 
 using namespace ox_wrapper;
 
-thread_local uint64_t OxEntityID::m_id_counter = 0;
+thread_local uint64_t OxEntityId::m_id_counter = 0;
 
 
-OxEntityID::OxEntityID() :
+OxEntityId::OxEntityId() :
     m_owning_thread{ std::this_thread::get_id() },
     m_id{ ++m_id_counter }
 {
 
 }
 
-bool OxEntityID::operator==(OxEntityID const& other) const
+bool OxEntityId::operator==(OxEntityId const& other) const
 {
     return m_owning_thread == other.m_owning_thread
         && m_id == other.m_id;
 }
 
-bool OxEntityID::operator<(OxEntityID const& other) const
+bool OxEntityId::operator<(OxEntityId const& other) const
 {
     return m_owning_thread < other.m_owning_thread
         || (m_owning_thread == other.m_owning_thread && m_id < other.m_id);
 }
 
-bool OxEntityID::operator<=(OxEntityID const& other) const
+bool OxEntityId::operator<=(OxEntityId const& other) const
 {
     return *this < other || *this == other;
 }
 
-bool OxEntityID::operator>(OxEntityID const& other) const
+bool OxEntityId::operator>(OxEntityId const& other) const
 {
     return m_owning_thread > other.m_owning_thread
         || (m_owning_thread == other.m_owning_thread && m_id > other.m_id);
 }
 
-bool OxEntityID::operator>=(OxEntityID const& other) const
+bool OxEntityId::operator>=(OxEntityId const& other) const
 {
     return *this > other || *this == other;
 }
 
-bool OxEntityID::operator!=(OxEntityID const& other) const
+bool OxEntityId::operator!=(OxEntityId const& other) const
 {
     return !(*this == other);
 }
 
-size_t OxEntityID::owningThread() const
+size_t OxEntityId::owningThread() const
 {
     std::hash<std::thread::id> hasher{};
     return hasher(m_owning_thread);
 }
 
-std::string OxEntityID::toString() const
+std::string OxEntityId::toString() const
 {
     return std::to_string(owningThread()) + "_" + std::to_string(m_id);
 }
@@ -61,7 +61,7 @@ std::string OxEntityID::toString() const
 
 thread_local uint64_t OxEntity::m_alive_entities = 0;
 
-OxEntityID OxEntity::getUniqueIdentifier() const
+OxEntityId OxEntity::getUniqueIdentifier() const
 {
     return m_id;
 }

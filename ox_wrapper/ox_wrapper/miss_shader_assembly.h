@@ -20,7 +20,7 @@ public:
     OxMissShaderAssembly(std::initializer_list<OxMissShader> init_list);
     virtual ~OxMissShaderAssembly() = default;
 
-    util::Optional<OxMissShader> getMissShaderById(OxEntityID const& id) const;
+    util::Optional<OxMissShader> getMissShaderById(OxEntityId const& id) const;
     util::Optional<OxMissShader> getMissShaderByName(std::string const& name) const;
     util::Optional<OxMissShader> getMissShaderByRayType(OxRayType ray_type) const;
 

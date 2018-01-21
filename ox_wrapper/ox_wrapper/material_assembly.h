@@ -24,7 +24,7 @@ public:
     OxMaterialAssembly(std::initializer_list<OxMaterial> init_list);
     virtual ~OxMaterialAssembly() = default;
 
-    util::Optional<OxMaterial> getMaterialById(OxEntityID const& id) const;
+    util::Optional<OxMaterial> getMaterialById(OxEntityId const& id) const;
     util::Optional<OxMaterial> getMaterialByName(std::string const& name) const;
     util::Optional<OxMaterial> getMaterialByRayType(OxRayType ray_type) const;
     size_t getMaterialCount() const;

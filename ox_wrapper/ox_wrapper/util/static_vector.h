@@ -421,7 +421,7 @@ template<typename ...Args>
 inline void util::StaticVector<T, max_size>::emplace_back(Args ...args)
 {
     assert(m_size < max_size);
-    new (m_p_end) T{ std::forward(args...) };
+    new (m_p_end) T{ std::forward<Args>(args)... };
 
     m_p_end += sizeof(T);
     ++m_size;

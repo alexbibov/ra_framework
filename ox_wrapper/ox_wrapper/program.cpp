@@ -29,12 +29,12 @@ OxProgram::OxProgram(OxContext const& optix_context,
     });
 }
 
-ProgramId OxProgram::getId() const
+OxProgramId OxProgram::getId() const
 {
     int id;
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtProgramGetId(m_native_optix_program.get(), &id));
 
-    return ProgramId{ id };
+    return OxProgramId{ id };
 }
 
 void OxProgram::setVariableValue(std::string const& name, float value)
@@ -232,18 +232,18 @@ void OxProgram::setVariableValue(std::string const& name, OxObjectHandle const& 
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSetObject(native_variable_handle, static_cast<RTobject>(value.p_native)));
 }
 
-void OxProgram::setVariableValue(std::string const& name, ProgramId const& program_id)
+void OxProgram::setVariableValue(std::string const& name, OxProgramId const& program_id)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet1i(native_variable_handle, program_id.native));
 }
 
-void OxProgram::getVariableValue(std::string const& name, float* value)
+void OxProgram::getVariableValue(std::string const& name, float& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet1f(native_variable_handle, value));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet1f(native_variable_handle, &value));
     }
     else
     {
@@ -251,12 +251,12 @@ void OxProgram::getVariableValue(std::string const& name, float* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, float2* value)
+void OxProgram::getVariableValue(std::string const& name, float2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet2f(native_variable_handle, &value->x, &value->y));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet2f(native_variable_handle, &value.x, &value.y));
     }
     else
     {
@@ -264,12 +264,12 @@ void OxProgram::getVariableValue(std::string const& name, float2* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, float3* value)
+void OxProgram::getVariableValue(std::string const& name, float3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet3f(native_variable_handle, &value->x, &value->y, &value->z));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet3f(native_variable_handle, &value.x, &value.y, &value.z));
     }
     else
     {
@@ -277,12 +277,12 @@ void OxProgram::getVariableValue(std::string const& name, float3* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, float4* value)
+void OxProgram::getVariableValue(std::string const& name, float4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet4f(native_variable_handle, &value->x, &value->y, &value->z, &value->w));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet4f(native_variable_handle, &value.x, &value.y, &value.z, &value.w));
     }
     else
     {
@@ -290,12 +290,12 @@ void OxProgram::getVariableValue(std::string const& name, float4* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, int* value)
+void OxProgram::getVariableValue(std::string const& name, int& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet1i(native_variable_handle, value));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet1i(native_variable_handle, &value));
     }
     else
     {
@@ -303,12 +303,12 @@ void OxProgram::getVariableValue(std::string const& name, int* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, int2* value)
+void OxProgram::getVariableValue(std::string const& name, int2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet2i(native_variable_handle, &value->x, &value->y));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet2i(native_variable_handle, &value.x, &value.y));
     }
     else
     {
@@ -316,12 +316,12 @@ void OxProgram::getVariableValue(std::string const& name, int2* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, int3* value)
+void OxProgram::getVariableValue(std::string const& name, int3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet3i(native_variable_handle, &value->x, &value->y, &value->z));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet3i(native_variable_handle, &value.x, &value.y, &value.z));
     }
     else
     {
@@ -329,12 +329,12 @@ void OxProgram::getVariableValue(std::string const& name, int3* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, int4* value)
+void OxProgram::getVariableValue(std::string const& name, int4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet4i(native_variable_handle, &value->x, &value->y, &value->z, &value->w));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet4i(native_variable_handle, &value.x, &value.y, &value.z, &value.w));
     }
     else
     {
@@ -342,12 +342,12 @@ void OxProgram::getVariableValue(std::string const& name, int4* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, unsigned int* value)
+void OxProgram::getVariableValue(std::string const& name, unsigned int& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet1ui(native_variable_handle, value));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet1ui(native_variable_handle, &value));
     }
     else
     {
@@ -355,12 +355,12 @@ void OxProgram::getVariableValue(std::string const& name, unsigned int* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, uint2* value)
+void OxProgram::getVariableValue(std::string const& name, uint2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet2ui(native_variable_handle, &value->x, &value->y));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet2ui(native_variable_handle, &value.x, &value.y));
     }
     else
     {
@@ -368,12 +368,12 @@ void OxProgram::getVariableValue(std::string const& name, uint2* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, uint3* value)
+void OxProgram::getVariableValue(std::string const& name, uint3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet3ui(native_variable_handle, &value->x, &value->y, &value->z));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet3ui(native_variable_handle, &value.x, &value.y, &value.z));
     }
     else
     {
@@ -381,12 +381,12 @@ void OxProgram::getVariableValue(std::string const& name, uint3* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, uint4* value)
+void OxProgram::getVariableValue(std::string const& name, uint4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
-        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet4ui(native_variable_handle, &value->x, &value->y, &value->z, &value->w));
+        LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGet4ui(native_variable_handle, &value.x, &value.y, &value.z, &value.w));
     }
     else
     {
@@ -394,15 +394,15 @@ void OxProgram::getVariableValue(std::string const& name, uint4* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat2x2* value)
+void OxProgram::getVariableValue(std::string const& name, util::mat2x2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
         float m[4];
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGetMatrix2x2fv(native_variable_handle, 0, m));
-        value->_11 = m[0]; value->_12 = m[1];
-        value->_21 = m[2]; value->_22 = m[3];
+        value._11 = m[0]; value._12 = m[1];
+        value._21 = m[2]; value._22 = m[3];
     }
     else
     {
@@ -410,15 +410,15 @@ void OxProgram::getVariableValue(std::string const& name, util::mat2x2* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat2x3* value)
+void OxProgram::getVariableValue(std::string const& name, util::mat2x3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
         float m[6];
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGetMatrix2x3fv(native_variable_handle, 0, m));
-        value->_11 = m[0]; value->_12 = m[1]; value->_13 = m[2];
-        value->_21 = m[3]; value->_22 = m[4]; value->_23 = m[5];
+        value._11 = m[0]; value._12 = m[1]; value._13 = m[2];
+        value._21 = m[3]; value._22 = m[4]; value._23 = m[5];
     }
     else
     {
@@ -426,15 +426,15 @@ void OxProgram::getVariableValue(std::string const& name, util::mat2x3* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat2x4* value)
+void OxProgram::getVariableValue(std::string const& name, util::mat2x4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
         float m[8];
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGetMatrix2x4fv(native_variable_handle, 0, m));
-        value->_11 = m[0]; value->_12 = m[1]; value->_13 = m[2]; value->_14 = m[3];
-        value->_21 = m[4]; value->_22 = m[5]; value->_23 = m[6]; value->_24 = m[7];
+        value._11 = m[0]; value._12 = m[1]; value._13 = m[2]; value._14 = m[3];
+        value._21 = m[4]; value._22 = m[5]; value._23 = m[6]; value._24 = m[7];
     }
     else
     {
@@ -442,16 +442,16 @@ void OxProgram::getVariableValue(std::string const& name, util::mat2x4* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat3x2* value)
+void OxProgram::getVariableValue(std::string const& name, util::mat3x2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
         float m[6];
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGetMatrix3x2fv(native_variable_handle, 0, m));
-        value->_11 = m[0]; value->_12 = m[1]; 
-        value->_21 = m[2]; value->_22 = m[3];
-        value->_31 = m[4]; value->_32 = m[5];
+        value._11 = m[0]; value._12 = m[1]; 
+        value._21 = m[2]; value._22 = m[3];
+        value._31 = m[4]; value._32 = m[5];
     }
     else
     {
@@ -459,16 +459,16 @@ void OxProgram::getVariableValue(std::string const& name, util::mat3x2* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat3x3* value)
+void OxProgram::getVariableValue(std::string const& name, util::mat3x3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
         float m[9];
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGetMatrix3x3fv(native_variable_handle, 0, m));
-        value->_11 = m[0]; value->_12 = m[1]; value->_13 = m[2];
-        value->_21 = m[3]; value->_22 = m[4]; value->_23 = m[5];
-        value->_31 = m[6]; value->_32 = m[7]; value->_33 = m[8];
+        value._11 = m[0]; value._12 = m[1]; value._13 = m[2];
+        value._21 = m[3]; value._22 = m[4]; value._23 = m[5];
+        value._31 = m[6]; value._32 = m[7]; value._33 = m[8];
     }
     else
     {
@@ -476,16 +476,16 @@ void OxProgram::getVariableValue(std::string const& name, util::mat3x3* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat3x4* value)
+void OxProgram::getVariableValue(std::string const& name, util::mat3x4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
         float m[12];
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGetMatrix3x4fv(native_variable_handle, 0, m));
-        value->_11 = m[0]; value->_12 = m[1]; value->_13 = m[2];  value->_14 = m[3];
-        value->_21 = m[4]; value->_22 = m[5]; value->_23 = m[6];  value->_24 = m[7];
-        value->_31 = m[8]; value->_32 = m[9]; value->_33 = m[10]; value->_34 = m[11];
+        value._11 = m[0]; value._12 = m[1]; value._13 = m[2];  value._14 = m[3];
+        value._21 = m[4]; value._22 = m[5]; value._23 = m[6];  value._24 = m[7];
+        value._31 = m[8]; value._32 = m[9]; value._33 = m[10]; value._34 = m[11];
     }
     else
     {
@@ -493,17 +493,17 @@ void OxProgram::getVariableValue(std::string const& name, util::mat3x4* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat4x2* value)
+void OxProgram::getVariableValue(std::string const& name, util::mat4x2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
         float m[8];
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGetMatrix4x2fv(native_variable_handle, 0, m));
-        value->_11 = m[0]; value->_12 = m[1];
-        value->_21 = m[2]; value->_22 = m[3];
-        value->_31 = m[4]; value->_32 = m[5];
-        value->_41 = m[6]; value->_42 = m[7];
+        value._11 = m[0]; value._12 = m[1];
+        value._21 = m[2]; value._22 = m[3];
+        value._31 = m[4]; value._32 = m[5];
+        value._41 = m[6]; value._42 = m[7];
     }
     else
     {
@@ -511,17 +511,17 @@ void OxProgram::getVariableValue(std::string const& name, util::mat4x2* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat4x3* value)
+void OxProgram::getVariableValue(std::string const& name, util::mat4x3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
         float m[12];
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGetMatrix4x3fv(native_variable_handle, 0, m));
-        value->_11 = m[0]; value->_12 = m[1];  value->_13 = m[2];
-        value->_21 = m[3]; value->_22 = m[4];  value->_23 = m[5];
-        value->_31 = m[6]; value->_32 = m[7];  value->_33 = m[8];
-        value->_41 = m[9]; value->_42 = m[10]; value->_43 = m[11];
+        value._11 = m[0]; value._12 = m[1];  value._13 = m[2];
+        value._21 = m[3]; value._22 = m[4];  value._23 = m[5];
+        value._31 = m[6]; value._32 = m[7];  value._33 = m[8];
+        value._41 = m[9]; value._42 = m[10]; value._43 = m[11];
     }
     else
     {
@@ -529,17 +529,17 @@ void OxProgram::getVariableValue(std::string const& name, util::mat4x3* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat4x4* value)
+void OxProgram::getVariableValue(std::string const& name, util::mat4x4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
         float m[16];
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGetMatrix4x4fv(native_variable_handle, 0, m));
-        value->_11 = m[0];  value->_12 = m[1];  value->_13 = m[2];  value->_14 = m[3];
-        value->_21 = m[4];  value->_22 = m[5];  value->_23 = m[6];  value->_24 = m[7];
-        value->_31 = m[8];  value->_32 = m[9];  value->_33 = m[10]; value->_34 = m[11];
-        value->_41 = m[12]; value->_42 = m[13]; value->_43 = m[14]; value->_44 = m[15];
+        value._11 = m[0];  value._12 = m[1];  value._13 = m[2];  value._14 = m[3];
+        value._21 = m[4];  value._22 = m[5];  value._23 = m[6];  value._24 = m[7];
+        value._31 = m[8];  value._32 = m[9];  value._33 = m[10]; value._34 = m[11];
+        value._41 = m[12]; value._42 = m[13]; value._43 = m[14]; value._44 = m[15];
     }
     else
     {
@@ -547,14 +547,14 @@ void OxProgram::getVariableValue(std::string const& name, util::mat4x4* value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, OxObjectHandle* value)
+void OxProgram::getVariableValue(std::string const& name, OxObjectHandle& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
     {
         RTobject native_object_handle;
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableGetObject(native_variable_handle, &native_object_handle));
-        value->p_native = native_object_handle;
+        value.p_native = native_object_handle;
     }
     else
     {

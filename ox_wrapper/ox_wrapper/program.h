@@ -17,7 +17,7 @@
 
 namespace ox_wrapper {
 
-struct ProgramId
+struct OxProgramId
 {
     int native;
 };
@@ -42,7 +42,7 @@ public:
 
     virtual ~OxProgram() = default;
 
-    ProgramId getId() const;
+    OxProgramId getId() const;
 
     void setVariableValue(std::string const& name, float value);
     void setVariableValue(std::string const& name, float2 const& value);
@@ -72,36 +72,36 @@ public:
     void setVariableValue(std::string const& name, util::mat4x4 const& value);
 
     void setVariableValue(std::string const& name, OxObjectHandle const& value);
-    void setVariableValue(std::string const& name, ProgramId const& program_id);
+    void setVariableValue(std::string const& name, OxProgramId const& program_id);
 
-    void getVariableValue(std::string const& name, float* value);
-    void getVariableValue(std::string const& name, float2* value);
-    void getVariableValue(std::string const& name, float3* value);
-    void getVariableValue(std::string const& name, float4* value);
+    void getVariableValue(std::string const& name, float& value);
+    void getVariableValue(std::string const& name, float2& value);
+    void getVariableValue(std::string const& name, float3& value);
+    void getVariableValue(std::string const& name, float4& value);
 
-    void getVariableValue(std::string const& name, int* value);
-    void getVariableValue(std::string const& name, int2* value);
-    void getVariableValue(std::string const& name, int3* value);
-    void getVariableValue(std::string const& name, int4*value);
+    void getVariableValue(std::string const& name, int& value);
+    void getVariableValue(std::string const& name, int2& value);
+    void getVariableValue(std::string const& name, int3& value);
+    void getVariableValue(std::string const& name, int4& value);
 
-    void getVariableValue(std::string const& name, unsigned int* value);
-    void getVariableValue(std::string const& name, uint2* value);
-    void getVariableValue(std::string const& name, uint3* value);
-    void getVariableValue(std::string const& name, uint4* value);
+    void getVariableValue(std::string const& name, unsigned int& value);
+    void getVariableValue(std::string const& name, uint2& value);
+    void getVariableValue(std::string const& name, uint3& value);
+    void getVariableValue(std::string const& name, uint4& value);
 
-    void getVariableValue(std::string const& name, util::mat2x2* value);
-    void getVariableValue(std::string const& name, util::mat2x3* value);
-    void getVariableValue(std::string const& name, util::mat2x4* value);
+    void getVariableValue(std::string const& name, util::mat2x2& value);
+    void getVariableValue(std::string const& name, util::mat2x3& value);
+    void getVariableValue(std::string const& name, util::mat2x4& value);
 
-    void getVariableValue(std::string const& name, util::mat3x2* value);
-    void getVariableValue(std::string const& name, util::mat3x3* value);
-    void getVariableValue(std::string const& name, util::mat3x4* value);
+    void getVariableValue(std::string const& name, util::mat3x2& value);
+    void getVariableValue(std::string const& name, util::mat3x3& value);
+    void getVariableValue(std::string const& name, util::mat3x4& value);
 
-    void getVariableValue(std::string const& name, util::mat4x2* value);
-    void getVariableValue(std::string const& name, util::mat4x3* value);
-    void getVariableValue(std::string const& name, util::mat4x4* value);
+    void getVariableValue(std::string const& name, util::mat4x2& value);
+    void getVariableValue(std::string const& name, util::mat4x3& value);
+    void getVariableValue(std::string const& name, util::mat4x4& value);
 
-    void getVariableValue(std::string const& name, OxObjectHandle* value);
+    void getVariableValue(std::string const& name, OxObjectHandle& value);
 
 
     // required by OxEntity interface

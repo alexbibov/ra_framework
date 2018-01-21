@@ -9,19 +9,22 @@
 #include "../ox_wrapper/ox_wrapper/rendering_passes/scattering_rendering_pass.h"
 #include "../ox_wrapper/ox_wrapper/materials/black_body.h"
 
+
 int main(int argc, char* argv[])
 {
     try
     {
         TCLAP::CmdLine cmd{ "OX_WRAPPER demonstration demo based on Gomos OptiX project", ' ', "0.1" };
 
-        TCLAP::ValueArg<unsigned int> num_rays{ "r", "num_rays", "Number of rays to generate", true, 1000, "unsigned int" };
+        TCLAP::ValueArg<std::string> lua_script{ "s", "lua_script", "input script written in LUA", false, "", "string" };
+        TCLAP::ValueArg<unsigned int> num_rays{ "r", "num_rays", "Number of rays to generate", false, 1000, "unsigned int" };
         TCLAP::ValueArg<unsigned int> max_recursion_depth{ "d", "max_recursion_depth", 
             "Maximal allowed depth of recursion", false, 20, "unsigned int" };
         TCLAP::ValueArg<std::string> ox_wrapper_path{ "", "ox_lib", "Path to OX_WRAPPER library", true, "", "string" };
         TCLAP::ValueArg<std::string> path_to_settings{ "", "path_to_settings", "Path to OX_WRAPPER settings JSON file", true, "", "string" };
         
 
+        cmd.add(lua_script);
         cmd.add(num_rays);
         cmd.add(max_recursion_depth);
         cmd.add(ox_wrapper_path);
@@ -29,10 +32,25 @@ int main(int argc, char* argv[])
 
         cmd.parse(argc, argv);
 
-        
-        // initialize OX_WRAPPER
+
+        // work with ox_wrapper
         {
             ox_wrapper::OxInit ox{ ox_wrapper_path.getValue(), path_to_settings.getValue() };
+
+            std::string input_lua_script_path = lua_script.getValue();
+            if (input_lua_script_path.length())
+            {
+                ox.executeLuaScriptFromSource(input_lua_script_path);
+
+            }
+
+            
+        }
+
+        
+        // initialize OX_WRAPPER
+        /*{
+            
             ox_wrapper::shapes::OxCircle atmospheric_circle{ ox.context(), 2.f, 1.1f, 1.1f };
             ox_wrapper::shapes::OxCircle planet_circle{ ox.context(), 2.f, 1.1f, 1.f };
             ox_wrapper::ray_casters::OxParallelRayGenerator parallel_ray_generator{ ox.context(), num_rays.getValue(), 2.f, -2.f, -3.14f / 2.f, 2 };
@@ -68,7 +86,7 @@ int main(int argc, char* argv[])
             
             
             
-        }
+        }*/
         
     }
     catch (TCLAP::ArgException& e)

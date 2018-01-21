@@ -117,7 +117,19 @@
     <ClCompile Include="ox_wrapper\init.cpp">
       <Filter>ox_wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="ox_wrapper\materials\black_body.cpp" />
+    <ClCompile Include="ox_wrapper\shapes\shapes_factory.cpp">
+      <Filter>ox_wrapper\shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\util\lua_support.cpp">
+      <Filter>ox_wrapper\util</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\materials\black_body.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\factory_initializer_sentinel.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\basic_factory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ox_wrapper\buffer.h">
@@ -252,6 +264,16 @@
     <ClInclude Include="ox_wrapper\materials\black_body.h">
       <Filter>ox_wrapper\materials</Filter>
     </ClInclude>
+    <ClInclude Include="ox_wrapper\shapes\shapes_factory.h">
+      <Filter>ox_wrapper\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\util\lua_support.h">
+      <Filter>ox_wrapper\util</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\factory_initializer_sentinel.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\basic_factory.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl">

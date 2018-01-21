@@ -44,28 +44,28 @@ void OxParallelRayGenerator::setEmitterRotation(float emitter_rotation)
 uint32_t OxParallelRayGenerator::getNumberOfRays() const
 {
     uint32_t rv;
-    getRayGenerationShader().getVariableValue("num_rays", &rv);
+    getRayGenerationShader().getVariableValue("num_rays", rv);
     return rv;
 }
 
 float OxParallelRayGenerator::getEmitterSize() const
 {
     float rv;
-    getRayGenerationShader().getVariableValue("emitter_size", &rv);
+    getRayGenerationShader().getVariableValue("emitter_size", rv);
     return rv;
 }
 
 float OxParallelRayGenerator::getEmitterPosition() const
 {
     float rv;
-    getRayGenerationShader().getVariableValue("emitter_position", &rv);
+    getRayGenerationShader().getVariableValue("emitter_position", rv);
     return rv;
 }
 
 float OxParallelRayGenerator::getEmitterRotation() const
 {
     float rv;
-    getRayGenerationShader().getVariableValue("emitter_rotation", &rv);
+    getRayGenerationShader().getVariableValue("emitter_rotation", rv);
     return rv;
 }
 

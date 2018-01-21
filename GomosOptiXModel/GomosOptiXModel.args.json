@@ -21,6 +21,10 @@
     {
       "Id": "572a89fa-c24e-4655-93b6-4332a85425c8",
       "Command": "--max_recursion_depth 20"
+    },
+    {
+      "Id": "0b623cad-91f1-4dfe-a080-1b09029d18af",
+      "Command": "--lua_script $(SolutionDir)GomosOptiXModel/test.lua"
     }
   ]
 }

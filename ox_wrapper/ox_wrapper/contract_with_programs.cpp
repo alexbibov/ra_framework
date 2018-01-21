@@ -16,7 +16,7 @@ OxProgram const* OxContractWithOxPrograms::getProgramByName(std::string const& n
     return nullptr;
 }
 
-OxProgram const* ox_wrapper::OxContractWithOxPrograms::getProgramById(OxEntityID const& id) const
+OxProgram const* ox_wrapper::OxContractWithOxPrograms::getProgramById(OxEntityId const& id) const
 {
     for (auto& e : m_programs)
     {
@@ -32,7 +32,7 @@ OxContractWithOxPrograms::OxContractWithOxPrograms(std::initializer_list<OxProgr
 {
 }
 
-uint32_t OxContractWithOxPrograms::getDeclarationOffsetFromId(OxEntityID const& id) const
+uint32_t OxContractWithOxPrograms::getDeclarationOffsetFromId(OxEntityId const& id) const
 {
     for (uint32_t i = 0; i < m_programs.size(); ++i)
     {

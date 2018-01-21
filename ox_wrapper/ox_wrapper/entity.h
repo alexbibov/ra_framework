@@ -6,17 +6,17 @@
 
 namespace ox_wrapper{
 
-class OxEntityID
+class OxEntityId
 {
 public:
-    OxEntityID();    //! initializes new identifier based on the calling thread and on the number of entities previously created by this thread
+    OxEntityId();    //! initializes new identifier based on the calling thread and on the number of entities previously created by this thread
 
-    bool operator==(OxEntityID const& other) const;
-    bool operator<(OxEntityID const& other) const;
-    bool operator<=(OxEntityID const& other) const;
-    bool operator>(OxEntityID const& other) const;
-    bool operator>=(OxEntityID const& other) const;
-    bool operator!=(OxEntityID const& other) const;
+    bool operator==(OxEntityId const& other) const;
+    bool operator<(OxEntityId const& other) const;
+    bool operator<=(OxEntityId const& other) const;
+    bool operator>(OxEntityId const& other) const;
+    bool operator>=(OxEntityId const& other) const;
+    bool operator!=(OxEntityId const& other) const;
 
     //! Returns numeric hash identifier of the thread that has created the object referred by the id
     size_t owningThread() const;
@@ -35,7 +35,7 @@ private:
 class OxEntity
 {
 public:
-    OxEntityID getUniqueIdentifier() const;    //! returns unique identifier of the entity
+    OxEntityId getUniqueIdentifier() const;    //! returns unique identifier of the entity
 
     std::string getStringName() const;	//! returns user-friendly string name of the entity
     void setStringName(std::string const& entity_string_name);	//! sets new user-friendly string name for the entity
@@ -52,7 +52,7 @@ public:
     virtual ~OxEntity();
 
 private:
-    OxEntityID m_id;    //!< unique identifier of the entity
+    OxEntityId m_id;    //!< unique identifier of the entity
     std::string m_string_name;	//!< user-friendly string name of the entity
     static thread_local uint64_t m_alive_entities;    //!< number of alive entities owned by the calling thread
 };

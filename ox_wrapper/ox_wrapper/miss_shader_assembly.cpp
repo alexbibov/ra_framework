@@ -15,7 +15,7 @@ OxMissShaderAssembly::OxMissShaderAssembly(std::initializer_list<OxMissShader> i
     }
 }
 
-util::Optional<OxMissShader> OxMissShaderAssembly::getMissShaderById(OxEntityID const& id) const
+util::Optional<OxMissShader> OxMissShaderAssembly::getMissShaderById(OxEntityId const& id) const
 {
     for (auto& ms : m_miss_shader_list)
     {

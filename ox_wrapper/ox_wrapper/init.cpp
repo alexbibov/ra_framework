@@ -2,6 +2,7 @@
 #include "context.h"
 #include "../../_3rd_party/json/json.hpp"
 #include "util/misc.h"
+#include "util/lua_support.h"
 
 #include <windows.h>
 
@@ -137,17 +138,29 @@ OxInit::OxInit(
         }
     }
 
-
     // create context
     {
         m_context.reset(new OxContext{ asset_directories, num_entry_points });
+        m_factories_sentinel.reset(new OxFactoryInitializerSentinel{ *m_context });
         m_context->setStringName("OptiX context");
+    }
+
+    // register some auxiliary functions in Lua
+    {
+        util::lua_support::LuaState::registerFunction("ox_logger_path", [this]()->std::string {return loggerPath(); });
+        util::lua_support::LuaState::registerFunction("ox_alive_entities", &OxEntity::aliveEntities);
     }
 }
 
 OxInit::~OxInit()
 {
-    m_context = nullptr;    // the context must be destroyed while the logger is still valid as errors may still occur during destruction
+    // Lua must be shutdown first to make sure all ox_wrapper objects it has created are dead by the time the
+    // context gets destroyed
+    util::lua_support::LuaState::shutdown();    
+
+    // the context and factories must be destroyed while the logger is still valid as errors may still occur during destruction
+    m_factories_sentinel = nullptr;
+    m_context = nullptr;
     auto alive_entities = OxEntity::aliveEntities();
     util::Log::retrieve()->out("Alive entities: " + std::to_string(alive_entities), 
         alive_entities ? util::LogMessageType::exclamation : util::LogMessageType::information);
@@ -168,4 +181,21 @@ util::Log const& OxInit::logger() const
 std::string OxInit::loggerPath() const
 {
     return m_logging_path;
+}
+
+void OxInit::executeLuaScriptFromSource(std::string const& lua_source_file) const
+{
+    std::ifstream ifile{ lua_source_file, std::ios::in };
+    std::string lua_source_script;
+    if (ifile)
+    {
+        ifile.close();
+        lua_source_script = static_cast<std::string>(util::misc::readAsciiTextFromSourceFile(lua_source_file));
+    }
+    else
+    {
+        lua_source_script = m_context->retrieveStringAsset(lua_source_file);
+    }
+
+    util::lua_support::LuaState::executeScript(lua_source_script);
 }

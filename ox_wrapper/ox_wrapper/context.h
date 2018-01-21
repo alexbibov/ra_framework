@@ -59,6 +59,9 @@ public:
     // required by OxEntity interface
     bool isValid() const override;
 
+    // reads requested string asset
+    std::string retrieveStringAsset(std::string const& source) const;
+
 private:
     std::vector<std::string> m_asset_directories;
     RTcontext m_optix_context;

@@ -1,6 +1,8 @@
 #include "context.h"
 #include "exception.h"
 #include "ray_payloads.h"
+#include "util/optional.h"
+#include "util/misc.h"
 
 #include <fstream>
 
@@ -23,6 +25,31 @@ std::string getPathAnchor(std::string const& path)
     }
     else
         return "";
+}
+
+util::Optional<std::string> getPathToAsset(std::string const& asset_name, std::vector<std::string> const& asset_search_directories)
+{
+    std::string anchor = '/' + getPathAnchor(asset_name);
+    std::ifstream ifile;
+
+    std::string target_path;
+    bool asset_found{ false };
+    for (auto const& asset_dir : asset_search_directories)
+    {
+        target_path = asset_dir + anchor;
+        ifile.open(target_path, std::ios::in);
+        if (ifile)
+        {
+            ifile.close();
+            asset_found = true;
+            break;
+        }
+    }
+
+    if (asset_found)
+        return util::Optional<std::string>{ target_path };
+    else 
+        return util::Optional<std::string>{};
 }
 
 }
@@ -58,26 +85,11 @@ OxProgram OxContext::createProgram(std::string const& source, OxProgram::Source 
 {
     if (source_type == OxProgram::Source::file)
     {
-        std::string anchor = '/' + getPathAnchor(source);
-        std::ifstream ifile;
-
-        std::string target_path;
-        bool asset_found{ false };
-        for (auto const& asset_dir : m_asset_directories)
-        {
-            target_path = asset_dir + anchor;
-            ifile.open(target_path, std::ios::in);
-            if (ifile)
-            {
-                ifile.close();
-                asset_found = true;
-                break;
-            }
-        }
-        if (!asset_found)
+        auto path_to_asset = getPathToAsset(source, m_asset_directories);
+        if (!path_to_asset.isValid())
             throw OxException{ ("Unable to locate asset \"" + source + "\"").c_str(), __FILE__, __FUNCTION__, __LINE__ };
 
-        return OxProgramAttorney<OxContext>::createOptiXProgram(*this, target_path, OxProgram::Source::file, program_name);
+        return OxProgramAttorney<OxContext>::createOptiXProgram(*this, path_to_asset, OxProgram::Source::file, program_name);
     }
 
     return OxProgramAttorney<OxContext>::createOptiXProgram(*this, source, source_type, program_name);
@@ -99,3 +111,15 @@ bool ox_wrapper::OxContext::isValid() const
     LOG_OPTIX_ERROR(m_optix_context, res = rtContextValidate(m_optix_context));
     return res == RT_SUCCESS;
 }
+
+std::string OxContext::retrieveStringAsset(std::string const& source) const
+{
+    auto path_to_asset = getPathToAsset(source, m_asset_directories);
+    if (path_to_asset.isValid())
+    {
+        return util::misc::readAsciiTextFromSourceFile(path_to_asset);
+    }
+    else
+        throw OxException{ ("Unable to retrieve asset \"" + source + "\"").c_str(), __FILE__, __FUNCTION__, __LINE__ };
+}
+

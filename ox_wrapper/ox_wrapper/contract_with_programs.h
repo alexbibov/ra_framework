@@ -16,12 +16,12 @@ namespace ox_wrapper {
     {
     public:
         OxProgram const* getProgramByName(std::string const& name) const;
-        OxProgram const* getProgramById(OxEntityID const& id) const;
+        OxProgram const* getProgramById(OxEntityId const& id) const;
 
     protected:
         OxContractWithOxPrograms(std::initializer_list<OxProgram> init_list);
 
-        uint32_t getDeclarationOffsetFromId(OxEntityID const& id) const;
+        uint32_t getDeclarationOffsetFromId(OxEntityId const& id) const;
         uint32_t getDeclarationOffsetFromName(std::string const& name) const;
         RTprogram nativeOptiXProgramHandle(uint32_t declaration_offset = 0U) const;
         OxProgram getOxProgramFromDeclarationOffset(uint32_t declaration_offset = 0U) const;
