@@ -132,6 +132,7 @@
     <ClCompile Include="ox_wrapper\ray_casters\parallel_ray_generator.cpp" />
     <ClCompile Include="ox_wrapper\ray_casters\recaster_generator.cpp" />
     <ClCompile Include="ox_wrapper\ray_generator.cpp" />
+    <ClCompile Include="ox_wrapper\ray_generator_with_output_buffer.cpp" />
     <ClCompile Include="ox_wrapper\rendering_passes\rendering_pass.cpp" />
     <ClCompile Include="ox_wrapper\rendering_passes\scattering_rendering_pass.cpp" />
     <ClCompile Include="ox_wrapper\scene.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="ox_wrapper\ray_casters\parallel_ray_generator.h" />
     <ClInclude Include="ox_wrapper\ray_casters\recaster_generator.h" />
     <ClInclude Include="ox_wrapper\ray_generator.h" />
+    <ClInclude Include="ox_wrapper\ray_generator_with_output_buffer.h" />
     <ClInclude Include="ox_wrapper\ray_occlusion_payload.h" />
     <ClInclude Include="ox_wrapper\ray_payloads.h" />
     <ClInclude Include="ox_wrapper\ray_radiance_payload.h" />

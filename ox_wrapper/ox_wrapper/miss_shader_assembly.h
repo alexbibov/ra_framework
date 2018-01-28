@@ -6,6 +6,7 @@
 #include "util/optional.h"
 
 #include <set>
+#include <vector>
 
 namespace ox_wrapper {
 
@@ -18,6 +19,7 @@ class OxMissShaderAssembly : public OxContractWithOxContext, public OxEntity
 
 public:
     OxMissShaderAssembly(std::initializer_list<OxMissShader> init_list);
+    OxMissShaderAssembly(std::vector<OxMissShader> const& miss_shaders);
     virtual ~OxMissShaderAssembly() = default;
 
     util::Optional<OxMissShader> getMissShaderById(OxEntityId const& id) const;

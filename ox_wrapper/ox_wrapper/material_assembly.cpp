@@ -12,7 +12,13 @@ OxMaterialAssembly::OxMaterialAssembly():
 }
 
 OxMaterialAssembly::OxMaterialAssembly(std::initializer_list<OxMaterial> init_list):
-    OxContractWithOxContext{ init_list.begin()->context() },
+    OxMaterialAssembly{ std::vector<OxMaterial>{init_list} }
+{
+    
+}
+
+OxMaterialAssembly::OxMaterialAssembly(std::vector<OxMaterial> const& materials):
+    OxContractWithOxContext{ materials.begin()->context() },
     m_is_dummy{ false }
 {
     RTgeometryinstance native_geometry_instance_handle;
@@ -23,13 +29,13 @@ OxMaterialAssembly::OxMaterialAssembly(std::initializer_list<OxMaterial> init_li
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryInstanceDestroy(gi));
     });
 
-    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), 
-        rtGeometryInstanceSetMaterialCount(native_geometry_instance_handle, static_cast<unsigned int>(init_list.size())));
-    
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(),
+        rtGeometryInstanceSetMaterialCount(native_geometry_instance_handle, static_cast<unsigned int>(materials.size())));
+
     unsigned int idx{ 0U };
-    for (auto const& e : init_list)
+    for (auto const& e : materials)
     {
-        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), 
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(),
             rtGeometryInstanceSetMaterial(native_geometry_instance_handle, idx, OxMaterialAttorney<OxMaterialAssembly>::getNativeMaterialHandle(e)));
 
         if (!m_materials.insert(e).second)

@@ -129,7 +129,12 @@
     <ClCompile Include="ox_wrapper\factory_initializer_sentinel.cpp">
       <Filter>ox_wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="ox_wrapper\basic_factory.cpp" />
+    <ClCompile Include="ox_wrapper\basic_factory.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\ray_generator_with_output_buffer.cpp">
+      <Filter>ox_wrapper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ox_wrapper\buffer.h">
@@ -273,7 +278,12 @@
     <ClInclude Include="ox_wrapper\factory_initializer_sentinel.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="ox_wrapper\basic_factory.h" />
+    <ClInclude Include="ox_wrapper\basic_factory.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\ray_generator_with_output_buffer.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl">

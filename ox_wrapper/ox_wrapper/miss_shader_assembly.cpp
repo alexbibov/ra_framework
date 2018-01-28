@@ -4,9 +4,15 @@ using namespace ox_wrapper;
 
 
 OxMissShaderAssembly::OxMissShaderAssembly(std::initializer_list<OxMissShader> init_list):
-    OxContractWithOxContext{ init_list.begin()->context() }
+    OxContractWithOxContext{ std::vector<OxMissShader>{init_list} }
 {
-    for (auto& ms : init_list)
+    
+}
+
+OxMissShaderAssembly::OxMissShaderAssembly(std::vector<OxMissShader> const& miss_shaders) :
+    OxContractWithOxContext{ miss_shaders.begin()->context() }
+{
+    for (auto& ms : miss_shaders)
     {
         if (!m_miss_shader_list.insert(ms).second)
             util::Log::retrieve()->out("WARNING: unable to insert miss shader \"" + ms.getStringName() +

@@ -6,6 +6,7 @@
 #include "material.h"
 #include <memory>
 #include <set>
+#include <vector>
 
 #include "util/optional.h"
 
@@ -22,6 +23,7 @@ class OxMaterialAssembly : public OxContractWithOxContext, public OxEntity
 public:
     OxMaterialAssembly();
     OxMaterialAssembly(std::initializer_list<OxMaterial> init_list);
+    OxMaterialAssembly(std::vector<OxMaterial> const& materials);
     virtual ~OxMaterialAssembly() = default;
 
     util::Optional<OxMaterial> getMaterialById(OxEntityId const& id) const;

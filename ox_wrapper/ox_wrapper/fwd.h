@@ -24,6 +24,7 @@ class OxMissShader;
 class OxMissShaderAssembly;
 class OxFactoryInitializerSentinel;
 class OxBasicFactory;
+class OxRayGeneratorWithOutputBuffer;
 }
 
 #endif

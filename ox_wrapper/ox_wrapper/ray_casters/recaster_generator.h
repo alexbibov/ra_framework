@@ -1,13 +1,13 @@
 #ifndef OX_WRAPPER_RAY_CASTERS_RECASTER_GENERATOR_H
 #define OX_WRAPPER_RAY_CASTERS_RECASTER_GENERATOR_H
 
-#include "../ray_generator.h"
+#include "../ray_generator_with_output_buffer.h"
 #include "../traverse_backup_buffer.h"
 #include "../ray_payloads.h"
 
 namespace ox_wrapper {
 
-class OxRecasterGenerator : public OxRayGenerator
+class OxRecasterGenerator : public OxRayGeneratorWithOutputBuffer
 {
 public:
     OxRecasterGenerator(OxTraverseBackupBuffer const& traverse_backup_buffer, OxBuffer<OxRayRadiancePayload> const& output_buffer, OxRayType recasted_ray_type);
