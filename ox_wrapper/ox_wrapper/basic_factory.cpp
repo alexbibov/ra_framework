@@ -244,7 +244,12 @@ void luaRegisterGeneralTypes()
         "toString", &OxEntityId::toString
         );
 
-
+    lua_support::LuaState::registerType<OxEntity>(
+        "OxEntity", lua_support::NoConstructor::make_initializer(),
+        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
+        "getStringName", &OxEntity::getStringName,
+        "setStringName", &OxEntity::setStringName
+        );
 }
 
 void luaRegisterRayPayloadTypes()
@@ -324,18 +329,19 @@ void luaRegisterShaderTypes()
         "native", &OxProgramId::native
         );
 
-    lua_support::LuaState::registerType<OxProgram>(
+    lua_support::LuaState::registerSubType<OxProgram>(
         "OxProgram",
+
+        lua_support::ListOfBaseClasses::make_initializer(
+            lua_support::BaseClass<OxEntity>{}
+        ),
+
         lua_support::ListOfFactories::make_initializer(
             [](std::string const& source, OxProgram::Source source_type, std::string const& program_name)
             {
                 return p_basic_factory_instance->createProgram(source, source_type, program_name);
             }
         ),
-
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName,
 
         "getId", &OxProgram::getId,
 
@@ -475,8 +481,13 @@ void luaRegisterBufferTypes()
         "_3D", OxBufferDimension::_3D
         );
 
-    lua_support::LuaState::registerType<OxAbstractBuffer>(
+    lua_support::LuaState::registerSubType<OxAbstractBuffer>(
         "OxBuffer",
+
+        lua_support::ListOfBaseClasses::make_initializer(
+            lua_support::BaseClass<OxEntity>{}
+        ),
+
         lua_support::ListOfFactories::make_initializer(
             [](OxBasicFactory::OxBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width)
             {
@@ -496,10 +507,6 @@ void luaRegisterBufferTypes()
                     buffer_kind, width, height, depth);
             }
         ),
-
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName,
 
         "getId", &OxAbstractBuffer::getId,
 
@@ -531,8 +538,13 @@ void luaRegisterBufferTypes()
 
 void luaRegisterMaterialTypes()
 {
-    lua_support::LuaState::registerType<OxMaterial>(
+    lua_support::LuaState::registerSubType<OxMaterial>(
         "OxMaterial",
+
+        lua_support::ListOfBaseClasses::make_initializer(
+            lua_support::BaseClass<OxEntity>{}
+        ),
+
         lua_support::ListOfFactories::make_initializer(
             [](OxProgram closest_hit_shader, OxProgram any_hit_shader, OxRayType ray_type)
             {
@@ -550,12 +562,26 @@ void luaRegisterMaterialTypes()
             {
                 return p_basic_factory_instance->
                     createMaterial(closest_hit_shader, util::Optional<OxProgram>{}, ray_type);
+            },
+
+            [](OxProgram closest_hit_shader, OxProgram any_hit_shader)
+            {
+                return p_basic_factory_instance->
+                    createMaterial(closest_hit_shader, any_hit_shader);
+            },
+
+            [](sol::nil_t, OxProgram any_hit_shader)
+            {
+                return p_basic_factory_instance->
+                    createMaterial(util::Optional<OxProgram>{}, any_hit_shader);
+            },
+
+            [](OxProgram closest_hit_shader, sol::nil_t)
+            {
+                return p_basic_factory_instance->
+                    createMaterial(closest_hit_shader, util::Optional<OxProgram>{});
             }
         ),
-
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName,
 
         "getClosestHitShader",
             [](OxMaterial* p)
@@ -577,15 +603,16 @@ void luaRegisterMaterialTypes()
     );
 
 
-    lua_support::LuaState::registerType<OxMaterialAssembly>(
+    lua_support::LuaState::registerSubType<OxMaterialAssembly>(
         "OxMaterialAssembly",
+
+        lua_support::ListOfBaseClasses::make_initializer(
+            lua_support::BaseClass<OxEntity>{}
+        ),
+
         lua_support::ListOfConstructors::make_initializer(
             lua_support::Constructor<std::vector<OxMaterial> const&>{}
         ),
-
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName,
 
         "getMaterialById",
             [](OxMaterialAssembly* p, OxEntityId id)
@@ -618,16 +645,17 @@ void luaRegisterMaterialTypes()
 
 void luaRegisterGeometryTypes()
 {
-    lua_support::LuaState::registerType<OxGeometry>(
+    lua_support::LuaState::registerSubType<OxGeometry>(
         "OxGeometry",
+
+        lua_support::ListOfBaseClasses::make_initializer(
+            lua_support::BaseClass<OxEntity>{}
+        ),
+
         lua_support::ListOfConstructors::make_initializer(
             lua_support::Constructor<OxProgram const&, OxProgram const&>{},
             lua_support::Constructor<OxProgram const&, OxProgram const&, OxMaterialAssembly const&>{}
         ),
-
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName,
 
         "getMaterialAssembly", 
             [](OxGeometry* p)
@@ -652,18 +680,27 @@ void luaRegisterGeometryTypes()
         OxBVHAlgorithm::none
     );
 
-    lua_support::LuaState::registerType<OxGeometryGroup>(
+    lua_support::LuaState::registerType<OxTransformable>(
+        "OxTransformable",
+        lua_support::NoConstructor::make_initializer(),
+        "applyTransform", &OxTransformable::applyTransform,
+        "getTransform", &OxTransformable::getTransform
+    );
+
+    lua_support::LuaState::registerSubType<OxGeometryGroup>(
         "OxGeometryGroup",
+
+        lua_support::ListOfBaseClasses::make_initializer(
+            lua_support::BaseClass<OxEntity>{},
+            lua_support::BaseClass<OxTransformable>{}
+        ),
+
         lua_support::ListOfFactories::make_initializer(
             [](OxBVHAlgorithm acceleration_structure_construction_algorithm)
             {
                 return p_basic_factory_instance->createGeometryGroup(acceleration_structure_construction_algorithm);
             }
         ),
-
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName,
 
         "getNumberOfGeometries", &OxGeometryGroup::getNumberOfGeometries,
 
@@ -679,30 +716,33 @@ void luaRegisterGeometryTypes()
 
 void luaRegisterMissShaderTypes()
 {
-    lua_support::LuaState::registerType<OxMissShader>(
+    lua_support::LuaState::registerSubType<OxMissShader>(
         "OxMissShader",
-        lua_support::ListOfConstructors::make_initializer(
-            lua_support::Constructor<OxProgram const&, OxRayType>{}
+
+        lua_support::ListOfBaseClasses::make_initializer(
+            lua_support::BaseClass<OxEntity>{}
         ),
 
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName,
+        lua_support::ListOfConstructors::make_initializer(
+            lua_support::Constructor<OxProgram const&, OxRayType>{},
+            lua_support::Constructor<OxProgram const&>{}
+        ),
 
         "getProgram", &OxMissShader::getProgram,
         "rayType", &OxMissShader::rayType,
         "isValid", &OxMissShader::isValid
     );
 
-    lua_support::LuaState::registerType<OxMissShaderAssembly>(
+    lua_support::LuaState::registerSubType<OxMissShaderAssembly>(
         "OxMissShaderAssembly",
+
+        lua_support::ListOfBaseClasses::make_initializer(
+            lua_support::BaseClass<OxEntity>{}
+        ),
+
         lua_support::ListOfConstructors::make_initializer(
             lua_support::Constructor<std::vector<OxMissShader> const&>{}
         ),
-
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName,
 
         "getMissShaderById",
             [](OxMissShaderAssembly* p, OxEntityId const& id)
@@ -735,19 +775,36 @@ void luaRegisterMissShaderTypes()
 
 void luaRegisterRayGeneratorTypes()
 {
-    lua_support::LuaState::registerType<OxRayGeneratorWithOutputBuffer>(
+    lua_support::LuaState::registerSubType<OxRayGeneratorWithOutputBuffer>(
         "OxRayGenerator",
+
+        lua_support::ListOfBaseClasses::make_initializer(
+            lua_support::BaseClass<OxEntity>{}
+        ),
+
         lua_support::ListOfConstructors::make_initializer(
             lua_support::Constructor<OxProgram const&, OxAbstractBuffer const&,
                 std::string const&, uint32_t, uint32_t, uint32_t, uint32_t>{},
+            lua_support::Constructor<OxProgram const&, OxAbstractBuffer const&,
+            std::string const&, uint32_t, uint32_t, uint32_t>{},
+            lua_support::Constructor<OxProgram const&, OxAbstractBuffer const&,
+            std::string const&, uint32_t, uint32_t>{},
+            lua_support::Constructor<OxProgram const&, OxAbstractBuffer const&,
+            std::string const&, uint32_t>{},
+
             lua_support::Constructor<OxProgram const&, 
                 OxMissShaderAssembly const&, OxAbstractBuffer const&,
-            std::string const&, uint32_t, uint32_t, uint32_t, uint32_t>{}
+            std::string const&, uint32_t, uint32_t, uint32_t, uint32_t>{},
+            lua_support::Constructor<OxProgram const&,
+            OxMissShaderAssembly const&, OxAbstractBuffer const&,
+            std::string const&, uint32_t, uint32_t, uint32_t>{},
+            lua_support::Constructor<OxProgram const&,
+            OxMissShaderAssembly const&, OxAbstractBuffer const&,
+            std::string const&, uint32_t, uint32_t>{},
+            lua_support::Constructor<OxProgram const&,
+            OxMissShaderAssembly const&, OxAbstractBuffer const&,
+            std::string const&, uint32_t>{}
         ),
-        
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName,
 
         "getRayGenerationShader", &OxRayGenerator::getRayGenerationShader,
         "getMissShaderAssembly", 
@@ -767,15 +824,17 @@ void luaRegisterRayGeneratorTypes()
 
 void luaRegisterSceneTypes()
 {
-    lua_support::LuaState::registerType<OxSceneSection>(
+    lua_support::LuaState::registerSubType<OxSceneSection>(
         "OxSceneSection",
+
+        lua_support::ListOfBaseClasses::make_initializer(
+            lua_support::BaseClass<OxEntity>{},
+            lua_support::BaseClass<OxTransformable>{}
+        ),
+
         lua_support::ListOfConstructors::make_initializer(
             lua_support::Constructor<OxRayGenerator const&, OxBVHAlgorithm>{}
         ),
-
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName,
 
         "rayGenerator", &OxSceneSection::rayGenerator,
         "beginConstruction", &OxSceneSection::beginConstruction,
@@ -791,12 +850,15 @@ void luaRegisterSceneTypes()
         "trace", &OxSceneSection::trace
     );
 
-    lua_support::LuaState::registerType<OxScene>(
+    lua_support::LuaState::registerSubType<OxScene>(
         "OxScene",
+
+        lua_support::ListOfBaseClasses::make_initializer(
+            lua_support::BaseClass<OxEntity>{}
+        ),
+
         lua_support::ListOfConstructors::make_initializer(),
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName,
+
         "addSceneSection", &OxScene::addSceneSection,
         "isValid", &OxScene::isValid,
         "update", &OxScene::update,
@@ -1047,7 +1109,7 @@ OxMissShaderAssembly OxBasicFactory::createMissShaderAssembly(std::vector<OxMiss
 
 OxRayGeneratorWithOutputBuffer OxBasicFactory::createRayGenerator(OxProgram const& ray_generation_shader, 
     OxAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name, 
-    uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z, uint32_t entry_point_index)
+    uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z, uint32_t entry_point_index) const
 {
     return OxRayGeneratorWithOutputBuffer{ ray_generation_shader, output_buffer, output_buffer_binding_name,
     num_rays_x, num_rays_y, num_rays_z, entry_point_index };
@@ -1057,18 +1119,18 @@ OxRayGeneratorWithOutputBuffer OxBasicFactory::createRayGenerator(OxProgram cons
     OxMissShaderAssembly const& miss_shader_assembly, OxAbstractBuffer const& output_buffer, 
     std::string const& output_buffer_binding_name, 
     uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z,
-    uint32_t entry_point_index)
+    uint32_t entry_point_index) const
 {
     return OxRayGeneratorWithOutputBuffer{ ray_generation_shader, miss_shader_assembly, output_buffer,
     output_buffer_binding_name, num_rays_x, num_rays_y, num_rays_z, entry_point_index };
 }
 
-OxSceneSection OxBasicFactory::createSceneSection(OxRayGenerator const& ray_generator, OxBVHAlgorithm acceleration_structure_construction_algorithm)
+OxSceneSection OxBasicFactory::createSceneSection(OxRayGenerator const& ray_generator, OxBVHAlgorithm acceleration_structure_construction_algorithm) const
 {
     return OxSceneSection{ ray_generator, acceleration_structure_construction_algorithm };
 }
 
-OxScene OxBasicFactory::createScene()
+OxScene OxBasicFactory::createScene() const
 {
     return OxScene{};
 }

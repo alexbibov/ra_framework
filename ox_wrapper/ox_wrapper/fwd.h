@@ -25,6 +25,7 @@ class OxMissShaderAssembly;
 class OxFactoryInitializerSentinel;
 class OxBasicFactory;
 class OxRayGeneratorWithOutputBuffer;
+class OxTraverseBackupBuffer;
 }
 
 #endif

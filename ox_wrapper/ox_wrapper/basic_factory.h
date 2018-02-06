@@ -61,24 +61,24 @@ public:
 public:
     OxMissShader createMissShader(OxProgram const& miss_shader, OxRayType ray_type = OxRayType::unknown) const;
     OxMissShaderAssembly createMissShaderAssembly(std::vector<OxMissShader> const& miss_shaders) const;
-    
-    OxRayGeneratorWithOutputBuffer createRayGenerator(OxProgram const& ray_generation_shader,
-        OxAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name,
-        uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U, 
-        uint32_t entry_point_index = 1U);
 
     // ray generators
 public:
     OxRayGeneratorWithOutputBuffer createRayGenerator(OxProgram const& ray_generation_shader,
+        OxAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name,
+        uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U,
+        uint32_t entry_point_index = 0U) const;
+
+    OxRayGeneratorWithOutputBuffer createRayGenerator(OxProgram const& ray_generation_shader,
         OxMissShaderAssembly const& miss_shader_assembly, OxAbstractBuffer const& output_buffer,
         std::string const& output_buffer_binding_name,
         uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U,
-        uint32_t entry_point_index = 0U);
+        uint32_t entry_point_index = 0U) const;
 
     // scenes
 public:
-    OxSceneSection createSceneSection(OxRayGenerator const& ray_generator, OxBVHAlgorithm acceleration_structure_construction_algorithm);
-    OxScene createScene();
+    OxSceneSection createSceneSection(OxRayGenerator const& ray_generator, OxBVHAlgorithm acceleration_structure_construction_algorithm) const;
+    OxScene createScene() const;
 
 private:
     OxBasicFactory(OxContext const& context);

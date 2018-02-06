@@ -5,7 +5,7 @@
 #include "../traverse_backup_buffer.h"
 #include "../ray_payloads.h"
 
-namespace ox_wrapper {
+namespace ox_wrapper { namespace ray_casters {
 
 class OxRecasterGenerator : public OxRayGeneratorWithOutputBuffer
 {
@@ -24,6 +24,6 @@ private:
     OxAbstractBuffer const& m_output_buffer;
 };
 
-}
+}}
 
 #endif

@@ -1,13 +1,13 @@
 #ifndef OX_WRAPPER_RAY_CASTERS_PARALLEL_RAY_GENERATOR_H
 #define OX_WRAPPER_RAY_CASTERS_PARALLEL_RAY_GENERATOR_H
 
-#include "../ray_generator.h"
+#include "../ray_generator_with_output_buffer.h"
 #include "../buffer.h"
 #include "../ray_radiance_payload.h"
 
 namespace ox_wrapper { namespace ray_casters {
 
-class OxParallelRayGenerator : public OxRayGenerator
+class OxParallelRayGenerator : public OxRayGeneratorWithOutputBuffer
 {
 public:
     OxParallelRayGenerator(OxContext const& context, uint32_t num_rays, 
@@ -30,11 +30,7 @@ public:
     OxRayRadiancePayload const* mapOutputbuffer() const;
     void unmapOutputBuffer() const;
 
-    // required by OxRayGenerator interface
-    OxAbstractBuffer const& outputBuffer() const override;
-
 private:
-    OxBuffer<OxRayRadiancePayload> m_output_buffer;
     OxBuffer<float2> m_spectral_flux_buffer;
     uint8_t m_num_spectra_pairs_supported;
 };

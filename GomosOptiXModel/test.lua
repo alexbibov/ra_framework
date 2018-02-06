@@ -1,4 +1,6 @@
 circle = OxProgram.new("circle.ptx", OxProgramSource.file, "__ox_intersect__")
+black_body = OxBlackBody.new(OxRayPayloadType["radiance"])
 print(circle:isValid())
-print(circle:getUniqueIdentifier():toString())
-print("Alive entities:"..ox_alive_entities())
+print("Circle id "..circle:getUniqueIdentifier():toString())
+print("Black body id "..black_body:getUniqueIdentifier():toString())
+print("Alive entities: "..ox_alive_entities())

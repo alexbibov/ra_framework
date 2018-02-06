@@ -10,8 +10,8 @@ using namespace ox_wrapper::ray_casters;
 OxParallelRayGenerator::OxParallelRayGenerator(OxContext const& context, uint32_t num_rays, float emitter_size, 
     float emitter_position, float emitter_rotation, 
     uint8_t num_spectra_pairs_supported, uint32_t entry_point_index):
-    OxRayGenerator{ context.createProgram(PTX_PARALLEL_RAY_GENERATOR, OxProgram::Source::file, OX_SHADER_ENTRY_RAY_GENERATION), num_rays, 1U, 1U, entry_point_index },
-    m_output_buffer{ context.createBuffer<OxRayRadiancePayload>(OxBufferKind::output, num_rays) },
+    OxRayGeneratorWithOutputBuffer{ context.createProgram(PTX_PARALLEL_RAY_GENERATOR, OxProgram::Source::file, OX_SHADER_ENTRY_RAY_GENERATION),
+    context.createBuffer<OxRayRadiancePayload>(OxBufferKind::output, num_rays), "ox_output_buffer", num_rays, 1U, 1U, entry_point_index },
     m_spectral_flux_buffer{ context.createBuffer<float2>(OxBufferKind::input, (std::min)(constants::max_spectra_pairs_supported, static_cast<uint32_t>(num_spectra_pairs_supported))) },
     m_num_spectra_pairs_supported{ num_spectra_pairs_supported }
 {
@@ -21,7 +21,6 @@ OxParallelRayGenerator::OxParallelRayGenerator(OxContext const& context, uint32_
     setEmitterSize(emitter_size);
     setEmitterPosition(emitter_position);
     setEmitterRotation(emitter_rotation);
-    getRayGenerationShader().assignBuffer("ox_output_buffer", m_output_buffer);
     getRayGenerationShader().assignBuffer("ox_init_spectral_flux_buffer", m_spectral_flux_buffer);
 }
 
@@ -86,15 +85,10 @@ void ray_casters::OxParallelRayGenerator::unmapSpectralFluxBuffer() const
 
 OxRayRadiancePayload const* ray_casters::OxParallelRayGenerator::mapOutputbuffer() const
 {
-    return m_output_buffer.map(OxBufferMapKind::read);
+    return static_cast<OxRayRadiancePayload const*>(outputBuffer().map(OxBufferMapKind::read));
 }
 
 void ray_casters::OxParallelRayGenerator::unmapOutputBuffer() const
 {
-    m_output_buffer.unmap();
-}
-
-OxAbstractBuffer const& OxParallelRayGenerator::outputBuffer() const
-{
-    return m_output_buffer;
+    outputBuffer().unmap();
 }

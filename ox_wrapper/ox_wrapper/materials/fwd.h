@@ -4,6 +4,7 @@
 namespace ox_wrapper { namespace materials {
 
 class OxBlackBody;
+class OxMaterialsFactory;
 
 }}
 

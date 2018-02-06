@@ -12,6 +12,23 @@ struct Constructor
     using type = void(Args...);
 };
 
+
+template<typename T>
+struct BaseClass
+{
+    using type = T;
+};
+
+struct ListOfBaseClasses
+{
+    template<typename ... Args>
+    static sol::bases<typename Args::type...>
+        make_initializer(Args...)
+    {
+        return sol::bases<typename Args::type...>{};
+    }
+};
+
 struct ListOfConstructors
 {
     template<typename ... Args>
@@ -99,6 +116,14 @@ public:
     {
         initialize();
         sol::usertype<RegistrantType> utype{ "new", initializer, args... };
+        m_lua_state->set_usertype(name, utype);
+    }
+
+    template<typename RegistrantType, typename BasesType, typename InitializerType, typename ... MemberArgs>
+    static void registerSubType(std::string const& name, BasesType bases, InitializerType initializer, MemberArgs ... args)
+    {
+        initialize();
+        sol::usertype<RegistrantType> utype{ "new", initializer, sol::base_classes, bases, args... };
         m_lua_state->set_usertype(name, utype);
     }
     

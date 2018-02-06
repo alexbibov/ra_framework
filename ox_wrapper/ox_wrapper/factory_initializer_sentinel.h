@@ -3,6 +3,8 @@
 
 #include "fwd.h"
 #include "shapes/fwd.h"
+#include "materials/fwd.h"
+#include "ray_casters/fwd.h"
 
 namespace ox_wrapper {
 
@@ -20,10 +22,14 @@ public:
 
     OxBasicFactory const& basicFactory() const;
     shapes::OxShapesFactory const& shapesFactory() const;
+    materials::OxMaterialsFactory const& materialsFactory() const;
+    ray_casters::OxRaycastersFactory const& raycastersFactory() const;
 
 private:
     OxBasicFactory* m_basic_factory;
     shapes::OxShapesFactory* m_shapes_factory;
+    materials::OxMaterialsFactory* m_materials_factory;
+    ray_casters::OxRaycastersFactory* m_raycasters_factory;
 };
 
 }

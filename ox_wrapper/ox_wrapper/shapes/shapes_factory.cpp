@@ -53,17 +53,27 @@ OxShapesFactory::OxShapesFactory(OxContext const& context):
 
     // Register factory functions in Lua
     {
-        auto factories = lua_support::ListOfFactories::make_initializer(
-            [this](float position_x, float position_y, float radius)
-        {
-            return createCircle(position_x, position_y, radius);
-        },
-            [this](OxMaterialAssembly const& material_assembly, float position_x, float position_y, float radius)
-        {
-            return createCircle(material_assembly, position_x, position_y, radius);
-        });
 
-        lua_support::LuaState::registerType<OxCircle>("OxCircle", factories,
+        lua_support::LuaState::registerSubType<OxCircle>(
+            
+            "OxCircle", 
+
+            lua_support::ListOfBaseClasses::make_initializer(
+                lua_support::BaseClass<OxEntity>{},
+                lua_support::BaseClass<OxGeometry>{}
+            ),
+
+            lua_support::ListOfFactories::make_initializer(
+                [this](float position_x, float position_y, float radius)
+                {
+                    return createCircle(position_x, position_y, radius);
+                },
+                        [this](OxMaterialAssembly const& material_assembly, float position_x, float position_y, float radius)
+                {
+                    return createCircle(material_assembly, position_x, position_y, radius);
+                }
+            ),
+
             "updatePosition", 
             lua_support::ListOfOverloads::make_initializer(
                 static_cast<void(OxCircle::*)(float2 const&)>(&OxCircle::updatePosition),

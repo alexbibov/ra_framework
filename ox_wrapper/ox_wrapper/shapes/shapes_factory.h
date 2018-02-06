@@ -18,7 +18,7 @@ public:
     // required by OxEntity interface
     bool isValid() const override;
 
-    //OxCircle
+    // OxCircle
 public:
     OxCircle createCircle(float position_x = 0.f, float position_y = 0.f, float radius = 1.f) const;
     OxCircle createCircle(OxMaterialAssembly const& material_assembly, float position_x = 0.f, float position_y = 0.f, float radius = 1.f) const;

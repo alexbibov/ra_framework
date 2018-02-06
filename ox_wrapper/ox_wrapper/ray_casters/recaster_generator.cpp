@@ -4,6 +4,7 @@
 #include "../../ptx.h"
 
 using namespace ox_wrapper;
+using namespace ox_wrapper::ray_casters;
 
 namespace
 {
