@@ -184,6 +184,7 @@
     <ClInclude Include="ox_wrapper\ray_radiance_payload.h" />
     <ClInclude Include="ox_wrapper\rendering_passes\fwd.h" />
     <ClInclude Include="ox_wrapper\rendering_passes\rendering_pass.h" />
+    <ClInclude Include="ox_wrapper\rendering_passes\rendering_passes_factory.h" />
     <ClInclude Include="ox_wrapper\rendering_passes\scattering_rendering_pass.h" />
     <ClInclude Include="ox_wrapper\scene.h" />
     <ClInclude Include="ox_wrapper\scene_section.h" />

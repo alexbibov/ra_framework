@@ -5,6 +5,7 @@ namespace ox_wrapper { namespace rendering_passes {
 
 class OxRenderingPass;
 class OxScatteringRenderingPass;
+class OxRenderingPassesFactory;
 
 }}
 

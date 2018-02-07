@@ -294,6 +294,9 @@
     <ClInclude Include="ox_wrapper\ray_casters\ray_casters_factory.h">
       <Filter>ox_wrapper\ray_casters</Filter>
     </ClInclude>
+    <ClInclude Include="ox_wrapper\rendering_passes\rendering_passes_factory.h">
+      <Filter>ox_wrapper\rendering_passes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl">
