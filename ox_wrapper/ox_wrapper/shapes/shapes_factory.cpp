@@ -68,7 +68,7 @@ OxShapesFactory::OxShapesFactory(OxContext const& context):
                 {
                     return createCircle(position_x, position_y, radius);
                 },
-                        [this](OxMaterialAssembly const& material_assembly, float position_x, float position_y, float radius)
+                [this](OxMaterialAssembly const& material_assembly, float position_x, float position_y, float radius)
                 {
                     return createCircle(material_assembly, position_x, position_y, radius);
                 }

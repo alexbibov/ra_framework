@@ -136,6 +136,7 @@
     <ClCompile Include="ox_wrapper\ray_generator.cpp" />
     <ClCompile Include="ox_wrapper\ray_generator_with_output_buffer.cpp" />
     <ClCompile Include="ox_wrapper\rendering_passes\rendering_pass.cpp" />
+    <ClCompile Include="ox_wrapper\rendering_passes\rendering_passes_factory.cpp" />
     <ClCompile Include="ox_wrapper\rendering_passes\scattering_rendering_pass.cpp" />
     <ClCompile Include="ox_wrapper\scene.cpp" />
     <ClCompile Include="ox_wrapper\scene_section.cpp" />

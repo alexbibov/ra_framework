@@ -139,6 +139,9 @@
     <ClCompile Include="ox_wrapper\ray_casters\ray_casters_factory.cpp">
       <Filter>ox_wrapper\ray_casters</Filter>
     </ClCompile>
+    <ClCompile Include="ox_wrapper\rendering_passes\rendering_passes_factory.cpp">
+      <Filter>ox_wrapper\rendering_passes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ox_wrapper\buffer.h">

@@ -19,10 +19,20 @@ public:
     bool isValid() const override;
 
     // OxScatteringRenderingPass
+public:
     OxScatteringRenderingPass createScatteringRenderingPass(OxSceneSection const& target_scene_section, uint8_t num_spectra_pairs_supported, uint32_t max_recursion_depth,
         float ray_marching_step_size, uint32_t num_scattering_integral_importance_directions,
         OxProgram const& absorption_probability_shader, OxProgram const& scattering_probability_shader,
         OxProgram const& scattering_phase_function_shader);
+
+    OxScatteringRenderingPass createScatteringRenderingPass(OxSceneSection const& target_scene_section, uint8_t num_spectra_pairs_supported, uint32_t max_recursion_depth,
+        float ray_marching_step_size, uint32_t num_scattering_integral_importance_directions);
+
+private:
+    OxRenderingPassesFactory(OxContext const& context);
+
+private:
+    OxContext const& m_context;
 };
 
 }}
