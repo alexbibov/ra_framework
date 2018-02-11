@@ -11,17 +11,15 @@ class OxScene final : public OxEntity
 {
 public:
     OxScene();
-    void addSceneSection(OxSceneSection const& scene_section);
+    void addSceneSection(OxSceneSection const& scene_section, OxRayGenerator const* ray_generator);
 
     // required by OxEntity interface
     bool isValid() const override;
 
-    void update() const;
-
     void trace() const;
 
 private:
-    std::list<OxSceneSection> m_scene_sections;
+    std::list<std::pair<OxSceneSection, OxRayGenerator const*>> m_scene_sections;
 };
 
 }

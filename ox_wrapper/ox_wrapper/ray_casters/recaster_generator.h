@@ -18,8 +18,6 @@ public:
     // required by OxRayGenerator interface
     OxAbstractBuffer const& outputBuffer() const override;
 
-    void launch() const;
-
 private:
     OxAbstractBuffer const& m_output_buffer;
 };

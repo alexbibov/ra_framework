@@ -38,7 +38,7 @@ private:
     using miss_shader_collection = std::set<OxMissShader, miss_shader_comparator>;
 
 private:
-    void apply() const;
+    void apply(OxObjectHandle top_scene_object) const;
 
 private:
     miss_shader_collection m_miss_shader_list;
@@ -59,9 +59,10 @@ class OxMissShaderAssemblyAttorney<OxRayGenerator>
 {
     friend class OxRayGenerator;
 
-    static void applyMissShaderAssembly(OxMissShaderAssembly const& parent_miss_shader_assembly)
+    static void applyMissShaderAssembly(OxMissShaderAssembly const& parent_miss_shader_assembly, 
+        OxObjectHandle top_scene_object)
     {
-        parent_miss_shader_assembly.apply();
+        parent_miss_shader_assembly.apply(top_scene_object);
     }
 };
 

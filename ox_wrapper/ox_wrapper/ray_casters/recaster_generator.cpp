@@ -131,9 +131,3 @@ OxAbstractBuffer const& OxRecasterGenerator::outputBuffer() const
 {
     return m_output_buffer;
 }
-
-void OxRecasterGenerator::launch() const
-{
-    OxRayGenerator::update();
-    OxRayGenerator::launch();
-}

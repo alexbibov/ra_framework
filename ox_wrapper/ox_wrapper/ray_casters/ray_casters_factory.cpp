@@ -207,9 +207,7 @@ OxRaycastersFactory::OxRaycastersFactory(OxContext const& context) :
                         throw OxException{ "unknown payload type", __FILE__, __FUNCTION__, __LINE__ };
                     }
                 }
-            ),
-
-            "launch", &OxRecasterGenerator::launch
+            )
         );
 
         

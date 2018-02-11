@@ -17,7 +17,8 @@ OxContractWithOxContext::OxContractWithOxContext(OxContext const& optix_context_
 OxContractWithOxContext& OxContractWithOxContext::operator=(OxContractWithOxContext const& other)
 {
     if (&m_optix_context_wrapper_ref != &other.m_optix_context_wrapper_ref)
-        throw OxException{ "Unable to assign ox_wrapper objects belonging to different contexts" };
+        throw OxException{ "Unable to assign ox_wrapper objects belonging to different contexts",
+    __FILE__, __FUNCTION__, __LINE__ };
 
     return *this;
 }

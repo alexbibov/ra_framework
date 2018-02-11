@@ -21,7 +21,7 @@ class OxMaterialAssembly : public OxContractWithOxContext, public OxEntity
     friend class OxMaterialAssemblyAttorney<OxGeometryGroup>;
 
 public:
-    OxMaterialAssembly();
+    OxMaterialAssembly(OxContext const& context);
     OxMaterialAssembly(std::initializer_list<OxMaterial> init_list);
     OxMaterialAssembly(std::vector<OxMaterial> const& materials);
     virtual ~OxMaterialAssembly() = default;

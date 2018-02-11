@@ -5,8 +5,8 @@
 using namespace ox_wrapper;
 
 
-OxMaterialAssembly::OxMaterialAssembly():
-    OxContractWithOxContext{*reinterpret_cast<OxContext const*>(0)},
+OxMaterialAssembly::OxMaterialAssembly(OxContext const& context):
+    OxContractWithOxContext{ context },
     m_is_dummy{ true }
 {
 }

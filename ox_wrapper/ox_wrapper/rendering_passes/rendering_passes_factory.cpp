@@ -43,6 +43,7 @@ bool OxRenderingPassesFactory::isValid() const
 
 OxScatteringRenderingPass OxRenderingPassesFactory::createScatteringRenderingPass(
     OxSceneSection const& target_scene_section, 
+    OxRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported,
     uint32_t max_recursion_depth, 
     float ray_marching_step_size, 
@@ -51,19 +52,20 @@ OxScatteringRenderingPass OxRenderingPassesFactory::createScatteringRenderingPas
     OxProgram const& scattering_probability_shader, 
     OxProgram const& scattering_phase_function_shader)
 {
-    return OxScatteringRenderingPass{ target_scene_section, num_spectra_pairs_supported,
+    return OxScatteringRenderingPass{ target_scene_section, ray_caster, num_spectra_pairs_supported,
     max_recursion_depth, ray_marching_step_size, num_scattering_integral_importance_directions,
     absorption_probability_shader, scattering_probability_shader, scattering_phase_function_shader };
 }
 
 OxScatteringRenderingPass OxRenderingPassesFactory::createScatteringRenderingPass(
     OxSceneSection const& target_scene_section, 
+    OxRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported, 
     uint32_t max_recursion_depth, 
     float ray_marching_step_size, 
     uint32_t num_scattering_integral_importance_directions)
 {
-    return OxScatteringRenderingPass{ target_scene_section, num_spectra_pairs_supported,
+    return OxScatteringRenderingPass{ target_scene_section, ray_caster, num_spectra_pairs_supported,
         max_recursion_depth, ray_marching_step_size, num_scattering_integral_importance_directions };
 }
 
@@ -90,6 +92,7 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
         lua_support::ListOfFactories::make_initializer(
             [this](
                 OxSceneSection const& target_scene_section,
+                OxRayGenerator const& ray_caster,
                 uint8_t num_spectra_pairs_supported,
                 uint32_t max_recursion_depth,
                 float ray_marching_step_size,
@@ -100,6 +103,7 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
             {
                 return createScatteringRenderingPass(
                     target_scene_section,
+                    ray_caster,
                     num_spectra_pairs_supported,
                     max_recursion_depth,
                     ray_marching_step_size,
@@ -111,6 +115,7 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
 
             [this](
                 OxSceneSection const& target_scene_section,
+                OxRayGenerator const& ray_caster,
                 uint8_t num_spectra_pairs_supported,
                 uint32_t max_recursion_depth,
                 float ray_marching_step_size,
@@ -118,6 +123,7 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
             {
                 return createScatteringRenderingPass(
                     target_scene_section,
+                    ray_caster,
                     num_spectra_pairs_supported,
                     max_recursion_depth,
                     ray_marching_step_size,

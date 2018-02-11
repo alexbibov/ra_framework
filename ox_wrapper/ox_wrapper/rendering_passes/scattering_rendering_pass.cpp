@@ -26,6 +26,7 @@ void applyMaterialAssemblyToSceneSection(OxSceneSection const& scene_section, Ox
 
 OxScatteringRenderingPass::OxScatteringRenderingPass(
     OxSceneSection const& scene_section,
+    OxRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported,
     uint32_t max_recursion_depth,
     float ray_marching_step_size,
@@ -35,6 +36,7 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
     OxProgram const& scattering_phase_function_shader) :
     OxRenderingPass{ scene_section },
     OxContractWithOxPrograms{ absorption_probability_shader, scattering_probability_shader, scattering_phase_function_shader },
+    m_ray_caster{ ray_caster },
     m_num_spectra_pairs_supported{ num_spectra_pairs_supported },
     //m_max_recursion_depth{ max_recursion_depth },
     //m_ray_marching_step_size{ ray_marching_step_size },
@@ -45,8 +47,8 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
     m_miss_shader_assembly{
     OxMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, OX_SHADER_ENTRY_MISS), OxRayType::unknown},
     OxMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_miss_scattered__"), OxRayType::scattered} },
-    m_traverse_backup_buffer{ targetSceneSection().context(), scene_section.rayGenerator().numberOfRays() },
-    m_recaster_ray_generator{ m_traverse_backup_buffer, castBufferToType<OxRayRadiancePayload>(scene_section.rayGenerator().outputBuffer()), OxRayType::unknown },
+    m_traverse_backup_buffer{ targetSceneSection().context(), ray_caster.numberOfRays() },
+    m_recaster_ray_generator{ m_traverse_backup_buffer, castBufferToType<OxRayRadiancePayload>(ray_caster.outputBuffer()), OxRayType::unknown },
     m_importance_directions_buffer{ targetSceneSection().context().createBuffer<float2>(OxBufferKind::input, num_scattering_integral_importance_directions*(1 + num_spectra_pairs_supported)) }
 {
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
@@ -70,20 +72,25 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
         .assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.getRawBuffer());
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
         .assignBuffer("importance_directions_buffer", m_importance_directions_buffer);
+    static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::scattered)).getClosestHitShader())
+        .assignBuffer("importance_directions_buffer", m_importance_directions_buffer);
     static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown))
         .getProgram().assignBuffer("importance_directions_buffer", m_importance_directions_buffer);
 }
 
 OxScatteringRenderingPass::OxScatteringRenderingPass(
     OxSceneSection const& scene_section,
+    OxRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported, 
     uint32_t max_recursion_depth, 
     float ray_marching_step_size, 
     uint32_t num_scattering_integral_importance_directions):
-    OxScatteringRenderingPass{ scene_section, num_spectra_pairs_supported, max_recursion_depth, ray_marching_step_size, num_scattering_integral_importance_directions,
-                               scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG, OxProgram::Source::file, "__ox_scattering_default_absorption_factor__"),
-                               scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG, OxProgram::Source::file, "__ox_scattering_default_scattering_factor__"),
-                               scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG, OxProgram::Source::file, "__ox_scattering_default_phase_function__") }
+    OxScatteringRenderingPass{ 
+    scene_section, ray_caster, num_spectra_pairs_supported, max_recursion_depth, 
+    ray_marching_step_size, num_scattering_integral_importance_directions,
+    scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG, OxProgram::Source::file, "__ox_scattering_default_absorption_factor__"),
+    scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG, OxProgram::Source::file, "__ox_scattering_default_scattering_factor__"),
+    scene_section.context().createProgram(PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG, OxProgram::Source::file, "__ox_scattering_default_phase_function__") }
 {
 }
 
@@ -204,15 +211,14 @@ void OxScatteringRenderingPass::setScatteringPhaseFunctionShader(OxProgram const
 void OxScatteringRenderingPass::render() const
 {
     applyMaterialAssemblyToSceneSection(targetSceneSection(), m_surface_material_assembly);
-    targetSceneSection().rayGenerator().setMissShaderAssembly(m_miss_shader_assembly);
+    m_ray_caster.setMissShaderAssembly(m_miss_shader_assembly);
 
-    targetSceneSection().update();
-    targetSceneSection().trace();
+    targetSceneSection().trace(m_ray_caster);
 
     unsigned int num_not_converged_rays{ *m_traverse_backup_buffer.getBufferPointer() };
     while (num_not_converged_rays > 0)
     {
-        m_recaster_ray_generator.launch();
+        targetSceneSection().trace(m_recaster_ray_generator);
         num_not_converged_rays = *m_traverse_backup_buffer.getBufferPointer();
     }
 }

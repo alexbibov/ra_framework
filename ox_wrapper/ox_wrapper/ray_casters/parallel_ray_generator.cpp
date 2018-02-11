@@ -21,7 +21,7 @@ OxParallelRayGenerator::OxParallelRayGenerator(OxContext const& context, uint32_
     setEmitterSize(emitter_size);
     setEmitterPosition(emitter_position);
     setEmitterRotation(emitter_rotation);
-    getRayGenerationShader().assignBuffer("ox_init_spectral_flux_buffer", m_spectral_flux_buffer);
+    getRayGenerationShader().assignBuffer("ox_init_flux_buffer", m_spectral_flux_buffer);
 }
 
 

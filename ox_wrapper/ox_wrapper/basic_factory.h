@@ -49,6 +49,7 @@ public:
     OxMaterial createMaterial(util::Optional<OxProgram> const& closest_hit_shader,
         util::Optional<OxProgram> const& any_hit_shader, OxRayType ray_type = OxRayType::unknown) const;
     OxMaterialAssembly createMaterialAssembly(std::vector<OxMaterial> const& materials) const;
+    OxMaterialAssembly createDummyMaterialAssembly() const;
 
     // geometries
 public:
@@ -77,7 +78,7 @@ public:
 
     // scenes
 public:
-    OxSceneSection createSceneSection(OxRayGenerator const& ray_generator, OxBVHAlgorithm acceleration_structure_construction_algorithm) const;
+    OxSceneSection createSceneSection(OxBVHAlgorithm acceleration_structure_construction_algorithm) const;
     OxScene createScene() const;
 
 private:

@@ -13,9 +13,7 @@ namespace ox_wrapper {
     class OxSceneSection final : public OxContractWithOxContext, public OxEntity, public OxTransformable
     {
     public:
-        OxSceneSection(OxRayGenerator const& optix_ray_generator, OxBVHAlgorithm acceleration_structure_construction_algorithm);
-
-        OxRayGenerator const& rayGenerator() const;
+        OxSceneSection(OxContext const& context, OxBVHAlgorithm acceleration_structure_construction_algorithm);
 
         void beginConstruction();
         void addGeometryGroup(OxGeometryGroup const& geometry_group);
@@ -28,18 +26,17 @@ namespace ox_wrapper {
         // required by OxEntity interface
         bool isValid() const override;
 
-        void update() const;
-        void trace() const;
+        void trace(OxRayGenerator const& ray_caster) const;
 
     private:
         RTobject getEntryNode() const;
-        bool _update(OxObjectHandle top_scene_object) const;
+        bool _update(OxRayGenerator const& ray_caster, OxObjectHandle top_scene_object) const;
+        void _trace(OxRayGenerator const& ray_caster) const;
 
         // required by OxTransformable interface
         RTobject getObjectToBeTransformed() const override;
 
     private:
-        OxRayGenerator const& m_optix_ray_generator;
         std::shared_ptr<RTgroup_api> m_native_group_handle;
         std::shared_ptr<RTacceleration_api> m_native_acceleration_handle;
         std::list<OxGeometryGroup> m_geometry_groups;

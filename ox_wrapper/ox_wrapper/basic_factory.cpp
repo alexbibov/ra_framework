@@ -619,7 +619,7 @@ void luaRegisterMaterialTypes()
 
             [](void)
             {
-                return OxMaterialAssembly{};
+                return p_basic_factory_instance->createDummyMaterialAssembly();
             }
         ),
 
@@ -846,11 +846,13 @@ void luaRegisterSceneTypes()
             lua_support::BaseClass<OxTransformable>{}
         ),
 
-        lua_support::ListOfConstructors::make_initializer(
-            lua_support::Constructor<OxRayGenerator const&, OxBVHAlgorithm>{}
+        lua_support::ListOfFactories::make_initializer(
+            [](OxBVHAlgorithm bvh_algorithm)
+            {
+                return p_basic_factory_instance->createSceneSection(bvh_algorithm); 
+            }
         ),
 
-        "rayGenerator", &OxSceneSection::rayGenerator,
         "beginConstruction", &OxSceneSection::beginConstruction,
         "addGeometryGroup", &OxSceneSection::addGeometryGroup,
         "addSceneSection", &OxSceneSection::addSceneSection,
@@ -860,7 +862,6 @@ void luaRegisterSceneTypes()
         "geometryGroups", &OxSceneSection::geometryGroups,
 
         "isValid", &OxSceneSection::isValid,
-        "update", &OxSceneSection::update,
         "trace", &OxSceneSection::trace
     );
 
@@ -871,11 +872,12 @@ void luaRegisterSceneTypes()
             lua_support::BaseClass<OxEntity>{}
         ),
 
-        lua_support::ListOfConstructors::make_initializer(),
+        lua_support::ListOfConstructors::make_initializer(
+            lua_support::Constructor<void>{}
+        ),
 
         "addSceneSection", &OxScene::addSceneSection,
         "isValid", &OxScene::isValid,
-        "update", &OxScene::update,
         "trace", &OxScene::trace
     );
 }
@@ -1095,6 +1097,11 @@ OxMaterialAssembly OxBasicFactory::createMaterialAssembly(std::vector<OxMaterial
     return OxMaterialAssembly{ materials };
 }
 
+OxMaterialAssembly OxBasicFactory::createDummyMaterialAssembly() const
+{
+    return OxMaterialAssembly{ m_context };
+}
+
 OxGeometry OxBasicFactory::createGeometry(OxProgram const& intersection_shader, OxProgram const& aabb_shader) const
 {
     return OxGeometry{ intersection_shader, aabb_shader };
@@ -1139,9 +1146,9 @@ OxRayGeneratorWithOutputBuffer OxBasicFactory::createRayGenerator(OxProgram cons
     output_buffer_binding_name, num_rays_x, num_rays_y, num_rays_z, entry_point_index };
 }
 
-OxSceneSection OxBasicFactory::createSceneSection(OxRayGenerator const& ray_generator, OxBVHAlgorithm acceleration_structure_construction_algorithm) const
+OxSceneSection OxBasicFactory::createSceneSection(OxBVHAlgorithm acceleration_structure_construction_algorithm) const
 {
-    return OxSceneSection{ ray_generator, acceleration_structure_construction_algorithm };
+    return OxSceneSection{ m_context, acceleration_structure_construction_algorithm };
 }
 
 OxScene OxBasicFactory::createScene() const

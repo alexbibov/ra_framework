@@ -62,9 +62,20 @@ int main(int argc, char* argv[])
                     "clc", []() { system("cls"); }
                 );
 
-                std::cout << "OX_WRAPPER v " << OX_WRAPPER_VERSION_MAJOR << "." << OX_WRAPPER_VERSION_MINOR
+                std::cout << "OX_WRAPPER v " << OX_WRAPPER_VERSION_MAJOR << "." << OX_WRAPPER_VERSION_MINOR << " "
                     << OX_WRAPPER_VERSION_SUFFIX << " (" << OX_WRAPPER_VERSION_CODENAME << ") Interactive Mode" << std::endl;
                 
+                std::cout << std::endl <<
+                    "   *******   **     **       *******  ******** *******   **     ** ****     **" << std::endl <<
+                    "  **/////** //**   **       /**////**/**///// /**////** /**    /**/**/**   /**" << std::endl <<
+                    " **     //** //** **        /**   /**/**      /**   /** /**    /**/**//**  /**" << std::endl <<
+                    "/**      /**  //***         /******* /******* /*******  /**    /**/** //** /**" << std::endl <<
+                    "/**      /**   **/**        /**////  /**////  /**///**  /**    /**/**  //**/**" << std::endl <<
+                    "//**     **   ** //**       /**      /**      /**  //** /**    /**/**   //****" << std::endl <<
+                    " //*******   **   //**      /**      /********/**   //**//******* /**    //***" << std::endl <<
+                    "  ///////   //     //       //       //////// //     //  ///////  //      ///" << std::endl << std::endl;
+
+
                 while (true)
                 {
                     std::cout << ">>";

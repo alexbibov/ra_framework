@@ -68,10 +68,10 @@ bool OxMissShaderAssembly::isValid() const
     return true;
 }
 
-void OxMissShaderAssembly::apply() const
+void OxMissShaderAssembly::apply(OxObjectHandle top_scene_object) const
 {
     for (auto& ms : m_miss_shader_list)
-        OxMissShaderAttorney<OxMissShaderAssembly>::applyMissShader(ms);
+        OxMissShaderAttorney<OxMissShaderAssembly>::applyMissShader(ms, top_scene_object);
 }
 
 OxMissShaderAssembly::miss_shader_collection::iterator OxMissShaderAssembly::begin()

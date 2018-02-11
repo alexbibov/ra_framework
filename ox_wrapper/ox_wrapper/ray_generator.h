@@ -45,7 +45,7 @@ public:
 protected:
     void setGeneratorDimensions(uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z);
 
-    void update() const;
+    void update(OxObjectHandle top_scene_object) const;
     void launch() const;
 
 private:
@@ -62,9 +62,9 @@ class OxRayGeneratorAttorney<OxSceneSection>
 {
     friend class OxSceneSection;
 
-    static void updateRayGenerator(OxRayGenerator const& parent_ray_generator)
+    static void updateRayGenerator(OxRayGenerator const& parent_ray_generator, OxObjectHandle top_scene_object)
     {
-        parent_ray_generator.update();
+        parent_ray_generator.update(top_scene_object);
     }
 
     static void launchRayGenerator(OxRayGenerator const& parent_ray_generator)

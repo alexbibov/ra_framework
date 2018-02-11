@@ -26,10 +26,12 @@ bool OxMissShader::isValid() const
     return res == RT_SUCCESS;
 }
 
-void OxMissShader::apply() const
+void OxMissShader::apply(OxObjectHandle top_scene_object) const
 {
     THROW_OPTIX_ERROR(
         nativeOptiXContextHandle(),
         rtContextSetMissProgram(nativeOptiXContextHandle(), static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle())
     );
+
+    getOxProgramFromDeclarationOffset().setVariableValue("ox_entry_node", top_scene_object);
 }

@@ -13,13 +13,24 @@ namespace ox_wrapper { namespace rendering_passes {
 class OxScatteringRenderingPass : public OxRenderingPass,  public OxContractWithOxPrograms
 {
 public:
-    OxScatteringRenderingPass(OxSceneSection const& target_scene_section, uint8_t num_spectra_pairs_supported, uint32_t max_recursion_depth,
-        float ray_marching_step_size, uint32_t num_scattering_integral_importance_directions,
-        OxProgram const& absorption_probability_shader, OxProgram const& scattering_probability_shader,
+    OxScatteringRenderingPass(
+        OxSceneSection const& target_scene_section, 
+        OxRayGenerator const& ray_caster,
+        uint8_t num_spectra_pairs_supported, 
+        uint32_t max_recursion_depth,
+        float ray_marching_step_size, 
+        uint32_t num_scattering_integral_importance_directions,
+        OxProgram const& absorption_probability_shader, 
+        OxProgram const& scattering_probability_shader,
         OxProgram const& scattering_phase_function_shader);
 
-    OxScatteringRenderingPass(OxSceneSection const& target_scene_section, uint8_t num_spectra_pairs_supported, uint32_t max_recursion_depth,
-        float ray_marching_step_size, uint32_t num_scattering_integral_importance_directions);
+    OxScatteringRenderingPass(
+        OxSceneSection const& target_scene_section, 
+        OxRayGenerator const& ray_caster,
+        uint8_t num_spectra_pairs_supported, 
+        uint32_t max_recursion_depth,
+        float ray_marching_step_size, 
+        uint32_t num_scattering_integral_importance_directions);
 
     float2* mapImportanceDirectionsBuffer() const;
     void unmapImportanceDirectionsBuffer() const;
@@ -45,6 +56,7 @@ public:
     void render() const override;
 
 private:
+    OxRayGenerator const& m_ray_caster;
     uint32_t m_num_spectra_pairs_supported;
     uint32_t m_max_recursion_depth;
     float m_ray_marching_step_size;

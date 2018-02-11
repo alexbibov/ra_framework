@@ -77,14 +77,14 @@ unsigned int OxRayGenerator::numberOfRays() const
     return m_num_rays_x * m_num_rays_y*m_num_rays_z;
 }
 
-void OxRayGenerator::update() const
+void OxRayGenerator::update(OxObjectHandle top_scene_object) const
 {
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(),
         rtContextSetRayGenerationProgram(nativeOptiXContextHandle(), m_entry_point_index, nativeOptiXProgramHandle()));
 
     if (m_p_miss_shader_assembly->isValid()
         && static_cast<OxMissShaderAssembly&>(*m_p_miss_shader_assembly).isValid())
-        OxMissShaderAssemblyAttorney<OxRayGenerator>::applyMissShaderAssembly(*m_p_miss_shader_assembly);
+        OxMissShaderAssemblyAttorney<OxRayGenerator>::applyMissShaderAssembly(*m_p_miss_shader_assembly, top_scene_object);
 }
 
 void OxRayGenerator::launch() const

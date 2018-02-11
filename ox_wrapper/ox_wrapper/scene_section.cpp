@@ -5,10 +5,9 @@
 
 using namespace ox_wrapper;
 
-OxSceneSection::OxSceneSection(OxRayGenerator const& optix_ray_generator, OxBVHAlgorithm acceleration_structure_construction_algorithm) :
-    OxContractWithOxContext{ optix_ray_generator.context() },
-    OxTransformable{ optix_ray_generator.context() },
-    m_optix_ray_generator{ optix_ray_generator },
+OxSceneSection::OxSceneSection(OxContext const& context, OxBVHAlgorithm acceleration_structure_construction_algorithm) :
+    OxContractWithOxContext{ context },
+    OxTransformable{ context },
     m_construction_begun{ false },
     m_construction_finished{ false }
 {
@@ -47,11 +46,6 @@ OxSceneSection::OxSceneSection(OxRayGenerator const& optix_ray_generator, OxBVHA
 
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationSetBuilder(acceleration_native_handle, acceleration_structure_construction_algorithm_name));
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGroupSetAcceleration(group_native_handle, acceleration_native_handle));
-}
-
-OxRayGenerator const& OxSceneSection::rayGenerator() const
-{
-    return m_optix_ray_generator;
 }
 
 void OxSceneSection::beginConstruction()
@@ -175,6 +169,12 @@ bool OxSceneSection::isValid() const
         && (m_construction_begun && m_construction_finished);
 }
 
+void ox_wrapper::OxSceneSection::trace(OxRayGenerator const& ray_caster) const
+{
+    _update(ray_caster, OxObjectHandle{ getEntryNode() });
+    _trace(ray_caster);
+}
+
 RTobject OxSceneSection::getEntryNode() const
 {
     return isTransformApplied() ?
@@ -182,7 +182,7 @@ RTobject OxSceneSection::getEntryNode() const
         static_cast<RTobject>(m_native_group_handle.get());
 }
 
-bool OxSceneSection::_update(OxObjectHandle top_scene_object) const
+bool OxSceneSection::_update(OxRayGenerator const& ray_caster, OxObjectHandle top_scene_object) const
 {
     bool rv{ false };
     for (auto& gg : m_geometry_groups)
@@ -196,27 +196,22 @@ bool OxSceneSection::_update(OxObjectHandle top_scene_object) const
 
     for (auto& ss : m_attached_scene_sections)
     {
-        if (ss._update(top_scene_object) && !rv)
+        if (ss._update(ray_caster, top_scene_object) && !rv)
         {
             THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
             rv = true;
         }
     }
 
-    OxRayGeneratorAttorney<OxSceneSection>::updateRayGenerator(m_optix_ray_generator);
+    OxRayGeneratorAttorney<OxSceneSection>::updateRayGenerator(ray_caster, top_scene_object);
 
     return rv;
 }
 
-void ox_wrapper::OxSceneSection::update() const
+void OxSceneSection::_trace(OxRayGenerator const& ray_caster) const
 {
-    _update(OxObjectHandle{ getEntryNode() });
-}
-
-void OxSceneSection::trace() const
-{
-    m_optix_ray_generator.getRayGenerationShader().setVariableValue("ox_entry_node", OxObjectHandle{ getEntryNode() });
-    OxRayGeneratorAttorney<OxSceneSection>::launchRayGenerator(m_optix_ray_generator);
+    ray_caster.getRayGenerationShader().setVariableValue("ox_entry_node", OxObjectHandle{ getEntryNode() });
+    OxRayGeneratorAttorney<OxSceneSection>::launchRayGenerator(ray_caster);
 }
 
 RTobject OxSceneSection::getObjectToBeTransformed() const

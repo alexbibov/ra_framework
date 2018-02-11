@@ -28,7 +28,7 @@ public:
     bool isValid() const override;
 
 private:
-    void apply() const;
+    void apply(OxObjectHandle top_scene_object) const;
 
 private:
     OxRayType m_ray_type;
@@ -39,9 +39,9 @@ class OxMissShaderAttorney<OxMissShaderAssembly>
 {
     friend class OxMissShaderAssembly;
 
-    static void applyMissShader(OxMissShader const& parent_miss_shader)
+    static void applyMissShader(OxMissShader const& parent_miss_shader, OxObjectHandle top_scene_object)
     {
-        parent_miss_shader.apply();
+        parent_miss_shader.apply(top_scene_object);
     }
 };
 
