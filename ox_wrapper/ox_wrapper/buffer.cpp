@@ -114,3 +114,52 @@ void OxAbstractBuffer::assignNativeOptixBufferHandle(RTbuffer native_optix_buffe
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferDestroy(b));
     });
 }
+
+OxBufferMapSentinel::OxBufferMapSentinel(
+    OxAbstractBuffer const& buffer_to_map,
+    OxBufferMapKind map_kind, 
+    unsigned int mipmap_level/* = 0U*/) :
+    m_mapped_buffer{ buffer_to_map },
+    m_counter{ new size_t{ 1U } },
+    m_data_ptr{ m_mapped_buffer.map(map_kind, mipmap_level) },
+    m_mapped_mipmap_level{ mipmap_level }
+{
+}
+
+OxBufferMapSentinel::OxBufferMapSentinel(OxBufferMapSentinel const& other):
+    m_mapped_buffer{ other.m_mapped_buffer },
+    m_counter{ other.m_counter },
+    m_data_ptr{ other.m_data_ptr },
+    m_mapped_mipmap_level{ other.m_mapped_mipmap_level }
+{
+    ++(*m_counter);
+}
+
+OxBufferMapSentinel::OxBufferMapSentinel(OxBufferMapSentinel&& other):
+    m_mapped_buffer{ other.m_mapped_buffer },
+    m_counter{ other.m_counter },
+    m_data_ptr{ other.m_counter },
+    m_mapped_mipmap_level{ other.m_mapped_mipmap_level }
+{
+    other.m_counter = nullptr;
+}
+
+ox_wrapper::OxBufferMapSentinel::~OxBufferMapSentinel()
+{
+    if (m_counter)
+    {
+        --(*m_counter);
+        if (!(*m_counter))
+        {
+            delete m_counter;
+            m_mapped_buffer.unmap(m_mapped_mipmap_level);
+        }
+    }
+}
+
+void* OxBufferMapSentinel::data() const
+{
+    return m_data_ptr;
+}
+
+

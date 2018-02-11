@@ -8,6 +8,23 @@
 #include "../ox_wrapper/ox_wrapper/scene_section.h"
 #include "../ox_wrapper/ox_wrapper/rendering_passes/scattering_rendering_pass.h"
 #include "../ox_wrapper/ox_wrapper/materials/black_body.h"
+#include "../ox_wrapper/ox_wrapper/util/lua_support.h"
+#include "../ox_wrapper/ox_wrapper/version.h"
+
+#include <windows.h>
+
+BOOL WINAPI ctrlCEnventHandler(DWORD dwCtrlType)
+{
+    switch (dwCtrlType)
+    {
+    case CTRL_C_EVENT:
+        exit(EXIT_SUCCESS);
+        break;
+
+    default:
+        return TRUE;
+    }
+}
 
 
 int main(int argc, char* argv[])
@@ -17,16 +34,10 @@ int main(int argc, char* argv[])
         TCLAP::CmdLine cmd{ "OX_WRAPPER demonstration demo based on Gomos OptiX project", ' ', "0.1" };
 
         TCLAP::ValueArg<std::string> lua_script{ "s", "lua_script", "input script written in LUA", false, "", "string" };
-        TCLAP::ValueArg<unsigned int> num_rays{ "r", "num_rays", "Number of rays to generate", false, 1000, "unsigned int" };
-        TCLAP::ValueArg<unsigned int> max_recursion_depth{ "d", "max_recursion_depth", 
-            "Maximal allowed depth of recursion", false, 20, "unsigned int" };
         TCLAP::ValueArg<std::string> ox_wrapper_path{ "", "ox_lib", "Path to OX_WRAPPER library", true, "", "string" };
         TCLAP::ValueArg<std::string> path_to_settings{ "", "path_to_settings", "Path to OX_WRAPPER settings JSON file", true, "", "string" };
-        
 
         cmd.add(lua_script);
-        cmd.add(num_rays);
-        cmd.add(max_recursion_depth);
         cmd.add(ox_wrapper_path);
         cmd.add(path_to_settings);
 
@@ -42,6 +53,36 @@ int main(int argc, char* argv[])
             {
                 ox.executeLuaScriptFromSource(input_lua_script_path);
 
+            }
+            else
+            {
+                SetConsoleCtrlHandler(ctrlCEnventHandler, TRUE);
+
+                ox_wrapper::util::lua_support::LuaState::registerFunction(
+                    "clc", []() { system("cls"); }
+                );
+
+                std::cout << "OX_WRAPPER v " << OX_WRAPPER_VERSION_MAJOR << "." << OX_WRAPPER_VERSION_MINOR
+                    << OX_WRAPPER_VERSION_SUFFIX << " (" << OX_WRAPPER_VERSION_CODENAME << ") Interactive Mode" << std::endl;
+                
+                while (true)
+                {
+                    std::cout << ">>";
+
+                    char input_buffer[4096];
+                    std::cin.getline(input_buffer, sizeof(input_buffer), '\n');
+
+                    try 
+                    {
+                        ox_wrapper::util::lua_support::LuaState::executeScript(std::string{ input_buffer });
+                    }
+                    catch (ox_wrapper::OxException& e)
+                    {
+                        std::cout << e.what() << std::endl;
+                    }
+
+                }
+                
             }
 
             

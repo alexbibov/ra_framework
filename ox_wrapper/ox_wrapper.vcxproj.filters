@@ -135,12 +135,14 @@
     <ClCompile Include="ox_wrapper\ray_generator_with_output_buffer.cpp">
       <Filter>ox_wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="ox_wrapper\materials\materials_factory.cpp" />
     <ClCompile Include="ox_wrapper\ray_casters\ray_casters_factory.cpp">
       <Filter>ox_wrapper\ray_casters</Filter>
     </ClCompile>
     <ClCompile Include="ox_wrapper\rendering_passes\rendering_passes_factory.cpp">
       <Filter>ox_wrapper\rendering_passes</Filter>
+    </ClCompile>
+    <ClCompile Include="ox_wrapper\materials\materials_factory.cpp">
+      <Filter>ox_wrapper\materials</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -299,6 +301,9 @@
     </ClInclude>
     <ClInclude Include="ox_wrapper\rendering_passes\rendering_passes_factory.h">
       <Filter>ox_wrapper\rendering_passes</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\version.h">
+      <Filter>ox_wrapper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

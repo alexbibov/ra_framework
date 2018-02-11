@@ -4,7 +4,7 @@ using namespace ox_wrapper;
 
 
 OxMissShaderAssembly::OxMissShaderAssembly(std::initializer_list<OxMissShader> init_list):
-    OxContractWithOxContext{ std::vector<OxMissShader>{init_list} }
+    OxMissShaderAssembly{ std::vector<OxMissShader>{init_list} }
 {
     
 }

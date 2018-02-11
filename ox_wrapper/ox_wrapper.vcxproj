@@ -203,6 +203,7 @@
     <ClInclude Include="ox_wrapper\util\optional.h" />
     <ClInclude Include="ox_wrapper\util\lua_support.h" />
     <ClInclude Include="ox_wrapper\util\static_vector.h" />
+    <ClInclude Include="ox_wrapper\version.h" />
     <ClInclude Include="ptx.h" />
   </ItemGroup>
   <ItemGroup>

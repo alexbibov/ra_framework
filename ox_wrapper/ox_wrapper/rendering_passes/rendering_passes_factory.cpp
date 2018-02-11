@@ -31,6 +31,16 @@ void OxRenderingPassesFactory::shutdown()
     }
 }
 
+OxRenderingPassesFactory* OxRenderingPassesFactory::retrieve()
+{
+    return p_factory_instance;
+}
+
+bool OxRenderingPassesFactory::isValid() const
+{
+    return static_cast<bool>(p_factory_instance);
+}
+
 OxScatteringRenderingPass OxRenderingPassesFactory::createScatteringRenderingPass(
     OxSceneSection const& target_scene_section, 
     uint8_t num_spectra_pairs_supported,

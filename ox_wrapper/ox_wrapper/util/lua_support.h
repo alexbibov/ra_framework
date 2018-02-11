@@ -98,6 +98,21 @@ struct Variable
     }
 };
 
+struct LuaTable
+{
+    using table_type = sol::table;
+    template<typename T>
+    static std::vector<T> toVector(table_type const& table)
+    {
+        std::vector<T> rv{};
+        rv.reserve(table.size());
+        for (size_t i = 0; i < table.size(); ++i)
+            rv.push_back(table[i + 1]);
+
+        return rv;
+    }
+};
+
 
 class LuaState
 {
@@ -109,6 +124,7 @@ public:
     {
         initialize();
         m_lua_state->set_function(name, args...);
+
     }
 
     template<typename RegistrantType, typename InitializerType, typename ... MemberArgs>

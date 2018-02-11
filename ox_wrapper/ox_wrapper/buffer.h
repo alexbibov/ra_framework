@@ -158,7 +158,7 @@ template<> class OxBufferAttorney<OxContext>
 template<typename T>
 util::Optional<OxBuffer<T>> castBufferToType(OxAbstractBuffer& source_buffer)
 {
-    OxBuffer<T>* p_dest_buffer = dynamic_cast<OxBuffer<T>*>(&source_buffer);
+    OxBuffer<T>* p_dest_buffer = static_cast<OxBuffer<T>*>(&source_buffer);
     if (p_dest_buffer)
         return util::Optional<OxBuffer<T>>{*p_dest_buffer};
 
@@ -170,6 +170,29 @@ util::Optional<OxBuffer<T> const> castBufferToType(OxAbstractBuffer const& sourc
 {
     return castBufferToType<T>(const_cast<OxAbstractBuffer&>(source_buffer));
 }
+
+class OxBufferMapSentinel final
+{
+public:
+    OxBufferMapSentinel(OxAbstractBuffer const& buffer_to_map, 
+        OxBufferMapKind map_kind, unsigned int mipmap_level = 0U);
+    OxBufferMapSentinel(OxBufferMapSentinel const& other);
+    OxBufferMapSentinel(OxBufferMapSentinel&& other);
+
+    OxBufferMapSentinel& operator=(OxBufferMapSentinel const& other) = delete;
+    OxBufferMapSentinel& operator=(OxBufferMapSentinel&& other) = delete;
+
+    ~OxBufferMapSentinel();
+
+    void* data() const;
+
+private:
+    OxAbstractBuffer m_mapped_buffer;
+    size_t* m_counter;
+    void* m_data_ptr;
+    unsigned int m_mapped_mipmap_level;
+};
+
 
 }
 

@@ -1,0 +1,22 @@
+{
+  "FileVersion": 2,
+  "Id": "ea388a09-5fe6-4f3d-b1ed-e1435790d15b",
+  "Items": [
+    {
+      "Id": "eaf53321-06b3-4c08-b22f-7502338e7e00",
+      "Command": "--ox_lib $(SolutionDir)ox_wrapper/"
+    },
+    {
+      "Id": "d8a17c62-31f9-4a5d-a68a-68c3aaf6e11d",
+      "Command": "--path_to_settings settings.json"
+    },
+    {
+      "Id": "acc36fe1-1d17-4ad2-a496-b5c3255f6168",
+      "Command": "--help"
+    },
+    {
+      "Id": "0b623cad-91f1-4dfe-a080-1b09029d18af",
+      "Command": "--lua_script $(SolutionDir)GomosOptiXModel/test.lua"
+    }
+  ]
+}

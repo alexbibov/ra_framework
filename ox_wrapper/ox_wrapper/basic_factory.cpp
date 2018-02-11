@@ -610,8 +610,17 @@ void luaRegisterMaterialTypes()
             lua_support::BaseClass<OxEntity>{}
         ),
 
-        lua_support::ListOfConstructors::make_initializer(
-            lua_support::Constructor<std::vector<OxMaterial> const&>{}
+        lua_support::ListOfFactories::make_initializer(
+            [](lua_support::LuaTable::table_type const& materials)
+            {
+                return p_basic_factory_instance->createMaterialAssembly(
+                    lua_support::LuaTable::toVector<OxMaterial>(materials));
+            },
+
+            [](void)
+            {
+                return OxMaterialAssembly{};
+            }
         ),
 
         "getMaterialById",
@@ -674,10 +683,10 @@ void luaRegisterGeometryTypes()
 
     lua_support::LuaState::registerEnum(
         "OxBVHAlgorithm", 
-        OxBVHAlgorithm::trbvh,
-        OxBVHAlgorithm::sbvh,
-        OxBVHAlgorithm::bvh,
-        OxBVHAlgorithm::none
+        "trbvh", OxBVHAlgorithm::trbvh,
+        "sbvh", OxBVHAlgorithm::sbvh,
+        "bvh", OxBVHAlgorithm::bvh,
+        "none", OxBVHAlgorithm::none
     );
 
     lua_support::LuaState::registerType<OxTransformable>(
@@ -740,8 +749,13 @@ void luaRegisterMissShaderTypes()
             lua_support::BaseClass<OxEntity>{}
         ),
 
-        lua_support::ListOfConstructors::make_initializer(
-            lua_support::Constructor<std::vector<OxMissShader> const&>{}
+        lua_support::ListOfFactories::make_initializer(
+            [](lua_support::LuaTable::table_type const& table)
+            {
+                return p_basic_factory_instance->createMissShaderAssembly(
+                    lua_support::LuaTable::toVector<OxMissShader>(table)
+                );
+            }
         ),
 
         "getMissShaderById",

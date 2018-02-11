@@ -3,6 +3,7 @@
 #include "../../_3rd_party/json/json.hpp"
 #include "util/misc.h"
 #include "util/lua_support.h"
+#include "version.h"
 
 #include <windows.h>
 
@@ -94,7 +95,9 @@ OxInit::OxInit(
             if (!GetComputerName(host_computer_name, &host_computer_name_length))
                 wcscpy_s(host_computer_name, L"UNKNOWN_HOST");
 
-            std::string log_name = "OX_WRAPPER \"" + util::misc::wstringToAsciiString(host_computer_name) + "\"";
+            std::string log_name = "OX_WRAPPER \"" + util::misc::wstringToAsciiString(host_computer_name) + "\""
+                + "v " + std::to_string(OX_WRAPPER_VERSION_MAJOR) + "." + std::to_string(OX_WRAPPER_VERSION_MINOR)
+                + OX_WRAPPER_VERSION_SUFFIX + " (" + OX_WRAPPER_VERSION_CODENAME + ")";
             util::Log::create(m_logging_stream, log_name, time_zone_bias, dts);
         }
 
