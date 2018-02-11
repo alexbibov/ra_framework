@@ -12,14 +12,11 @@ public:
 
     OxBuffer<unsigned int> getRawBuffer() const;
 
-    unsigned int* getBufferPointer() const;
-
     // required by OxEntity interface
     bool isValid() const override;
 
 private:
     OxBuffer<unsigned int> m_raw_buffer;
-    OxBufferMapSentinel m_persistent_map_sentinel;
 };
 
 }

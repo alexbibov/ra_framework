@@ -10,9 +10,9 @@
 rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
 
 rtDeclareVariable(float, step_size, , "Ray marching step size");
-rtDeclareVariable(unsigned int, max_recursion_depth, , "Maximal depth of recursion for scattering traverse");
-rtDeclareVariable(unsigned int, num_spectra_pairs_supported, , "Number of wavelengths in use");
-rtDeclareVariable(unsigned int, num_importance_directions, , );
+rtDeclareVariable(optix::uint, max_recursion_depth, , "Maximal depth of recursion for scattering traverse");
+rtDeclareVariable(optix::uint, num_spectra_pairs_supported, , "Number of wavelengths in use");
+rtDeclareVariable(optix::uint, num_importance_directions, , );
 
 typedef rtCallableProgramId<optix::float2(optix::float3, unsigned int)> absorption_factor_program_id_type;
 typedef rtCallableProgramId<optix::float2(optix::float3, unsigned int)> scattering_factor_program_id_type;

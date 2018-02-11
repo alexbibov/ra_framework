@@ -92,10 +92,13 @@ class OxBuffer final : public OxAbstractBuffer
     friend class OxBufferAttorney<OxContext>;
 
 public:
+    using value_type = T;
+
+public:
     ~OxBuffer() = default;
 
 private:
-    #include "buffer_tuner.inl"
+#include "buffer_tuner.inl"
     using my_tuner_type = OxBufferTuner<T>;
 
 
@@ -124,7 +127,7 @@ private:
     }
 
 public:
-    T* map(OxBufferMapKind map_kind, unsigned int mipmap_level = 0U) const
+    T * map(OxBufferMapKind map_kind, unsigned int mipmap_level = 0U) const
     {
         void* rv{ nullptr };
         THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferMapEx(nativeOptiXBufferHandle(), static_cast<unsigned>(map_kind), mipmap_level, nullptr, &rv));
@@ -171,29 +174,88 @@ util::Optional<OxBuffer<T> const> castBufferToType(OxAbstractBuffer const& sourc
     return castBufferToType<T>(const_cast<OxAbstractBuffer&>(source_buffer));
 }
 
-class OxBufferMapSentinel final
+
+template<typename T> class OxBufferMapSentry;
+
+template<typename T>
+class OxBufferMapSentry final
 {
 public:
-    OxBufferMapSentinel(OxAbstractBuffer const& buffer_to_map, 
-        OxBufferMapKind map_kind, unsigned int mipmap_level = 0U);
-    OxBufferMapSentinel(OxBufferMapSentinel const& other);
-    OxBufferMapSentinel(OxBufferMapSentinel&& other);
+    OxBufferMapSentry(OxBuffer<T> const& buffer_to_map,
+        OxBufferMapKind map_kind, unsigned int mipmap_level = 0U) :
+        m_mapped_buffer{ buffer_to_map },
+        m_mapped_mipmap_level{ mipmap_level },
+        m_addr{ m_mapped_buffer.map(map_kind, mipmap_level) }
+    {
 
-    OxBufferMapSentinel& operator=(OxBufferMapSentinel const& other) = delete;
-    OxBufferMapSentinel& operator=(OxBufferMapSentinel&& other) = delete;
+    }
 
-    ~OxBufferMapSentinel();
+    OxBufferMapSentry(OxBufferMapSentry const&) = delete;
+    OxBufferMapSentry(OxBufferMapSentry&&) = default;
 
-    void* data() const;
+    OxBufferMapSentry& operator=(OxBufferMapSentry const&) = delete;
+    OxBufferMapSentry& operator=(OxBufferMapSentry&&) = delete;
+
+    T* address() const { return m_addr; }
+
+    ~OxBufferMapSentry()
+    {
+        m_mapped_buffer.unmap(m_mapped_mipmap_level);
+    }
 
 private:
-    OxAbstractBuffer m_mapped_buffer;
-    size_t* m_counter;
-    void* m_data_ptr;
+    OxBuffer<T> const& m_mapped_buffer;
     unsigned int m_mapped_mipmap_level;
+    T* m_addr;
 };
 
 
+/*template<>
+class OxBufferMapSentry<void> final
+{
+public:
+    OxBufferMapSentry(OxAbstractBuffer const& buffer_to_map,
+        OxBufferMapKind map_kind, unsigned int mipmap_level = 0U) :
+        m_mapped_buffer{ buffer_to_map },
+        m_mapped_mipmap_level{ mipmap_level },
+        m_addr{ m_mapped_buffer.map(map_kind, mipmap_level) }
+    {
+    }
+
+    OxBufferMapSentry(OxBufferMapSentry const&) = delete;
+    OxBufferMapSentry(OxBufferMapSentry&&) = default;
+
+    OxBufferMapSentry& operator=(OxBufferMapSentry const&) = delete;
+    OxBufferMapSentry& operator=(OxBufferMapSentry&&) = delete;
+
+    void* address() const { return m_addr; }
+
+    ~OxBufferMapSentry()
+    {
+        m_mapped_buffer.unmap(m_mapped_mipmap_level);
+    }
+
+private:
+    OxAbstractBuffer const& m_mapped_buffer;
+    unsigned int m_mapped_mipmap_level;
+    void* m_addr;
+};*/
+
+
+template<typename T>
+OxBufferMapSentry<T> makeBufferMapSentry(OxBuffer<T> const& buffer,
+    OxBufferMapKind map_kind, unsigned int mipmap_level = 0U)
+{
+    return OxBufferMapSentry<T>{ buffer, map_kind, mipmap_level };
 }
+
+/*OxBufferMapSentry<void> makeBufferMapSentry(OxAbstractBuffer const& buffer,
+    OxBufferMapKind map_kind, unsigned int mipmap_level = 0U)
+{
+    return OxBufferMapSentry<void>{ buffer, map_kind, mipmap_level };
+}*/
+
+}
+
 
 #endif

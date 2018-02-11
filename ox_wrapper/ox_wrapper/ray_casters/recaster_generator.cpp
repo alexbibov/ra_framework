@@ -34,7 +34,8 @@ OxRecasterGenerator::OxRecasterGenerator(
     OxTraverseBackupBuffer const& traverse_backup_buffer, OxBuffer<OxRayRadiancePayload> const& output_buffer, OxRayType recasted_ray_type):
     OxRayGeneratorWithOutputBuffer{ 
     output_buffer.context().createProgram(PTX_RECASTER_GENERATOR, OxProgram::Source::file, OX_SHADER_ENTRY_RAY_GENERATION),
-    output_buffer, create_output_buffer_binding_name(output_buffer), static_cast<uint32_t>(traverse_backup_buffer.getBufferPointer()[0]) },
+    output_buffer, create_output_buffer_binding_name(output_buffer), 
+    makeBufferMapSentry(traverse_backup_buffer.getRawBuffer(), OxBufferMapKind::read).address()[0] },
     m_output_buffer{ output_buffer }
 {
     getRayGenerationShader().setVariableValue("dimension", static_cast<unsigned int>(output_buffer.getDimension()));
@@ -47,7 +48,8 @@ OxRecasterGenerator::OxRecasterGenerator(
     OxTraverseBackupBuffer const& traverse_backup_buffer, OxBuffer<OxRayRadiancePayloadSimple> const& output_buffer, OxRayType recasted_ray_type) :
     OxRayGeneratorWithOutputBuffer{ 
     output_buffer.context().createProgram(PTX_RECASTER_GENERATOR, OxProgram::Source::file, OX_SHADER_ENTRY_RAY_GENERATION),
-    output_buffer, create_output_buffer_binding_name(output_buffer), static_cast<uint32_t>(traverse_backup_buffer.getBufferPointer()[0]) },
+    output_buffer, create_output_buffer_binding_name(output_buffer), 
+    makeBufferMapSentry(traverse_backup_buffer.getRawBuffer(), OxBufferMapKind::read).address()[0] },
     m_output_buffer{ output_buffer }
 {
     getRayGenerationShader().setVariableValue("dimension", static_cast<unsigned int>(output_buffer.getDimension()));
@@ -75,7 +77,8 @@ OxRecasterGenerator::OxRecasterGenerator(
     OxTraverseBackupBuffer const& traverse_backup_buffer, OxBuffer<OxRayRadiancePayloadMonochromatic> const& output_buffer, OxRayType recasted_ray_type) :
     OxRayGeneratorWithOutputBuffer{ 
     output_buffer.context().createProgram(PTX_RECASTER_GENERATOR, OxProgram::Source::file, OX_SHADER_ENTRY_RAY_GENERATION),
-    output_buffer, create_output_buffer_binding_name(output_buffer), static_cast<uint32_t>(traverse_backup_buffer.getBufferPointer()[0]) },
+    output_buffer, create_output_buffer_binding_name(output_buffer), 
+    makeBufferMapSentry(traverse_backup_buffer.getRawBuffer(), OxBufferMapKind::read).address()[0] },
     m_output_buffer{ output_buffer }
 {
     getRayGenerationShader().setVariableValue("dimension", static_cast<unsigned int>(output_buffer.getDimension()));
@@ -103,7 +106,8 @@ OxRecasterGenerator::OxRecasterGenerator(
     OxTraverseBackupBuffer const& traverse_backup_buffer, OxBuffer<OxRayOcclusionPayload> const& output_buffer, OxRayType recasted_ray_type) :
     OxRayGeneratorWithOutputBuffer{ 
     output_buffer.context().createProgram(PTX_RECASTER_GENERATOR, OxProgram::Source::file, OX_SHADER_ENTRY_RAY_GENERATION),
-    output_buffer, create_output_buffer_binding_name(output_buffer), static_cast<uint32_t>(traverse_backup_buffer.getBufferPointer()[0]) },
+    output_buffer, create_output_buffer_binding_name(output_buffer), 
+    makeBufferMapSentry(traverse_backup_buffer.getRawBuffer(), OxBufferMapKind::read).address()[0] },
     m_output_buffer{ output_buffer }
 {
     getRayGenerationShader().setVariableValue("dimension", static_cast<unsigned int>(output_buffer.getDimension()));

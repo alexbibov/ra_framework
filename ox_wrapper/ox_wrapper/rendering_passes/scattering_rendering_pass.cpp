@@ -215,10 +215,12 @@ void OxScatteringRenderingPass::render() const
 
     targetSceneSection().trace(m_ray_caster);
 
-    unsigned int num_not_converged_rays{ *m_traverse_backup_buffer.getBufferPointer() };
+    unsigned int num_not_converged_rays = 
+        *makeBufferMapSentry(m_traverse_backup_buffer.getRawBuffer(), OxBufferMapKind::read).address();
     while (num_not_converged_rays > 0)
     {
         targetSceneSection().trace(m_recaster_ray_generator);
-        num_not_converged_rays = *m_traverse_backup_buffer.getBufferPointer();
+        num_not_converged_rays = 
+            *makeBufferMapSentry(m_traverse_backup_buffer.getRawBuffer(), OxBufferMapKind::read).address();
     }
 }

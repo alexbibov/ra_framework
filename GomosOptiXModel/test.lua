@@ -21,10 +21,10 @@ earth_geometry_group:addGeometry(atmospheric_circle)
 earth_geometry_group:addGeometry(planet_circle)
 earth_geometry_group:endConstruction()
 
-scene_section = OxSceneSection.new(parallel_ray_generator, OxBVHAlgorithm["trbvh"])
+scene_section = OxSceneSection.new(OxBVHAlgorithm["trbvh"])
 scene_section:beginConstruction()
 scene_section:addGeometryGroup(earth_geometry_group)
 scene_section:endConstruction()
 
-scattering_rendering_pass = OxScatteringRenderingPass.new(scene_section, 2, 10, 0.01, 1)
+scattering_rendering_pass = OxScatteringRenderingPass.new(scene_section, parallel_ray_generator, 2, 10, 0.01, 1)
 scattering_rendering_pass:render()

@@ -10,6 +10,7 @@ class OxProgram;
 class OxContractWithOxPrograms;
 class OxAbstractBuffer;
 template<typename T> class OxBuffer;
+template<typename T> class OxBufferMapSentry;
 class OxScene;
 class OxSceneSection;
 class OxGeometryGroup;

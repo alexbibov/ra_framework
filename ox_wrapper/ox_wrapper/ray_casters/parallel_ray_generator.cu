@@ -13,7 +13,7 @@ rtDeclareVariable(unsigned int, num_rays, , "Number of casted rays");
 rtDeclareVariable(float, emitter_position, , "Position of the emitter");
 rtDeclareVariable(float, emitter_size, , "Size of the emitter");
 rtDeclareVariable(float, emitter_rotation, , "Rotation of the emitter");
-rtDeclareVariable(unsigned int, num_spectra_pairs_supported, , "Number of wavelengths in use");
+rtDeclareVariable(optix::uint, num_spectra_pairs_supported, , "Number of wavelengths in use");
 
 rtDeclareVariable(unsigned int, index, rtLaunchIndex, "Thread index");
 

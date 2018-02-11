@@ -67,9 +67,9 @@
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_zE;
 .global .align 16 .b8 _ZN21rti_internal_typename13ox_entry_nodeE[9] = {114, 116, 79, 98, 106, 101, 99, 116, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename9step_sizeE[6] = {102, 108, 111, 97, 116, 0};
-.global .align 16 .b8 _ZN21rti_internal_typename19max_recursion_depthE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
-.global .align 16 .b8 _ZN21rti_internal_typename27num_spectra_pairs_supportedE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
-.global .align 16 .b8 _ZN21rti_internal_typename25num_importance_directionsE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename19max_recursion_depthE[12] = {111, 112, 116, 105, 120, 58, 58, 117, 105, 110, 116, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename27num_spectra_pairs_supportedE[12] = {111, 112, 116, 105, 120, 58, 58, 117, 105, 110, 116, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename25num_importance_directionsE[12] = {111, 112, 116, 105, 120, 58, 58, 117, 105, 110, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename17absorption_factorE[34] = {97, 98, 115, 111, 114, 112, 116, 105, 111, 110, 95, 102, 97, 99, 116, 111, 114, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename17scattering_factorE[34] = {115, 99, 97, 116, 116, 101, 114, 105, 110, 103, 95, 102, 97, 99, 116, 111, 114, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename14phase_functionE[31] = {112, 104, 97, 115, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};

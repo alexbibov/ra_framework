@@ -17,7 +17,7 @@ OxParallelRayGenerator::OxParallelRayGenerator(OxContext const& context, uint32_
 {
     setGeneratorDimensions(num_rays, 1U, 1U);
     getRayGenerationShader().setVariableValue("num_rays", num_rays);
-    getRayGenerationShader().setVariableValue("num_spectra_pairs_supported", num_spectra_pairs_supported);
+    getRayGenerationShader().setVariableValue("num_spectra_pairs_supported", static_cast<uint32_t>(num_spectra_pairs_supported));
     setEmitterSize(emitter_size);
     setEmitterPosition(emitter_position);
     setEmitterRotation(emitter_rotation);

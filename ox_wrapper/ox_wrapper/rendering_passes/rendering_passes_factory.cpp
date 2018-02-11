@@ -92,7 +92,7 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
         lua_support::ListOfFactories::make_initializer(
             [this](
                 OxSceneSection const& target_scene_section,
-                OxRayGenerator const& ray_caster,
+                OxRayGeneratorWithOutputBuffer const& ray_caster,
                 uint8_t num_spectra_pairs_supported,
                 uint32_t max_recursion_depth,
                 float ray_marching_step_size,
@@ -115,7 +115,7 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
 
             [this](
                 OxSceneSection const& target_scene_section,
-                OxRayGenerator const& ray_caster,
+                OxRayGeneratorWithOutputBuffer const& ray_caster,
                 uint8_t num_spectra_pairs_supported,
                 uint32_t max_recursion_depth,
                 float ray_marching_step_size,
