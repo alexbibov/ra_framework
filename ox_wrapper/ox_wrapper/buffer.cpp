@@ -114,3 +114,8 @@ void OxAbstractBuffer::assignNativeOptixBufferHandle(RTbuffer native_optix_buffe
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferDestroy(b));
     });
 }
+
+OxBufferMapSentry<void> makeBufferMapSentry(OxAbstractBuffer const& buffer, OxBufferMapKind map_kind, unsigned int mipmap_level)
+{
+    return OxBufferMapSentry<void>{ buffer, map_kind, mipmap_level };
+}

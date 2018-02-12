@@ -210,7 +210,7 @@ private:
 };
 
 
-/*template<>
+template<>
 class OxBufferMapSentry<void> final
 {
 public:
@@ -239,7 +239,7 @@ private:
     OxAbstractBuffer const& m_mapped_buffer;
     unsigned int m_mapped_mipmap_level;
     void* m_addr;
-};*/
+};
 
 
 template<typename T>
@@ -249,11 +249,8 @@ OxBufferMapSentry<T> makeBufferMapSentry(OxBuffer<T> const& buffer,
     return OxBufferMapSentry<T>{ buffer, map_kind, mipmap_level };
 }
 
-/*OxBufferMapSentry<void> makeBufferMapSentry(OxAbstractBuffer const& buffer,
-    OxBufferMapKind map_kind, unsigned int mipmap_level = 0U)
-{
-    return OxBufferMapSentry<void>{ buffer, map_kind, mipmap_level };
-}*/
+OxBufferMapSentry<void> makeBufferMapSentry(OxAbstractBuffer const& buffer,
+    OxBufferMapKind map_kind, unsigned int mipmap_level = 0U);
 
 }
 
