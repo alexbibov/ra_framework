@@ -39,9 +39,10 @@ bool ox_wrapper::materials::OxMaterialsFactory::isValid() const
     return p_factory_instance;
 }
 
-OxBlackBody OxMaterialsFactory::createBlackBody(OxRayPayloadType payload_type, OxRayType affected_ray_type) const
+OxBlackBody OxMaterialsFactory::createBlackBody(OxRayPayloadType payload_type, 
+    OxRayTypeCollection const& affected_ray_types) const
 {
-    return OxBlackBody{ m_context, payload_type, affected_ray_type };
+    return OxBlackBody{ m_context, payload_type, affected_ray_types };
 }
 
 OxMaterialsFactory::OxMaterialsFactory(OxContext const& context) :
@@ -60,9 +61,11 @@ OxMaterialsFactory::OxMaterialsFactory(OxContext const& context) :
             ),
 
             lua_support::ListOfFactories::make_initializer(
-                [this](OxRayPayloadType payload_type, OxRayType affected_ray_type) 
+                [this](OxRayPayloadType payload_type, 
+                    lua_support::LuaTable::table_type const& affected_ray_types) 
                 {
-                    return createBlackBody(payload_type, affected_ray_type); 
+                    return createBlackBody(payload_type, 
+                        lua_support::LuaTable::toStaticVector<OxRayTypeCollection::value_type, OxRayTypeCollection::capacity()>(affected_ray_types)); 
                 }
             )
         );

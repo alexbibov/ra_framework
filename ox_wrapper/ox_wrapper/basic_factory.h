@@ -47,7 +47,8 @@ public:
     // materials
 public:
     OxMaterial createMaterial(util::Optional<OxProgram> const& closest_hit_shader,
-        util::Optional<OxProgram> const& any_hit_shader, OxRayType ray_type = OxRayType::unknown) const;
+        util::Optional<OxProgram> const& any_hit_shader, 
+        OxRayTypeCollection const& supported_ray_types = OxRayTypeCollection{ OxRayType::unknown }) const;
     OxMaterialAssembly createMaterialAssembly(std::vector<OxMaterial> const& materials) const;
     OxMaterialAssembly createDummyMaterialAssembly() const;
 
@@ -60,7 +61,8 @@ public:
 
     // miss shaders
 public:
-    OxMissShader createMissShader(OxProgram const& miss_shader, OxRayType ray_type = OxRayType::unknown) const;
+    OxMissShader createMissShader(OxProgram const& miss_shader, 
+        OxRayTypeCollection const& supported_ray_types = OxRayTypeCollection{ OxRayType::unknown }) const;
     OxMissShaderAssembly createMissShaderAssembly(std::vector<OxMissShader> const& miss_shaders) const;
 
     // ray generators

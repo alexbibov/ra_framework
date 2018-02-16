@@ -1,6 +1,10 @@
 #include "context.h"
 #include "material_assembly.h"
 #include "contract_with_context.h"
+#include "util/misc.h"
+
+#include <algorithm>
+
 
 using namespace ox_wrapper;
 
@@ -32,18 +36,34 @@ OxMaterialAssembly::OxMaterialAssembly(std::vector<OxMaterial> const& materials)
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(),
         rtGeometryInstanceSetMaterialCount(native_geometry_instance_handle, static_cast<unsigned int>(materials.size())));
 
-    unsigned int idx{ 0U };
-    for (auto const& e : materials)
+    uint64_t used_material_slots_mask = 0U;
+    for(unsigned int idx = 0U; idx < materials.size(); ++idx)
     {
-        THROW_OPTIX_ERROR(nativeOptiXContextHandle(),
-            rtGeometryInstanceSetMaterial(native_geometry_instance_handle, idx, OxMaterialAttorney<OxMaterialAssembly>::getNativeMaterialHandle(e)));
+        OxMaterial const& current = materials[idx];
+        
+        uint64_t current_mask = rayTypeCollectionTo64BitMask(current.supportedRayTypes());
+        uint64_t repeated_uses_mask = current_mask & used_material_slots_mask;
+        if (repeated_uses_mask)
+        {
+            auto repeated_uses_indices = util::misc::getSetBits(repeated_uses_mask);
+            std::string log_message = "Material \"" + current.getStringName() + "\" could not be added into material "
+                "assembly \"" + getStringName() + "\". Materials for ray types ";
 
-        if (!m_materials.insert(e).second)
-            util::Log::retrieve()->out("Material \"" + e.getStringName() + "\" cannot be added into material assembly (material for ray type \""
-                + std::to_string(static_cast<unsigned int>(e.rayType())) + "\" already exists in this assembly)", util::LogMessageType::exclamation);
+            std::for_each(repeated_uses_indices.begin(), --repeated_uses_indices.end(),
+                [&log_message](uint8_t e) { log_message += e + ", "; });
+            log_message += repeated_uses_indices[repeated_uses_indices.size() - 1];
+
+            log_message += " have already been assigned in this material assembly";
+
+            throw OxException{ log_message.c_str(), __FILE__, __FUNCTION__, __LINE__ };
+        }
+
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(),
+            rtGeometryInstanceSetMaterial(native_geometry_instance_handle, idx,
+                OxMaterialAttorney<OxMaterialAssembly>::getNativeMaterialHandle(current)));
 
         ++idx;
-    }
+    } 
 }
 
 util::Optional<OxMaterial> OxMaterialAssembly::getMaterialById(OxEntityId const& id) const
@@ -72,7 +92,8 @@ util::Optional<OxMaterial> OxMaterialAssembly::getMaterialByRayType(OxRayType ra
 {
     for (auto const& e : m_materials)
     {
-        if (e.rayType() == ray_type)
+        uint64_t supported_ray_types_mask = rayTypeCollectionTo64BitMask(e.supportedRayTypes());
+        if (supported_ray_types_mask & static_cast<uint64_t>(ray_type))
             return e;
     }
 
@@ -148,7 +169,16 @@ OxMaterialAssembly::material_collection::const_iterator OxMaterialAssembly::end(
     return m_materials.end();
 }
 
-bool OxMaterialAssembly::material_comparator::operator()(OxMaterial const& m1, OxMaterial const& m2) const
+uint64_t OxMaterialAssembly::material_hasher::operator()(OxMaterial const& m) const
 {
-    return m1.rayType() < m2.rayType();
+    return rayTypeCollectionTo64BitMask(m.supportedRayTypes());
+}
+
+bool OxMaterialAssembly::material_hasher::operator()(OxMaterial const& m1, OxMaterial const& m2) const
+{
+    return 
+        static_cast<OxProgram&>(m1.getClosestHitShader()).getId().native ==
+        static_cast<OxProgram&>(m2.getClosestHitShader()).getId().native
+        && static_cast<OxProgram&>(m1.getAnyHitShader()).getId().native ==
+        static_cast<OxProgram&>(m2.getAnyHitShader()).getId().native;
 }

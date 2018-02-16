@@ -144,6 +144,7 @@
     <ClCompile Include="ox_wrapper\materials\materials_factory.cpp">
       <Filter>ox_wrapper\materials</Filter>
     </ClCompile>
+    <ClCompile Include="ox_wrapper\ray_payloads.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ox_wrapper\buffer.h">

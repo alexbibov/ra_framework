@@ -54,20 +54,35 @@ template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::RA
 void luaRegisterGeneralTypes()
 {
     lua_support::LuaState::registerType<float2>(
-        "float2", lua_support::NoConstructor::make_initializer(),
+        "float2", 
+        lua_support::ListOfFactories::make_initializer(
+            [](float x, float y) {return float2{ x, y }; }
+        ),
         "x", &float2::x,
         "y", &float2::y
         );
 
     lua_support::LuaState::registerType<float3>(
-        "float3", lua_support::NoConstructor::make_initializer(),
+        "float3", 
+        lua_support::ListOfFactories::make_initializer(
+            [](float x, float y, float z) {return float3{ x, y, z }; },
+            [](float2 const& xy, float z) {return float3{ xy.x, xy.y, z }; },
+            [](float x, float2 const& yz) {return float3{ x, yz.x, yz.y }; }
+        ),
         "x", &float3::x,
         "y", &float3::y,
         "z", &float3::z
         );
 
     lua_support::LuaState::registerType<float4>(
-        "float4", lua_support::NoConstructor::make_initializer(),
+        "float4", 
+        lua_support::ListOfFactories::make_initializer(
+            [](float x, float y, float z, float w) {return float4{ x, y, z, w }; },
+            [](float2 const& xy, float z, float w) {return float4{ xy.x, xy.y, z, w }; },
+            [](float2 const& xy, float2 const& zw) {return float4{ xy.x, xy.y, zw.x, zw.y }; },
+            [](float x, float2 const& yz, float w) {return float4{ x, yz.x, yz.y, w }; },
+            [](float x, float y, float2 const& zw) {return float4{ x, y, zw.x, zw.y }; }
+        ),
         "x", &float4::x,
         "y", &float4::y,
         "z", &float4::z,
@@ -76,20 +91,35 @@ void luaRegisterGeneralTypes()
 
 
     lua_support::LuaState::registerType<int2>(
-        "int2", lua_support::NoConstructor::make_initializer(),
+        "int2", 
+        lua_support::ListOfFactories::make_initializer(
+            [](int x, int y) {return int2{ x, y }; }
+        ),
         "x", &int2::x,
         "y", &int2::y
         );
 
     lua_support::LuaState::registerType<int3>(
-        "int3", lua_support::NoConstructor::make_initializer(),
+        "int3", 
+        lua_support::ListOfFactories::make_initializer(
+            [](int x, int y, int z) {return int3{ x, y, z }; },
+            [](int2 const& xy, int z) {return int3{ xy.x, xy.y, z }; },
+            [](int x, int2 const& yz) {return int3{ x, yz.x, yz.y }; }
+        ),
         "x", &int3::x,
         "y", &int3::y,
         "z", &int3::z
         );
 
     lua_support::LuaState::registerType<int4>(
-        "int4", lua_support::NoConstructor::make_initializer(),
+        "int4", 
+        lua_support::ListOfFactories::make_initializer(
+            [](int x, int y, int z, int w) {return int4{ x, y, z, w }; },
+            [](int2 const& xy, int z, int w) {return int4{ xy.x, xy.y, z, w }; },
+            [](int2 const& xy, int2 const& zw) {return int4{ xy.x, xy.y, zw.x, zw.y }; },
+            [](int x, int2 const& yz, int w) {return int4{ x, yz.x, yz.y, w }; },
+            [](int x, int y, int2 const& zw) {return int4{ x, y, zw.x, zw.y }; }
+        ),
         "x", &int4::x,
         "y", &int4::y,
         "z", &int4::z,
@@ -98,20 +128,35 @@ void luaRegisterGeneralTypes()
 
 
     lua_support::LuaState::registerType<uint2>(
-        "uint2", lua_support::NoConstructor::make_initializer(),
+        "uint2", 
+        lua_support::ListOfFactories::make_initializer(
+            [](unsigned int x, unsigned int y) {return uint2{ x, y }; }
+        ),
         "x", &uint2::x,
         "y", &uint2::y
         );
 
     lua_support::LuaState::registerType<uint3>(
-        "uint3", lua_support::NoConstructor::make_initializer(),
+        "uint3", 
+        lua_support::ListOfFactories::make_initializer(
+            [](unsigned int x, unsigned int y, unsigned int z) {return uint3{ x, y, z }; },
+            [](uint2 const& xy, unsigned int z) {return uint3{ xy.x, xy.y, z }; },
+            [](unsigned int x, uint2 const& yz) {return uint3{ x, yz.x, yz.y }; }
+        ),
         "x", &uint3::x,
         "y", &uint3::y,
         "z", &uint3::z
         );
 
     lua_support::LuaState::registerType<uint4>(
-        "uint4", lua_support::NoConstructor::make_initializer(),
+        "uint4", 
+        lua_support::ListOfFactories::make_initializer(
+            [](unsigned int x, unsigned int y, unsigned int z, unsigned int w) {return uint4{ x, y, z, w }; },
+            [](uint2 const& xy, unsigned int z, unsigned int w) {return uint4{ xy.x, xy.y, z, w }; },
+            [](uint2 const& xy, uint2 const& zw) {return uint4{ xy.x, xy.y, zw.x, zw.y }; },
+            [](unsigned int x, uint2 const& yz, unsigned int w) {return uint4{ x, yz.x, yz.y, w }; },
+            [](unsigned int x, unsigned int y, uint2 const& zw) {return uint4{ x, y, zw.x, zw.y }; }
+        ),
         "x", &uint4::x,
         "y", &uint4::y,
         "z", &uint4::z,
@@ -120,7 +165,22 @@ void luaRegisterGeneralTypes()
 
 
     lua_support::LuaState::registerType<mat2x2>(
-        "mat2x2", lua_support::NoConstructor::make_initializer(),
+        "mat2x2",
+        lua_support::ListOfFactories::make_initializer(
+            [](float m11, float m12, 
+                float m21, float m22)
+            {
+                return mat2x2{ 
+                    m11, m12, 
+                    m21, m22 };
+            },
+            [](float2 const& r1, float2 const& r2)
+            {
+                return mat2x2{ 
+                    r1.x, r1.y,
+                    r2.x, r2.y };
+            }
+        ),
         "m11", &mat2x2::_11,
         "m12", &mat2x2::_12,
         "m21", &mat2x2::_21,
@@ -128,7 +188,22 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<mat2x3>(
-        "mat2x3", lua_support::NoConstructor::make_initializer(),
+        "mat2x3", 
+        lua_support::ListOfFactories::make_initializer(
+            [](float m11, float m12, float m13,
+                float m21, float m22, float m23)
+            {
+                return mat2x3{ 
+                    m11, m12, m13, 
+                    m21, m22, m23 };
+            },
+            [](float3 const& r1, float3 const& r2)
+            {
+                return mat2x3{ 
+                    r1.x, r1.y, r1.z,
+                    r2.x, r2.y, r2.z };
+            }
+        ),
         "m11", &mat2x3::_11,
         "m12", &mat2x3::_12,
         "m13", &mat2x3::_13,
@@ -138,7 +213,22 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<mat2x4>(
-        "mat2x4", lua_support::NoConstructor::make_initializer(),
+        "mat2x4", 
+        lua_support::ListOfFactories::make_initializer(
+            [](float m11, float m12, float m13, float m14,
+                float m21, float m22, float m23, float m24)
+            {
+                return mat2x4{
+                    m11, m12, m13, m14,
+                    m21, m22, m23, m24 };
+            },
+            [](float4 const& r1, float4 const& r2)
+            {
+                return mat2x4{
+                    r1.x, r1.y, r1.z, r1.w,
+                    r2.x, r2.y, r2.z, r2.w };
+            }
+        ),
         "m11", &mat2x4::_11,
         "m12", &mat2x4::_12,
         "m13", &mat2x4::_13,
@@ -151,7 +241,27 @@ void luaRegisterGeneralTypes()
 
 
     lua_support::LuaState::registerType<mat3x2>(
-        "mat3x2", lua_support::NoConstructor::make_initializer(),
+        "mat3x2", 
+        lua_support::ListOfFactories::make_initializer(
+            [](float m11, float m12,
+                float m21, float m22,
+                float m31, float m32)
+            {
+                return mat3x2{
+                    m11, m12,
+                    m21, m22,
+                    m31, m32 };
+            },
+            
+            [](float2 const& r1, float2 const& r2, float2 const& r3)
+            {
+                return mat3x2{
+                    r1.x, r1.y,
+                    r2.x, r2.y,
+                    r3.x, r3.y };
+            }
+        ),
+
         "m11", &mat3x2::_11,
         "m12", &mat3x2::_12,
         "m21", &mat3x2::_21,
@@ -161,7 +271,26 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<mat3x3>(
-        "mat3x3", lua_support::NoConstructor::make_initializer(),
+        "mat3x3",
+        lua_support::ListOfFactories::make_initializer(
+            [](float m11, float m12, float m13,
+                float m21, float m22, float m23,
+                float m31, float m32, float m33)
+            {
+                return mat3x3{
+                    m11, m12, m13,
+                    m21, m22, m23,
+                    m31, m32, m33 };
+            },
+
+            [](float3 const& r1, float3 const& r2, float3 const& r3)
+            {
+                return mat3x3{
+                    r1.x, r1.y, r1.z,
+                    r2.x, r2.y, r2.z,
+                    r3.x, r3.y, r3.z };
+            }
+        ),
         "m11", &mat3x3::_11,
         "m12", &mat3x3::_12,
         "m13", &mat3x3::_13,
@@ -174,7 +303,27 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<mat3x4>(
-        "mat3x4", lua_support::NoConstructor::make_initializer(),
+        "mat3x4", 
+        lua_support::ListOfFactories::make_initializer(
+            [](float m11, float m12, float m13, float m14,
+                float m21, float m22, float m23, float m24,
+                float m31, float m32, float m33, float m34)
+            {
+                return mat3x4{
+                    m11, m12, m13, m14,
+                    m21, m22, m23, m24,
+                    m31, m32, m33, m34 };
+            },
+
+            [](float4 const& r1, float4 const& r2, float4 const& r3)
+            {
+                return mat3x4{
+                    r1.x, r1.y, r1.z, r1.w,
+                    r2.x, r2.y, r2.z, r2.w,
+                    r3.x, r3.y, r3.z, r3.w };
+            }
+        ),
+
         "m11", &mat3x4::_11,
         "m12", &mat3x4::_12,
         "m13", &mat3x4::_13,
@@ -191,7 +340,30 @@ void luaRegisterGeneralTypes()
 
 
     lua_support::LuaState::registerType<mat4x2>(
-        "mat4x2", lua_support::NoConstructor::make_initializer(),
+        "mat4x2", 
+        lua_support::ListOfFactories::make_initializer(
+            [](float m11, float m12, 
+                float m21, float m22,
+                float m31, float m32,
+                float m41, float m42)
+            {
+                return mat4x2{
+                    m11, m12,
+                    m21, m22,
+                    m31, m32,
+                    m41, m42 };
+            },
+
+            [](float2 const& r1, float2 const& r2, float2 const& r3, float2 const& r4)
+            {
+                return mat4x2{
+                    r1.x, r1.y,
+                    r2.x, r2.y,
+                    r3.x, r3.y,
+                    r4.x, r4.y };
+            }
+        ),
+
         "m11", &mat4x2::_11,
         "m12", &mat4x2::_12,
         "m21", &mat4x2::_21,
@@ -203,7 +375,30 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<mat4x3>(
-        "mat4x3", lua_support::NoConstructor::make_initializer(),
+        "mat4x3", 
+        lua_support::ListOfFactories::make_initializer(
+            [](float m11, float m12, float m13,
+                float m21, float m22, float m23,
+                float m31, float m32, float m33,
+                float m41, float m42, float m43)
+            {
+                return mat4x3{
+                    m11, m12, m13,
+                    m21, m22, m23,
+                    m31, m32, m33,
+                    m41, m42, m43 };
+            },
+
+            [](float3 const& r1, float3 const& r2, float3 const& r3, float3 const& r4)
+            {
+                return mat4x3{
+                    r1.x, r1.y, r1.z,
+                    r2.x, r2.y, r2.z,
+                    r3.x, r3.y, r3.z,
+                    r4.x, r4.y, r4.z };
+            }
+        ),
+
         "m11", &mat4x3::_11,
         "m12", &mat4x3::_12,
         "m13", &mat4x3::_13,
@@ -219,7 +414,30 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<mat4x4>(
-        "mat4x4", lua_support::NoConstructor::make_initializer(),
+        "mat4x4", 
+        lua_support::ListOfFactories::make_initializer(
+            [](float m11, float m12, float m13, float m14,
+                float m21, float m22, float m23, float m24,
+                float m31, float m32, float m33, float m34,
+                float m41, float m42, float m43, float m44)
+            {
+                return mat4x4{
+                    m11, m12, m13, m14,
+                    m21, m22, m23, m24,
+                    m31, m32, m33, m34,
+                    m41, m42, m43, m44 };
+            },
+
+            [](float4 const& r1, float4 const& r2, float4 const& r3, float4 const& r4)
+            {
+                return mat4x4{
+                    r1.x, r1.y, r1.z, r1.w,
+                    r2.x, r2.y, r2.z, r2.w,
+                    r3.x, r3.y, r3.z, r3.w,
+                    r4.x, r4.y, r4.z, r4.w };
+            }
+        ),
+
         "m11", &mat4x4::_11,
         "m12", &mat4x4::_12,
         "m13", &mat4x4::_13,
@@ -546,22 +764,28 @@ void luaRegisterMaterialTypes()
         ),
 
         lua_support::ListOfFactories::make_initializer(
-            [](OxProgram closest_hit_shader, OxProgram any_hit_shader, OxRayType ray_type)
+            [](OxProgram closest_hit_shader, OxProgram any_hit_shader, 
+                lua_support::LuaTable::table_type const& supported_ray_types)
             {
                 return p_basic_factory_instance->
-                    createMaterial(closest_hit_shader, any_hit_shader, ray_type);
+                    createMaterial(closest_hit_shader, any_hit_shader, 
+                        lua_support::LuaTable::toStaticVector<OxRayTypeCollection::value_type, OxRayTypeCollection::capacity()>(supported_ray_types));
             },
 
-            [](sol::nil_t, OxProgram any_hit_shader, OxRayType ray_type)
+            [](sol::nil_t, OxProgram any_hit_shader, 
+                lua_support::LuaTable::table_type const& supported_ray_types)
             {
                 return p_basic_factory_instance->
-                    createMaterial(util::Optional<OxProgram>{}, any_hit_shader, ray_type);
+                    createMaterial(util::Optional<OxProgram>{}, any_hit_shader, 
+                        lua_support::LuaTable::toStaticVector<OxRayTypeCollection::value_type, OxRayTypeCollection::capacity()>(supported_ray_types));
             },
 
-            [](OxProgram closest_hit_shader, sol::nil_t, OxRayType ray_type)
+            [](OxProgram closest_hit_shader, sol::nil_t, 
+                lua_support::LuaTable::table_type const& supported_ray_types)
             {
                 return p_basic_factory_instance->
-                    createMaterial(closest_hit_shader, util::Optional<OxProgram>{}, ray_type);
+                    createMaterial(closest_hit_shader, util::Optional<OxProgram>{}, 
+                        lua_support::LuaTable::toStaticVector<OxRayTypeCollection::value_type, OxRayTypeCollection::capacity()>(supported_ray_types));
             },
 
             [](OxProgram closest_hit_shader, OxProgram any_hit_shader)
@@ -598,6 +822,15 @@ void luaRegisterMaterialTypes()
                 if (rv.isValid()) return sol::optional<OxProgram>{static_cast<OxProgram&>(rv)};
                 else return sol::optional<OxProgram>{};
             },
+
+        "supportedRayTypes",
+            [](OxMaterial* p) -> lua_support::LuaTable::table_type
+            {
+                auto supported_ray_types = p->supportedRayTypes();
+                return lua_support::LuaTable::staticVectorToTable(supported_ray_types);
+            },
+
+        "supportsRayType", &OxMaterial::supportsRayType,
 
         "isValid", &OxMaterial::isValid
     );
@@ -732,13 +965,30 @@ void luaRegisterMissShaderTypes()
             lua_support::BaseClass<OxEntity>{}
         ),
 
-        lua_support::ListOfConstructors::make_initializer(
-            lua_support::Constructor<OxProgram const&, OxRayType>{},
-            lua_support::Constructor<OxProgram const&>{}
+        lua_support::ListOfFactories::make_initializer(
+            [](OxProgram const& miss_shader,
+                OxRayTypeCollection const& supported_ray_types)
+            {
+                return p_basic_factory_instance->createMissShader(miss_shader, supported_ray_types);
+            },
+
+            [](OxProgram const& miss_shader)
+            {
+                return p_basic_factory_instance->createMissShader(miss_shader);
+            }
         ),
 
         "getProgram", &OxMissShader::getProgram,
-        "rayType", &OxMissShader::rayType,
+        
+        "supportedRayTypes",
+        [](OxMissShader* p)
+        {
+            auto supported_ray_types = p->supportedRayTypes();
+            return lua_support::LuaTable::staticVectorToTable(supported_ray_types);
+        },
+
+        "supportsRayType", &OxMissShader::supportsRayType,
+
         "isValid", &OxMissShader::isValid
     );
 
@@ -1087,9 +1337,12 @@ OxAbstractBuffer OxBasicFactory::createBuffer(OxBufferFormat buffer_format, OxBu
     }
 }
 
-OxMaterial OxBasicFactory::createMaterial(util::Optional<OxProgram> const& closest_hit_shader, util::Optional<OxProgram> const& any_hit_shader, OxRayType ray_type) const
+OxMaterial OxBasicFactory::createMaterial(
+    util::Optional<OxProgram> const& closest_hit_shader, 
+    util::Optional<OxProgram> const& any_hit_shader, 
+    OxRayTypeCollection const& supported_ray_types) const
 {
-    return OxMaterial{ closest_hit_shader, any_hit_shader, ray_type };
+    return OxMaterial{ closest_hit_shader, any_hit_shader, supported_ray_types };
 }
 
 OxMaterialAssembly OxBasicFactory::createMaterialAssembly(std::vector<OxMaterial> const& materials) const
@@ -1118,9 +1371,10 @@ OxGeometryGroup OxBasicFactory::createGeometryGroup(OxBVHAlgorithm acceleration_
     return OxGeometryGroup{ m_context, acceleration_structure_construction_algorithm };
 }
 
-OxMissShader OxBasicFactory::createMissShader(OxProgram const& miss_shader, OxRayType ray_type) const
+OxMissShader OxBasicFactory::createMissShader(OxProgram const& miss_shader, 
+    OxRayTypeCollection const& supported_ray_types/* = OxRayTypeCollection{ OxRayType::unknown }*/) const
 {
-    return OxMissShader{ miss_shader, ray_type };
+    return OxMissShader{ miss_shader, supported_ray_types };
 }
 
 OxMissShaderAssembly OxBasicFactory::createMissShaderAssembly(std::vector<OxMissShader> const& miss_shaders) const

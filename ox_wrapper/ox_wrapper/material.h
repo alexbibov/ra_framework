@@ -23,12 +23,16 @@ class OxMaterial : public OxContractWithOxContext, public OxContractWithOxProgra
     friend class OxMaterialAttorney<OxMaterialAssembly>;
 
 public:
-    OxMaterial(util::Optional<OxProgram> const& closest_hit_shader, util::Optional<OxProgram> const& any_hit_shader, OxRayType ray_type = OxRayType::unknown);
+    OxMaterial(
+        util::Optional<OxProgram> const& closest_hit_shader,
+        util::Optional<OxProgram> const& any_hit_shader,
+        OxRayTypeCollection const& supported_ray_types = OxRayTypeCollection{ 1U, OxRayType::unknown });
     virtual ~OxMaterial() = default;
 
     util::Optional<OxProgram> getClosestHitShader() const;
     util::Optional<OxProgram> getAnyHitShader() const;
-    OxRayType rayType() const;
+    OxRayTypeCollection supportedRayTypes() const;
+    bool supportsRayType(OxRayType ray_type) const;
 
     // required by OxEntity interface
     bool isValid() const override;
@@ -38,7 +42,7 @@ private:
 
 private:
     std::shared_ptr<RTmaterial_api> m_native_material;
-    OxRayType m_ray_type;
+    OxRayTypeCollection m_supported_ray_types;
 
     int8_t m_closest_hit_program_offset;
     int8_t m_any_hit_program_offset;

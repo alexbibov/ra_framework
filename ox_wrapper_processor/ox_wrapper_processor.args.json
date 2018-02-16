@@ -16,7 +16,7 @@
     },
     {
       "Id": "0b623cad-91f1-4dfe-a080-1b09029d18af",
-      "Command": "--lua_script $(SolutionDir)GomosOptiXModel/test.lua"
+      "Command": "--lua_script $(SolutionDir)ox_wrapper_processor/test.lua"
     }
   ]
 }

@@ -1,6 +1,8 @@
 #ifndef OX_RAY_PAYLOADS
 #define OX_RAY_PAYLOADS
 
+#include "util/static_vector.h"
+
 namespace ox_wrapper {
 
 enum class OxRayPayloadType : unsigned int
@@ -19,6 +21,10 @@ enum class OxRayType : unsigned int
     reflected = 3U,
     count
 };
+
+using OxRayTypeCollection = util::StaticVector<OxRayType, static_cast<size_t>(OxRayType::count)>;
+
+uint64_t rayTypeCollectionTo64BitMask(OxRayTypeCollection const& ray_type_collection);
 
 }
 

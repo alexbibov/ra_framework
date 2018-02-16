@@ -2,10 +2,11 @@
 
 using namespace ox_wrapper;
 
-OxMissShader::OxMissShader(OxProgram const& miss_shader, OxRayType ray_type):
+OxMissShader::OxMissShader(OxProgram const& miss_shader, 
+    OxRayTypeCollection const& supported_ray_types/* = OxRayTypeCollection{ 1U, OxRayType::unknown }*/):
     OxContractWithOxContext{ miss_shader.context() },
     OxContractWithOxPrograms{ miss_shader },
-    m_ray_type{ ray_type }
+    m_supported_ray_types{ supported_ray_types }
 {
 }
 
@@ -14,9 +15,15 @@ OxProgram OxMissShader::getProgram() const
     return getOxProgramFromDeclarationOffset();
 }
 
-OxRayType OxMissShader::rayType() const
+OxRayTypeCollection OxMissShader::supportedRayTypes() const
 {
-    return m_ray_type;
+    return m_supported_ray_types;
+}
+
+bool OxMissShader::supportsRayType(OxRayType ray_type) const
+{
+    return std::find(m_supported_ray_types.begin(), m_supported_ray_types.end(), ray_type)
+        != m_supported_ray_types.end();
 }
 
 bool OxMissShader::isValid() const
@@ -28,10 +35,13 @@ bool OxMissShader::isValid() const
 
 void OxMissShader::apply(OxObjectHandle top_scene_object) const
 {
-    THROW_OPTIX_ERROR(
-        nativeOptiXContextHandle(),
-        rtContextSetMissProgram(nativeOptiXContextHandle(), static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle())
-    );
+    for(auto rt : m_supported_ray_types)
+    {
+        THROW_OPTIX_ERROR(
+            nativeOptiXContextHandle(),
+            rtContextSetMissProgram(nativeOptiXContextHandle(), static_cast<unsigned int>(rt), nativeOptiXProgramHandle())
+        );
+    }
 
     getOxProgramFromDeclarationOffset().setVariableValue("ox_entry_node", top_scene_object);
 }

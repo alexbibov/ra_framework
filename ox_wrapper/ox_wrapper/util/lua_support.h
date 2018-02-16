@@ -2,6 +2,7 @@
 #define OX_WRAPPER_UTIL_LUA_SUPPORT_H
 
 #include "../../_3rd_party/sol2/sol.hpp"
+#include "static_vector.h"
 
 
 namespace ox_wrapper { namespace util { namespace lua_support {
@@ -101,6 +102,8 @@ struct Variable
 struct LuaTable
 {
     using table_type = sol::table;
+
+
     template<typename T>
     static std::vector<T> toVector(table_type const& table)
     {
@@ -109,6 +112,34 @@ struct LuaTable
         for (size_t i = 0; i < table.size(); ++i)
             rv.push_back(table[i + 1]);
 
+        return rv;
+    }
+
+    template<typename T, size_t capacity>
+    static util::StaticVector<T, capacity> toStaticVector(table_type const& table)
+    {
+        util::StaticVector<T, capacity> rv{};
+        for (size_t i = 0; i < table.size(); ++i)
+            rv.push_back(table[i + 1]);
+        
+        return rv;
+    }
+
+    template<typename T, size_t capacity>
+    static table_type staticVectorToTable(StaticVector<T, capacity> const& static_vector)
+    {
+        table_type rv{};
+        for (size_t i = 0; i < static_vector.size(); ++i)
+            rv.set(i + 1, static_vector[i]);
+        return rv;
+    }
+
+    template<typename T>
+    static table_type vectorToTable(std::vector<T> const& vector)
+    {
+        table_type rv{};
+        for (size_t i = 0; i < vector.size(); ++i)
+            rv.set(i + 1, vector[i]);
         return rv;
     }
 };

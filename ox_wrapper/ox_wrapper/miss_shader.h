@@ -18,11 +18,13 @@ class OxMissShader : public OxContractWithOxContext, public OxContractWithOxProg
     friend class OxMissShaderAttorney<OxMissShaderAssembly>;
 
 public:
-    OxMissShader(OxProgram const& miss_shader, OxRayType ray_type = OxRayType::unknown);
+    OxMissShader(OxProgram const& miss_shader, 
+        OxRayTypeCollection const& supported_ray_types = OxRayTypeCollection{ 1U, OxRayType::unknown });
     virtual ~OxMissShader() = default;
 
     OxProgram getProgram() const;
-    OxRayType rayType() const;
+    OxRayTypeCollection supportedRayTypes() const;
+    bool supportsRayType(OxRayType ray_type) const;
 
     // required by OxEntity interface
     bool isValid() const override;
@@ -31,7 +33,7 @@ private:
     void apply(OxObjectHandle top_scene_object) const;
 
 private:
-    OxRayType m_ray_type;
+    OxRayTypeCollection m_supported_ray_types;
 };
 
 template<>
@@ -43,6 +45,8 @@ class OxMissShaderAttorney<OxMissShaderAssembly>
     {
         parent_miss_shader.apply(top_scene_object);
     }
+
+
 };
 
 }

@@ -3,16 +3,29 @@
 
 using namespace ox_wrapper;
 
-OxMaterial::OxMaterial(util::Optional<OxProgram> const& closest_hit_shader, util::Optional<OxProgram> const& any_hit_shader, OxRayType ray_type):
-    OxContractWithOxContext{ closest_hit_shader.isValid() ? static_cast<OxProgram const&>(closest_hit_shader).context() :
-                             static_cast<OxProgram const&>(any_hit_shader).context() },
-    OxContractWithOxPrograms{ closest_hit_shader.isValid() && any_hit_shader.isValid() ?
-    std::initializer_list<OxProgram>{static_cast<OxProgram const&>(closest_hit_shader), static_cast<OxProgram const&>(any_hit_shader)} :
-    closest_hit_shader.isValid() ? std::initializer_list<OxProgram>{static_cast<OxProgram const&>(closest_hit_shader)} :
-    std::initializer_list<OxProgram>{static_cast<OxProgram const&>(any_hit_shader)} },
-    m_ray_type{ ray_type },
-    m_closest_hit_program_offset{ closest_hit_shader.isValid() ? 0 : -1 },
-    m_any_hit_program_offset{ closest_hit_shader.isValid() && any_hit_shader.isValid() ? 1 : any_hit_shader.isValid() ? 0 : -1 }
+OxMaterial::OxMaterial(
+    util::Optional<OxProgram> const& closest_hit_shader, 
+    util::Optional<OxProgram> const& any_hit_shader, 
+    OxRayTypeCollection const& supported_ray_types/* = RayTypeCollection{ 1U, OxRayType::unknown }*/)
+    : OxContractWithOxContext{ 
+        closest_hit_shader.isValid() ? 
+        static_cast<OxProgram const&>(closest_hit_shader).context()
+        : static_cast<OxProgram const&>(any_hit_shader).context() 
+     }
+    , OxContractWithOxPrograms{ 
+        closest_hit_shader.isValid() && any_hit_shader.isValid() ?
+        std::initializer_list<OxProgram>{
+            static_cast<OxProgram const&>(closest_hit_shader),
+            static_cast<OxProgram const&>(any_hit_shader) }
+        : closest_hit_shader.isValid() ? 
+            std::initializer_list<OxProgram>{ static_cast<OxProgram const&>(closest_hit_shader) }
+            : std::initializer_list<OxProgram>{ static_cast<OxProgram const&>(any_hit_shader)} }
+    , m_supported_ray_types{ supported_ray_types }
+    , m_closest_hit_program_offset{ closest_hit_shader.isValid() ? 0 : -1 }
+    , m_any_hit_program_offset{ 
+                closest_hit_shader.isValid() && any_hit_shader.isValid() ? 
+                1 
+                : any_hit_shader.isValid() ? 0 : -1 }
 {
     RTmaterial native_material_handle;
     THROW_OPTIX_ERROR(
@@ -31,18 +44,30 @@ OxMaterial::OxMaterial(util::Optional<OxProgram> const& closest_hit_shader, util
 
     if(closest_hit_shader.isValid())
     {
-        THROW_OPTIX_ERROR(
-            nativeOptiXContextHandle(),
-            rtMaterialSetClosestHitProgram(native_material_handle, static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle(m_closest_hit_program_offset))
-        );
+        for(auto ray_type : m_supported_ray_types)
+        {
+            THROW_OPTIX_ERROR(
+                nativeOptiXContextHandle(),
+                rtMaterialSetClosestHitProgram(
+                    native_material_handle,
+                    static_cast<unsigned int>(ray_type),
+                    nativeOptiXProgramHandle(m_closest_hit_program_offset))
+            );
+        }
     }
 
     if(any_hit_shader.isValid())
     {
-        THROW_OPTIX_ERROR(
-            nativeOptiXContextHandle(),
-            rtMaterialSetAnyHitProgram(native_material_handle, static_cast<unsigned int>(m_ray_type), nativeOptiXProgramHandle(m_any_hit_program_offset))
-        );
+        for(auto ray_type : m_supported_ray_types)
+        {
+            THROW_OPTIX_ERROR(
+                nativeOptiXContextHandle(),
+                rtMaterialSetAnyHitProgram(
+                    native_material_handle,
+                    static_cast<unsigned int>(ray_type),
+                    nativeOptiXProgramHandle(m_any_hit_program_offset))
+            );
+        }
     }
 }
 
@@ -70,9 +95,15 @@ util::Optional<OxProgram> OxMaterial::getAnyHitShader() const
     }
 }
 
-OxRayType OxMaterial::rayType() const
+OxRayTypeCollection OxMaterial::supportedRayTypes() const
 {
-    return m_ray_type;
+    return m_supported_ray_types;
+}
+
+bool ox_wrapper::OxMaterial::supportsRayType(OxRayType ray_type) const
+{
+    return std::find(m_supported_ray_types.begin(), m_supported_ray_types.end(), ray_type) 
+        != m_supported_ray_types.end();
 }
 
 bool OxMaterial::isValid() const

@@ -33,23 +33,25 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
     uint32_t num_scattering_integral_importance_directions,
     OxProgram const& absorption_probability_shader,
     OxProgram const& scattering_probability_shader,
-    OxProgram const& scattering_phase_function_shader) :
-    OxRenderingPass{ scene_section },
-    OxContractWithOxPrograms{ absorption_probability_shader, scattering_probability_shader, scattering_phase_function_shader },
-    m_ray_caster{ ray_caster },
-    m_num_spectra_pairs_supported{ num_spectra_pairs_supported },
+    OxProgram const& scattering_phase_function_shader)
+
+    : OxRenderingPass{ scene_section }
+    , OxContractWithOxPrograms{ absorption_probability_shader, scattering_probability_shader, scattering_phase_function_shader }
+    , m_ray_caster{ ray_caster }
+    , m_num_spectra_pairs_supported{ num_spectra_pairs_supported }
     //m_max_recursion_depth{ max_recursion_depth },
     //m_ray_marching_step_size{ ray_marching_step_size },
-    m_num_scattering_integral_importance_directions{ num_scattering_integral_importance_directions },
-    m_surface_material_assembly{
-    OxMaterial{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, OX_SHADER_ENTRY_CLOSEST_HIT), util::Optional<OxProgram>{}, OxRayType::unknown },
-    OxMaterial{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_closest_hit_scattered__"), util::Optional<OxProgram>{}, OxRayType::scattered} },
-    m_miss_shader_assembly{
-    OxMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, OX_SHADER_ENTRY_MISS), OxRayType::unknown},
-    OxMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_miss_scattered__"), OxRayType::scattered} },
-    m_traverse_backup_buffer{ targetSceneSection().context(), ray_caster.numberOfRays() },
-    m_recaster_ray_generator{ m_traverse_backup_buffer, castBufferToType<OxRayRadiancePayload>(ray_caster.outputBuffer()), OxRayType::unknown },
-    m_importance_directions_buffer{ targetSceneSection().context().createBuffer<float2>(OxBufferKind::input, num_scattering_integral_importance_directions*(1 + num_spectra_pairs_supported)) }
+    , m_num_scattering_integral_importance_directions{ num_scattering_integral_importance_directions }
+    , m_surface_material_assembly{
+        OxMaterial{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, OX_SHADER_ENTRY_CLOSEST_HIT), util::Optional<OxProgram>{}, OxRayTypeCollection{ OxRayType::unknown } },
+        OxMaterial{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_closest_hit_scattered__"), util::Optional<OxProgram>{}, OxRayTypeCollection{ OxRayType::scattered }} }
+    , m_miss_shader_assembly{
+        OxMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, OX_SHADER_ENTRY_MISS), OxRayTypeCollection{ OxRayType::unknown } },
+        OxMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_miss_scattered__"), OxRayTypeCollection{ OxRayType::scattered } } }
+    , m_traverse_backup_buffer{ targetSceneSection().context(), ray_caster.numberOfRays() }
+    , m_recaster_ray_generator{ m_traverse_backup_buffer, castBufferToType<OxRayRadiancePayload>(ray_caster.outputBuffer()), OxRayType::unknown }
+    , m_importance_directions_buffer{ targetSceneSection().context().createBuffer<float2>(OxBufferKind::input, num_scattering_integral_importance_directions*(1 + num_spectra_pairs_supported)) }
+
 {
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
         .setVariableValue("num_spectra_pairs_supported", m_num_spectra_pairs_supported);

@@ -12,7 +12,7 @@ OxParallelRayGenerator::OxParallelRayGenerator(OxContext const& context, uint32_
     uint8_t num_spectra_pairs_supported, uint32_t entry_point_index):
     OxRayGeneratorWithOutputBuffer{ context.createProgram(PTX_PARALLEL_RAY_GENERATOR, OxProgram::Source::file, OX_SHADER_ENTRY_RAY_GENERATION),
     context.createBuffer<OxRayRadiancePayload>(OxBufferKind::output, num_rays), "ox_output_buffer", num_rays, 1U, 1U, entry_point_index },
-    m_spectral_flux_buffer{ context.createBuffer<float2>(OxBufferKind::input, (std::min)(constants::max_spectra_pairs_supported, static_cast<uint32_t>(num_spectra_pairs_supported))) },
+    m_spectral_flux_buffer{ context.createBuffer<float2>(OxBufferKind::input, num_rays*(std::min)(constants::max_spectra_pairs_supported, static_cast<uint32_t>(num_spectra_pairs_supported))) },
     m_num_spectra_pairs_supported{ num_spectra_pairs_supported }
 {
     setGeneratorDimensions(num_rays, 1U, 1U);

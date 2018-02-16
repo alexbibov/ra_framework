@@ -5,7 +5,7 @@
 #include "fwd.h"
 #include "material.h"
 #include <memory>
-#include <set>
+#include <unordered_set>
 #include <vector>
 
 #include "util/optional.h"
@@ -35,12 +35,14 @@ public:
     bool isValid() const override;
 
 private:
-    struct material_comparator 
+    struct material_hasher
     {
+        uint64_t operator()(OxMaterial const& m) const;
         bool operator()(OxMaterial const& m1, OxMaterial const& m2) const;
     };
 
-    using material_collection = std::set<OxMaterial, material_comparator>;
+    using material_collection = std::unordered_set<OxMaterial, 
+        material_hasher, material_hasher>;
 
 private:
     void update(OxObjectHandle top_scene_object) const;

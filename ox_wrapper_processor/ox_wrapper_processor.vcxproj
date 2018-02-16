@@ -73,17 +73,18 @@
       </Message>
     </PreBuildEvent>
     <CustomBuildStep>
-      <Command>python $(SolutionDir)ox_wrapper\compile_ptx.py $(SolutionDir)GomosOptiXModel/config.xml</Command>
+      <Command>
+      </Command>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Outputs>$(SolutionDir)GomosOptiXModel/shaders/ptx/scattering_shaders.ptx</Outputs>
+      <Outputs>
+      </Outputs>
     </CustomBuildStep>
     <CustomBuildStep>
-      <Inputs>$(SolutionDir)GomosOptiXModel/shaders/ptx/scattering_shaders.cu</Inputs>
+      <Inputs>
+      </Inputs>
     </CustomBuildStep>
-    <CustomBuildStep>
-      <TreatOutputAsContent>true</TreatOutputAsContent>
-    </CustomBuildStep>
+    <CustomBuildStep />
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>

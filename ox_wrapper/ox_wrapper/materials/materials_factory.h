@@ -20,7 +20,7 @@ public:
 
     // OxBlackBody
 public:
-    OxBlackBody createBlackBody(OxRayPayloadType payload_type, OxRayType affected_ray_type) const;
+    OxBlackBody createBlackBody(OxRayPayloadType payload_type, OxRayTypeCollection const& affected_ray_types) const;
 
 private:
     OxMaterialsFactory(OxContext const& context);

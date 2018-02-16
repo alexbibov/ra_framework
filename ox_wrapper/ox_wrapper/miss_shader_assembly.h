@@ -5,7 +5,7 @@
 #include "miss_shader.h"
 #include "util/optional.h"
 
-#include <set>
+#include <unordered_set>
 #include <vector>
 
 namespace ox_wrapper {
@@ -30,12 +30,14 @@ public:
     bool isValid() const override;
 
 private:
-    struct miss_shader_comparator
+    struct miss_shader_hasher
     {
+        uint64_t operator()(OxMissShader const& ms) const;
         bool operator()(OxMissShader const& ms1, OxMissShader const& ms2) const;
     };
 
-    using miss_shader_collection = std::set<OxMissShader, miss_shader_comparator>;
+    using miss_shader_collection = std::unordered_set<OxMissShader, 
+        miss_shader_hasher, miss_shader_hasher>;
 
 private:
     void apply(OxObjectHandle top_scene_object) const;

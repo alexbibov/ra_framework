@@ -1,4 +1,7 @@
 #include "miss_shader_assembly.h"
+#include "util/misc.h"
+
+#include <algorithm>
 
 using namespace ox_wrapper;
 
@@ -12,12 +15,26 @@ OxMissShaderAssembly::OxMissShaderAssembly(std::initializer_list<OxMissShader> i
 OxMissShaderAssembly::OxMissShaderAssembly(std::vector<OxMissShader> const& miss_shaders) :
     OxContractWithOxContext{ miss_shaders.begin()->context() }
 {
+    uint64_t used_ray_types_mask{ 0U };
     for (auto& ms : miss_shaders)
     {
-        if (!m_miss_shader_list.insert(ms).second)
-            util::Log::retrieve()->out("WARNING: unable to insert miss shader \"" + ms.getStringName() +
-                "\" into miss shader assembly (miss shader for ray type \"" + std::to_string(static_cast<unsigned int>(ms.rayType()))
-                + "\" already exists in this assembly)", util::LogMessageType::exclamation);
+        uint64_t current_mask = rayTypeCollectionTo64BitMask(ms.supportedRayTypes());
+        uint64_t repeated_uses_mask = current_mask & used_ray_types_mask;
+        if (repeated_uses_mask)
+        {
+            auto repeated_uses_ray_indices = util::misc::getSetBits(repeated_uses_mask);
+
+            std::string log_message = "Unable to insert miss shader \"" + ms.getStringName()
+                + "\" into miss shader assembly \"" + getStringName() + "\". Ray types ";
+
+            std::for_each(repeated_uses_ray_indices.begin(), --repeated_uses_ray_indices.end(),
+                [&log_message](uint8_t rt_index) {log_message += rt_index + ","; });
+            log_message += repeated_uses_ray_indices[repeated_uses_ray_indices.size() - 1];
+
+            log_message += " are already in use in this assembly";
+
+            throw OxException{ log_message.c_str(), __FILE__, __FUNCTION__, __LINE__ };
+        }
     }
 }
 
@@ -47,7 +64,7 @@ util::Optional<OxMissShader> OxMissShaderAssembly::getMissShaderByRayType(OxRayT
 {
     for (auto& ms : m_miss_shader_list)
     {
-        if (ms.rayType() == ray_type)
+        if (rayTypeCollectionTo64BitMask(ms.supportedRayTypes()) & static_cast<unsigned int>(ray_type))
             return ms;
     }
 
@@ -104,7 +121,12 @@ OxMissShaderAssembly::miss_shader_collection::const_iterator OxMissShaderAssembl
     return m_miss_shader_list.end();
 }
 
-bool OxMissShaderAssembly::miss_shader_comparator::operator()(OxMissShader const& ms1, OxMissShader const& ms2) const
+uint64_t OxMissShaderAssembly::miss_shader_hasher::operator()(OxMissShader const& ms) const
 {
-    return ms1.rayType() < ms2.rayType();
+    return rayTypeCollectionTo64BitMask(ms.supportedRayTypes());
+}
+
+bool OxMissShaderAssembly::miss_shader_hasher::operator()(OxMissShader const& ms1, OxMissShader const& ms2) const
+{
+    return ms1.getProgram().getId().native == ms2.getProgram().getId().native;
 }

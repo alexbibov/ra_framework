@@ -135,12 +135,13 @@ OxRaycastersFactory::OxRaycastersFactory(OxContext const& context) :
             "getEmitterRotation", &OxParallelRayGenerator::getEmitterRotation,
             "getNumberOfSpectraPairsSupported", &OxParallelRayGenerator::getNumberOfSpectraPairsSupported,
             
-            "writeToSpectralFluxBuffer",
-            [](OxParallelRayGenerator* p, std::vector<float2> const& data)
+            "updateSpectralFluxBuffer",
+            [](OxParallelRayGenerator* p, lua_support::LuaTable::table_type const& data)
             {
-            float2* p_destinations = p->mapSpectralFluxBuffer();
-            memcpy(p_destinations, data.data(), sizeof(float2)*data.size());
-            p->unmapSpectralFluxBuffer();
+                auto converted_data = lua_support::LuaTable::toVector<float2>(data);
+                float2* p_destinations = p->mapSpectralFluxBuffer();
+                memcpy(p_destinations, converted_data.data(), sizeof(float2)*converted_data.size());
+                p->unmapSpectralFluxBuffer();
             }
         );
 

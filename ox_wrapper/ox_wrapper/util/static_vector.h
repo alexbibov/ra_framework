@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include <type_traits>
 #include <cassert>
+#include <iterator>
 
 namespace ox_wrapper { namespace util {
 
@@ -12,9 +13,9 @@ template<typename T, size_t max_size>
 class StaticVector
 {
 public:
-    class StaticVectorIterator
+    class StaticVectorIterator : public std::iterator<std::random_access_iterator_tag, T>
     {
-        friend class StaticVector;
+        friend class StaticVector<T, max_size>;
 
     public:
 
@@ -61,11 +62,14 @@ public:
         char* m_addr;
     };
 
-    using iterator_type = StaticVectorIterator;
-    using const_iterator_type = StaticVectorIterator const;
+    using value_type = T;
+
+    using iterator = StaticVectorIterator;
+    using const_iterator = StaticVectorIterator const;
 
     StaticVector();
-    StaticVector(T const& val);
+    StaticVector(size_t num_elements, T const& val);
+    StaticVector(size_t num_elements);
     StaticVector(std::initializer_list<T> elements);
     StaticVector(StaticVector const& other);
     StaticVector(StaticVector&& other);
@@ -86,16 +90,18 @@ public:
     T pop_back();
 
     size_t size() const;
-    size_t capacity() const;
+    static constexpr size_t capacity() { return m_capacity / sizeof(T); }
 
-    iterator_type begin() { return StaticVectorIterator{ m_data }; }
-    iterator_type end() { return StaticVectorIterator{ m_p_end }; }
+    StaticVectorIterator find(T const& value) const;
 
-    const_iterator_type cbegin() const { return const_cast<StaticVector*>(this)->begin(); }
-    const_iterator_type cend() const { return const_cast<StaticVector*>(this)->end(); }
+    iterator begin() { return StaticVectorIterator{ m_data }; }
+    iterator end() { return StaticVectorIterator{ m_p_end }; }
 
-    const_iterator_type begin() const { return cbegin(); }
-    const_iterator_type end() const { return cend(); }
+    const_iterator cbegin() const { return const_cast<StaticVector*>(this)->begin(); }
+    const_iterator cend() const { return const_cast<StaticVector*>(this)->end(); }
+
+    const_iterator begin() const { return cbegin(); }
+    const_iterator end() const { return cend(); }
 
 private:
     template<typename = typename std::enable_if<std::is_destructible<T>::value && !std::is_trivially_destructible<T>::value>::type>
@@ -105,7 +111,7 @@ private:
     static void destruct_element(T* p_e, int = 0) {}
 
 private:
-    static const size_t m_capacity = sizeof(T)*max_size;
+    static constexpr size_t m_capacity = sizeof(T)*max_size;
     char m_data[m_capacity];
     char* m_p_end;
     size_t m_size;
@@ -121,12 +127,21 @@ inline StaticVector<T, max_size>::StaticVector() :
 }
 
 template<typename T, size_t max_size>
-inline StaticVector<T, max_size>::StaticVector(T const& val) :
+inline StaticVector<T, max_size>::StaticVector(size_t num_elements, T const& val) :
     m_data{ 0 },
     m_p_end{ m_data },
     m_size{ 0U }
 {
-    while (m_size < max_size) push_back(val);
+    while (m_size < num_elements) push_back(val);
+}
+
+template<typename T, size_t max_size>
+inline StaticVector<T, max_size>::StaticVector(size_t num_elements) :
+    m_data{ 0 },
+    m_p_end{ m_data },
+    m_size{ 0U }
+{
+    while (m_size < num_elements) push_back(T{});
 }
 
 template<typename T, size_t max_size>
@@ -173,11 +188,11 @@ inline StaticVector<T, max_size>& StaticVector<T, max_size>::operator=(StaticVec
         return *this;
 
     while (m_size > other.m_size) pop_back();
-    for (size_t i = 0; i < (std::min)(m_size, other.m_size); ++i)
+    for (size_t i = 0; i < m_size; ++i)
     {
         (*this)[i] = other[i];
     }
-    for (size_t i = (std::min)(m_size, other.m_size); i < other.m_size; ++i)
+    for (size_t i = m_size; i < other.m_size; ++i)
         push_back(other[i]);
 
     return *this;
@@ -190,11 +205,11 @@ inline StaticVector<T, max_size>& StaticVector<T, max_size>::operator=(StaticVec
         return this;
 
     while (m_size > other.m_size) pop_back();
-    for (size_t i = 0; i < (std::min)(m_size, other.m_size); ++i)
+    for (size_t i = 0; i < m_size; ++i)
     {
         (*this)[i] = std::move(other[i]);
     }
-    for (size_t i = (std::min)(m_size, other.m_size); i < other.m_size; ++i)
+    for (size_t i = m_size; i < other.m_size; ++i)
         emplace_back(std::move(other[i]));
 
     return *this;
@@ -247,15 +262,22 @@ inline size_t StaticVector<T, max_size>::size() const
 }
 
 template<typename T, size_t max_size>
-inline size_t StaticVector<T, max_size>::capacity() const
+inline typename StaticVector<T, max_size>::StaticVectorIterator StaticVector<T, max_size>::find(T const& value) const
 {
-    return m_capacity;
+    for (char* addr = m_data; addr < m_data + sizeof(T)*m_size; addr += sizeof(T))
+    {
+        if (*reinterpret_cast<T*>(addr) == value)
+            return StaticVectorIterator{ addr };
+    }
+
+    return end();
 }
 
 
 // required by random-access iterator canonical implementation
 template<typename T, size_t max_size>
-inline typename StaticVector<T, max_size>::StaticVectorIterator operator+(size_t n, typename StaticVector<T, max_size>::iterator_type const& other)
+inline typename StaticVector<T, max_size>::StaticVectorIterator operator+(size_t n, 
+    typename StaticVector<T, max_size>::iterator const& other)
 {
     return other + n;
 }
@@ -387,7 +409,7 @@ inline typename StaticVector<T, max_size>::StaticVectorIterator StaticVector<T, 
 template<typename T, size_t max_size>
 inline size_t StaticVector<T, max_size>::StaticVectorIterator::operator-(StaticVectorIterator const& other) const
 {
-    return reinterpret_cast<size_t>(m_addr - other.m_addr);
+    return reinterpret_cast<size_t>((m_addr - other.m_addr) / sizeof(T));
 }
 template<typename T, size_t max_size>
 inline bool StaticVector<T, max_size>::StaticVectorIterator::operator<(StaticVectorIterator const& other) const

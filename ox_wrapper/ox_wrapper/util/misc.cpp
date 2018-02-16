@@ -40,3 +40,43 @@ std::string ox_wrapper::util::misc::wstringToAsciiString(std::wstring const& wst
 
     return rv;
 }
+
+int8_t ox_wrapper::util::misc::getFirstHighBit(uint64_t mask)
+{
+    int8_t rv{ -1 };
+
+#ifdef OX_WRAPPER_USE_CPU_INTRINSICS
+    unsigned long set_bit_index{};
+    _BitScanReverse64(&set_bit_index, static_cast<unsigned long long>(mask));
+    rv = static_cast<int8_t>(set_bit_index) - 1;
+#else
+    if (mask) ++rv;
+    if (mask & 0xFFFFFFFF00000000) { rv += 32; mask &= 0xFFFFFFFF00000000; }
+    if (mask & 0xFFFF0000FFFF0000) { rv += 16; mask &= 0xFFFF0000FFFF0000; }
+    if (mask & 0xFF00FF00FF00FF00) { rv += 8; mask &= 0xFF00FF00FF00FF00; }
+    if (mask & 0xF0F0F0F0F0F0F0F0) { rv += 4; mask &= 0xF0F0F0F0F0F0F0F0; }
+    if (mask & 0xCCCCCCCCCCCCCCCC) { rv += 2; mask &= 0xCCCCCCCCCCCCCCCC; }
+    if (mask & 0xAAAAAAAAAAAAAAAA) rv += 1;
+#endif
+
+    return rv;
+}
+
+ox_wrapper::util::StaticVector<uint8_t, 64U> ox_wrapper::util::misc::getSetBits(uint64_t mask)
+{
+    util::StaticVector<uint8_t, 64U> rv{};
+
+    int8_t bit{};
+    while (bit = getFirstHighBit(mask) >= 0)
+    {
+        rv.push_back(static_cast<uint8_t>(bit));
+        mask ^= 0x1ui64 << bit;
+    }
+
+    return rv;
+}
+
+
+
+
+
