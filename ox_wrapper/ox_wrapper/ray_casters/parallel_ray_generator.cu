@@ -30,17 +30,25 @@ rtBuffer<optix::float2, 1> ox_init_flux_buffer;
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
+__device__ optix::float2 rotate_point_on_X_axis(float point_to_rotate, float center_of_rotation, optix::float2 cs)
+{
+    optix::float2 rv = optix::make_float2(
+        cs.x * point_to_rotate/*.x - cs.y * point_to_rotate.y*/ + (1 - cs.x)*center_of_rotation/*.x + cs.y*center_of_rotation.y*/,
+        cs.y * point_to_rotate/*.x + cs.x * point_to_rotate.y*/ - cs.y*center_of_rotation/*.x + (1 - cs.x)*center_of_rotation.y*/
+    );
+
+    return rv;
+}
+
 RT_PROGRAM void __ox_generate__(void)
 {
     optix::float3 origin{ -emitter_size / 2.f + emitter_size / (num_rays - 1) * index + emitter_position, 0.f, 0.f };
     //float3 direction{ 0.f, 1.f, 0.f };
 
-    float c{ cosf(emitter_rotation) }, s{ sinf(emitter_rotation) };
-    origin.x = c * origin.x - s * origin.y;
-    origin.y = s * origin.x + c * origin.y;
-
-    optix::float3 direction{ -s, c };
-
+    optix::float2 cs = optix::make_float2(cosf(emitter_rotation), sinf(emitter_rotation));
+    optix::float2 rotated_point = rotate_point_on_X_axis(origin.x, emitter_position, cs);
+    origin.x = rotated_point.x; origin.y = rotated_point.y;
+    optix::float3 direction{ -cs.y, cs.x };
     optix::Ray ray = optix::make_Ray(origin, direction, static_cast<unsigned int>(ox_wrapper::OxRayType::unknown), 0.f, RT_DEFAULT_MAX);
     
     unsigned int const ns{ MIN(ox_wrapper::constants::max_spectra_pairs_supported, num_spectra_pairs_supported) };

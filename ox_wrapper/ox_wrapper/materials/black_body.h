@@ -10,7 +10,7 @@ namespace ox_wrapper { namespace materials {
 class OxBlackBody : public OxMaterial
 {
 public:
-    OxBlackBody(OxContext const& context, OxRayPayloadType payload_type);
+    OxBlackBody(OxContext const& context, OxRayPayloadType payload_type, OxRayType affected_ray_type);
 };
 
 }}
