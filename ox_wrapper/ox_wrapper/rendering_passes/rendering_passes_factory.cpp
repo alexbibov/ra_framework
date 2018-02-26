@@ -132,7 +132,8 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
         ),
 
         "updateImportanceDirections",
-        [](OxScatteringRenderingPass* p, std::vector<float2> const& data)
+        [](OxScatteringRenderingPass* p, 
+            lua_support::LuaTable::table_type const& data)
         {
             uint32_t num_importance_directions = p->getNumberOfScatteringIntegralImportanceDirections();
             uint32_t num_spectra_pairs_supported = p->getNumberOfSpectraPairsSupported();
@@ -142,8 +143,10 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
                     std::to_string(num_elements) + " elements, but " 
                     + std::to_string(data.size()) + " elements were provided instead").c_str(), 
                 __FILE__, __FUNCTION__, __LINE__ };
+
+            auto converted_data = lua_support::LuaTable::toVector<float2>(data);
             float2* p_buffer = p->mapImportanceDirectionsBuffer();
-            std::copy(data.begin(), data.end(), p_buffer);
+            std::copy(converted_data.begin(), converted_data.end(), p_buffer);
             p->unmapImportanceDirectionsBuffer();
         },
 

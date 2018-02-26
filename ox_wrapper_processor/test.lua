@@ -127,5 +127,10 @@ scattering_rendering_pass = OxScatteringRenderingPass.new(
     1    -- number of importance directions used to approximate the scattering integral
 )
 
+importance_directions = { float2.new(0.0, 3.14) }
+for i = 2, frequency_pairs + 1 do
+    importance_directions[i] = float2.new(1.0, 1.0)
+end
+scattering_rendering_pass:updateImportanceDirections(importance_directions)
 
 -- scattering_rendering_pass:render()    -- execute ray-tracing
