@@ -134,10 +134,14 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
         "updateImportanceDirections",
         [](OxScatteringRenderingPass* p, std::vector<float2> const& data)
         {
-            uint32_t num_elements = p->getNumberOfScatteringIntegralImportanceDirections();
+            uint32_t num_importance_directions = p->getNumberOfScatteringIntegralImportanceDirections();
+            uint32_t num_spectra_pairs_supported = p->getNumberOfSpectraPairsSupported();
+            uint32_t num_elements = num_importance_directions * (1 + num_spectra_pairs_supported);
             if (data.size() != num_elements)
                 throw OxException{ ("updateImportanceDirections(...) must supply " +
-                    std::to_string(num_elements) + " elements").c_str(), __FILE__, __FUNCTION__, __LINE__ };
+                    std::to_string(num_elements) + " elements, but " 
+                    + std::to_string(data.size()) + " elements were provided instead").c_str(), 
+                __FILE__, __FUNCTION__, __LINE__ };
             float2* p_buffer = p->mapImportanceDirectionsBuffer();
             std::copy(data.begin(), data.end(), p_buffer);
             p->unmapImportanceDirectionsBuffer();

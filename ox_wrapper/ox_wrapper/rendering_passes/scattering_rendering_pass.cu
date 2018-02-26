@@ -36,7 +36,7 @@ rtDeclareVariable(optix::float3, normal, attribute attrNormal, "Normal of the su
  more precisely float2.x stores inclination and float2.y stores azimuthal angle
  — the following are N more float2 elements, where each component (i.e. x- and y-) identifies single spectral
  radiance value in the given importance direction OUTSIDE of medium (therefore, current design only supports
- cases where spectral radiance outside of medium does not depend on spatial location).
+ cases where spectral radiance outside of the medium does not depend on spatial location).
  
  *Here N=min(num_spectra_pairs_supported, constants::max_spectra_pairs_supported)
 */

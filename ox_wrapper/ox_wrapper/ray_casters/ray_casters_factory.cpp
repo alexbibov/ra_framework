@@ -1,3 +1,5 @@
+#define _SCL_SECURE_NO_WARNINGS
+
 #include "ray_casters_factory.h"
 #include "parallel_ray_generator.h"
 #include "recaster_generator.h"
@@ -125,22 +127,30 @@ OxRaycastersFactory::OxRaycastersFactory(OxContext const& context) :
                 {
                     return createParallelRayGenerator(num_rays, emitter_size);
                 }
-            ),
+                    ),
 
-            "setEmitterSize", &OxParallelRayGenerator::setEmitterSize,
-            "setEmitterPosition", &OxParallelRayGenerator::setEmitterPosition,
-            "setEmitterRotation", &OxParallelRayGenerator::setEmitterRotation,
-            "getNumberOfRays", &OxParallelRayGenerator::getNumberOfRays,
-            "getEmitterSize", &OxParallelRayGenerator::getEmitterSize,
-            "getEmitterRotation", &OxParallelRayGenerator::getEmitterRotation,
-            "getNumberOfSpectraPairsSupported", &OxParallelRayGenerator::getNumberOfSpectraPairsSupported,
-            
-            "updateSpectralFluxBuffer",
-            [](OxParallelRayGenerator* p, lua_support::LuaTable::table_type const& data)
-            {
+                "setEmitterSize", &OxParallelRayGenerator::setEmitterSize,
+                    "setEmitterPosition", &OxParallelRayGenerator::setEmitterPosition,
+                    "setEmitterRotation", &OxParallelRayGenerator::setEmitterRotation,
+                    "getNumberOfRays", &OxParallelRayGenerator::getNumberOfRays,
+                    "getEmitterSize", &OxParallelRayGenerator::getEmitterSize,
+                    "getEmitterRotation", &OxParallelRayGenerator::getEmitterRotation,
+                    "getNumberOfSpectraPairsSupported", &OxParallelRayGenerator::getNumberOfSpectraPairsSupported,
+
+                    "updateSpectralFluxBuffer",
+                    [](OxParallelRayGenerator* p, lua_support::LuaTable::table_type const& data)
+                {
+                    uint32_t num_elements = p->numberOfRays() * p->getNumberOfSpectraPairsSupported();
+                    if (data.size() != num_elements)
+                        throw OxException{ ("Error while updating spectral flux buffer of parallel ray generator \""
+                            + p->getStringName() + "\": updateSpectralFluxBuffer(...) must supply "
+                            + std::to_string(num_elements)
+                            + " elements, but " + std::to_string(data.size()) + " elements were provided instead").c_str(),
+                            __FILE__, __FUNCTION__, __LINE__ };
+
                 auto converted_data = lua_support::LuaTable::toVector<float2>(data);
                 float2* p_destinations = p->mapSpectralFluxBuffer();
-                memcpy(p_destinations, converted_data.data(), sizeof(float2)*converted_data.size());
+                std::copy(converted_data.begin(), converted_data.end(), p_destinations);
                 p->unmapSpectralFluxBuffer();
             }
         );

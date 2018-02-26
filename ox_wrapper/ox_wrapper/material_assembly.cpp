@@ -50,8 +50,8 @@ OxMaterialAssembly::OxMaterialAssembly(std::vector<OxMaterial> const& materials)
                 "assembly \"" + getStringName() + "\". Materials for ray types ";
 
             std::for_each(repeated_uses_indices.begin(), --repeated_uses_indices.end(),
-                [&log_message](uint8_t e) { log_message += e + ", "; });
-            log_message += repeated_uses_indices[repeated_uses_indices.size() - 1];
+                [&log_message](uint8_t e) { log_message += std::to_string(e) + ", "; });
+            log_message += std::to_string(repeated_uses_indices[repeated_uses_indices.size() - 1]);
 
             log_message += " have already been assigned in this material assembly";
 
@@ -61,8 +61,9 @@ OxMaterialAssembly::OxMaterialAssembly(std::vector<OxMaterial> const& materials)
         THROW_OPTIX_ERROR(nativeOptiXContextHandle(),
             rtGeometryInstanceSetMaterial(native_geometry_instance_handle, idx,
                 OxMaterialAttorney<OxMaterialAssembly>::getNativeMaterialHandle(current)));
-
-        ++idx;
+        m_materials.insert(current);
+        
+        used_material_slots_mask |= current_mask;
     } 
 }
 
@@ -93,7 +94,7 @@ util::Optional<OxMaterial> OxMaterialAssembly::getMaterialByRayType(OxRayType ra
     for (auto const& e : m_materials)
     {
         uint64_t supported_ray_types_mask = rayTypeCollectionTo64BitMask(e.supportedRayTypes());
-        if (supported_ray_types_mask & static_cast<uint64_t>(ray_type))
+        if (supported_ray_types_mask & (0x1ui64 << static_cast<unsigned>(ray_type)))
             return e;
     }
 
@@ -133,9 +134,9 @@ bool OxMaterialAssembly::isValid() const
 
 void OxMaterialAssembly::update(OxObjectHandle top_scene_object) const
 {
-    for (auto& m : m_materials)
+    for (auto& _ : m_materials)
     {
-        OxMaterialAttorney<OxMaterialAssembly>::updateMaterial(m, top_scene_object);
+        OxMaterialAttorney<OxMaterialAssembly>::updateMaterial(_, top_scene_object);
     }
 }
 

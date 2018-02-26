@@ -967,9 +967,10 @@ void luaRegisterMissShaderTypes()
 
         lua_support::ListOfFactories::make_initializer(
             [](OxProgram const& miss_shader,
-                OxRayTypeCollection const& supported_ray_types)
+                lua_support::LuaTable::table_type const& supported_ray_types)
             {
-                return p_basic_factory_instance->createMissShader(miss_shader, supported_ray_types);
+                return p_basic_factory_instance->createMissShader(miss_shader, 
+                    lua_support::LuaTable::toStaticVector<OxRayTypeCollection::value_type, OxRayTypeCollection::capacity()>(supported_ray_types));
             },
 
             [](OxProgram const& miss_shader)

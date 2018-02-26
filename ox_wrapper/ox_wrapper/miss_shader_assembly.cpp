@@ -28,13 +28,16 @@ OxMissShaderAssembly::OxMissShaderAssembly(std::vector<OxMissShader> const& miss
                 + "\" into miss shader assembly \"" + getStringName() + "\". Ray types ";
 
             std::for_each(repeated_uses_ray_indices.begin(), --repeated_uses_ray_indices.end(),
-                [&log_message](uint8_t rt_index) {log_message += rt_index + ","; });
-            log_message += repeated_uses_ray_indices[repeated_uses_ray_indices.size() - 1];
+                [&log_message](uint8_t rt_index) {log_message += std::to_string(rt_index) + ","; });
+            log_message += std::to_string(repeated_uses_ray_indices[repeated_uses_ray_indices.size() - 1]);
 
             log_message += " are already in use in this assembly";
 
             throw OxException{ log_message.c_str(), __FILE__, __FUNCTION__, __LINE__ };
         }
+
+        used_ray_types_mask |= current_mask;
+        m_miss_shader_list.insert(ms);
     }
 }
 
@@ -64,7 +67,7 @@ util::Optional<OxMissShader> OxMissShaderAssembly::getMissShaderByRayType(OxRayT
 {
     for (auto& ms : m_miss_shader_list)
     {
-        if (rayTypeCollectionTo64BitMask(ms.supportedRayTypes()) & static_cast<unsigned int>(ray_type))
+        if (rayTypeCollectionTo64BitMask(ms.supportedRayTypes()) & (0x1ui64 << static_cast<unsigned>(ray_type)))
             return ms;
     }
 
