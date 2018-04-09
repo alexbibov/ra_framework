@@ -133,4 +133,7 @@ for i = 2, frequency_pairs + 1 do
 end
 scattering_rendering_pass:updateImportanceDirections(importance_directions)
 
--- scattering_rendering_pass:render()    -- execute ray-tracing
+scattering_rendering_pass:render()    -- execute ray-tracing
+
+output_buffer = parallel_ray_generator:getRawBuffer()
+

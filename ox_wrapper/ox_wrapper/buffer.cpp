@@ -115,7 +115,7 @@ void OxAbstractBuffer::assignNativeOptixBufferHandle(RTbuffer native_optix_buffe
     });
 }
 
-OxBufferMapSentry<void> makeBufferMapSentry(OxAbstractBuffer const& buffer, OxBufferMapKind map_kind, unsigned int mipmap_level)
+OxBufferMapSentry<void> ox_wrapper::makeBufferMapSentry(OxAbstractBuffer const& buffer, OxBufferMapKind map_kind, unsigned int mipmap_level)
 {
     return OxBufferMapSentry<void>{ buffer, map_kind, mipmap_level };
 }

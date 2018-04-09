@@ -53,6 +53,8 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
     , m_importance_directions_buffer{ targetSceneSection().context().createBuffer<float2>(OxBufferKind::input, num_scattering_integral_importance_directions*(1 + num_spectra_pairs_supported)) }
 
 {
+    makeBufferMapSentry(m_traverse_backup_buffer.getRawBuffer(), OxBufferMapKind::write).address()[0] = 0U;
+
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
         .setVariableValue("num_spectra_pairs_supported", m_num_spectra_pairs_supported);
     static_cast<OxProgram&>(static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).getProgram())
