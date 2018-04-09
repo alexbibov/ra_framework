@@ -1,17 +1,17 @@
 #ifndef OX_WRAPPER_MATERIAL_H
 #define OX_WRAPPER_MATERIAL_H
 
-#include "fwd.h"
 #include "optix.h"
-#include "contract_with_context.h"
-#include "contract_with_programs.h"
-#include "entity.h"
-#include "util/optional.h"
+
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/contract_with_context.h"
+#include "ox_wrapper/contract_with_programs.h"
+#include "ox_wrapper/entity.h"
+#include "ox_wrapper/ray_payloads.h"
+#include "ox_wrapper/util/optional.h"
 
 #include <string>
 #include <memory>
-
-#include "ray_payloads.h"
 
 namespace ox_wrapper {
 

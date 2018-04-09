@@ -2,7 +2,7 @@
 #define OX_WRAPPER_MATERIAL_ASSEMBLY_H
 
 #include "optix.h"
-#include "fwd.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
 #include "material.h"
 #include <memory>
 #include <unordered_set>

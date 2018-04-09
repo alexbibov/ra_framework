@@ -2,10 +2,11 @@
 #define OX_WRAPPER_CONTRACT_WITH_PROGRAMS_H
 
 #include "optix.h"
-#include "fwd.h"
-#include "constants.h"
-#include "util/static_vector.h"
-#include "program.h"
+
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/constants.h"
+#include "ox_wrapper/util/static_vector.h"
+#include "ox_wrapper/program.h"
 
 #include <cstdint>
 #include <initializer_list>

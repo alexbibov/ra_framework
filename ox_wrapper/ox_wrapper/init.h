@@ -1,9 +1,9 @@
 #ifndef OX_WRAPPER_INIT_H
 #define OX_WRAPPER_INIT_H
 
-#include "fwd.h"
-#include "util/log.h"
-#include "factory_initializer_sentinel.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/util/log.h"
+#include "ox_wrapper/factory_initializer_sentinel.h"
 
 #include <memory>
 #include <fstream>

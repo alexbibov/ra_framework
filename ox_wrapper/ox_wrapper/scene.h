@@ -1,8 +1,8 @@
 #ifndef OX_WRAPPER_OPTIX_SCENE_H
 #define OX_WRAPPER_OPTIX_SCENE_H
 
-#include "context.h"
-#include "fwd.h"
+#include "ox_wrapper/context.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
 #include <list>
 
 namespace ox_wrapper{

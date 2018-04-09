@@ -4,15 +4,15 @@
 #include <string>
 #include <map>
 
-#include "fwd.h"
+#include "vector_types.h"
 #include "optix.h"
-#include "buffer.h"
-#include "contract_with_context.h"
-#include "entity.h"
-#include "util/matrix_types.h"
-#include "util/log.h"
 
-#include "../../CUDA/v9.0/include/vector_types.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/buffer.h"
+#include "ox_wrapper/contract_with_context.h"
+#include "ox_wrapper/entity.h"
+#include "ox_wrapper/util/matrix_types.h"
+#include "ox_wrapper/util/log.h"
 
 
 namespace ox_wrapper {

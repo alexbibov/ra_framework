@@ -1,9 +1,9 @@
 #ifndef OX_WRAPPER_MATERIALS_MATERIALS_FACTORY_H
 #define OX_WRAPPER_MATERIALS_MATERIALS_FACTORY_H
 
-#include "../context.h"
-#include "black_body.h"
-#include "../fwd.h"
+#include "ox_wrapper/context.h"
+#include "ox_wrapper/materials/black_body.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
 
 namespace ox_wrapper { namespace materials {
 

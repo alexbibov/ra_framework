@@ -2,11 +2,12 @@
 #define OX_WRAPPER_GEOMETRY_GROUP
 
 #include "optix.h"
-#include "fwd.h"
-#include "contract_with_context.h"
-#include "geometry.h"
-#include "util/matrix_types.h"
-#include "transformable.h"
+
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/contract_with_context.h"
+#include "ox_wrapper/geometry.h"
+#include "ox_wrapper/util/matrix_types.h"
+#include "ox_wrapper/transformable.h"
 
 #include <cstdint>
 #include <memory>

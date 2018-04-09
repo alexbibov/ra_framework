@@ -1,9 +1,9 @@
 #ifndef OX_WRAPPER_RENDERING_PASSES_RENDERING_PASSES_FACTORY_H
 #define OX_WRAPPER_RENDERING_PASSES_RENDERING_PASSES_FACTORY_H
 
-#include "../entity.h"
-#include "fwd.h"
-#include "scattering_rendering_pass.h"
+#include "ox_wrapper/entity.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/rendering_passes/scattering_rendering_pass.h"
 
 namespace ox_wrapper { namespace rendering_passes {
 

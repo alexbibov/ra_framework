@@ -2,10 +2,11 @@
 #define OX_WRAPPER_GEOMETRY_H
 
 #include "optix.h"
-#include "fwd.h"
-#include "entity.h"
-#include "material_assembly.h"
-#include "util/optional.h"
+
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/entity.h"
+#include "ox_wrapper/material_assembly.h"
+#include "ox_wrapper/util/optional.h"
 
 #include <map>
 #include <list>

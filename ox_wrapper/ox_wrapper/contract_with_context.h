@@ -2,7 +2,7 @@
 #define OX_WRAPPER_CONTRACT_WITH_CONTEXT_H
 
 #include "optix.h"
-#include "fwd.h"
+#include "ox_wrapper_fwd.h"
 
 namespace ox_wrapper {
 

@@ -1,9 +1,9 @@
 #ifndef OX_WRAPPER_MISS_SHADER_ASSEMBLY_H
 #define OX_WRAPPER_MISS_SHADER_ASSEMBLY_H
 
-#include "fwd.h"
-#include "miss_shader.h"
-#include "util/optional.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/miss_shader.h"
+#include "ox_wrapper/util/optional.h"
 
 #include <unordered_set>
 #include <vector>

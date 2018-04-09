@@ -2,12 +2,12 @@
 #define OX_WRAPPER_RAY_GENERATOR_H
 
 #include <cstdint>
-#include "fwd.h"
-#include "contract_with_context.h"
-#include "contract_with_programs.h"
-#include "entity.h"
-#include "miss_shader_assembly.h"
-#include "util/optional.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/contract_with_context.h"
+#include "ox_wrapper/contract_with_programs.h"
+#include "ox_wrapper/entity.h"
+#include "ox_wrapper/miss_shader_assembly.h"
+#include "ox_wrapper/util/optional.h"
 
 
 namespace ox_wrapper {

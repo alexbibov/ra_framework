@@ -1,12 +1,12 @@
 #ifndef OX_WRAPPER_MISS_SHADER_H
 #define OX_WRAPPER_MISS_SHADER_H
 
-#include "fwd.h"
-#include "contract_with_context.h"
-#include "contract_with_programs.h"
-#include "entity.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/contract_with_context.h"
+#include "ox_wrapper/contract_with_programs.h"
+#include "ox_wrapper/entity.h"
 
-#include "ray_payloads.h"
+#include "ox_wrapper/ray_payloads.h"
 
 namespace ox_wrapper {
 

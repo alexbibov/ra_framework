@@ -2,7 +2,7 @@
 #define OX_WRAPPER_RAY_GENERATOR_WITH_OUTPUT_BUFFER_H
 
 #include "ray_generator.h"
-#include "fwd.h"
+#include "ox_wrapper/ray_casters/ox_wrapper_ray_casters_fwd.h"
 
 namespace ox_wrapper {
 

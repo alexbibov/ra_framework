@@ -2,9 +2,9 @@
 #define OX_WRAPPER_SCENE_SECTION_H
 
 #include "optix.h"
-#include "fwd.h"
-#include "entity.h"
-#include "geometry_group.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/entity.h"
+#include "ox_wrapper/geometry_group.h"
 
 #include <list>
 

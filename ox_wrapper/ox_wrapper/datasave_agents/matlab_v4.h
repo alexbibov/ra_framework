@@ -8,7 +8,7 @@ namespace ox_wrapper { namespace datasave_agents {
 class MatlabV4
 {
 public:
-    MatlabV4(OxAbstractBuffer const& source_buffer, )
+    //MatlabV4(OxAbstractBuffer const& source_buffer, )
 
 private:
 

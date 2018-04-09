@@ -25,6 +25,9 @@
     <Filter Include="ox_wrapper\materials">
       <UniqueIdentifier>{6dbd5259-8cfa-4b63-9a18-5053a38f87cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ox_wrapper\datasave_agents">
+      <UniqueIdentifier>{59a4db99-f10e-43b5-ac90-658eb387aa43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ox_wrapper\context.cpp">
@@ -159,9 +162,6 @@
     <ClInclude Include="ox_wrapper\exception.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="ox_wrapper\fwd.h">
-      <Filter>ox_wrapper</Filter>
-    </ClInclude>
     <ClInclude Include="ox_wrapper\geometry.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
@@ -225,12 +225,6 @@
     <ClInclude Include="ox_wrapper\ray_casters\parallel_ray_generator.h">
       <Filter>ox_wrapper\ray_casters</Filter>
     </ClInclude>
-    <ClInclude Include="ox_wrapper\ray_casters\fwd.h">
-      <Filter>ox_wrapper\ray_casters</Filter>
-    </ClInclude>
-    <ClInclude Include="ox_wrapper\shapes\fwd.h">
-      <Filter>ox_wrapper\shapes</Filter>
-    </ClInclude>
     <ClInclude Include="ox_wrapper\traverse_backup_buffer.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
@@ -264,17 +258,11 @@
     <ClInclude Include="ox_wrapper\rendering_passes\rendering_pass.h">
       <Filter>ox_wrapper\rendering_passes</Filter>
     </ClInclude>
-    <ClInclude Include="ox_wrapper\rendering_passes\fwd.h">
-      <Filter>ox_wrapper\rendering_passes</Filter>
-    </ClInclude>
     <ClInclude Include="ox_wrapper\util\misc.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
     <ClInclude Include="ox_wrapper\init.h">
       <Filter>ox_wrapper</Filter>
-    </ClInclude>
-    <ClInclude Include="ox_wrapper\materials\fwd.h">
-      <Filter>ox_wrapper\materials</Filter>
     </ClInclude>
     <ClInclude Include="ox_wrapper\materials\black_body.h">
       <Filter>ox_wrapper\materials</Filter>
@@ -305,6 +293,24 @@
     </ClInclude>
     <ClInclude Include="ox_wrapper\version.h">
       <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\datasave_agents\matlab_v4.h">
+      <Filter>ox_wrapper\datasave_agents</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\ox_wrapper_fwd.h">
+      <Filter>ox_wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\ray_casters\ox_wrapper_ray_casters_fwd.h">
+      <Filter>ox_wrapper\ray_casters</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\shapes\ox_wrapper_shapes_fwd.h">
+      <Filter>ox_wrapper\shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\rendering_passes\ox_wrapper_rendering_passes_fwd.h">
+      <Filter>ox_wrapper\rendering_passes</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\materials\ox_wrapper_materials_fwd.h">
+      <Filter>ox_wrapper\materials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

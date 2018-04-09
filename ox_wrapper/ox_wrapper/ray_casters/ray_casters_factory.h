@@ -1,10 +1,10 @@
 #ifndef OX_WRAPPER_RAYCASTERS_RAYCASTERS_FACTORY_H
 #define OX_WRAPPER_RAYCASTERS_RAYCASTERS_FACTORY_H
 
-#include "fwd.h"
-#include "../fwd.h"
-#include "../context.h"
-#include "../ray_payloads.h"
+#include "ox_wrapper_ray_casters_fwd.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/context.h"
+#include "ox_wrapper/ray_payloads.h"
 
 namespace ox_wrapper { namespace ray_casters {
 

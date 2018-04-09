@@ -1,11 +1,11 @@
 #ifndef OX_WRAPPER_FACTORY_INITIALIZER_SENTINEL_H
 #define OX_WRAPPER_FACTORY_INITIALIZER_SENTINEL_H
 
-#include "fwd.h"
-#include "shapes/fwd.h"
-#include "materials/fwd.h"
-#include "ray_casters/fwd.h"
-#include "rendering_passes/fwd.h"
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/shapes/ox_wrapper_shapes_fwd.h"
+#include "ox_wrapper/materials/ox_wrapper_materials_fwd.h"
+#include "ox_wrapper/ray_casters/ox_wrapper_ray_casters_fwd.h"
+#include "ox_wrapper/rendering_passes/ox_wrapper_rendering_passes_fwd.h"
 
 namespace ox_wrapper {
 

@@ -1,12 +1,13 @@
 #ifndef OX_WRAPPER_TRANSFORM_H
 #define OX_WRAPPER_TRANSFORM_H
 
-#include "fwd.h"
-#include "contract_with_context.h"
-#include "util/matrix_types.h"
 #include "optix.h"
-#include "entity.h"
-#include "util/log.h"
+
+#include "ox_wrapper/ox_wrapper_fwd.h"
+#include "ox_wrapper/contract_with_context.h"
+#include "ox_wrapper/util/matrix_types.h"
+#include "ox_wrapper/entity.h"
+#include "ox_wrapper/util/log.h"
 
 #include <memory>
 

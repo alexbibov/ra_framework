@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "entity.h"
-#include "fwd.h"
+#include "ox_wrapper_fwd.h"
 #include "program.h"
 #include "ray_payloads.h"
 #include "geometry_group.h"
