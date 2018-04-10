@@ -41,6 +41,19 @@ struct OxBufferId
 };
 
 
+enum class OxBasicBufferFormat
+{
+    FLOAT, FLOAT2, FLOAT3, FLOAT4,
+    INT, INT2, INT3, INT4,
+    UINT, UINT2, UINT3, UINT4,
+    CHAR, CHAR2, CHAR3, CHAR4,
+    UCHAR, UCHAR2, UCHAR3, UCHAR4,
+    RAY_RADIANCE_PAYLOAD, RAY_RADIANCE_PAYLOAD_SIMPLE,
+    RAY_RADIANCE_PAYLOAD_MONOCHROMATIC,
+    RAY_OCCLUSION_PAYLOAD
+};
+
+
 template<typename T> class OxAbstractBufferAttorney;
 
 class OxAbstractBuffer : public OxContractWithOxContext, public OxEntity

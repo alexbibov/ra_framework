@@ -28,21 +28,9 @@ public:
     
     // buffers
 public:
-    enum class OxBufferFormat
-    {
-        FLOAT, FLOAT2, FLOAT3, FLOAT4,
-        INT, INT2, INT3, INT4,
-        UINT, UINT2, UINT3, UINT4,
-        CHAR, CHAR2, CHAR3, CHAR4,
-        UCHAR, UCHAR2, UCHAR3, UCHAR4,
-        RAY_RADIANCE_PAYLOAD, RAY_RADIANCE_PAYLOAD_SIMPLE,
-        RAY_RADIANCE_PAYLOAD_MONOCHROMATIC,
-        RAY_OCCLUSION_PAYLOAD
-    };
-
-    OxAbstractBuffer createBuffer(OxBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width) const;
-    OxAbstractBuffer createBuffer(OxBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height) const;
-    OxAbstractBuffer createBuffer(OxBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height, size_t depth) const;
+    OxAbstractBuffer createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width) const;
+    OxAbstractBuffer createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height) const;
+    OxAbstractBuffer createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height, size_t depth) const;
 
     // materials
 public:

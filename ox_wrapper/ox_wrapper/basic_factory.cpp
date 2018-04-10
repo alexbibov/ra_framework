@@ -16,38 +16,38 @@ using namespace ox_wrapper::util;
 namespace {
 static OxBasicFactory* p_basic_factory_instance{ nullptr };
 
-template<OxBasicFactory::OxBufferFormat format>
+template<OxBasicBufferFormat format>
 struct buffer_format_to_cpp_format;
 
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::FLOAT> { using type = float; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::FLOAT2> { using type = float2; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::FLOAT3> { using type = float3; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::FLOAT4> { using type = float4; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::FLOAT> { using type = float; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::FLOAT2> { using type = float2; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::FLOAT3> { using type = float3; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::FLOAT4> { using type = float4; };
 
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::INT> { using type = int; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::INT2> { using type = int2; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::INT3> { using type = int3; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::INT4> { using type = int4; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::INT> { using type = int; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::INT2> { using type = int2; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::INT3> { using type = int3; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::INT4> { using type = int4; };
 
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::UINT> { using type = unsigned int; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::UINT2> { using type = uint2; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::UINT3> { using type = uint3; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::UINT4> { using type = uint4; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UINT> { using type = unsigned int; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UINT2> { using type = uint2; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UINT3> { using type = uint3; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UINT4> { using type = uint4; };
 
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::CHAR> { using type = char; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::CHAR2> { using type = char2; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::CHAR3> { using type = char3; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::CHAR4> { using type = char4; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::CHAR> { using type = char; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::CHAR2> { using type = char2; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::CHAR3> { using type = char3; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::CHAR4> { using type = char4; };
 
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::UCHAR> { using type = unsigned char; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::UCHAR2> { using type = uchar2; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::UCHAR3> { using type = uchar3; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::UCHAR4> { using type = uchar4; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UCHAR> { using type = unsigned char; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UCHAR2> { using type = uchar2; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UCHAR3> { using type = uchar3; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UCHAR4> { using type = uchar4; };
 
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::RAY_RADIANCE_PAYLOAD> { using type = OxRayRadiancePayload; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE> { using type = OxRayRadiancePayloadSimple; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC> { using type = OxRayRadiancePayloadMonochromatic; };
-template<> struct buffer_format_to_cpp_format<OxBasicFactory::OxBufferFormat::RAY_OCCLUSION_PAYLOAD> { using type = OxRayOcclusionPayload; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD> { using type = OxRayRadiancePayload; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE> { using type = OxRayRadiancePayloadSimple; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC> { using type = OxRayRadiancePayloadMonochromatic; };
+template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD> { using type = OxRayOcclusionPayload; };
 
 
 
@@ -655,35 +655,35 @@ void readDataFromBuffer(OxAbstractBuffer* p_buffer, size_t first_element, size_t
 void luaRegisterBufferTypes()
 {
     lua_support::LuaState::registerEnum("OxBufferFormat",
-        "FLOAT", OxBasicFactory::OxBufferFormat::FLOAT,
-        "FLOAT2", OxBasicFactory::OxBufferFormat::FLOAT2,
-        "FLOAT3", OxBasicFactory::OxBufferFormat::FLOAT3,
-        "FLOAT4", OxBasicFactory::OxBufferFormat::FLOAT4,
+        "FLOAT", OxBasicBufferFormat::FLOAT,
+        "FLOAT2", OxBasicBufferFormat::FLOAT2,
+        "FLOAT3", OxBasicBufferFormat::FLOAT3,
+        "FLOAT4", OxBasicBufferFormat::FLOAT4,
 
-        "INT", OxBasicFactory::OxBufferFormat::INT,
-        "INT2", OxBasicFactory::OxBufferFormat::INT2,
-        "INT3", OxBasicFactory::OxBufferFormat::INT3,
-        "INT4", OxBasicFactory::OxBufferFormat::INT4,
+        "INT", OxBasicBufferFormat::INT,
+        "INT2", OxBasicBufferFormat::INT2,
+        "INT3", OxBasicBufferFormat::INT3,
+        "INT4", OxBasicBufferFormat::INT4,
 
-        "UINT", OxBasicFactory::OxBufferFormat::UINT,
-        "UINT2", OxBasicFactory::OxBufferFormat::UINT2,
-        "UINT3", OxBasicFactory::OxBufferFormat::UINT3,
-        "UINT4", OxBasicFactory::OxBufferFormat::UINT4,
+        "UINT", OxBasicBufferFormat::UINT,
+        "UINT2", OxBasicBufferFormat::UINT2,
+        "UINT3", OxBasicBufferFormat::UINT3,
+        "UINT4", OxBasicBufferFormat::UINT4,
 
-        "CHAR", OxBasicFactory::OxBufferFormat::CHAR,
-        "CHAR2", OxBasicFactory::OxBufferFormat::CHAR2,
-        "CHAR3", OxBasicFactory::OxBufferFormat::CHAR3,
-        "CHAR4", OxBasicFactory::OxBufferFormat::CHAR4,
+        "CHAR", OxBasicBufferFormat::CHAR,
+        "CHAR2", OxBasicBufferFormat::CHAR2,
+        "CHAR3", OxBasicBufferFormat::CHAR3,
+        "CHAR4", OxBasicBufferFormat::CHAR4,
 
-        "CUHAR", OxBasicFactory::OxBufferFormat::UCHAR,
-        "UCHAR2", OxBasicFactory::OxBufferFormat::UCHAR2,
-        "UCHAR3", OxBasicFactory::OxBufferFormat::UCHAR3,
-        "UCHAR4", OxBasicFactory::OxBufferFormat::UCHAR4,
+        "CUHAR", OxBasicBufferFormat::UCHAR,
+        "UCHAR2", OxBasicBufferFormat::UCHAR2,
+        "UCHAR3", OxBasicBufferFormat::UCHAR3,
+        "UCHAR4", OxBasicBufferFormat::UCHAR4,
 
-        "RAY_RADIANCE_PAYLOAD", OxBasicFactory::OxBufferFormat::RAY_RADIANCE_PAYLOAD,
-        "RAY_RADIANCE_PAYLOAD_SIMPLE", OxBasicFactory::OxBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE,
-        "RAY_RADIANCE_PAYLOAD_MONOCHROMATIC", OxBasicFactory::OxBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC,
-        "RAY_OCCLUSION_PAYLOAD", OxBasicFactory::OxBufferFormat::RAY_OCCLUSION_PAYLOAD);
+        "RAY_RADIANCE_PAYLOAD", OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD,
+        "RAY_RADIANCE_PAYLOAD_SIMPLE", OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE,
+        "RAY_RADIANCE_PAYLOAD_MONOCHROMATIC", OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC,
+        "RAY_OCCLUSION_PAYLOAD", OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD);
 
     lua_support::LuaState::registerEnum(
         "OxBufferKind",
@@ -707,19 +707,19 @@ void luaRegisterBufferTypes()
         ),
 
         lua_support::ListOfFactories::make_initializer(
-            [](OxBasicFactory::OxBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width)
+            [](OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width)
             {
                 return p_basic_factory_instance->createBuffer(buffer_format, 
                     buffer_kind, width);
             },
 
-            [](OxBasicFactory::OxBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height)
+            [](OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height)
             {
                 return p_basic_factory_instance->createBuffer(buffer_format, 
                     buffer_kind, width, height);
             },
 
-            [](OxBasicFactory::OxBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height, size_t depth)
+            [](OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height, size_t depth)
             {
                 return p_basic_factory_instance->createBuffer(buffer_format, 
                     buffer_kind, width, height, depth);
@@ -1167,171 +1167,171 @@ OxProgram OxBasicFactory::createProgram(std::string const& source, OxProgram::So
     return m_context.createProgram(source, source_type, program_name);
 }
 
-OxAbstractBuffer OxBasicFactory::createBuffer(OxBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width) const
+OxAbstractBuffer OxBasicFactory::createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width) const
 {
     switch (buffer_format)
     {
-    case OxBufferFormat::FLOAT:
+    case OxBasicBufferFormat::FLOAT:
         return m_context.createBuffer<float>(buffer_kind, width);
-    case OxBufferFormat::FLOAT2:
+    case OxBasicBufferFormat::FLOAT2:
         return m_context.createBuffer<float2>(buffer_kind, width);
-    case OxBufferFormat::FLOAT3:
+    case OxBasicBufferFormat::FLOAT3:
         return m_context.createBuffer<float3>(buffer_kind, width);
-    case OxBufferFormat::FLOAT4:
+    case OxBasicBufferFormat::FLOAT4:
         return m_context.createBuffer<float4>(buffer_kind, width);
-    case OxBufferFormat::INT:
+    case OxBasicBufferFormat::INT:
         return m_context.createBuffer<int>(buffer_kind, width);
-    case OxBufferFormat::INT2:
+    case OxBasicBufferFormat::INT2:
         return m_context.createBuffer<int2>(buffer_kind, width);
-    case OxBufferFormat::INT3:
+    case OxBasicBufferFormat::INT3:
         return m_context.createBuffer<int3>(buffer_kind, width);
-    case OxBufferFormat::INT4:
+    case OxBasicBufferFormat::INT4:
         return m_context.createBuffer<int4>(buffer_kind, width);
-    case OxBufferFormat::UINT:
+    case OxBasicBufferFormat::UINT:
         return m_context.createBuffer<unsigned int>(buffer_kind, width);
-    case OxBufferFormat::UINT2:
+    case OxBasicBufferFormat::UINT2:
         return m_context.createBuffer<uint2>(buffer_kind, width);
-    case OxBufferFormat::UINT3:
+    case OxBasicBufferFormat::UINT3:
         return m_context.createBuffer<uint3>(buffer_kind, width);
-    case OxBufferFormat::UINT4:
+    case OxBasicBufferFormat::UINT4:
         return m_context.createBuffer<uint4>(buffer_kind, width);
-    case OxBufferFormat::CHAR:
+    case OxBasicBufferFormat::CHAR:
         return m_context.createBuffer<char>(buffer_kind, width);
-    case OxBufferFormat::CHAR2:
+    case OxBasicBufferFormat::CHAR2:
         return m_context.createBuffer<char2>(buffer_kind, width);
-    case OxBufferFormat::CHAR3:
+    case OxBasicBufferFormat::CHAR3:
         return m_context.createBuffer<char3>(buffer_kind, width);
-    case OxBufferFormat::CHAR4:
+    case OxBasicBufferFormat::CHAR4:
         return m_context.createBuffer<char3>(buffer_kind, width);
-    case OxBufferFormat::UCHAR:
+    case OxBasicBufferFormat::UCHAR:
         return m_context.createBuffer<unsigned char>(buffer_kind, width);
-    case OxBufferFormat::UCHAR2:
+    case OxBasicBufferFormat::UCHAR2:
         return m_context.createBuffer<uchar2>(buffer_kind, width);
-    case OxBufferFormat::UCHAR3:
+    case OxBasicBufferFormat::UCHAR3:
         return m_context.createBuffer<uchar3>(buffer_kind, width);
-    case OxBufferFormat::UCHAR4:
+    case OxBasicBufferFormat::UCHAR4:
         return m_context.createBuffer<uchar4>(buffer_kind, width);
-    case OxBufferFormat::RAY_RADIANCE_PAYLOAD:
+    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD:
         return m_context.createBuffer<OxRayRadiancePayload>(buffer_kind, width);
-    case OxBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
+    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
         return m_context.createBuffer<OxRayRadiancePayloadSimple>(buffer_kind, width);
-    case OxBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
+    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
         return m_context.createBuffer<OxRayRadiancePayloadMonochromatic>(buffer_kind, width);
-    case OxBufferFormat::RAY_OCCLUSION_PAYLOAD:
+    case OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
         return m_context.createBuffer<OxRayOcclusionPayload>(buffer_kind, width);
     default:
         throw OxException{ "Unknown buffer format", __FILE__, __FUNCTION__, __LINE__ };
     }
 }
 
-OxAbstractBuffer OxBasicFactory::createBuffer(OxBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height) const
+OxAbstractBuffer OxBasicFactory::createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height) const
 {
     switch (buffer_format)
     {
-    case OxBufferFormat::FLOAT:
+    case OxBasicBufferFormat::FLOAT:
         return m_context.createBuffer<float>(buffer_kind, width, height);
-    case OxBufferFormat::FLOAT2:
+    case OxBasicBufferFormat::FLOAT2:
         return m_context.createBuffer<float2>(buffer_kind, width, height);
-    case OxBufferFormat::FLOAT3:
+    case OxBasicBufferFormat::FLOAT3:
         return m_context.createBuffer<float3>(buffer_kind, width, height);
-    case OxBufferFormat::FLOAT4:
+    case OxBasicBufferFormat::FLOAT4:
         return m_context.createBuffer<float4>(buffer_kind, width, height);
-    case OxBufferFormat::INT:
+    case OxBasicBufferFormat::INT:
         return m_context.createBuffer<int>(buffer_kind, width, height);
-    case OxBufferFormat::INT2:
+    case OxBasicBufferFormat::INT2:
         return m_context.createBuffer<int2>(buffer_kind, width, height);
-    case OxBufferFormat::INT3:
+    case OxBasicBufferFormat::INT3:
         return m_context.createBuffer<int3>(buffer_kind, width, height);
-    case OxBufferFormat::INT4:
+    case OxBasicBufferFormat::INT4:
         return m_context.createBuffer<int4>(buffer_kind, width, height);
-    case OxBufferFormat::UINT:
+    case OxBasicBufferFormat::UINT:
         return m_context.createBuffer<unsigned int>(buffer_kind, width, height);
-    case OxBufferFormat::UINT2:
+    case OxBasicBufferFormat::UINT2:
         return m_context.createBuffer<uint2>(buffer_kind, width, height);
-    case OxBufferFormat::UINT3:
+    case OxBasicBufferFormat::UINT3:
         return m_context.createBuffer<uint3>(buffer_kind, width, height);
-    case OxBufferFormat::UINT4:
+    case OxBasicBufferFormat::UINT4:
         return m_context.createBuffer<uint4>(buffer_kind, width, height);
-    case OxBufferFormat::CHAR:
+    case OxBasicBufferFormat::CHAR:
         return m_context.createBuffer<char>(buffer_kind, width, height);
-    case OxBufferFormat::CHAR2:
+    case OxBasicBufferFormat::CHAR2:
         return m_context.createBuffer<char2>(buffer_kind, width, height);
-    case OxBufferFormat::CHAR3:
+    case OxBasicBufferFormat::CHAR3:
         return m_context.createBuffer<char3>(buffer_kind, width, height);
-    case OxBufferFormat::CHAR4:
+    case OxBasicBufferFormat::CHAR4:
         return m_context.createBuffer<char3>(buffer_kind, width, height);
-    case OxBufferFormat::UCHAR:
+    case OxBasicBufferFormat::UCHAR:
         return m_context.createBuffer<unsigned char>(buffer_kind, width, height);
-    case OxBufferFormat::UCHAR2:
+    case OxBasicBufferFormat::UCHAR2:
         return m_context.createBuffer<uchar2>(buffer_kind, width, height);
-    case OxBufferFormat::UCHAR3:
+    case OxBasicBufferFormat::UCHAR3:
         return m_context.createBuffer<uchar3>(buffer_kind, width, height);
-    case OxBufferFormat::UCHAR4:
+    case OxBasicBufferFormat::UCHAR4:
         return m_context.createBuffer<uchar4>(buffer_kind, width, height);
-    case OxBufferFormat::RAY_RADIANCE_PAYLOAD:
+    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD:
         return m_context.createBuffer<OxRayRadiancePayload>(buffer_kind, width, height);
-    case OxBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
+    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
         return m_context.createBuffer<OxRayRadiancePayloadSimple>(buffer_kind, width, height);
-    case OxBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
+    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
         return m_context.createBuffer<OxRayRadiancePayloadMonochromatic>(buffer_kind, width, height);
-    case OxBufferFormat::RAY_OCCLUSION_PAYLOAD:
+    case OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
         return m_context.createBuffer<OxRayOcclusionPayload>(buffer_kind, width, height);
     default:
         throw OxException{ "Unknown buffer format", __FILE__, __FUNCTION__, __LINE__ };
     }
 }
 
-OxAbstractBuffer OxBasicFactory::createBuffer(OxBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height, size_t depth) const
+OxAbstractBuffer OxBasicFactory::createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height, size_t depth) const
 {
     switch (buffer_format)
     {
-    case OxBufferFormat::FLOAT:
+    case OxBasicBufferFormat::FLOAT:
         return m_context.createBuffer<float>(buffer_kind, width, height, depth);
-    case OxBufferFormat::FLOAT2:
+    case OxBasicBufferFormat::FLOAT2:
         return m_context.createBuffer<float2>(buffer_kind, width, height, depth);
-    case OxBufferFormat::FLOAT3:
+    case OxBasicBufferFormat::FLOAT3:
         return m_context.createBuffer<float3>(buffer_kind, width, height, depth);
-    case OxBufferFormat::FLOAT4:
+    case OxBasicBufferFormat::FLOAT4:
         return m_context.createBuffer<float4>(buffer_kind, width, height, depth);
-    case OxBufferFormat::INT:
+    case OxBasicBufferFormat::INT:
         return m_context.createBuffer<int>(buffer_kind, width, height, depth);
-    case OxBufferFormat::INT2:
+    case OxBasicBufferFormat::INT2:
         return m_context.createBuffer<int2>(buffer_kind, width, height, depth);
-    case OxBufferFormat::INT3:
+    case OxBasicBufferFormat::INT3:
         return m_context.createBuffer<int3>(buffer_kind, width, height, depth);
-    case OxBufferFormat::INT4:
+    case OxBasicBufferFormat::INT4:
         return m_context.createBuffer<int4>(buffer_kind, width, height, depth);
-    case OxBufferFormat::UINT:
+    case OxBasicBufferFormat::UINT:
         return m_context.createBuffer<unsigned int>(buffer_kind, width, height, depth);
-    case OxBufferFormat::UINT2:
+    case OxBasicBufferFormat::UINT2:
         return m_context.createBuffer<uint2>(buffer_kind, width, height, depth);
-    case OxBufferFormat::UINT3:
+    case OxBasicBufferFormat::UINT3:
         return m_context.createBuffer<uint3>(buffer_kind, width, height, depth);
-    case OxBufferFormat::UINT4:
+    case OxBasicBufferFormat::UINT4:
         return m_context.createBuffer<uint4>(buffer_kind, width, height, depth);
-    case OxBufferFormat::CHAR:
+    case OxBasicBufferFormat::CHAR:
         return m_context.createBuffer<char>(buffer_kind, width, height, depth);
-    case OxBufferFormat::CHAR2:
+    case OxBasicBufferFormat::CHAR2:
         return m_context.createBuffer<char2>(buffer_kind, width, height, depth);
-    case OxBufferFormat::CHAR3:
+    case OxBasicBufferFormat::CHAR3:
         return m_context.createBuffer<char3>(buffer_kind, width, height, depth);
-    case OxBufferFormat::CHAR4:
+    case OxBasicBufferFormat::CHAR4:
         return m_context.createBuffer<char3>(buffer_kind, width, height, depth);
-    case OxBufferFormat::UCHAR:
+    case OxBasicBufferFormat::UCHAR:
         return m_context.createBuffer<unsigned char>(buffer_kind, width, height, depth);
-    case OxBufferFormat::UCHAR2:
+    case OxBasicBufferFormat::UCHAR2:
         return m_context.createBuffer<uchar2>(buffer_kind, width, height, depth);
-    case OxBufferFormat::UCHAR3:
+    case OxBasicBufferFormat::UCHAR3:
         return m_context.createBuffer<uchar3>(buffer_kind, width, height, depth);
-    case OxBufferFormat::UCHAR4:
+    case OxBasicBufferFormat::UCHAR4:
         return m_context.createBuffer<uchar4>(buffer_kind, width, height, depth);
-    case OxBufferFormat::RAY_RADIANCE_PAYLOAD:
+    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD:
         return m_context.createBuffer<OxRayRadiancePayload>(buffer_kind, width, height, depth);
-    case OxBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
+    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
         return m_context.createBuffer<OxRayRadiancePayloadSimple>(buffer_kind, width, height, depth);
-    case OxBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
+    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
         return m_context.createBuffer<OxRayRadiancePayloadMonochromatic>(buffer_kind, width, height, depth);
-    case OxBufferFormat::RAY_OCCLUSION_PAYLOAD:
+    case OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
         return m_context.createBuffer<OxRayOcclusionPayload>(buffer_kind, width, height, depth);
     default:
         throw OxException{ "Unknown buffer format", __FILE__, __FUNCTION__, __LINE__ };

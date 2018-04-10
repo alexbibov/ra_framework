@@ -25,7 +25,7 @@
     <Filter Include="ox_wrapper\materials">
       <UniqueIdentifier>{6dbd5259-8cfa-4b63-9a18-5053a38f87cb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ox_wrapper\datasave_agents">
+    <Filter Include="ox_wrapper\data_store_agents">
       <UniqueIdentifier>{59a4db99-f10e-43b5-ac90-658eb387aa43}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -294,9 +294,6 @@
     <ClInclude Include="ox_wrapper\version.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="ox_wrapper\datasave_agents\matlab_v4.h">
-      <Filter>ox_wrapper\datasave_agents</Filter>
-    </ClInclude>
     <ClInclude Include="ox_wrapper\ox_wrapper_fwd.h">
       <Filter>ox_wrapper</Filter>
     </ClInclude>
@@ -311,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="ox_wrapper\materials\ox_wrapper_materials_fwd.h">
       <Filter>ox_wrapper\materials</Filter>
+    </ClInclude>
+    <ClInclude Include="ox_wrapper\data_store_agents\matlab_v4.h">
+      <Filter>ox_wrapper\data_store_agents</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

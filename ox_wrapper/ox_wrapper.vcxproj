@@ -160,7 +160,7 @@
     <ClInclude Include="ox_wrapper\buffer.h" />
     <ClInclude Include="ox_wrapper\constants.h" />
     <ClInclude Include="ox_wrapper\context.h" />
-    <ClInclude Include="ox_wrapper\datasave_agents\matlab_v4.h" />
+    <ClInclude Include="ox_wrapper\data_store_agents\matlab_v4.h" />
     <ClInclude Include="ox_wrapper\entity.h" />
     <ClInclude Include="ox_wrapper\exception.h" />
     <ClInclude Include="ox_wrapper\factory_initializer_sentinel.h" />
