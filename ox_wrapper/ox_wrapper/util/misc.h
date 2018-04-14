@@ -20,6 +20,8 @@ int8_t getFirstHighBit(uint64_t mask);
 
 util::StaticVector<uint8_t, 64U> getSetBits(uint64_t mask);
 
+bool doesFileExist(std::string const& file_path);
+
 }}}
 
 #endif

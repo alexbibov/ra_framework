@@ -148,6 +148,9 @@
       <Filter>ox_wrapper\materials</Filter>
     </ClCompile>
     <ClCompile Include="ox_wrapper\ray_payloads.cpp" />
+    <ClCompile Include="ox_wrapper\data_store_agents\matlab_v4.cpp">
+      <Filter>ox_wrapper\data_store_agents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ox_wrapper\buffer.h">
@@ -310,6 +313,9 @@
       <Filter>ox_wrapper\materials</Filter>
     </ClInclude>
     <ClInclude Include="ox_wrapper\data_store_agents\matlab_v4.h">
+      <Filter>ox_wrapper\data_store_agents</Filter>
+    </ClInclude>
+    <ClInclude Include="data_store_agents_common.h">
       <Filter>ox_wrapper\data_store_agents</Filter>
     </ClInclude>
   </ItemGroup>

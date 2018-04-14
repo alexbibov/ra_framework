@@ -117,6 +117,7 @@
     <ClCompile Include="ox_wrapper\basic_factory.cpp" />
     <ClCompile Include="ox_wrapper\buffer.cpp" />
     <ClCompile Include="ox_wrapper\context.cpp" />
+    <ClCompile Include="ox_wrapper\data_store_agents\matlab_v4.cpp" />
     <ClCompile Include="ox_wrapper\entity.cpp" />
     <ClCompile Include="ox_wrapper\exception.cpp" />
     <ClCompile Include="ox_wrapper\factory_initializer_sentinel.cpp" />
@@ -156,6 +157,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\_3rd_party\SpookyHash\SpookyV2.h" />
+    <ClInclude Include="data_store_agents_common.h" />
     <ClInclude Include="ox_wrapper\basic_factory.h" />
     <ClInclude Include="ox_wrapper\buffer.h" />
     <ClInclude Include="ox_wrapper\constants.h" />

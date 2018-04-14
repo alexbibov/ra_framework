@@ -76,6 +76,11 @@ ox_wrapper::util::StaticVector<uint8_t, 64U> ox_wrapper::util::misc::getSetBits(
     return rv;
 }
 
+bool ox_wrapper::util::misc::doesFileExist(std::string const& file_path)
+{
+    return static_cast<bool>(std::ifstream(file_path.c_str(), std::ios::in));
+}
+
 
 
 

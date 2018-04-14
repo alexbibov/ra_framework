@@ -10,11 +10,15 @@ class MatlabV4
 public:
     MatlabV4(std::string const& path, bool append = true);
 
-    void save(OxAbstractBuffer const& source_buffer,
+    ~MatlabV4();
+
+    bool save(OxAbstractBuffer const& source_buffer,
+        uint32_t level,
         OxBasicBufferFormat source_buffer_format,
         std::string const& variable_name);
 
-    void load(OxAbstractBuffer& destination_buffer,
+    bool load(OxAbstractBuffer& destination_buffer,
+        uint32_t level,
         OxBasicBufferFormat destination_buffer_format,
         std::string const& variable_name);
 
