@@ -55,18 +55,20 @@ bool findVariable(std::istream& input_stream, std::string const& variable_name,
 }
 
 
-MatlabV4::MatlabV4(std::string const& path, bool append):
+OxMatlabV4::OxMatlabV4(std::string const& path, bool append):
     m_path{ path },
     m_append{ append }
 {
     
 }
 
+bool OxMatlabV4::isValid() const
+{
+    return true;
+}
 
-MatlabV4::~MatlabV4() = default;
 
-
-bool MatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
+bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
     OxBasicBufferFormat source_buffer_format, std::string const& variable_name)
 {
     auto stream_flags = std::ios_base::out | std::ios_base::binary;
@@ -578,7 +580,7 @@ bool MatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
     }
 }
 
-bool MatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBasicBufferFormat destination_buffer_format, std::string const& variable_name)
+bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBasicBufferFormat destination_buffer_format, std::string const& variable_name)
 {
     std::fstream stream{ m_path, std::ios_base::in | std::ios_base::binary };
     if (!stream) return false;

@@ -1,16 +1,21 @@
 #ifndef OX_WRAPPER_DATA_STORE_AGENTS_MATLAB_V4_H
 #define OX_WRAPPER_DATA_STORE_AGENTS_MATLAB_V4_H
 
+#include "ox_wrapper/entity.h"
 #include "ox_wrapper/buffer.h"
 
 namespace ox_wrapper { namespace data_store_agents {
 
-class MatlabV4
+class OxMatlabV4 : public OxEntity
 {
 public:
-    MatlabV4(std::string const& path, bool append = true);
+    OxMatlabV4(std::string const& path, bool append = true);
 
-    ~MatlabV4();
+public:
+    // required by OxEntity interface
+    bool isValid() const override;
+
+public:
 
     bool save(OxAbstractBuffer const& source_buffer,
         uint32_t level,

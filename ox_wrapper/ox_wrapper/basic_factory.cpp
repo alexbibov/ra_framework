@@ -1159,7 +1159,7 @@ OxBasicFactory* OxBasicFactory::retrieve()
 
 bool OxBasicFactory::isValid() const
 {
-    return p_basic_factory_instance;
+    return true;
 }
 
 OxProgram OxBasicFactory::createProgram(std::string const& source, OxProgram::Source source_type, std::string const& program_name) const
