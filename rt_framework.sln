@@ -13,6 +13,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua", "_3rd_party\lua\lua.vcxproj", "{36F390F1-9DBA-4785-9B15-046B6C761258}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ox_wrapper_processor", "ox_wrapper_processor\ox_wrapper_processor.vcxproj", "{EA388A09-5FE6-4F3D-B1ED-E1435790D15B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FFBAA09D-7293-404A-92C3-2DAA376F6F81} = {FFBAA09D-7293-404A-92C3-2DAA376F6F81}
+		{36F390F1-9DBA-4785-9B15-046B6C761258} = {36F390F1-9DBA-4785-9B15-046B6C761258}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

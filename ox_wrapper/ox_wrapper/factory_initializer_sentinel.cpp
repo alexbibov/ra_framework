@@ -5,6 +5,7 @@
 #include "materials/materials_factory.h"
 #include "ray_casters/ray_casters_factory.h"
 #include "rendering_passes/rendering_passes_factory.h"
+#include "data_store_agents/data_store_agents_factory.h"
 
 using namespace ox_wrapper;
 
@@ -15,6 +16,7 @@ OxFactoryInitializerSentinel::OxFactoryInitializerSentinel(OxContext const& cont
     m_materials_factory = materials::OxMaterialsFactory::initialize(context);
     m_raycasters_factory = ray_casters::OxRaycastersFactory::initialize(context);
     m_rendering_passes_factory = rendering_passes::OxRenderingPassesFactory::initialize(context);
+    m_data_store_agents_factory = data_store_agents::OxDataStoreAgentsFactory::initialize(context);
 }
 
 OxFactoryInitializerSentinel::~OxFactoryInitializerSentinel()
@@ -24,6 +26,7 @@ OxFactoryInitializerSentinel::~OxFactoryInitializerSentinel()
     materials::OxMaterialsFactory::shutdown();
     ray_casters::OxRaycastersFactory::shutdown();
     rendering_passes::OxRenderingPassesFactory::shutdown();
+    data_store_agents::OxDataStoreAgentsFactory::shutdown();
 }
 
 OxBasicFactory const& OxFactoryInitializerSentinel::basicFactory() const
@@ -46,7 +49,12 @@ ray_casters::OxRaycastersFactory const& OxFactoryInitializerSentinel::raycasters
     return *m_raycasters_factory;
 }
 
-rendering_passes::OxRenderingPassesFactory const& ox_wrapper::OxFactoryInitializerSentinel::renderingPassesFactory() const
+rendering_passes::OxRenderingPassesFactory const& OxFactoryInitializerSentinel::renderingPassesFactory() const
 {
     return *m_rendering_passes_factory;
+}
+
+data_store_agents::OxDataStoreAgentsFactory const& OxFactoryInitializerSentinel::dataStoreAgentsFactory() const
+{
+    return *m_data_store_agents_factory;
 }

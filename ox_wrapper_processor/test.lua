@@ -135,5 +135,7 @@ scattering_rendering_pass:updateImportanceDirections(importance_directions)
 
 scattering_rendering_pass:render()    -- execute ray-tracing
 
-output_buffer = parallel_ray_generator:getRawBuffer()
+output_buffer = parallel_ray_generator:outputBuffer()
 
+matlab_v4_data_store_agent = OxMatlabV4.new("test.mat")
+matlab_v4_data_store_agent:save(output_buffer, 0, OxBufferFormat["RAY_RADIANCE_PAYLOAD"], "output")

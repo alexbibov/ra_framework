@@ -74,7 +74,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
     auto stream_flags = std::ios_base::out | std::ios_base::binary;
     bool file_exists = util::misc::doesFileExist(m_path);
 
-    if (!file_exists || m_append)
+    if (!file_exists || !m_append)
         stream_flags |= std::ios_base::trunc;
 
     std::fstream stream{ m_path, stream_flags };
@@ -110,460 +110,216 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
         {
         case OxBasicBufferFormat::FLOAT:
         {
-            OxBuffer<float> const* p_buf = dynamic_cast<OxBuffer<float> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \"" 
-                    + m_path + "\": the standard data format specified for the buffer (FLOAT) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::FLOAT>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<float const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
             
         case OxBasicBufferFormat::FLOAT2:
         {
-            OxBuffer<float2> const* p_buf = dynamic_cast<OxBuffer<float2> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (FLOAT2) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::FLOAT2>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<float2 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
             
         case OxBasicBufferFormat::FLOAT3:
         {
-            OxBuffer<float3> const* p_buf = dynamic_cast<OxBuffer<float3> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (FLOAT3) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::FLOAT3>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<float3 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
             
         case OxBasicBufferFormat::FLOAT4:
         {
-            OxBuffer<float4> const* p_buf = dynamic_cast<OxBuffer<float4> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (FLOAT4) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::FLOAT4>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<float4 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
             
         case OxBasicBufferFormat::INT:
         {
-            OxBuffer<int> const* p_buf = dynamic_cast<OxBuffer<int> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (INT) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::INT>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<int const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::INT2:
         {
-            OxBuffer<int2> const* p_buf = dynamic_cast<OxBuffer<int2> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (INT2) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::INT2>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<int2 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::INT3:
         {
-            OxBuffer<int3> const* p_buf = dynamic_cast<OxBuffer<int3> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (INT3) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::INT3>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<int3 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::INT4:
         {
-            OxBuffer<int4> const* p_buf = dynamic_cast<OxBuffer<int4> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (INT4) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::INT4>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<int4 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UINT:
         {
-            OxBuffer<unsigned int> const* p_buf = dynamic_cast<OxBuffer<unsigned int> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (UINT) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::UINT>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<unsigned int const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UINT2:
         {
-            OxBuffer<uint2> const* p_buf = dynamic_cast<OxBuffer<uint2> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (UINT2) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::UINT2>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<uint2 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UINT3:
         {
-            OxBuffer<uint3> const* p_buf = dynamic_cast<OxBuffer<uint3> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (UINT3) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::UINT3>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<uint3 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UINT4:
         {
-            OxBuffer<uint4> const* p_buf = dynamic_cast<OxBuffer<uint4> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (UINT4) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::UINT4>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<uint4 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::CHAR:
         {
-            OxBuffer<char> const* p_buf = dynamic_cast<OxBuffer<char> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (CHAR) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::CHAR>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<char const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::CHAR2:
         {
-            OxBuffer<char2> const* p_buf = dynamic_cast<OxBuffer<char2> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (CHAR2) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::CHAR2>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<char2 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::CHAR3:
         {
-            OxBuffer<char3> const* p_buf = dynamic_cast<OxBuffer<char3> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (CHAR3) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::CHAR3>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<char3 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::CHAR4:
         {
-            OxBuffer<char4> const* p_buf = dynamic_cast<OxBuffer<char4> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (CHAR4) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::CHAR4>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<char4 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UCHAR:
         {
-            OxBuffer<unsigned char> const* p_buf = dynamic_cast<OxBuffer<unsigned char> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (UCHAR) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::UCHAR>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<unsigned char const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UCHAR2:
         {
-            OxBuffer<uchar2> const* p_buf = dynamic_cast<OxBuffer<uchar2> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (UCHAR2) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::UCHAR2>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<uchar2 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UCHAR3:
         {
-            OxBuffer<uchar3> const* p_buf = dynamic_cast<OxBuffer<uchar3> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (UCHAR3) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::UCHAR3>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<uchar3 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UCHAR4:
         {
-            OxBuffer<uchar4> const* p_buf = dynamic_cast<OxBuffer<uchar4> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (UCHAR4) does not correspond to "
-                    "the actual data stored in the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::UCHAR4>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<uchar4 const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD:
         {
-            OxBuffer<OxRayRadiancePayload> const* p_buf = 
-                dynamic_cast<OxBuffer<OxRayRadiancePayload> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (RAY_RADIANCE_PAYLOAD) does not correspond to "
-                    "the actual data stored int the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<OxRayRadiancePayload const*>(buffer_mapper.address()), num_data_elements);
             
             break;
         }
 
         case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
         {
-            OxBuffer<OxRayRadiancePayloadSimple> const* p_buf = 
-                dynamic_cast<OxBuffer<OxRayRadiancePayloadSimple> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (RAY_RADIANCE_PAYLOAD_SIMPLE) does not correspond to "
-                    "the actual data stored int the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<OxRayRadiancePayloadSimple const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
         {
-            OxBuffer<OxRayRadiancePayloadMonochromatic> const* p_buf =
-                dynamic_cast<OxBuffer<OxRayRadiancePayloadMonochromatic> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (RAY_RADIANCE_PAYLOAD_MONOCHROMATIC) does not correspond to "
-                    "the actual data stored int the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<OxRayRadiancePayloadMonochromatic const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
         {
-            OxBuffer<OxRayOcclusionPayload> const* p_buf =
-                dynamic_cast<OxBuffer<OxRayOcclusionPayload> const*>(&source_buffer);
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to write data from buffer \""
-                    + source_buffer.getStringName() + "\" to MATLAB v4 file \""
-                    + m_path + "\": the standard data format specified for the buffer (RAY_OCCLUSION_PAYLOAD) does not correspond to "
-                    "the actual data stored int the buffer", util::LogMessageType::error);
-                return false;
-            }
-
-            auto buffer_mapper = makeBufferMapSentry(*p_buf, OxBufferMapKind::read, level);
+            auto buffer_mapper = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
             DataReadWriteHelper<OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD>::
-                write(stream, buffer_mapper.address(), num_data_elements);
+                write(stream, static_cast<OxRayOcclusionPayload const*>(buffer_mapper.address()), num_data_elements);
 
             break;
         }
@@ -645,532 +401,216 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
         {
         case OxBasicBufferFormat::FLOAT:
         {
-            OxBuffer<float>* p_buf = dynamic_cast<OxBuffer<float>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName() 
-                    + "\": the buffer appears to have invalid format (FLOAT was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::FLOAT>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<float*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::FLOAT2:
         {
-            OxBuffer<float2>* p_buf = dynamic_cast<OxBuffer<float2>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName() 
-                    + "\": the buffer appears to have invalid format (FLOAT2 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::FLOAT2>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<float2*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::FLOAT3:
         {
-            OxBuffer<float3>* p_buf = dynamic_cast<OxBuffer<float3>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (FLOAT3 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::FLOAT3>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<float3*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::FLOAT4:
         {
-            OxBuffer<float4>* p_buf = dynamic_cast<OxBuffer<float4>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (FLOAT4 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::FLOAT4>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<float4*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::INT:
         {
-            OxBuffer<int>* p_buf = dynamic_cast<OxBuffer<int>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (INT was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::INT>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<int*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::INT2:
         {
-            OxBuffer<int2>* p_buf = dynamic_cast<OxBuffer<int2>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (INT2 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::INT2>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<int2*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::INT3:
         {
-            OxBuffer<int3>* p_buf = dynamic_cast<OxBuffer<int3>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (INT3 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::INT3>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<int3*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::INT4:
         {
-            OxBuffer<int4>* p_buf = dynamic_cast<OxBuffer<int4>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (INT4 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::INT4>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<int4*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UINT:
         {
-            OxBuffer<unsigned int>* p_buf = dynamic_cast<OxBuffer<unsigned int>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (UINT was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::UINT>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<unsigned int*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UINT2:
         {
-            OxBuffer<uint2>* p_buf = dynamic_cast<OxBuffer<uint2>*>(&destination_buffer);
-           
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (UINT2 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::UINT2>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<uint2*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UINT3:
         {
-            OxBuffer<uint3>* p_buf = dynamic_cast<OxBuffer<uint3>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (UINT3 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::UINT3>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<uint3*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UINT4:
         {
-            OxBuffer<uint4>* p_buf = dynamic_cast<OxBuffer<uint4>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (UINT4 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::UINT4>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<uint4*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::CHAR:
         {
-            OxBuffer<char>* p_buf = dynamic_cast<OxBuffer<char>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (CHAR was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::CHAR>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<char*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::CHAR2:
         {
-            OxBuffer<char2>* p_buf = dynamic_cast<OxBuffer<char2>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (CHAR2 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::CHAR2>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<char2*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::CHAR3:
         {
-            OxBuffer<char3>* p_buf = dynamic_cast<OxBuffer<char3>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (CHAR3 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::CHAR3>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<char3*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::CHAR4:
         {
-            OxBuffer<char4>* p_buf = dynamic_cast<OxBuffer<char4>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (CHAR4 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::CHAR4>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<char4*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UCHAR:
         {
-            OxBuffer<unsigned char>* p_buf = dynamic_cast<OxBuffer<unsigned char>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (UCHAR was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::UCHAR>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<unsigned char*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UCHAR2:
         {
-            OxBuffer<uchar2>* p_buf = dynamic_cast<OxBuffer<uchar2>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (UCHAR2 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::UCHAR2>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<uchar2*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UCHAR3:
         {
-            OxBuffer<uchar3>* p_buf = dynamic_cast<OxBuffer<uchar3>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (UCHAR3 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::UCHAR3>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<uchar3*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::UCHAR4:
         {
-            OxBuffer<uchar4>* p_buf = dynamic_cast<OxBuffer<uchar4>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (UCHAR4 was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::UCHAR4>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<uchar4*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD:
         {
-            OxBuffer<OxRayRadiancePayload>* p_buf 
-                = dynamic_cast<OxBuffer<OxRayRadiancePayload>*>(&destination_buffer);
-            
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (RAY_RADIANCE_PAYLOAD was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<OxRayRadiancePayload*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
         {
-            OxBuffer<OxRayRadiancePayloadSimple>* p_buf 
-                = dynamic_cast<OxBuffer<OxRayRadiancePayloadSimple>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (RAY_RADIANCE_PAYLOAD_SIMPLE was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<OxRayRadiancePayloadSimple*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
         {
-            OxBuffer<OxRayRadiancePayloadMonochromatic>* p_buf
-                = dynamic_cast<OxBuffer<OxRayRadiancePayloadMonochromatic>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (RAY_RADIANCE_PAYLOAD_MONOCHROMATIC was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<OxRayRadiancePayloadMonochromatic*>(mapping.address()), num_data_elements);
 
             break;
         }
 
         case OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
         {
-            OxBuffer<OxRayOcclusionPayload>* p_buf
-                = dynamic_cast<OxBuffer<OxRayOcclusionPayload>*>(&destination_buffer);
-
-            if (p_buf == nullptr)
-            {
-                util::Log::retrieve()->out("Unable to fetch data from variable \"" + variable_name
-                    + "\" located in MATLAB v4 file \"" + m_path + "\" into destination buffer \""
-                    + destination_buffer.getStringName()
-                    + "\": the buffer appears to have invalid format (RAY_OCCLUSION_PAYLOAD was expected)",
-                    util::LogMessageType::error);
-
-                return false;
-            }
-
-            auto mapping = makeBufferMapSentry(*p_buf, OxBufferMapKind::write, level);
+            auto mapping = makeBufferMapSentry(destination_buffer, OxBufferMapKind::write, level);
             DataReadWriteHelper<OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD>::
-                read(stream, mapping.address(), num_data_elements);
+                read(stream, static_cast<OxRayOcclusionPayload*>(mapping.address()), num_data_elements);
 
             break;
         }

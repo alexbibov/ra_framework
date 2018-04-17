@@ -51,7 +51,7 @@ OxDataStoreAgentsFactory::OxDataStoreAgentsFactory(OxContext const& context) :
 
     // Register factory functions in Lua
     {
-        /*lua_support::LuaState::registerSubType<OxMatlabV4>(
+        lua_support::LuaState::registerSubType<OxMatlabV4>(
             "OxMatlabV4",
 
             lua_support::ListOfBaseClasses::make_initializer(
@@ -59,11 +59,19 @@ OxDataStoreAgentsFactory::OxDataStoreAgentsFactory(OxContext const& context) :
             ),
 
             lua_support::ListOfFactories::make_initializer(
-                &OxDataStoreAgentsFactory::createMatlabV4Agent
+                [this](std::string const& target_path)
+                {
+                    return createMatlabV4Agent(target_path);
+                },
+
+                [this](std::string const& target_path, bool append_data)
+                {
+                    return createMatlabV4Agent(target_path, append_data);
+                }
             ),
 
             "save", &OxMatlabV4::save,
             "load", &OxMatlabV4::load
-        );*/
+        );
     }
 }
