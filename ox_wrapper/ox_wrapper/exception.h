@@ -16,6 +16,11 @@ namespace ox_wrapper {
             std::string const& file_name, 
             std::string const& function_name, 
             long line);
+        OxException(std::string const& description);
+        OxException(std::string const& description,
+            std::string const& file_name,
+            std::string const& function_name,
+            long line);
 
         long line() const;
         std::string function() const;

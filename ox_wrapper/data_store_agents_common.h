@@ -24,6 +24,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::FLOAT>
     {
         output_stream.write(reinterpret_cast<char const*>(src), sizeof(float)*len);
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 1U;
 };
 
 template<>
@@ -43,12 +45,10 @@ struct DataReadWriteHelper<OxBasicBufferFormat::FLOAT2>
 
     static void write(std::ostream& output_stream, float2 const* src, size_t len)
     {
-        for (size_t i = 0U; i < len; ++i)
-        {
-            float aux[2] = { src[i].x, src[i].y };
-            output_stream.write(reinterpret_cast<char const*>(aux), sizeof(float) * 2);
-        }
+        
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 2U;
 };
 
 template<>
@@ -75,6 +75,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::FLOAT3>
             output_stream.write(reinterpret_cast<char const*>(aux), sizeof(float) * 3);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 3U;
 };
 
 template<>
@@ -102,6 +104,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::FLOAT4>
             output_stream.write(reinterpret_cast<char const*>(aux), sizeof(float) * 4);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 4U;
 };
 
 
@@ -117,6 +121,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::INT>
     {
         output_stream.write(reinterpret_cast<char const*>(src), sizeof(int)*len);
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 1U;
 };
 
 template<>
@@ -142,6 +148,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::INT2>
             output_stream.write(reinterpret_cast<char const*>(aux), sizeof(int) * 2);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 2U;
 };
 
 template<>
@@ -168,6 +176,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::INT3>
             output_stream.write(reinterpret_cast<char const*>(aux), sizeof(int) * 3);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 3U;
 };
 
 template<>
@@ -195,6 +205,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::INT4>
             output_stream.write(reinterpret_cast<char const*>(aux), sizeof(int) * 4);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 4U;
 };
 
 
@@ -210,6 +222,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::UINT>
     {
         output_stream.write(reinterpret_cast<char const*>(src), sizeof(unsigned int)*len);
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 1U;
 };
 
 template<>
@@ -235,6 +249,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::UINT2>
             output_stream.write(reinterpret_cast<char const*>(aux), sizeof(unsigned int) * 2);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 2U;
 };
 
 template<>
@@ -261,6 +277,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::UINT3>
             output_stream.write(reinterpret_cast<char const*>(aux), sizeof(unsigned int) * 3);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 3U;
 };
 
 template<>
@@ -288,6 +306,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::UINT4>
             output_stream.write(reinterpret_cast<char const*>(aux), sizeof(unsigned int) * 4);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 4U;
 };
 
 
@@ -303,6 +323,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::CHAR>
     {
         output_stream.write(src, len);
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 1U;
 };
 
 template<>
@@ -328,6 +350,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::CHAR2>
             output_stream.write(aux, 2);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 2U;
 };
 
 template<>
@@ -354,6 +378,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::CHAR3>
             output_stream.write(aux, 3);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 3U;
 };
 
 template<>
@@ -381,6 +407,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::CHAR4>
             output_stream.write(aux, 4);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 4U;
 };
 
 
@@ -396,6 +424,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::UCHAR>
     {
         output_stream.write(reinterpret_cast<char const*>(src), sizeof(unsigned char)*len);
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 1U;
 };
 
 template<>
@@ -421,6 +451,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::UCHAR2>
             output_stream.write(reinterpret_cast<char const*>(aux), sizeof(unsigned char) * 2);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 2U;
 };
 
 template<>
@@ -447,6 +479,7 @@ struct DataReadWriteHelper<OxBasicBufferFormat::UCHAR3>
             output_stream.write(reinterpret_cast<char const*>(aux), sizeof(unsigned char) * 3);
         }
     }
+    static constexpr uint8_t num_data_elements_per_entry = 3U;
 };
 
 template<>
@@ -474,6 +507,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::UCHAR4>
             output_stream.write(reinterpret_cast<char const*>(aux), sizeof(unsigned char) * 4);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 4U;
 };
 
 template<>
@@ -524,6 +559,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD>
             output_stream.write(reinterpret_cast<char const*>(tracing_depth_and_aux), sizeof(unsigned int) * 4);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 2 * constants::max_spectra_pairs_supported + 2 + 4;
 };
 
 template<>
@@ -568,6 +605,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE>
             output_stream.write(reinterpret_cast<char const*>(tracing_depth_and_aux), sizeof(unsigned int) * 4);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 8;
 };
 
 template<>
@@ -610,6 +649,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMAT
             output_stream.write(reinterpret_cast<char const*>(tracing_depth_and_aux), sizeof(unsigned int) * 4);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 7;
 };
 
 template<>
@@ -639,6 +680,8 @@ struct DataReadWriteHelper<OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD>
             output_stream.write(reinterpret_cast<char const*>(depth), sizeof(float) * 2);
         }
     }
+
+    static constexpr uint8_t num_data_elements_per_entry = 4;
 };
 
 

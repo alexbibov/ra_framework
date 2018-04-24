@@ -134,9 +134,9 @@ bool OxMaterialAssembly::isValid() const
 
 void OxMaterialAssembly::update(OxObjectHandle top_scene_object) const
 {
-    for (auto& _ : m_materials)
+    for (auto& m : m_materials)
     {
-        OxMaterialAttorney<OxMaterialAssembly>::updateMaterial(_, top_scene_object);
+        OxMaterialAttorney<OxMaterialAssembly>::updateMaterial(m, top_scene_object);
     }
 }
 

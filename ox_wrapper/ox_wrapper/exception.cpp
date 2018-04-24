@@ -38,6 +38,16 @@ OxException::OxException(char const* description, std::string const& file_name, 
     }
 }
 
+OxException::OxException(std::string const& description):
+    OxException{ description.c_str() }
+{
+}
+
+OxException::OxException(std::string const& description, std::string const& file_name, std::string const& function_name, long line):
+    OxException{ description.c_str(), file_name, function_name, line }
+{
+}
+
 long OxException::line() const
 {
     return m_line;

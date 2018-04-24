@@ -148,7 +148,7 @@ RT_PROGRAM void __ox_closest_hit__(void)
     int dS = static_cast<int>(sign(-dot(normal, current_ray.direction)));
     ray_payload.tracing_depth_and_aux.y = MAX(0, static_cast<int>(ray_payload.tracing_depth_and_aux.y) + dS);
     float3 p{ current_ray.origin + intersection_distance*current_ray.direction };
-    
+
     if (dS > 0)    // the ray has entered object
     {
         ray_payload.depth.x = intersection_distance;

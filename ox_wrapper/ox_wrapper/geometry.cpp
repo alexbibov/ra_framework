@@ -79,7 +79,11 @@ void OxGeometry::update(OxObjectHandle top_scene_object) const
 {
     if (m_geometry_blueprint->material_assembly.isValid()
         && static_cast<OxMaterialAssembly&>(m_geometry_blueprint->material_assembly).isValid())
+    {
         OxMaterialAssemblyAttorney<OxGeometry>::updateMaterialAssembly(m_geometry_blueprint->material_assembly, top_scene_object);
+        getOxProgramFromDeclarationOffset().setVariableValue("num_materials",
+            static_cast<unsigned int>(static_cast<OxMaterialAssembly&>(m_geometry_blueprint->material_assembly).getMaterialCount()));
+    }
 }
 
 unsigned int OxGeometry::getPrimitiveCount() const

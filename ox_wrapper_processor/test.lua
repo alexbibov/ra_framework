@@ -3,16 +3,16 @@ frequency_pairs = 2    -- number of frequency pairs to support (means 4 frquenci
 
 -- create planet and atmosphere that encloses it
 planet_circle = OxCircle.new(
-    2.0, --[X-coordinate of the planet center]
-    1.1, --[Y-coordinate of the planet center]
-    0.9 --[Z-coodinate of the planter center]
+    1.0, --[X-coordinate of the planet center]
+    0.0, --[Y-coordinate of the planet center]
+    0.9 --[Circle radius]
 )
 planet_circle:setStringName("planet_circle_shape")
 
 atmospheric_circle = OxCircle.new(
-    2.0, --[Circle center X coordinate]
-    1.0, --[Circle center Y coordinate]
-    1.0 --[Circle radius]
+    1.0, --[Circle center X coordinate]
+    0.0, --[Circle center Y coordinate]
+    1.1 --[Circle radius]
 )
 atmospheric_circle:setStringName("atmosphere_circle_shape")
 
@@ -44,14 +44,14 @@ parallel_ray_generator = OxParallelRayGenerator.new(
     num_rays, --[Total number of rays to cast]
     2, --[Opening of the emitter]
     -2, --[Position of the emitter]
-    3.14/2, --[Rotation of the emitter]
+    -3.14/2, --[Rotation of the emitter]
     frequency_pairs --[Number of spectral pairs to support]
 )
 
 -- write per-spectrum intensities for rays casted by the parallel ray generator
 spectral_flux = {}
 for i = 1, num_rays*frequency_pairs do
-    e = float2.new(1.0, 1.0)
+    e = float2.new(1.5, 1.5)
     spectral_flux[i] = e
 end
 parallel_ray_generator:updateSpectralFluxBuffer(spectral_flux)

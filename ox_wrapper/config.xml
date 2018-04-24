@@ -13,7 +13,7 @@
     <ccbin>C:/Program Files (x86)/Microsoft Visual Studio 14.0/VC/bin/</ccbin>
 
     <!-- Path to OptiX SDK -->
-    <OptiX_SDK>../../_3rd_party/Optix SDK 4.0.1/include/</OptiX_SDK>
+    <OptiX_SDK>../_3rd_party/Optix SDK 4.0.1/include/</OptiX_SDK>
 
     <!-- List of CUDA modules to compile to PTX -->
     <modules>
