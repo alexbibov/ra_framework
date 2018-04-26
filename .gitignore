@@ -26,6 +26,8 @@
 *.a
 #*.lib
 !_3rd_party/**/*.lib
+!_3rd_party/**/*.dll
+!_3rd_party/**/*.exe
 
 # Executables
 *.exe
