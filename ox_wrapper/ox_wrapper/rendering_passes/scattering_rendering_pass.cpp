@@ -49,12 +49,9 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
         OxMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, OX_SHADER_ENTRY_MISS), OxRayTypeCollection{ OxRayType::unknown } },
         OxMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_miss_scattered__"), OxRayTypeCollection{ OxRayType::scattered } } }
     , m_traverse_backup_buffer{ targetSceneSection().context(), ray_caster.numberOfRays() }
-    , m_recaster_ray_generator{ m_traverse_backup_buffer, castBufferToType<OxRayRadiancePayload>(ray_caster.outputBuffer()), OxRayType::unknown }
     , m_importance_directions_buffer{ targetSceneSection().context().createBuffer<float2>(OxBufferKind::input, num_scattering_integral_importance_directions*(1 + num_spectra_pairs_supported)) }
-
+    , m_recaster{ m_traverse_backup_buffer, castBufferToType<OxRayRadiancePayload>(m_ray_caster.outputBuffer()), OxRayType::unknown, ray_marching_step_size }
 {
-    makeBufferMapSentry(m_traverse_backup_buffer.getRawBuffer(), OxBufferMapKind::write).address()[0] = 0U;
-
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
         .setVariableValue("num_spectra_pairs_supported", m_num_spectra_pairs_supported);
     static_cast<OxProgram&>(static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).getProgram())
@@ -73,13 +70,17 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
     setScatteringPhaseFunctionShader(scattering_phase_function_shader);
 
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
-        .assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.getRawBuffer());
+        .assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.writeBuffer());
+    
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
         .assignBuffer("importance_directions_buffer", m_importance_directions_buffer);
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::scattered)).getClosestHitShader())
         .assignBuffer("importance_directions_buffer", m_importance_directions_buffer);
     static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown))
         .getProgram().assignBuffer("importance_directions_buffer", m_importance_directions_buffer);
+
+    static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).getProgram().
+        assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.writeBuffer());
 }
 
 OxScatteringRenderingPass::OxScatteringRenderingPass(
@@ -146,15 +147,17 @@ float OxScatteringRenderingPass::getRayMarchingStepSize() const
 
 void OxScatteringRenderingPass::setRayMarchingStepSize(float step_size)
 {
+    m_ray_marching_step_size = step_size;
+
     for (auto& ms : m_miss_shader_assembly)
     {
-        ms.getProgram().setVariableValue("step_size", m_ray_marching_step_size);
+        ms.getProgram().setVariableValue("step_size", step_size);
     }
 
     static_cast<OxProgram&>(
         static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown))
         .getClosestHitShader())
-        .setVariableValue("step_size", m_ray_marching_step_size);
+        .setVariableValue("step_size", step_size);
 }
 
 OxProgram OxScatteringRenderingPass::getAbsorptionProbabilityShader() const
@@ -219,12 +222,24 @@ void OxScatteringRenderingPass::render() const
 
     targetSceneSection().trace(m_ray_caster);
 
+    m_traverse_backup_buffer.ping_pong();
+
     unsigned int num_not_converged_rays = 
-        *makeBufferMapSentry(m_traverse_backup_buffer.getRawBuffer(), OxBufferMapKind::read).address();
+        *makeBufferMapSentry(m_traverse_backup_buffer.readBuffer(), OxBufferMapKind::read).address();
+
     while (num_not_converged_rays > 0)
     {
-        targetSceneSection().trace(m_recaster_ray_generator);
+        static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
+            .assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.writeBuffer());
+        static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).getProgram().
+            assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.writeBuffer());
+
+
+        targetSceneSection().trace(m_recaster);
+
+        m_traverse_backup_buffer.ping_pong();
+        
         num_not_converged_rays = 
-            *makeBufferMapSentry(m_traverse_backup_buffer.getRawBuffer(), OxBufferMapKind::read).address();
+            *makeBufferMapSentry(m_traverse_backup_buffer.readBuffer(), OxBufferMapKind::read).address();
     }
 }

@@ -109,7 +109,7 @@
 	.reg .f32 	%f<2>;
 
 
-	ld.param.f32 	%f1, [_Z43__ox_scattering_default_absorption_factor__6float3j_param_0];
+	mov.f32 	%f1, 0f3DCCCCCD;
 	st.param.f32	[func_retval0+0], %f1;
 	st.param.f32	[func_retval0+4], %f1;
 	ret;

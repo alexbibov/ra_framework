@@ -45,16 +45,20 @@ public:
 protected:
     void setGeneratorDimensions(uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z);
 
-    void update(OxObjectHandle top_scene_object) const;
-    void launch() const;
+    virtual void update(OxObjectHandle top_scene_object) const;
+    virtual void launch() const;
+
+    void update_topology(uint32_t new_num_rays_x, 
+        uint32_t new_num_rays_y, 
+        uint32_t new_num_rays_z, uint32_t new_entry_point_index = 0U) const;
 
 private:
     std::shared_ptr<util::Optional<OxMissShaderAssembly>> m_p_miss_shader_assembly;
 
-    uint32_t m_num_rays_x;
-    uint32_t m_num_rays_y;
-    uint32_t m_num_rays_z;
-    uint32_t m_entry_point_index;
+    mutable uint32_t m_num_rays_x;
+    mutable uint32_t m_num_rays_y;
+    mutable uint32_t m_num_rays_z;
+    mutable uint32_t m_entry_point_index;
 };
 
 template<>

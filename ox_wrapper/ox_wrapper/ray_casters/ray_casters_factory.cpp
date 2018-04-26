@@ -54,27 +54,27 @@ OxParallelRayGenerator OxRaycastersFactory::createParallelRayGenerator(uint32_t 
 }
 
 OxRecasterGenerator OxRaycastersFactory::createRecasterGenerator(OxTraverseBackupBuffer const& traverse_backup_buffer, 
-    OxBuffer<OxRayRadiancePayload> const& output_buffer, OxRayType recasted_ray_type) const
+    OxBuffer<OxRayRadiancePayload> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length) const
 {
-    return OxRecasterGenerator{ traverse_backup_buffer, output_buffer, recasted_ray_type };
+    return OxRecasterGenerator{ traverse_backup_buffer, output_buffer, recasted_ray_type, recasted_ray_parametric_length };
 }
 
 OxRecasterGenerator OxRaycastersFactory::createRecasterGenerator(OxTraverseBackupBuffer const& traverse_backup_buffer,
-    OxBuffer<OxRayRadiancePayloadSimple> const& output_buffer, OxRayType recasted_ray_type) const
+    OxBuffer<OxRayRadiancePayloadSimple> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length) const
 {
-    return OxRecasterGenerator{ traverse_backup_buffer, output_buffer, recasted_ray_type };
+    return OxRecasterGenerator{ traverse_backup_buffer, output_buffer, recasted_ray_type, recasted_ray_parametric_length };
 }
 
 OxRecasterGenerator OxRaycastersFactory::createRecasterGenerator(OxTraverseBackupBuffer const& traverse_backup_buffer,
-    OxBuffer<OxRayRadiancePayloadMonochromatic> const& output_buffer, OxRayType recasted_ray_type) const
+    OxBuffer<OxRayRadiancePayloadMonochromatic> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length) const
 {
-    return OxRecasterGenerator{ traverse_backup_buffer, output_buffer, recasted_ray_type };
+    return OxRecasterGenerator{ traverse_backup_buffer, output_buffer, recasted_ray_type, recasted_ray_parametric_length };
 }
 
 OxRecasterGenerator OxRaycastersFactory::createRecasterGenerator(OxTraverseBackupBuffer const& traverse_backup_buffer,
-    OxBuffer<OxRayOcclusionPayload> const& output_buffer, OxRayType recasted_ray_type) const
+    OxBuffer<OxRayOcclusionPayload> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length) const
 {
-    return OxRecasterGenerator{ traverse_backup_buffer, output_buffer, recasted_ray_type };
+    return OxRecasterGenerator{ traverse_backup_buffer, output_buffer, recasted_ray_type, recasted_ray_parametric_length };
 }
 
 OxTraverseBackupBuffer OxRaycastersFactory::createTraverseBackupBuffer(size_t max_ray_storage_capacity)
@@ -170,10 +170,17 @@ OxRaycastersFactory::OxRaycastersFactory(OxContext const& context) :
                 }
             ),
 
-            "getRawBuffer",
+            "readBuffer",
             [](OxTraverseBackupBuffer* p)
             {
-                OxAbstractBuffer rv = p->getRawBuffer();
+                OxAbstractBuffer rv = p->readBuffer();
+                return rv;
+            },
+
+            "writeBuffer",
+                [](OxTraverseBackupBuffer* p)
+            {
+                OxAbstractBuffer rv = p->writeBuffer();
                 return rv;
             },
 
@@ -190,6 +197,35 @@ OxRaycastersFactory::OxRaycastersFactory(OxContext const& context) :
             ),
 
             lua_support::ListOfFactories::make_initializer(
+                [this](OxTraverseBackupBuffer const& traverse_backup_buffer,
+                    OxAbstractBuffer const& output_buffer, OxRayPayloadType payload_type,
+                    OxRayType recasted_ray_type, float recasted_ray_parametric_length)
+                {
+                    switch (payload_type)
+                    {
+                    case OxRayPayloadType::radiance:
+                        return createRecasterGenerator(traverse_backup_buffer,
+                            dynamic_cast<OxBuffer<OxRayRadiancePayload> const&>(output_buffer),
+                            recasted_ray_type, recasted_ray_parametric_length);
+
+                    case OxRayPayloadType::radiance_simple:
+                        return createRecasterGenerator(traverse_backup_buffer,
+                            dynamic_cast<OxBuffer<OxRayRadiancePayloadSimple> const&>(output_buffer),
+                            recasted_ray_type, recasted_ray_parametric_length);
+
+                    case OxRayPayloadType::monochromatic:
+                        return createRecasterGenerator(traverse_backup_buffer,
+                            dynamic_cast<OxBuffer<OxRayRadiancePayloadMonochromatic> const&>(output_buffer),
+                            recasted_ray_type, recasted_ray_parametric_length);
+                    case OxRayPayloadType::occlusion:
+                        return createRecasterGenerator(traverse_backup_buffer,
+                            dynamic_cast<OxBuffer<OxRayOcclusionPayload> const&>(output_buffer),
+                            recasted_ray_type, recasted_ray_parametric_length);
+                    default:
+                        throw OxException{ "unknown payload type", __FILE__, __FUNCTION__, __LINE__ };
+                    }
+                },
+
                 [this](OxTraverseBackupBuffer const& traverse_backup_buffer,
                     OxAbstractBuffer const& output_buffer, OxRayPayloadType payload_type,
                     OxRayType recasted_ray_type)

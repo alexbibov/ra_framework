@@ -117,3 +117,15 @@ void OxRayGenerator::launch() const
             m_num_rays_x));
     }
 }
+
+void OxRayGenerator::update_topology(uint32_t new_num_rays_x, 
+    uint32_t new_num_rays_y, 
+    uint32_t new_num_rays_z, 
+    uint32_t new_entry_point_index) const
+{
+    m_num_rays_x = new_num_rays_x;
+    m_num_rays_y = new_num_rays_y;
+    m_num_rays_z = new_num_rays_z;
+
+    m_entry_point_index = new_entry_point_index;
+}

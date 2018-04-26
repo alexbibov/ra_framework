@@ -64,7 +64,7 @@ private:
     OxMaterialAssembly m_surface_material_assembly;
     OxMissShaderAssembly m_miss_shader_assembly;
     OxTraverseBackupBuffer m_traverse_backup_buffer;
-    ray_casters::OxRecasterGenerator m_recaster_ray_generator;
+    ray_casters::OxRecasterGenerator m_recaster;
     OxBuffer<float2> m_importance_directions_buffer;
 };
 

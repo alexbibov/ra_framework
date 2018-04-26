@@ -3,7 +3,7 @@
 
 RT_CALLABLE_PROGRAM float2 __ox_scattering_default_absorption_factor__(float3 pos, unsigned int spectrum)
 {
-    return make_float2(pos.x, pos.x);
+    return make_float2(.1f, .1f);
 }
 
 RT_CALLABLE_PROGRAM float2 __ox_scattering_default_scattering_factor__(float3 pos, unsigned int spectrum)

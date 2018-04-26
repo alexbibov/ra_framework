@@ -10,13 +10,19 @@ public:
     OxTraverseBackupBuffer(OxContext const& context, size_t max_ray_storage_capacity);
     ~OxTraverseBackupBuffer();
 
-    OxBuffer<unsigned int> getRawBuffer() const;
+    OxBuffer<unsigned int> readBuffer() const;
+    OxBuffer<unsigned int> writeBuffer() const;
 
     // required by OxEntity interface
     bool isValid() const override;
 
+    void ping_pong() const;
+
+
+
 private:
-    OxBuffer<unsigned int> m_raw_buffer;
+    std::shared_ptr<uint8_t> m_current_buffer_idx;
+    OxBuffer<unsigned int> m_raw_buffer[2];    // traverse backup buffer is always a ping-pong buffer
 };
 
 }

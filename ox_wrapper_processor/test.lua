@@ -5,7 +5,7 @@ frequency_pairs = 2    -- number of frequency pairs to support (means 4 frquenci
 planet_circle = OxCircle.new(
     1.0, --[X-coordinate of the planet center]
     0.0, --[Y-coordinate of the planet center]
-    0.9 --[Circle radius]
+    0.5 --[Circle radius]
 )
 planet_circle:setStringName("planet_circle_shape")
 
@@ -123,7 +123,7 @@ scattering_rendering_pass = OxScatteringRenderingPass.new(
     parallel_ray_generator,    -- ray generator employed by the scattering pass
     2,    -- number of spectral pairs supported by the scattering pass (must be equal to that of the ray generator)
     10,   -- maximal depth of recursion
-    0.01,    -- ray marching step size
+    0.05,    -- ray marching step size
     1    -- number of importance directions used to approximate the scattering integral
 )
 

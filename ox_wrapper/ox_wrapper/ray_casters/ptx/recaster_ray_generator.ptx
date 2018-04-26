@@ -15,6 +15,7 @@
 .global .align 4 .u32 dimension;
 .global .align 4 .u32 payload_type;
 .global .align 4 .u32 ray_type;
+.global .align 4 .f32 ray_parametric_length;
 .global .align 4 .u32 index;
 .global .align 1 .b8 traverse_backup_buffer[1];
 .global .align 1 .b8 ox_radiance_payload_1d_out[1];
@@ -33,6 +34,7 @@
 .global .align 4 .b8 _ZN21rti_internal_typeinfo9dimensionE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo12payload_typeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo8ray_typeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
+.global .align 4 .b8 _ZN21rti_internal_typeinfo21ray_parametric_lengthE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo5indexE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 8 .u64 _ZN21rti_internal_register20reg_bitness_detectorE;
 .global .align 8 .u64 _ZN21rti_internal_register24reg_exception_64_detail0E;
@@ -62,21 +64,25 @@
 .global .align 16 .b8 _ZN21rti_internal_typename9dimensionE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename12payload_typeE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename8ray_typeE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
+.global .align 8 .b8 _ZN21rti_internal_typename21ray_parametric_lengthE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename5indexE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
 .global .align 4 .u32 _ZN21rti_internal_typeenum13ox_entry_nodeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum9dimensionE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum12payload_typeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum8ray_typeE = 4919;
+.global .align 4 .u32 _ZN21rti_internal_typeenum21ray_parametric_lengthE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum5indexE = 4919;
 .global .align 1 .b8 _ZN21rti_internal_semantic13ox_entry_nodeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic9dimensionE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic12payload_typeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic8ray_typeE[1];
+.global .align 1 .b8 _ZN21rti_internal_semantic21ray_parametric_lengthE[1];
 .global .align 16 .b8 _ZN21rti_internal_semantic5indexE[14] = {114, 116, 76, 97, 117, 110, 99, 104, 73, 110, 100, 101, 120, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation13ox_entry_nodeE[19] = {34, 83, 99, 101, 110, 101, 32, 101, 110, 116, 114, 121, 32, 110, 111, 100, 101, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation9dimensionE[33] = {34, 68, 105, 109, 101, 110, 115, 105, 111, 110, 32, 111, 102, 32, 116, 104, 101, 32, 111, 117, 116, 112, 117, 116, 32, 98, 117, 102, 102, 101, 114, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation12payload_typeE[18] = {34, 84, 121, 112, 101, 32, 111, 102, 32, 112, 97, 121, 108, 111, 97, 100, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation8ray_typeE[26] = {34, 84, 121, 112, 101, 32, 111, 102, 32, 114, 101, 108, 97, 117, 110, 99, 104, 101, 100, 32, 114, 97, 121, 115, 34, 0};
+.global .align 16 .b8 _ZN23rti_internal_annotation21ray_parametric_lengthE[36] = {34, 80, 97, 114, 97, 109, 101, 116, 114, 105, 99, 32, 108, 101, 110, 103, 116, 104, 32, 111, 102, 32, 114, 101, 99, 97, 115, 116, 101, 100, 32, 114, 97, 121, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation5indexE[15] = {34, 84, 104, 114, 101, 97, 100, 32, 105, 110, 100, 101, 120, 34, 0};
 
 .visible .entry _Z15__ox_generate__v(
@@ -88,7 +94,7 @@
 	.reg .b64 	%SPL;
 	.reg .pred 	%p<18>;
 	.reg .b16 	%rs<145>;
-	.reg .f32 	%f<439>;
+	.reg .f32 	%f<440>;
 	.reg .b32 	%r<301>;
 	.reg .b64 	%rd<240>;
 
@@ -108,7 +114,7 @@
 	// inline asm
 	ld.u32 	%r4, [%rd4];
 	// inline asm
-	mov.b32 	%f7, %r4;
+	mov.b32 	%f8, %r4;
 	// inline asm
 	ld.global.u32 	%r29, [index];
 	mad.lo.s32 	%r30, %r29, 9, 2;
@@ -118,7 +124,7 @@
 	// inline asm
 	ld.u32 	%r7, [%rd10];
 	// inline asm
-	mov.b32 	%f8, %r7;
+	mov.b32 	%f9, %r7;
 	// inline asm
 	ld.global.u32 	%r31, [index];
 	mad.lo.s32 	%r32, %r31, 9, 3;
@@ -128,7 +134,7 @@
 	// inline asm
 	ld.u32 	%r10, [%rd16];
 	// inline asm
-	mov.b32 	%f9, %r10;
+	mov.b32 	%f10, %r10;
 	// inline asm
 	ld.global.u32 	%r33, [index];
 	mad.lo.s32 	%r34, %r33, 9, 4;
@@ -138,7 +144,7 @@
 	// inline asm
 	ld.u32 	%r13, [%rd22];
 	// inline asm
-	mov.b32 	%f10, %r13;
+	mov.b32 	%f11, %r13;
 	// inline asm
 	ld.global.u32 	%r35, [index];
 	mad.lo.s32 	%r36, %r35, 9, 5;
@@ -148,7 +154,7 @@
 	// inline asm
 	ld.u32 	%r16, [%rd28];
 	// inline asm
-	mov.b32 	%f11, %r16;
+	mov.b32 	%f12, %r16;
 	// inline asm
 	ld.global.u32 	%r37, [index];
 	mad.lo.s32 	%r38, %r37, 9, 6;
@@ -158,7 +164,7 @@
 	// inline asm
 	ld.u32 	%r19, [%rd34];
 	// inline asm
-	mov.b32 	%f12, %r19;
+	mov.b32 	%f13, %r19;
 	// inline asm
 	ld.global.u32 	%r39, [index];
 	mad.lo.s32 	%r40, %r39, 9, 7;
@@ -182,6 +188,7 @@
 	// inline asm
 	ld.u32 	%rd3, [%rd52];
 	ld.global.u32 	%r1, [ray_type];
+	ld.global.f32 	%f7, [ray_parametric_length];
 	ld.global.u32 	%r26, [payload_type];
 	setp.gt.s32	%p1, %r26, 1;
 	@%p1 bra 	BB0_7;
@@ -209,47 +216,46 @@ BB0_27:
 	// inline asm
 	call (%rd209), _rt_buffer_get_64, (%rd210, %r260, %r261, %rd1, %rd2, %rd57, %rd57);
 	// inline asm
-	ld.v2.f32 	{%f287, %f288}, [%rd209+64];
-	ld.v4.f32 	{%f289, %f290, %f291, %f292}, [%rd209];
-	ld.v4.f32 	{%f293, %f294, %f295, %f296}, [%rd209+16];
-	ld.v4.f32 	{%f297, %f298, %f299, %f300}, [%rd209+32];
-	ld.v4.f32 	{%f301, %f302, %f303, %f304}, [%rd209+48];
+	ld.v2.f32 	{%f288, %f289}, [%rd209+64];
+	ld.v4.f32 	{%f290, %f291, %f292, %f293}, [%rd209];
+	ld.v4.f32 	{%f294, %f295, %f296, %f297}, [%rd209+16];
+	ld.v4.f32 	{%f298, %f299, %f300, %f301}, [%rd209+32];
+	ld.v4.f32 	{%f302, %f303, %f304, %f305}, [%rd209+48];
 	ld.v4.u8 	{%rs81, %rs82, %rs83, %rs84}, [%rd209+72];
 	ld.v4.u8 	{%rs85, %rs86, %rs87, %rs88}, [%rd209+76];
 	ld.v4.u32 	{%r262, %r263, %r264, %r265}, [%rd209+80];
 	st.local.v4.u32 	[%rd222+80], {%r262, %r263, %r264, %r265};
 	st.local.v4.u8 	[%rd222+76], {%rs85, %rs86, %rs87, %rs88};
 	st.local.v4.u8 	[%rd222+72], {%rs81, %rs82, %rs83, %rs84};
-	st.local.v4.f32 	[%rd222+48], {%f301, %f302, %f303, %f304};
-	st.local.v4.f32 	[%rd222+32], {%f297, %f298, %f299, %f300};
-	st.local.v4.f32 	[%rd222+16], {%f293, %f294, %f295, %f296};
-	st.local.v4.f32 	[%rd222], {%f289, %f290, %f291, %f292};
-	st.local.v2.f32 	[%rd222+64], {%f287, %f288};
+	st.local.v4.f32 	[%rd222+48], {%f302, %f303, %f304, %f305};
+	st.local.v4.f32 	[%rd222+32], {%f298, %f299, %f300, %f301};
+	st.local.v4.f32 	[%rd222+16], {%f294, %f295, %f296, %f297};
+	st.local.v4.f32 	[%rd222], {%f290, %f291, %f292, %f293};
+	st.local.v2.f32 	[%rd222+64], {%f288, %f289};
 	ld.global.u32 	%r257, [ox_entry_node];
-	mov.f32 	%f285, 0f00000000;
-	mov.f32 	%f286, 0f6C4ECB8F;
+	mov.f32 	%f286, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r257, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f285, %f286, %rd215, %r261);
+	call _rt_trace_64, (%r257, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f286, %f7, %rd215, %r261);
 	// inline asm
 	// inline asm
 	call (%rd216), _rt_buffer_get_64, (%rd210, %r260, %r261, %rd1, %rd2, %rd57, %rd57);
 	// inline asm
-	ld.local.v2.f32 	{%f323, %f324}, [%rd222+64];
-	ld.local.v4.f32 	{%f325, %f326, %f327, %f328}, [%rd222];
-	ld.local.v4.f32 	{%f329, %f330, %f331, %f332}, [%rd222+16];
-	ld.local.v4.f32 	{%f333, %f334, %f335, %f336}, [%rd222+32];
-	ld.local.v4.f32 	{%f337, %f338, %f339, %f340}, [%rd222+48];
+	ld.local.v2.f32 	{%f324, %f325}, [%rd222+64];
+	ld.local.v4.f32 	{%f326, %f327, %f328, %f329}, [%rd222];
+	ld.local.v4.f32 	{%f330, %f331, %f332, %f333}, [%rd222+16];
+	ld.local.v4.f32 	{%f334, %f335, %f336, %f337}, [%rd222+32];
+	ld.local.v4.f32 	{%f338, %f339, %f340, %f341}, [%rd222+48];
 	ld.local.v4.u8 	{%rs97, %rs98, %rs99, %rs100}, [%rd222+72];
 	ld.local.v4.u8 	{%rs101, %rs102, %rs103, %rs104}, [%rd222+76];
 	ld.local.v4.u32 	{%r270, %r271, %r272, %r273}, [%rd222+80];
 	st.v4.u32 	[%rd216+80], {%r270, %r271, %r272, %r273};
 	st.v4.u8 	[%rd216+76], {%rs101, %rs102, %rs103, %rs104};
 	st.v4.u8 	[%rd216+72], {%rs97, %rs98, %rs99, %rs100};
-	st.v4.f32 	[%rd216+48], {%f337, %f338, %f339, %f340};
-	st.v4.f32 	[%rd216+32], {%f333, %f334, %f335, %f336};
-	st.v4.f32 	[%rd216+16], {%f329, %f330, %f331, %f332};
-	st.v4.f32 	[%rd216], {%f325, %f326, %f327, %f328};
-	st.v2.f32 	[%rd216+64], {%f323, %f324};
+	st.v4.f32 	[%rd216+48], {%f338, %f339, %f340, %f341};
+	st.v4.f32 	[%rd216+32], {%f334, %f335, %f336, %f337};
+	st.v4.f32 	[%rd216+16], {%f330, %f331, %f332, %f333};
+	st.v4.f32 	[%rd216], {%f326, %f327, %f328, %f329};
+	st.v2.f32 	[%rd216+64], {%f324, %f325};
 	bra.uni 	BB0_29;
 
 BB0_7:
@@ -276,29 +282,28 @@ BB0_19:
 	// inline asm
 	call (%rd119), _rt_buffer_get_64, (%rd120, %r120, %r121, %rd1, %rd2, %rd57, %rd57);
 	// inline asm
-	ld.v4.f32 	{%f91, %f92, %f93, %f94}, [%rd119];
+	ld.v4.f32 	{%f92, %f93, %f94, %f95}, [%rd119];
 	ld.v4.u8 	{%rs17, %rs18, %rs19, %rs20}, [%rd119+4];
 	ld.v4.u32 	{%r122, %r123, %r124, %r125}, [%rd119+16];
 	st.local.v4.u32 	[%rd132+16], {%r122, %r123, %r124, %r125};
 	st.local.v4.u8 	[%rd132+4], {%rs17, %rs18, %rs19, %rs20};
-	st.local.v2.f32 	[%rd132+8], {%f93, %f94};
-	st.local.f32 	[%rd132], %f91;
+	st.local.v2.f32 	[%rd132+8], {%f94, %f95};
+	st.local.f32 	[%rd132], %f92;
 	ld.global.u32 	%r117, [ox_entry_node];
-	mov.f32 	%f89, 0f00000000;
-	mov.f32 	%f90, 0f6C4ECB8F;
+	mov.f32 	%f90, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r117, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f89, %f90, %rd125, %r121);
+	call _rt_trace_64, (%r117, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f90, %f7, %rd125, %r121);
 	// inline asm
 	// inline asm
 	call (%rd126), _rt_buffer_get_64, (%rd120, %r120, %r121, %rd1, %rd2, %rd57, %rd57);
 	// inline asm
-	ld.local.v4.f32 	{%f98, %f99, %f100, %f101}, [%rd132];
+	ld.local.v4.f32 	{%f99, %f100, %f101, %f102}, [%rd132];
 	ld.local.v4.u8 	{%rs25, %rs26, %rs27, %rs28}, [%rd132+4];
 	ld.local.v4.u32 	{%r130, %r131, %r132, %r133}, [%rd132+16];
 	st.v4.u32 	[%rd126+16], {%r130, %r131, %r132, %r133};
 	st.v4.u8 	[%rd126+4], {%rs25, %rs26, %rs27, %rs28};
-	st.v2.f32 	[%rd126+8], {%f100, %f101};
-	st.f32 	[%rd126], %f98;
+	st.v2.f32 	[%rd126+8], {%f101, %f102};
+	st.f32 	[%rd126], %f99;
 	bra.uni 	BB0_29;
 
 BB0_2:
@@ -325,23 +330,22 @@ BB0_21:
 	// inline asm
 	call (%rd164), _rt_buffer_get_64, (%rd165, %r190, %r191, %rd1, %rd2, %rd57, %rd57);
 	// inline asm
-	ld.v4.f32 	{%f159, %f160, %f161, %f162}, [%rd164];
+	ld.v4.f32 	{%f160, %f161, %f162, %f163}, [%rd164];
 	ld.v4.u32 	{%r192, %r193, %r194, %r195}, [%rd164+16];
 	st.local.v4.u32 	[%rd177+16], {%r192, %r193, %r194, %r195};
-	st.local.v4.f32 	[%rd177], {%f159, %f160, %f161, %f162};
+	st.local.v4.f32 	[%rd177], {%f160, %f161, %f162, %f163};
 	ld.global.u32 	%r187, [ox_entry_node];
-	mov.f32 	%f157, 0f00000000;
-	mov.f32 	%f158, 0f6C4ECB8F;
+	mov.f32 	%f158, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r187, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f157, %f158, %rd170, %r191);
+	call _rt_trace_64, (%r187, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f158, %f7, %rd170, %r191);
 	// inline asm
 	// inline asm
 	call (%rd171), _rt_buffer_get_64, (%rd165, %r190, %r191, %rd1, %rd2, %rd57, %rd57);
 	// inline asm
-	ld.local.v4.f32 	{%f167, %f168, %f169, %f170}, [%rd177];
+	ld.local.v4.f32 	{%f168, %f169, %f170, %f171}, [%rd177];
 	ld.local.v4.u32 	{%r200, %r201, %r202, %r203}, [%rd177+16];
 	st.v4.u32 	[%rd171+16], {%r200, %r201, %r202, %r203};
-	st.v4.f32 	[%rd171], {%f167, %f168, %f169, %f170};
+	st.v4.f32 	[%rd171], {%f168, %f169, %f170, %f171};
 	bra.uni 	BB0_29;
 
 BB0_8:
@@ -367,21 +371,20 @@ BB0_13:
 	call (%rd74), _rt_buffer_get_64, (%rd75, %r66, %r67, %rd1, %rd2, %rd57, %rd57);
 	// inline asm
 	ld.v2.u32 	{%r68, %r69}, [%rd74];
-	ld.v2.f32 	{%f37, %f38}, [%rd74+8];
-	st.local.v2.f32 	[%rd87+8], {%f37, %f38};
+	ld.v2.f32 	{%f38, %f39}, [%rd74+8];
+	st.local.v2.f32 	[%rd87+8], {%f38, %f39};
 	st.local.v2.u32 	[%rd87], {%r68, %r69};
 	ld.global.u32 	%r63, [ox_entry_node];
-	mov.f32 	%f35, 0f00000000;
-	mov.f32 	%f36, 0f6C4ECB8F;
+	mov.f32 	%f36, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r63, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f35, %f36, %rd80, %r67);
+	call _rt_trace_64, (%r63, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f36, %f7, %rd80, %r67);
 	// inline asm
 	// inline asm
 	call (%rd81), _rt_buffer_get_64, (%rd75, %r66, %r67, %rd1, %rd2, %rd57, %rd57);
 	// inline asm
 	ld.local.v2.u32 	{%r72, %r73}, [%rd87];
-	ld.local.v2.f32 	{%f41, %f42}, [%rd87+8];
-	st.v2.f32 	[%rd81+8], {%f41, %f42};
+	ld.local.v2.f32 	{%f42, %f43}, [%rd87+8];
+	st.v2.f32 	[%rd81+8], {%f42, %f43};
 	st.v2.u32 	[%rd81], {%r72, %r73};
 	bra.uni 	BB0_29;
 
@@ -394,47 +397,46 @@ BB0_28:
 	// inline asm
 	call (%rd224), _rt_buffer_get_64, (%rd225, %r24, %r284, %rd1, %rd57, %rd57, %rd57);
 	// inline asm
-	ld.v2.f32 	{%f367, %f368}, [%rd224+64];
-	ld.v4.f32 	{%f369, %f370, %f371, %f372}, [%rd224];
-	ld.v4.f32 	{%f373, %f374, %f375, %f376}, [%rd224+16];
-	ld.v4.f32 	{%f377, %f378, %f379, %f380}, [%rd224+32];
-	ld.v4.f32 	{%f381, %f382, %f383, %f384}, [%rd224+48];
+	ld.v2.f32 	{%f368, %f369}, [%rd224+64];
+	ld.v4.f32 	{%f370, %f371, %f372, %f373}, [%rd224];
+	ld.v4.f32 	{%f374, %f375, %f376, %f377}, [%rd224+16];
+	ld.v4.f32 	{%f378, %f379, %f380, %f381}, [%rd224+32];
+	ld.v4.f32 	{%f382, %f383, %f384, %f385}, [%rd224+48];
 	ld.v4.u8 	{%rs113, %rs114, %rs115, %rs116}, [%rd224+72];
 	ld.v4.u8 	{%rs117, %rs118, %rs119, %rs120}, [%rd224+76];
 	ld.v4.u32 	{%r285, %r286, %r287, %r288}, [%rd224+80];
 	st.local.v4.u32 	[%rd237+80], {%r285, %r286, %r287, %r288};
 	st.local.v4.u8 	[%rd237+76], {%rs117, %rs118, %rs119, %rs120};
 	st.local.v4.u8 	[%rd237+72], {%rs113, %rs114, %rs115, %rs116};
-	st.local.v4.f32 	[%rd237+48], {%f381, %f382, %f383, %f384};
-	st.local.v4.f32 	[%rd237+32], {%f377, %f378, %f379, %f380};
-	st.local.v4.f32 	[%rd237+16], {%f373, %f374, %f375, %f376};
-	st.local.v4.f32 	[%rd237], {%f369, %f370, %f371, %f372};
-	st.local.v2.f32 	[%rd237+64], {%f367, %f368};
+	st.local.v4.f32 	[%rd237+48], {%f382, %f383, %f384, %f385};
+	st.local.v4.f32 	[%rd237+32], {%f378, %f379, %f380, %f381};
+	st.local.v4.f32 	[%rd237+16], {%f374, %f375, %f376, %f377};
+	st.local.v4.f32 	[%rd237], {%f370, %f371, %f372, %f373};
+	st.local.v2.f32 	[%rd237+64], {%f368, %f369};
 	ld.global.u32 	%r280, [ox_entry_node];
-	mov.f32 	%f365, 0f00000000;
-	mov.f32 	%f366, 0f6C4ECB8F;
+	mov.f32 	%f366, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r280, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f365, %f366, %rd230, %r284);
+	call _rt_trace_64, (%r280, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f366, %f7, %rd230, %r284);
 	// inline asm
 	// inline asm
 	call (%rd231), _rt_buffer_get_64, (%rd225, %r24, %r284, %rd1, %rd57, %rd57, %rd57);
 	// inline asm
-	ld.local.v2.f32 	{%f403, %f404}, [%rd237+64];
-	ld.local.v4.f32 	{%f405, %f406, %f407, %f408}, [%rd237];
-	ld.local.v4.f32 	{%f409, %f410, %f411, %f412}, [%rd237+16];
-	ld.local.v4.f32 	{%f413, %f414, %f415, %f416}, [%rd237+32];
-	ld.local.v4.f32 	{%f417, %f418, %f419, %f420}, [%rd237+48];
+	ld.local.v2.f32 	{%f404, %f405}, [%rd237+64];
+	ld.local.v4.f32 	{%f406, %f407, %f408, %f409}, [%rd237];
+	ld.local.v4.f32 	{%f410, %f411, %f412, %f413}, [%rd237+16];
+	ld.local.v4.f32 	{%f414, %f415, %f416, %f417}, [%rd237+32];
+	ld.local.v4.f32 	{%f418, %f419, %f420, %f421}, [%rd237+48];
 	ld.local.v4.u8 	{%rs129, %rs130, %rs131, %rs132}, [%rd237+72];
 	ld.local.v4.u8 	{%rs133, %rs134, %rs135, %rs136}, [%rd237+76];
 	ld.local.v4.u32 	{%r293, %r294, %r295, %r296}, [%rd237+80];
 	st.v4.u32 	[%rd231+80], {%r293, %r294, %r295, %r296};
 	st.v4.u8 	[%rd231+76], {%rs133, %rs134, %rs135, %rs136};
 	st.v4.u8 	[%rd231+72], {%rs129, %rs130, %rs131, %rs132};
-	st.v4.f32 	[%rd231+48], {%f417, %f418, %f419, %f420};
-	st.v4.f32 	[%rd231+32], {%f413, %f414, %f415, %f416};
-	st.v4.f32 	[%rd231+16], {%f409, %f410, %f411, %f412};
-	st.v4.f32 	[%rd231], {%f405, %f406, %f407, %f408};
-	st.v2.f32 	[%rd231+64], {%f403, %f404};
+	st.v4.f32 	[%rd231+48], {%f418, %f419, %f420, %f421};
+	st.v4.f32 	[%rd231+32], {%f414, %f415, %f416, %f417};
+	st.v4.f32 	[%rd231+16], {%f410, %f411, %f412, %f413};
+	st.v4.f32 	[%rd231], {%f406, %f407, %f408, %f409};
+	st.v2.f32 	[%rd231+64], {%f404, %f405};
 	bra.uni 	BB0_29;
 
 BB0_25:
@@ -450,47 +452,46 @@ BB0_25:
 	// inline asm
 	call (%rd194), _rt_buffer_get_64, (%rd195, %r237, %r238, %rd1, %rd2, %rd3, %rd57);
 	// inline asm
-	ld.v2.f32 	{%f207, %f208}, [%rd194+64];
-	ld.v4.f32 	{%f209, %f210, %f211, %f212}, [%rd194];
-	ld.v4.f32 	{%f213, %f214, %f215, %f216}, [%rd194+16];
-	ld.v4.f32 	{%f217, %f218, %f219, %f220}, [%rd194+32];
-	ld.v4.f32 	{%f221, %f222, %f223, %f224}, [%rd194+48];
+	ld.v2.f32 	{%f208, %f209}, [%rd194+64];
+	ld.v4.f32 	{%f210, %f211, %f212, %f213}, [%rd194];
+	ld.v4.f32 	{%f214, %f215, %f216, %f217}, [%rd194+16];
+	ld.v4.f32 	{%f218, %f219, %f220, %f221}, [%rd194+32];
+	ld.v4.f32 	{%f222, %f223, %f224, %f225}, [%rd194+48];
 	ld.v4.u8 	{%rs49, %rs50, %rs51, %rs52}, [%rd194+72];
 	ld.v4.u8 	{%rs53, %rs54, %rs55, %rs56}, [%rd194+76];
 	ld.v4.u32 	{%r239, %r240, %r241, %r242}, [%rd194+80];
 	st.local.v4.u32 	[%rd207+80], {%r239, %r240, %r241, %r242};
 	st.local.v4.u8 	[%rd207+76], {%rs53, %rs54, %rs55, %rs56};
 	st.local.v4.u8 	[%rd207+72], {%rs49, %rs50, %rs51, %rs52};
-	st.local.v4.f32 	[%rd207+48], {%f221, %f222, %f223, %f224};
-	st.local.v4.f32 	[%rd207+32], {%f217, %f218, %f219, %f220};
-	st.local.v4.f32 	[%rd207+16], {%f213, %f214, %f215, %f216};
-	st.local.v4.f32 	[%rd207], {%f209, %f210, %f211, %f212};
-	st.local.v2.f32 	[%rd207+64], {%f207, %f208};
+	st.local.v4.f32 	[%rd207+48], {%f222, %f223, %f224, %f225};
+	st.local.v4.f32 	[%rd207+32], {%f218, %f219, %f220, %f221};
+	st.local.v4.f32 	[%rd207+16], {%f214, %f215, %f216, %f217};
+	st.local.v4.f32 	[%rd207], {%f210, %f211, %f212, %f213};
+	st.local.v2.f32 	[%rd207+64], {%f208, %f209};
 	ld.global.u32 	%r234, [ox_entry_node];
-	mov.f32 	%f205, 0f00000000;
-	mov.f32 	%f206, 0f6C4ECB8F;
+	mov.f32 	%f206, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r234, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f205, %f206, %rd200, %r238);
+	call _rt_trace_64, (%r234, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f206, %f7, %rd200, %r238);
 	// inline asm
 	// inline asm
 	call (%rd201), _rt_buffer_get_64, (%rd195, %r237, %r238, %rd1, %rd2, %rd3, %rd57);
 	// inline asm
-	ld.local.v2.f32 	{%f243, %f244}, [%rd207+64];
-	ld.local.v4.f32 	{%f245, %f246, %f247, %f248}, [%rd207];
-	ld.local.v4.f32 	{%f249, %f250, %f251, %f252}, [%rd207+16];
-	ld.local.v4.f32 	{%f253, %f254, %f255, %f256}, [%rd207+32];
-	ld.local.v4.f32 	{%f257, %f258, %f259, %f260}, [%rd207+48];
+	ld.local.v2.f32 	{%f244, %f245}, [%rd207+64];
+	ld.local.v4.f32 	{%f246, %f247, %f248, %f249}, [%rd207];
+	ld.local.v4.f32 	{%f250, %f251, %f252, %f253}, [%rd207+16];
+	ld.local.v4.f32 	{%f254, %f255, %f256, %f257}, [%rd207+32];
+	ld.local.v4.f32 	{%f258, %f259, %f260, %f261}, [%rd207+48];
 	ld.local.v4.u8 	{%rs65, %rs66, %rs67, %rs68}, [%rd207+72];
 	ld.local.v4.u8 	{%rs69, %rs70, %rs71, %rs72}, [%rd207+76];
 	ld.local.v4.u32 	{%r247, %r248, %r249, %r250}, [%rd207+80];
 	st.v4.u32 	[%rd201+80], {%r247, %r248, %r249, %r250};
 	st.v4.u8 	[%rd201+76], {%rs69, %rs70, %rs71, %rs72};
 	st.v4.u8 	[%rd201+72], {%rs65, %rs66, %rs67, %rs68};
-	st.v4.f32 	[%rd201+48], {%f257, %f258, %f259, %f260};
-	st.v4.f32 	[%rd201+32], {%f253, %f254, %f255, %f256};
-	st.v4.f32 	[%rd201+16], {%f249, %f250, %f251, %f252};
-	st.v4.f32 	[%rd201], {%f245, %f246, %f247, %f248};
-	st.v2.f32 	[%rd201+64], {%f243, %f244};
+	st.v4.f32 	[%rd201+48], {%f258, %f259, %f260, %f261};
+	st.v4.f32 	[%rd201+32], {%f254, %f255, %f256, %f257};
+	st.v4.f32 	[%rd201+16], {%f250, %f251, %f252, %f253};
+	st.v4.f32 	[%rd201], {%f246, %f247, %f248, %f249};
+	st.v2.f32 	[%rd201+64], {%f244, %f245};
 	bra.uni 	BB0_29;
 
 BB0_20:
@@ -502,29 +503,28 @@ BB0_20:
 	// inline asm
 	call (%rd134), _rt_buffer_get_64, (%rd135, %r24, %r144, %rd1, %rd57, %rd57, %rd57);
 	// inline asm
-	ld.v4.f32 	{%f113, %f114, %f115, %f116}, [%rd134];
+	ld.v4.f32 	{%f114, %f115, %f116, %f117}, [%rd134];
 	ld.v4.u8 	{%rs33, %rs34, %rs35, %rs36}, [%rd134+4];
 	ld.v4.u32 	{%r145, %r146, %r147, %r148}, [%rd134+16];
 	st.local.v4.u32 	[%rd147+16], {%r145, %r146, %r147, %r148};
 	st.local.v4.u8 	[%rd147+4], {%rs33, %rs34, %rs35, %rs36};
-	st.local.v2.f32 	[%rd147+8], {%f115, %f116};
-	st.local.f32 	[%rd147], %f113;
+	st.local.v2.f32 	[%rd147+8], {%f116, %f117};
+	st.local.f32 	[%rd147], %f114;
 	ld.global.u32 	%r140, [ox_entry_node];
-	mov.f32 	%f111, 0f00000000;
-	mov.f32 	%f112, 0f6C4ECB8F;
+	mov.f32 	%f112, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r140, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f111, %f112, %rd140, %r144);
+	call _rt_trace_64, (%r140, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f112, %f7, %rd140, %r144);
 	// inline asm
 	// inline asm
 	call (%rd141), _rt_buffer_get_64, (%rd135, %r24, %r144, %rd1, %rd57, %rd57, %rd57);
 	// inline asm
-	ld.local.v4.f32 	{%f120, %f121, %f122, %f123}, [%rd147];
+	ld.local.v4.f32 	{%f121, %f122, %f123, %f124}, [%rd147];
 	ld.local.v4.u8 	{%rs41, %rs42, %rs43, %rs44}, [%rd147+4];
 	ld.local.v4.u32 	{%r153, %r154, %r155, %r156}, [%rd147+16];
 	st.v4.u32 	[%rd141+16], {%r153, %r154, %r155, %r156};
 	st.v4.u8 	[%rd141+4], {%rs41, %rs42, %rs43, %rs44};
-	st.v2.f32 	[%rd141+8], {%f122, %f123};
-	st.f32 	[%rd141], %f120;
+	st.v2.f32 	[%rd141+8], {%f123, %f124};
+	st.f32 	[%rd141], %f121;
 	bra.uni 	BB0_29;
 
 BB0_17:
@@ -540,29 +540,28 @@ BB0_17:
 	// inline asm
 	call (%rd104), _rt_buffer_get_64, (%rd105, %r97, %r98, %rd1, %rd2, %rd3, %rd57);
 	// inline asm
-	ld.v4.f32 	{%f69, %f70, %f71, %f72}, [%rd104];
+	ld.v4.f32 	{%f70, %f71, %f72, %f73}, [%rd104];
 	ld.v4.u8 	{%rs1, %rs2, %rs3, %rs4}, [%rd104+4];
 	ld.v4.u32 	{%r99, %r100, %r101, %r102}, [%rd104+16];
 	st.local.v4.u32 	[%rd117+16], {%r99, %r100, %r101, %r102};
 	st.local.v4.u8 	[%rd117+4], {%rs1, %rs2, %rs3, %rs4};
-	st.local.v2.f32 	[%rd117+8], {%f71, %f72};
-	st.local.f32 	[%rd117], %f69;
+	st.local.v2.f32 	[%rd117+8], {%f72, %f73};
+	st.local.f32 	[%rd117], %f70;
 	ld.global.u32 	%r94, [ox_entry_node];
-	mov.f32 	%f67, 0f00000000;
-	mov.f32 	%f68, 0f6C4ECB8F;
+	mov.f32 	%f68, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r94, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f67, %f68, %rd110, %r98);
+	call _rt_trace_64, (%r94, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f68, %f7, %rd110, %r98);
 	// inline asm
 	// inline asm
 	call (%rd111), _rt_buffer_get_64, (%rd105, %r97, %r98, %rd1, %rd2, %rd3, %rd57);
 	// inline asm
-	ld.local.v4.f32 	{%f76, %f77, %f78, %f79}, [%rd117];
+	ld.local.v4.f32 	{%f77, %f78, %f79, %f80}, [%rd117];
 	ld.local.v4.u8 	{%rs9, %rs10, %rs11, %rs12}, [%rd117+4];
 	ld.local.v4.u32 	{%r107, %r108, %r109, %r110}, [%rd117+16];
 	st.v4.u32 	[%rd111+16], {%r107, %r108, %r109, %r110};
 	st.v4.u8 	[%rd111+4], {%rs9, %rs10, %rs11, %rs12};
-	st.v2.f32 	[%rd111+8], {%f78, %f79};
-	st.f32 	[%rd111], %f76;
+	st.v2.f32 	[%rd111+8], {%f79, %f80};
+	st.f32 	[%rd111], %f77;
 	bra.uni 	BB0_29;
 
 BB0_22:
@@ -574,23 +573,22 @@ BB0_22:
 	// inline asm
 	call (%rd179), _rt_buffer_get_64, (%rd180, %r24, %r214, %rd1, %rd57, %rd57, %rd57);
 	// inline asm
-	ld.v4.f32 	{%f183, %f184, %f185, %f186}, [%rd179];
+	ld.v4.f32 	{%f184, %f185, %f186, %f187}, [%rd179];
 	ld.v4.u32 	{%r215, %r216, %r217, %r218}, [%rd179+16];
 	st.local.v4.u32 	[%rd192+16], {%r215, %r216, %r217, %r218};
-	st.local.v4.f32 	[%rd192], {%f183, %f184, %f185, %f186};
+	st.local.v4.f32 	[%rd192], {%f184, %f185, %f186, %f187};
 	ld.global.u32 	%r210, [ox_entry_node];
-	mov.f32 	%f181, 0f00000000;
-	mov.f32 	%f182, 0f6C4ECB8F;
+	mov.f32 	%f182, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r210, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f181, %f182, %rd185, %r214);
+	call _rt_trace_64, (%r210, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f182, %f7, %rd185, %r214);
 	// inline asm
 	// inline asm
 	call (%rd186), _rt_buffer_get_64, (%rd180, %r24, %r214, %rd1, %rd57, %rd57, %rd57);
 	// inline asm
-	ld.local.v4.f32 	{%f191, %f192, %f193, %f194}, [%rd192];
+	ld.local.v4.f32 	{%f192, %f193, %f194, %f195}, [%rd192];
 	ld.local.v4.u32 	{%r223, %r224, %r225, %r226}, [%rd192+16];
 	st.v4.u32 	[%rd186+16], {%r223, %r224, %r225, %r226};
-	st.v4.f32 	[%rd186], {%f191, %f192, %f193, %f194};
+	st.v4.f32 	[%rd186], {%f192, %f193, %f194, %f195};
 	bra.uni 	BB0_29;
 
 BB0_14:
@@ -603,21 +601,20 @@ BB0_14:
 	call (%rd89), _rt_buffer_get_64, (%rd90, %r24, %r82, %rd1, %rd57, %rd57, %rd57);
 	// inline asm
 	ld.v2.u32 	{%r83, %r84}, [%rd89];
-	ld.v2.f32 	{%f53, %f54}, [%rd89+8];
-	st.local.v2.f32 	[%rd102+8], {%f53, %f54};
+	ld.v2.f32 	{%f54, %f55}, [%rd89+8];
+	st.local.v2.f32 	[%rd102+8], {%f54, %f55};
 	st.local.v2.u32 	[%rd102], {%r83, %r84};
 	ld.global.u32 	%r78, [ox_entry_node];
-	mov.f32 	%f51, 0f00000000;
-	mov.f32 	%f52, 0f6C4ECB8F;
+	mov.f32 	%f52, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r78, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f51, %f52, %rd95, %r82);
+	call _rt_trace_64, (%r78, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f52, %f7, %rd95, %r82);
 	// inline asm
 	// inline asm
 	call (%rd96), _rt_buffer_get_64, (%rd90, %r24, %r82, %rd1, %rd57, %rd57, %rd57);
 	// inline asm
 	ld.local.v2.u32 	{%r87, %r88}, [%rd102];
-	ld.local.v2.f32 	{%f57, %f58}, [%rd102+8];
-	st.v2.f32 	[%rd96+8], {%f57, %f58};
+	ld.local.v2.f32 	{%f58, %f59}, [%rd102+8];
+	st.v2.f32 	[%rd96+8], {%f58, %f59};
 	st.v2.u32 	[%rd96], {%r87, %r88};
 	bra.uni 	BB0_29;
 
@@ -634,23 +631,22 @@ BB0_5:
 	// inline asm
 	call (%rd149), _rt_buffer_get_64, (%rd150, %r167, %r168, %rd1, %rd2, %rd3, %rd57);
 	// inline asm
-	ld.v4.f32 	{%f135, %f136, %f137, %f138}, [%rd149];
+	ld.v4.f32 	{%f136, %f137, %f138, %f139}, [%rd149];
 	ld.v4.u32 	{%r169, %r170, %r171, %r172}, [%rd149+16];
 	st.local.v4.u32 	[%rd162+16], {%r169, %r170, %r171, %r172};
-	st.local.v4.f32 	[%rd162], {%f135, %f136, %f137, %f138};
+	st.local.v4.f32 	[%rd162], {%f136, %f137, %f138, %f139};
 	ld.global.u32 	%r164, [ox_entry_node];
-	mov.f32 	%f133, 0f00000000;
-	mov.f32 	%f134, 0f6C4ECB8F;
+	mov.f32 	%f134, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r164, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f133, %f134, %rd155, %r168);
+	call _rt_trace_64, (%r164, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f134, %f7, %rd155, %r168);
 	// inline asm
 	// inline asm
 	call (%rd156), _rt_buffer_get_64, (%rd150, %r167, %r168, %rd1, %rd2, %rd3, %rd57);
 	// inline asm
-	ld.local.v4.f32 	{%f143, %f144, %f145, %f146}, [%rd162];
+	ld.local.v4.f32 	{%f144, %f145, %f146, %f147}, [%rd162];
 	ld.local.v4.u32 	{%r177, %r178, %r179, %r180}, [%rd162+16];
 	st.v4.u32 	[%rd156+16], {%r177, %r178, %r179, %r180};
-	st.v4.f32 	[%rd156], {%f143, %f144, %f145, %f146};
+	st.v4.f32 	[%rd156], {%f144, %f145, %f146, %f147};
 	bra.uni 	BB0_29;
 
 BB0_11:
@@ -667,21 +663,20 @@ BB0_11:
 	call (%rd59), _rt_buffer_get_64, (%rd60, %r51, %r52, %rd1, %rd2, %rd3, %rd57);
 	// inline asm
 	ld.v2.u32 	{%r53, %r54}, [%rd59];
-	ld.v2.f32 	{%f21, %f22}, [%rd59+8];
-	st.local.v2.f32 	[%rd72+8], {%f21, %f22};
+	ld.v2.f32 	{%f22, %f23}, [%rd59+8];
+	st.local.v2.f32 	[%rd72+8], {%f22, %f23};
 	st.local.v2.u32 	[%rd72], {%r53, %r54};
 	ld.global.u32 	%r48, [ox_entry_node];
-	mov.f32 	%f19, 0f00000000;
-	mov.f32 	%f20, 0f6C4ECB8F;
+	mov.f32 	%f20, 0f00000000;
 	// inline asm
-	call _rt_trace_64, (%r48, %f7, %f8, %f9, %f10, %f11, %f12, %r1, %f19, %f20, %rd65, %r52);
+	call _rt_trace_64, (%r48, %f8, %f9, %f10, %f11, %f12, %f13, %r1, %f20, %f7, %rd65, %r52);
 	// inline asm
 	// inline asm
 	call (%rd66), _rt_buffer_get_64, (%rd60, %r51, %r52, %rd1, %rd2, %rd3, %rd57);
 	// inline asm
 	ld.local.v2.u32 	{%r57, %r58}, [%rd72];
-	ld.local.v2.f32 	{%f25, %f26}, [%rd72+8];
-	st.v2.f32 	[%rd66+8], {%f25, %f26};
+	ld.local.v2.f32 	{%f26, %f27}, [%rd72+8];
+	st.v2.f32 	[%rd66+8], {%f26, %f27};
 	st.v2.u32 	[%rd66], {%r57, %r58};
 
 BB0_29:

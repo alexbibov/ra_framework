@@ -14,6 +14,7 @@ rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
 rtDeclareVariable(unsigned int, dimension, , "Dimension of the output buffer");
 rtDeclareVariable(unsigned int, payload_type, , "Type of payload");
 rtDeclareVariable(unsigned int, ray_type, , "Type of relaunched rays");
+rtDeclareVariable(float, ray_parametric_length, , "Parametric length of recasted ray");
 
 rtDeclareVariable(unsigned int, index, rtLaunchIndex, "Thread index");
 
@@ -67,8 +68,13 @@ RT_PROGRAM void __ox_generate__(void)
     float3 origin, direction;
     uint3 output_buffer_index;
     unpack_ray(origin, direction, output_buffer_index);
+/*
+    ox_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[2].x = origin.x;
+    ox_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[2].y = origin.y;
+    ox_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[3].x = direction.x;
+    ox_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[3].y = direction.y;*/
 
-    Ray current_ray = make_Ray(origin, direction, ray_type, 0.f, RT_DEFAULT_MAX);
+    Ray current_ray = make_Ray(origin, direction, ray_type, 0.f, ray_parametric_length);
 
     switch (static_cast<OxRayPayloadType>(payload_type))
     {
@@ -79,6 +85,7 @@ RT_PROGRAM void __ox_generate__(void)
         {
             unsigned int idx = output_buffer_index.x;
             OxRayRadiancePayload payload = ox_radiance_payload_1d_out[idx];
+            payload.tracing_depth_and_aux.z = idx;
             rtTrace(ox_entry_node, current_ray, payload);
             ox_radiance_payload_1d_out[idx] = payload;
             break;
@@ -89,6 +96,9 @@ RT_PROGRAM void __ox_generate__(void)
             uint2 idx = make_uint2(output_buffer_index.x, output_buffer_index.y);
             OxRayRadiancePayload payload = ox_radiance_payload_2d_out[idx];
             rtTrace(ox_entry_node, current_ray, payload);
+
+            payload.tracing_depth_and_aux.z = idx.x
+
             ox_radiance_payload_2d_out[idx] = payload;
             break;
         }

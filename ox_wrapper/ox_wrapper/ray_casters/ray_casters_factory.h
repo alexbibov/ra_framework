@@ -29,13 +29,13 @@ public:
     // OxRecasterGenerator
 public:
     OxRecasterGenerator createRecasterGenerator(OxTraverseBackupBuffer const& traverse_backup_buffer,
-        OxBuffer<OxRayRadiancePayload> const& output_buffer, OxRayType recasted_ray_type) const;
+        OxBuffer<OxRayRadiancePayload> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length = 1.e27f) const;
     OxRecasterGenerator createRecasterGenerator(OxTraverseBackupBuffer const& traverse_backup_buffer,
-        OxBuffer<OxRayRadiancePayloadSimple> const& output_buffer, OxRayType recasted_ray_type) const;
+        OxBuffer<OxRayRadiancePayloadSimple> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length = 1.e27f) const;
     OxRecasterGenerator createRecasterGenerator(OxTraverseBackupBuffer const& traverse_backup_buffer,
-        OxBuffer<OxRayRadiancePayloadMonochromatic> const& output_buffer, OxRayType recasted_ray_type) const;
+        OxBuffer<OxRayRadiancePayloadMonochromatic> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length = 1.e27f) const;
     OxRecasterGenerator createRecasterGenerator(OxTraverseBackupBuffer const& traverse_backup_buffer,
-        OxBuffer<OxRayOcclusionPayload> const& output_buffer, OxRayType recasted_ray_type) const;
+        OxBuffer<OxRayOcclusionPayload> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length = 1.e27f) const;
 
     OxTraverseBackupBuffer createTraverseBackupBuffer(size_t max_ray_storage_capacity);
 
