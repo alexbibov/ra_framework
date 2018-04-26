@@ -10,6 +10,7 @@
 rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
 
 rtDeclareVariable(float, step_size, , "Ray marching step size");
+rtDeclareVariable(uint3, problem_size, , "Original size of the problem");
 rtDeclareVariable(optix::uint, max_recursion_depth, , "Maximal depth of recursion for scattering traverse");
 rtDeclareVariable(optix::uint, num_spectra_pairs_supported, , "Number of wavelengths in use");
 rtDeclareVariable(optix::uint, num_importance_directions, , );
@@ -57,6 +58,20 @@ rtBuffer<unsigned int, 1> traverse_backup_buffer;
 
 using namespace optix;
 using namespace ox_wrapper;
+
+__device__ uint3 linear_index_to_3d_index(unsigned int idx)
+{
+    unsigned int const layer_size = problem_size.x*problem_size.y;
+    unsigned int const scanline_size = problem_size.x;
+
+    unsigned int layer_idx = idx / layer_size;
+    unsigned int aux = idx % layer_idx;
+
+    unsigned int scanline_idx = aux / scanline_size;
+    unsigned int ray_idx = aux % scanline_size;
+
+    return make_uint3(ray_idx, scanline_idx, layer_idx);
+}
 
 __device__ float sign(float x)
 {
@@ -167,7 +182,10 @@ RT_PROGRAM void __ox_closest_hit__(void)
         else
         {
             ray_payload.tracing_depth_and_aux.x = 0U;
-            pack_ray_info(current_ray.origin, current_ray.direction, index);
+
+            uint3 idx = ray_payload.tracing_depth_and_aux.z ?
+                linear_index_to_3d_index(ray_payload.tracing_depth_and_aux.z) : index;
+            pack_ray_info(current_ray.origin, current_ray.direction, idx);
         }
     }
     else if (dS < 0)    // the ray has left object
@@ -219,7 +237,10 @@ RT_PROGRAM void __ox_miss__(void)
         else
         {
             ray_payload.tracing_depth_and_aux.x = 0U;
-            pack_ray_info(p, current_ray.direction, index);
+
+            uint3 idx = ray_payload.tracing_depth_and_aux.z ?
+                linear_index_to_3d_index(ray_payload.tracing_depth_and_aux.z) : index;
+            pack_ray_info(current_ray.origin, current_ray.direction, idx);
         }
     }
 

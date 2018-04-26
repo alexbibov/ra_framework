@@ -13,6 +13,7 @@
 	// .globl	_Z18__ox_closest_hit__v
 .global .align 4 .b8 ox_entry_node[4];
 .global .align 4 .f32 step_size;
+.global .align 4 .b8 problem_size[12];
 .global .align 4 .u32 max_recursion_depth;
 .global .align 4 .u32 num_spectra_pairs_supported;
 .global .align 4 .u32 num_importance_directions;
@@ -29,6 +30,7 @@
 .global .align 1 .b8 traverse_backup_buffer[1];
 .global .align 4 .b8 _ZN21rti_internal_typeinfo13ox_entry_nodeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo9step_sizeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
+.global .align 4 .b8 _ZN21rti_internal_typeinfo12problem_sizeE[8] = {82, 97, 121, 0, 12, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo19max_recursion_depthE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo27num_spectra_pairs_supportedE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo25num_importance_directionsE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
@@ -67,6 +69,7 @@
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_zE;
 .global .align 16 .b8 _ZN21rti_internal_typename13ox_entry_nodeE[9] = {114, 116, 79, 98, 106, 101, 99, 116, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename9step_sizeE[6] = {102, 108, 111, 97, 116, 0};
+.global .align 8 .b8 _ZN21rti_internal_typename12problem_sizeE[6] = {117, 105, 110, 116, 51, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename19max_recursion_depthE[12] = {111, 112, 116, 105, 120, 58, 58, 117, 105, 110, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename27num_spectra_pairs_supportedE[12] = {111, 112, 116, 105, 120, 58, 58, 117, 105, 110, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename25num_importance_directionsE[12] = {111, 112, 116, 105, 120, 58, 58, 117, 105, 110, 116, 0};
@@ -81,6 +84,7 @@
 .global .align 16 .b8 _ZN21rti_internal_typename6normalE[14] = {111, 112, 116, 105, 120, 58, 58, 102, 108, 111, 97, 116, 51, 0};
 .global .align 4 .u32 _ZN21rti_internal_typeenum13ox_entry_nodeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum9step_sizeE = 4919;
+.global .align 4 .u32 _ZN21rti_internal_typeenum12problem_sizeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum19max_recursion_depthE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum27num_spectra_pairs_supportedE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum25num_importance_directionsE = 4919;
@@ -95,6 +99,7 @@
 .global .align 4 .u32 _ZN21rti_internal_typeenum6normalE = 4919;
 .global .align 1 .b8 _ZN21rti_internal_semantic13ox_entry_nodeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic9step_sizeE[1];
+.global .align 1 .b8 _ZN21rti_internal_semantic12problem_sizeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic19max_recursion_depthE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic27num_spectra_pairs_supportedE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic25num_importance_directionsE[1];
@@ -109,6 +114,7 @@
 .global .align 16 .b8 _ZN21rti_internal_semantic6normalE[21] = {97, 116, 116, 114, 105, 98, 117, 116, 101, 32, 97, 116, 116, 114, 78, 111, 114, 109, 97, 108, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation13ox_entry_nodeE[19] = {34, 83, 99, 101, 110, 101, 32, 101, 110, 116, 114, 121, 32, 110, 111, 100, 101, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation9step_sizeE[25] = {34, 82, 97, 121, 32, 109, 97, 114, 99, 104, 105, 110, 103, 32, 115, 116, 101, 112, 32, 115, 105, 122, 101, 34, 0};
+.global .align 16 .b8 _ZN23rti_internal_annotation12problem_sizeE[31] = {34, 79, 114, 105, 103, 105, 110, 97, 108, 32, 115, 105, 122, 101, 32, 111, 102, 32, 116, 104, 101, 32, 112, 114, 111, 98, 108, 101, 109, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation19max_recursion_depthE[53] = {34, 77, 97, 120, 105, 109, 97, 108, 32, 100, 101, 112, 116, 104, 32, 111, 102, 32, 114, 101, 99, 117, 114, 115, 105, 111, 110, 32, 102, 111, 114, 32, 115, 99, 97, 116, 116, 101, 114, 105, 110, 103, 32, 116, 114, 97, 118, 101, 114, 115, 101, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation27num_spectra_pairs_supportedE[31] = {34, 78, 117, 109, 98, 101, 114, 32, 111, 102, 32, 119, 97, 118, 101, 108, 101, 110, 103, 116, 104, 115, 32, 105, 110, 32, 117, 115, 101, 34, 0};
 .global .align 1 .b8 _ZN23rti_internal_annotation25num_importance_directionsE[1];
@@ -126,9 +132,9 @@
 
 )
 {
-	.reg .pred 	%p<13>;
+	.reg .pred 	%p<14>;
 	.reg .f32 	%f<209>;
-	.reg .b32 	%r<98>;
+	.reg .b32 	%r<112>;
 	.reg .b64 	%rd<95>;
 
 
@@ -149,12 +155,12 @@
 	selp.f32	%f208, 0fBF800000, 0f00000000, %p2;
 
 BB0_2:
-	ld.global.u32 	%r12, [ray_payload+84];
+	ld.global.u32 	%r22, [ray_payload+84];
 	cvt.rzi.ftz.s32.f32	%r1, %f208;
-	add.s32 	%r13, %r12, %r1;
-	mov.u32 	%r94, 0;
-	max.s32 	%r15, %r94, %r13;
-	st.global.u32 	[ray_payload+84], %r15;
+	add.s32 	%r23, %r22, %r1;
+	mov.u32 	%r105, 0;
+	max.s32 	%r25, %r105, %r23;
+	st.global.u32 	[ray_payload+84], %r25;
 	ld.global.f32 	%f7, [intersection_distance];
 	ld.global.f32 	%f8, [current_ray];
 	fma.rn.ftz.f32 	%f9, %f7, %f1, %f8;
@@ -168,113 +174,33 @@ BB0_2:
 
 BB0_15:
 	st.global.v2.f32 	[ray_payload+64], {%f7, %f7};
-	ld.global.u32 	%r47, [ray_payload+80];
-	add.s32 	%r48, %r47, 1;
-	st.global.u32 	[ray_payload+80], %r48;
-	ld.global.u32 	%r49, [max_recursion_depth];
-	setp.gt.u32	%p12, %r48, %r49;
+	ld.global.u32 	%r57, [ray_payload+80];
+	add.s32 	%r58, %r57, 1;
+	st.global.u32 	[ray_payload+80], %r58;
+	ld.global.u32 	%r59, [max_recursion_depth];
+	setp.gt.u32	%p12, %r58, %r59;
 	@%p12 bra 	BB0_17;
 	bra.uni 	BB0_16;
 
 BB0_17:
-	mov.u32 	%r79, 0;
-	st.global.u32 	[ray_payload+80], %r79;
-	ld.global.f32 	%f204, [current_ray+8];
-	ld.global.f32 	%f203, [current_ray+4];
-	ld.global.f32 	%f202, [current_ray];
-	ld.global.f32 	%f207, [current_ray+20];
-	ld.global.f32 	%f206, [current_ray+16];
-	ld.global.f32 	%f205, [current_ray+12];
-	ld.global.u32 	%r80, [index+8];
-	ld.global.u32 	%r81, [index+4];
-	ld.global.u32 	%r82, [index];
-	mov.u64 	%rd94, traverse_backup_buffer;
-	cvta.global.u64 	%rd35, %rd94;
-	mov.u32 	%r77, 1;
-	mov.u32 	%r78, 4;
-	mov.u64 	%rd93, 0;
-	// inline asm
-	call (%rd34), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd93, %rd93, %rd93, %rd93);
-	// inline asm
-	atom.add.u32 	%r83, [%rd34], 1;
-	mul.lo.s32 	%r84, %r83, 9;
-	// inline asm
-	mov.b32 	%r55, %f202;
-	// inline asm
-	add.s32 	%r85, %r84, 1;
-	cvt.u64.u32	%rd42, %r85;
-	// inline asm
-	call (%rd40), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd42, %rd93, %rd93, %rd93);
-	// inline asm
-	st.u32 	[%rd40], %r55;
-	// inline asm
-	mov.b32 	%r58, %f203;
-	// inline asm
-	add.s32 	%r86, %r84, 2;
-	cvt.u64.u32	%rd48, %r86;
-	// inline asm
-	call (%rd46), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd48, %rd93, %rd93, %rd93);
-	// inline asm
-	st.u32 	[%rd46], %r58;
-	// inline asm
-	mov.b32 	%r61, %f204;
-	// inline asm
-	add.s32 	%r87, %r84, 3;
-	cvt.u64.u32	%rd54, %r87;
-	// inline asm
-	call (%rd52), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd54, %rd93, %rd93, %rd93);
-	// inline asm
-	st.u32 	[%rd52], %r61;
-	// inline asm
-	mov.b32 	%r64, %f205;
-	// inline asm
-	add.s32 	%r88, %r84, 4;
-	cvt.u64.u32	%rd60, %r88;
-	// inline asm
-	call (%rd58), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd60, %rd93, %rd93, %rd93);
-	// inline asm
-	st.u32 	[%rd58], %r64;
-	// inline asm
-	mov.b32 	%r67, %f206;
-	// inline asm
-	add.s32 	%r89, %r84, 5;
-	cvt.u64.u32	%rd66, %r89;
-	// inline asm
-	call (%rd64), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd66, %rd93, %rd93, %rd93);
-	// inline asm
-	st.u32 	[%rd64], %r67;
-	// inline asm
-	mov.b32 	%r70, %f207;
-	// inline asm
-	add.s32 	%r90, %r84, 6;
-	cvt.u64.u32	%rd72, %r90;
-	// inline asm
-	call (%rd70), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd72, %rd93, %rd93, %rd93);
-	// inline asm
-	st.u32 	[%rd70], %r70;
-	add.s32 	%r91, %r84, 7;
-	cvt.u64.u32	%rd78, %r91;
-	// inline asm
-	call (%rd76), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd78, %rd93, %rd93, %rd93);
-	// inline asm
-	st.u32 	[%rd76], %r82;
-	add.s32 	%r92, %r84, 8;
-	cvt.u64.u32	%rd84, %r92;
-	// inline asm
-	call (%rd82), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd84, %rd93, %rd93, %rd93);
-	// inline asm
-	st.u32 	[%rd82], %r81;
-	add.s32 	%r93, %r84, 9;
-	cvt.u64.u32	%rd90, %r93;
-	// inline asm
-	call (%rd88), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd90, %rd93, %rd93, %rd93);
-	// inline asm
-	st.u32 	[%rd88], %r80;
-	bra.uni 	BB0_18;
+	mov.u32 	%r63, 0;
+	st.global.u32 	[ray_payload+80], %r63;
+	ld.global.u32 	%r12, [ray_payload+88];
+	setp.eq.s32	%p13, %r12, 0;
+	@%p13 bra 	BB0_19;
+
+	ld.global.u32 	%r64, [problem_size];
+	ld.global.u32 	%r65, [problem_size+4];
+	mul.lo.s32 	%r66, %r65, %r64;
+	div.u32 	%r111, %r12, %r66;
+	rem.u32 	%r67, %r12, %r111;
+	div.u32 	%r110, %r67, %r64;
+	rem.u32 	%r109, %r67, %r64;
+	bra.uni 	BB0_20;
 
 BB0_3:
 	setp.gt.s32	%p4, %r1, -1;
-	@%p4 bra 	BB0_18;
+	@%p4 bra 	BB0_21;
 
 	ld.global.f32 	%f26, [ray_payload+68];
 	add.ftz.f32 	%f27, %f7, %f26;
@@ -284,27 +210,27 @@ BB0_3:
 	fma.rn.ftz.f32 	%f15, %f28, %f2, %f10;
 	fma.rn.ftz.f32 	%f16, %f28, %f3, %f12;
 	ld.global.u32 	%r2, [num_spectra_pairs_supported];
-	mov.u32 	%r16, 8;
-	min.u32 	%r3, %r16, %r2;
+	mov.u32 	%r26, 8;
+	min.u32 	%r3, %r26, %r2;
 	setp.eq.s32	%p5, %r3, 0;
 	@%p5 bra 	BB0_13;
 
-	min.u32 	%r4, %r2, %r16;
-	and.b32  	%r20, %r4, 3;
-	setp.eq.s32	%p6, %r20, 0;
+	min.u32 	%r4, %r2, %r26;
+	and.b32  	%r30, %r4, 3;
+	setp.eq.s32	%p6, %r30, 0;
 	@%p6 bra 	BB0_11;
 
-	setp.eq.s32	%p7, %r20, 1;
+	setp.eq.s32	%p7, %r30, 1;
 	@%p7 bra 	BB0_10;
 
-	setp.eq.s32	%p8, %r20, 2;
+	setp.eq.s32	%p8, %r30, 2;
 	@%p8 bra 	BB0_9;
 
-	ld.global.u32 	%r22, [absorption_factor];
+	ld.global.u32 	%r32, [absorption_factor];
 	// inline asm
-	call (%rd1), _rt_callable_program_from_id_64, (%r22);
+	call (%rd1), _rt_callable_program_from_id_64, (%r32);
 	// inline asm
-	mov.u32 	%r25, 0;
+	mov.u32 	%r35, 0;
 	// Callseq Start 0
 	{
 	.reg .b32 temp_param_reg;
@@ -314,7 +240,7 @@ BB0_3:
 	st.param.f32	[param0+4], %f15;
 	st.param.f32	[param0+8], %f16;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r25;
+	st.param.b32	[param1+0], %r35;
 	.param .align 8 .b8 retval0[8];
 	prototype_0 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -338,9 +264,9 @@ BB0_3:
 	mul.ftz.f32 	%f37, %f34, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f38, %f37;
 	ld.global.v2.f32 	{%f39, %f40}, [ray_payload];
-	ld.global.u32 	%r23, [scattering_factor];
+	ld.global.u32 	%r33, [scattering_factor];
 	// inline asm
-	call (%rd2), _rt_callable_program_from_id_64, (%r23);
+	call (%rd2), _rt_callable_program_from_id_64, (%r33);
 	// inline asm
 	// Callseq Start 1
 	{
@@ -351,7 +277,7 @@ BB0_3:
 	st.param.f32	[param0+4], %f11;
 	st.param.f32	[param0+8], %f13;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r25;
+	st.param.b32	[param1+0], %r35;
 	.param .align 8 .b8 retval0[8];
 	prototype_1 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -373,12 +299,12 @@ BB0_3:
 	fma.rn.ftz.f32 	%f49, %f38, %f40, %f48;
 	fma.rn.ftz.f32 	%f50, %f36, %f39, %f47;
 	st.global.v2.f32 	[ray_payload], {%f50, %f49};
-	mov.u32 	%r94, 1;
+	mov.u32 	%r105, 1;
 
 BB0_9:
-	ld.global.u32 	%r26, [absorption_factor];
+	ld.global.u32 	%r36, [absorption_factor];
 	// inline asm
-	call (%rd3), _rt_callable_program_from_id_64, (%r26);
+	call (%rd3), _rt_callable_program_from_id_64, (%r36);
 	// inline asm
 	// Callseq Start 2
 	{
@@ -389,7 +315,7 @@ BB0_9:
 	st.param.f32	[param0+4], %f15;
 	st.param.f32	[param0+8], %f16;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r94;
+	st.param.b32	[param1+0], %r105;
 	.param .align 8 .b8 retval0[8];
 	prototype_2 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -412,13 +338,13 @@ BB0_9:
 	ex2.approx.ftz.f32 	%f58, %f57;
 	mul.ftz.f32 	%f59, %f56, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f60, %f59;
-	mul.wide.u32 	%rd5, %r94, 8;
+	mul.wide.u32 	%rd5, %r105, 8;
 	mov.u64 	%rd6, ray_payload;
 	add.s64 	%rd7, %rd6, %rd5;
 	ld.global.v2.f32 	{%f61, %f62}, [%rd7];
-	ld.global.u32 	%r27, [scattering_factor];
+	ld.global.u32 	%r37, [scattering_factor];
 	// inline asm
-	call (%rd4), _rt_callable_program_from_id_64, (%r27);
+	call (%rd4), _rt_callable_program_from_id_64, (%r37);
 	// inline asm
 	// Callseq Start 3
 	{
@@ -429,7 +355,7 @@ BB0_9:
 	st.param.f32	[param0+4], %f11;
 	st.param.f32	[param0+8], %f13;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r94;
+	st.param.b32	[param1+0], %r105;
 	.param .align 8 .b8 retval0[8];
 	prototype_3 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -451,12 +377,12 @@ BB0_9:
 	fma.rn.ftz.f32 	%f71, %f60, %f62, %f70;
 	fma.rn.ftz.f32 	%f72, %f58, %f61, %f69;
 	st.global.v2.f32 	[%rd7], {%f72, %f71};
-	add.s32 	%r94, %r94, 1;
+	add.s32 	%r105, %r105, 1;
 
 BB0_10:
-	ld.global.u32 	%r28, [absorption_factor];
+	ld.global.u32 	%r38, [absorption_factor];
 	// inline asm
-	call (%rd8), _rt_callable_program_from_id_64, (%r28);
+	call (%rd8), _rt_callable_program_from_id_64, (%r38);
 	// inline asm
 	// Callseq Start 4
 	{
@@ -467,7 +393,7 @@ BB0_10:
 	st.param.f32	[param0+4], %f15;
 	st.param.f32	[param0+8], %f16;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r94;
+	st.param.b32	[param1+0], %r105;
 	.param .align 8 .b8 retval0[8];
 	prototype_4 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -490,13 +416,13 @@ BB0_10:
 	ex2.approx.ftz.f32 	%f80, %f79;
 	mul.ftz.f32 	%f81, %f78, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f82, %f81;
-	mul.wide.u32 	%rd10, %r94, 8;
+	mul.wide.u32 	%rd10, %r105, 8;
 	mov.u64 	%rd11, ray_payload;
 	add.s64 	%rd12, %rd11, %rd10;
 	ld.global.v2.f32 	{%f83, %f84}, [%rd12];
-	ld.global.u32 	%r29, [scattering_factor];
+	ld.global.u32 	%r39, [scattering_factor];
 	// inline asm
-	call (%rd9), _rt_callable_program_from_id_64, (%r29);
+	call (%rd9), _rt_callable_program_from_id_64, (%r39);
 	// inline asm
 	// Callseq Start 5
 	{
@@ -507,7 +433,7 @@ BB0_10:
 	st.param.f32	[param0+4], %f11;
 	st.param.f32	[param0+8], %f13;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r94;
+	st.param.b32	[param1+0], %r105;
 	.param .align 8 .b8 retval0[8];
 	prototype_5 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -529,16 +455,16 @@ BB0_10:
 	fma.rn.ftz.f32 	%f93, %f82, %f84, %f92;
 	fma.rn.ftz.f32 	%f94, %f80, %f83, %f91;
 	st.global.v2.f32 	[%rd12], {%f94, %f93};
-	add.s32 	%r94, %r94, 1;
+	add.s32 	%r105, %r105, 1;
 
 BB0_11:
 	setp.lt.u32	%p9, %r4, 4;
 	@%p9 bra 	BB0_13;
 
 BB0_12:
-	ld.global.u32 	%r30, [absorption_factor];
+	ld.global.u32 	%r40, [absorption_factor];
 	// inline asm
-	call (%rd13), _rt_callable_program_from_id_64, (%r30);
+	call (%rd13), _rt_callable_program_from_id_64, (%r40);
 	// inline asm
 	// Callseq Start 6
 	{
@@ -549,7 +475,7 @@ BB0_12:
 	st.param.f32	[param0+4], %f15;
 	st.param.f32	[param0+8], %f16;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r94;
+	st.param.b32	[param1+0], %r105;
 	.param .align 8 .b8 retval0[8];
 	prototype_6 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -572,13 +498,13 @@ BB0_12:
 	ex2.approx.ftz.f32 	%f102, %f101;
 	mul.ftz.f32 	%f103, %f100, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f104, %f103;
-	mul.wide.u32 	%rd21, %r94, 8;
+	mul.wide.u32 	%rd21, %r105, 8;
 	mov.u64 	%rd22, ray_payload;
 	add.s64 	%rd23, %rd22, %rd21;
 	ld.global.v2.f32 	{%f105, %f106}, [%rd23];
-	ld.global.u32 	%r31, [scattering_factor];
+	ld.global.u32 	%r41, [scattering_factor];
 	// inline asm
-	call (%rd14), _rt_callable_program_from_id_64, (%r31);
+	call (%rd14), _rt_callable_program_from_id_64, (%r41);
 	// inline asm
 	// Callseq Start 7
 	{
@@ -589,7 +515,7 @@ BB0_12:
 	st.param.f32	[param0+4], %f11;
 	st.param.f32	[param0+8], %f13;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r94;
+	st.param.b32	[param1+0], %r105;
 	.param .align 8 .b8 retval0[8];
 	prototype_7 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -611,11 +537,11 @@ BB0_12:
 	fma.rn.ftz.f32 	%f115, %f104, %f106, %f114;
 	fma.rn.ftz.f32 	%f116, %f102, %f105, %f113;
 	st.global.v2.f32 	[%rd23], {%f116, %f115};
-	ld.global.u32 	%r32, [absorption_factor];
+	ld.global.u32 	%r42, [absorption_factor];
 	// inline asm
-	call (%rd15), _rt_callable_program_from_id_64, (%r32);
+	call (%rd15), _rt_callable_program_from_id_64, (%r42);
 	// inline asm
-	add.s32 	%r38, %r94, 1;
+	add.s32 	%r48, %r105, 1;
 	// Callseq Start 8
 	{
 	.reg .b32 temp_param_reg;
@@ -625,7 +551,7 @@ BB0_12:
 	st.param.f32	[param0+4], %f15;
 	st.param.f32	[param0+8], %f16;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r38;
+	st.param.b32	[param1+0], %r48;
 	.param .align 8 .b8 retval0[8];
 	prototype_8 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -648,12 +574,12 @@ BB0_12:
 	ex2.approx.ftz.f32 	%f124, %f123;
 	mul.ftz.f32 	%f125, %f122, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f126, %f125;
-	mul.wide.u32 	%rd24, %r38, 8;
+	mul.wide.u32 	%rd24, %r48, 8;
 	add.s64 	%rd25, %rd22, %rd24;
 	ld.global.v2.f32 	{%f127, %f128}, [%rd25];
-	ld.global.u32 	%r33, [scattering_factor];
+	ld.global.u32 	%r43, [scattering_factor];
 	// inline asm
-	call (%rd16), _rt_callable_program_from_id_64, (%r33);
+	call (%rd16), _rt_callable_program_from_id_64, (%r43);
 	// inline asm
 	// Callseq Start 9
 	{
@@ -664,7 +590,7 @@ BB0_12:
 	st.param.f32	[param0+4], %f11;
 	st.param.f32	[param0+8], %f13;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r38;
+	st.param.b32	[param1+0], %r48;
 	.param .align 8 .b8 retval0[8];
 	prototype_9 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -686,11 +612,11 @@ BB0_12:
 	fma.rn.ftz.f32 	%f137, %f126, %f128, %f136;
 	fma.rn.ftz.f32 	%f138, %f124, %f127, %f135;
 	st.global.v2.f32 	[%rd25], {%f138, %f137};
-	ld.global.u32 	%r34, [absorption_factor];
+	ld.global.u32 	%r44, [absorption_factor];
 	// inline asm
-	call (%rd17), _rt_callable_program_from_id_64, (%r34);
+	call (%rd17), _rt_callable_program_from_id_64, (%r44);
 	// inline asm
-	add.s32 	%r39, %r94, 2;
+	add.s32 	%r49, %r105, 2;
 	// Callseq Start 10
 	{
 	.reg .b32 temp_param_reg;
@@ -700,7 +626,7 @@ BB0_12:
 	st.param.f32	[param0+4], %f15;
 	st.param.f32	[param0+8], %f16;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r39;
+	st.param.b32	[param1+0], %r49;
 	.param .align 8 .b8 retval0[8];
 	prototype_10 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -723,12 +649,12 @@ BB0_12:
 	ex2.approx.ftz.f32 	%f146, %f145;
 	mul.ftz.f32 	%f147, %f144, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f148, %f147;
-	mul.wide.u32 	%rd26, %r39, 8;
+	mul.wide.u32 	%rd26, %r49, 8;
 	add.s64 	%rd27, %rd22, %rd26;
 	ld.global.v2.f32 	{%f149, %f150}, [%rd27];
-	ld.global.u32 	%r35, [scattering_factor];
+	ld.global.u32 	%r45, [scattering_factor];
 	// inline asm
-	call (%rd18), _rt_callable_program_from_id_64, (%r35);
+	call (%rd18), _rt_callable_program_from_id_64, (%r45);
 	// inline asm
 	// Callseq Start 11
 	{
@@ -739,7 +665,7 @@ BB0_12:
 	st.param.f32	[param0+4], %f11;
 	st.param.f32	[param0+8], %f13;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r39;
+	st.param.b32	[param1+0], %r49;
 	.param .align 8 .b8 retval0[8];
 	prototype_11 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -761,11 +687,11 @@ BB0_12:
 	fma.rn.ftz.f32 	%f159, %f148, %f150, %f158;
 	fma.rn.ftz.f32 	%f160, %f146, %f149, %f157;
 	st.global.v2.f32 	[%rd27], {%f160, %f159};
-	ld.global.u32 	%r36, [absorption_factor];
+	ld.global.u32 	%r46, [absorption_factor];
 	// inline asm
-	call (%rd19), _rt_callable_program_from_id_64, (%r36);
+	call (%rd19), _rt_callable_program_from_id_64, (%r46);
 	// inline asm
-	add.s32 	%r40, %r94, 3;
+	add.s32 	%r50, %r105, 3;
 	// Callseq Start 12
 	{
 	.reg .b32 temp_param_reg;
@@ -775,7 +701,7 @@ BB0_12:
 	st.param.f32	[param0+4], %f15;
 	st.param.f32	[param0+8], %f16;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r40;
+	st.param.b32	[param1+0], %r50;
 	.param .align 8 .b8 retval0[8];
 	prototype_12 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -798,12 +724,12 @@ BB0_12:
 	ex2.approx.ftz.f32 	%f168, %f167;
 	mul.ftz.f32 	%f169, %f166, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f170, %f169;
-	mul.wide.u32 	%rd28, %r40, 8;
+	mul.wide.u32 	%rd28, %r50, 8;
 	add.s64 	%rd29, %rd22, %rd28;
 	ld.global.v2.f32 	{%f171, %f172}, [%rd29];
-	ld.global.u32 	%r37, [scattering_factor];
+	ld.global.u32 	%r47, [scattering_factor];
 	// inline asm
-	call (%rd20), _rt_callable_program_from_id_64, (%r37);
+	call (%rd20), _rt_callable_program_from_id_64, (%r47);
 	// inline asm
 	// Callseq Start 13
 	{
@@ -814,7 +740,7 @@ BB0_12:
 	st.param.f32	[param0+4], %f11;
 	st.param.f32	[param0+8], %f13;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r40;
+	st.param.b32	[param1+0], %r50;
 	.param .align 8 .b8 retval0[8];
 	prototype_13 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -836,17 +762,17 @@ BB0_12:
 	fma.rn.ftz.f32 	%f181, %f170, %f172, %f180;
 	fma.rn.ftz.f32 	%f182, %f168, %f171, %f179;
 	st.global.v2.f32 	[%rd29], {%f182, %f181};
-	add.s32 	%r94, %r94, 4;
-	setp.lt.u32	%p10, %r94, %r3;
+	add.s32 	%r105, %r105, 4;
+	setp.lt.u32	%p10, %r105, %r3;
 	@%p10 bra 	BB0_12;
 
 BB0_13:
-	ld.global.u32 	%r41, [ray_payload+80];
-	add.s32 	%r42, %r41, 1;
-	st.global.u32 	[ray_payload+80], %r42;
-	ld.global.u32 	%r43, [max_recursion_depth];
-	setp.gt.u32	%p11, %r42, %r43;
-	@%p11 bra 	BB0_18;
+	ld.global.u32 	%r51, [ray_payload+80];
+	add.s32 	%r52, %r51, 1;
+	st.global.u32 	[ray_payload+80], %r52;
+	ld.global.u32 	%r53, [max_recursion_depth];
+	setp.gt.u32	%p11, %r52, %r53;
+	@%p11 bra 	BB0_21;
 
 	ld.global.f32 	%f191, [step_size];
 	mul.ftz.f32 	%f192, %f191, 0f3727C5AC;
@@ -856,17 +782,17 @@ BB0_13:
 	fma.rn.ftz.f32 	%f183, %f186, %f192, %f9;
 	fma.rn.ftz.f32 	%f184, %f192, %f187, %f11;
 	fma.rn.ftz.f32 	%f185, %f192, %f188, %f13;
-	ld.global.u32 	%r44, [ox_entry_node];
+	ld.global.u32 	%r54, [ox_entry_node];
 	mov.u64 	%rd31, ray_payload;
 	cvta.global.u64 	%rd30, %rd31;
-	mov.u32 	%r45, 0;
+	mov.u32 	%r55, 0;
 	mov.f32 	%f189, 0f00000000;
 	mov.f32 	%f190, 0f6C4ECB8F;
-	mov.u32 	%r46, 96;
+	mov.u32 	%r56, 96;
 	// inline asm
-	call _rt_trace_64, (%r44, %f183, %f184, %f185, %f186, %f187, %f188, %r45, %f189, %f190, %rd30, %r46);
+	call _rt_trace_64, (%r54, %f183, %f184, %f185, %f186, %f187, %f188, %r55, %f189, %f190, %rd30, %r56);
 	// inline asm
-	bra.uni 	BB0_18;
+	bra.uni 	BB0_21;
 
 BB0_16:
 	ld.global.f32 	%f200, [step_size];
@@ -877,17 +803,113 @@ BB0_16:
 	ld.global.f32 	%f198, [current_ray+20];
 	ld.global.f32 	%f197, [current_ray+16];
 	ld.global.f32 	%f196, [current_ray+12];
-	ld.global.u32 	%r50, [ox_entry_node];
+	ld.global.u32 	%r60, [ox_entry_node];
 	mov.u64 	%rd33, ray_payload;
 	cvta.global.u64 	%rd32, %rd33;
-	mov.u32 	%r51, 0;
+	mov.u32 	%r61, 0;
 	mov.f32 	%f199, 0f00000000;
-	mov.u32 	%r52, 96;
+	mov.u32 	%r62, 96;
 	// inline asm
-	call _rt_trace_64, (%r50, %f193, %f194, %f195, %f196, %f197, %f198, %r51, %f199, %f200, %rd32, %r52);
+	call _rt_trace_64, (%r60, %f193, %f194, %f195, %f196, %f197, %f198, %r61, %f199, %f200, %rd32, %r62);
 	// inline asm
+	bra.uni 	BB0_21;
 
-BB0_18:
+BB0_19:
+	ld.global.u32 	%r109, [index];
+	ld.global.u32 	%r110, [index+4];
+	ld.global.u32 	%r111, [index+8];
+
+BB0_20:
+	ld.global.f32 	%f204, [current_ray+8];
+	ld.global.f32 	%f203, [current_ray+4];
+	ld.global.f32 	%f202, [current_ray];
+	ld.global.f32 	%f207, [current_ray+20];
+	ld.global.f32 	%f206, [current_ray+16];
+	ld.global.f32 	%f205, [current_ray+12];
+	mov.u64 	%rd94, traverse_backup_buffer;
+	cvta.global.u64 	%rd35, %rd94;
+	mov.u32 	%r92, 1;
+	mov.u32 	%r93, 4;
+	mov.u64 	%rd93, 0;
+	// inline asm
+	call (%rd34), _rt_buffer_get_64, (%rd35, %r92, %r93, %rd93, %rd93, %rd93, %rd93);
+	// inline asm
+	atom.add.u32 	%r94, [%rd34], 1;
+	mul.lo.s32 	%r95, %r94, 9;
+	// inline asm
+	mov.b32 	%r70, %f202;
+	// inline asm
+	add.s32 	%r96, %r95, 1;
+	cvt.u64.u32	%rd42, %r96;
+	// inline asm
+	call (%rd40), _rt_buffer_get_64, (%rd35, %r92, %r93, %rd42, %rd93, %rd93, %rd93);
+	// inline asm
+	st.u32 	[%rd40], %r70;
+	// inline asm
+	mov.b32 	%r73, %f203;
+	// inline asm
+	add.s32 	%r97, %r95, 2;
+	cvt.u64.u32	%rd48, %r97;
+	// inline asm
+	call (%rd46), _rt_buffer_get_64, (%rd35, %r92, %r93, %rd48, %rd93, %rd93, %rd93);
+	// inline asm
+	st.u32 	[%rd46], %r73;
+	// inline asm
+	mov.b32 	%r76, %f204;
+	// inline asm
+	add.s32 	%r98, %r95, 3;
+	cvt.u64.u32	%rd54, %r98;
+	// inline asm
+	call (%rd52), _rt_buffer_get_64, (%rd35, %r92, %r93, %rd54, %rd93, %rd93, %rd93);
+	// inline asm
+	st.u32 	[%rd52], %r76;
+	// inline asm
+	mov.b32 	%r79, %f205;
+	// inline asm
+	add.s32 	%r99, %r95, 4;
+	cvt.u64.u32	%rd60, %r99;
+	// inline asm
+	call (%rd58), _rt_buffer_get_64, (%rd35, %r92, %r93, %rd60, %rd93, %rd93, %rd93);
+	// inline asm
+	st.u32 	[%rd58], %r79;
+	// inline asm
+	mov.b32 	%r82, %f206;
+	// inline asm
+	add.s32 	%r100, %r95, 5;
+	cvt.u64.u32	%rd66, %r100;
+	// inline asm
+	call (%rd64), _rt_buffer_get_64, (%rd35, %r92, %r93, %rd66, %rd93, %rd93, %rd93);
+	// inline asm
+	st.u32 	[%rd64], %r82;
+	// inline asm
+	mov.b32 	%r85, %f207;
+	// inline asm
+	add.s32 	%r101, %r95, 6;
+	cvt.u64.u32	%rd72, %r101;
+	// inline asm
+	call (%rd70), _rt_buffer_get_64, (%rd35, %r92, %r93, %rd72, %rd93, %rd93, %rd93);
+	// inline asm
+	st.u32 	[%rd70], %r85;
+	add.s32 	%r102, %r95, 7;
+	cvt.u64.u32	%rd78, %r102;
+	// inline asm
+	call (%rd76), _rt_buffer_get_64, (%rd35, %r92, %r93, %rd78, %rd93, %rd93, %rd93);
+	// inline asm
+	st.u32 	[%rd76], %r109;
+	add.s32 	%r103, %r95, 8;
+	cvt.u64.u32	%rd84, %r103;
+	// inline asm
+	call (%rd82), _rt_buffer_get_64, (%rd35, %r92, %r93, %rd84, %rd93, %rd93, %rd93);
+	// inline asm
+	st.u32 	[%rd82], %r110;
+	add.s32 	%r104, %r95, 9;
+	cvt.u64.u32	%rd90, %r104;
+	// inline asm
+	call (%rd88), _rt_buffer_get_64, (%rd35, %r92, %r93, %rd90, %rd93, %rd93, %rd93);
+	// inline asm
+	st.u32 	[%rd88], %r111;
+
+BB0_21:
 	ret;
 }
 
@@ -896,15 +918,15 @@ BB0_18:
 
 )
 {
-	.reg .pred 	%p<9>;
+	.reg .pred 	%p<10>;
 	.reg .f32 	%f<188>;
-	.reg .b32 	%r<88>;
+	.reg .b32 	%r<102>;
 	.reg .b64 	%rd<93>;
 
 
-	ld.global.u32 	%r12, [ray_payload+84];
-	setp.eq.s32	%p1, %r12, 0;
-	@%p1 bra 	BB1_13;
+	ld.global.u32 	%r22, [ray_payload+84];
+	setp.eq.s32	%p1, %r22, 0;
+	@%p1 bra 	BB1_16;
 
 	ld.global.f32 	%f1, [step_size];
 	ld.global.f32 	%f11, [current_ray+12];
@@ -924,28 +946,28 @@ BB0_18:
 	add.ftz.f32 	%f19, %f1, %f18;
 	st.global.f32 	[ray_payload+68], %f19;
 	ld.global.u32 	%r1, [num_spectra_pairs_supported];
-	mov.u32 	%r13, 8;
-	min.u32 	%r2, %r13, %r1;
+	mov.u32 	%r23, 8;
+	min.u32 	%r2, %r23, %r1;
 	setp.eq.s32	%p2, %r2, 0;
 	@%p2 bra 	BB1_10;
 
-	min.u32 	%r3, %r1, %r13;
-	and.b32  	%r17, %r3, 3;
-	mov.u32 	%r84, 0;
-	setp.eq.s32	%p3, %r17, 0;
+	min.u32 	%r3, %r1, %r23;
+	and.b32  	%r27, %r3, 3;
+	mov.u32 	%r95, 0;
+	setp.eq.s32	%p3, %r27, 0;
 	@%p3 bra 	BB1_8;
 
-	setp.eq.s32	%p4, %r17, 1;
+	setp.eq.s32	%p4, %r27, 1;
 	@%p4 bra 	BB1_7;
 
-	setp.eq.s32	%p5, %r17, 2;
+	setp.eq.s32	%p5, %r27, 2;
 	@%p5 bra 	BB1_6;
 
-	ld.global.u32 	%r19, [absorption_factor];
+	ld.global.u32 	%r29, [absorption_factor];
 	// inline asm
-	call (%rd1), _rt_callable_program_from_id_64, (%r19);
+	call (%rd1), _rt_callable_program_from_id_64, (%r29);
 	// inline asm
-	mov.u32 	%r22, 0;
+	mov.u32 	%r32, 0;
 	// Callseq Start 14
 	{
 	.reg .b32 temp_param_reg;
@@ -955,7 +977,7 @@ BB0_18:
 	st.param.f32	[param0+4], %f9;
 	st.param.f32	[param0+8], %f10;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r22;
+	st.param.b32	[param1+0], %r32;
 	.param .align 8 .b8 retval0[8];
 	prototype_14 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -979,9 +1001,9 @@ BB0_18:
 	mul.ftz.f32 	%f28, %f25, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f29, %f28;
 	ld.global.v2.f32 	{%f30, %f31}, [ray_payload];
-	ld.global.u32 	%r20, [scattering_factor];
+	ld.global.u32 	%r30, [scattering_factor];
 	// inline asm
-	call (%rd2), _rt_callable_program_from_id_64, (%r20);
+	call (%rd2), _rt_callable_program_from_id_64, (%r30);
 	// inline asm
 	// Callseq Start 15
 	{
@@ -992,7 +1014,7 @@ BB0_18:
 	st.param.f32	[param0+4], %f3;
 	st.param.f32	[param0+8], %f4;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r22;
+	st.param.b32	[param1+0], %r32;
 	.param .align 8 .b8 retval0[8];
 	prototype_15 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1014,12 +1036,12 @@ BB0_18:
 	fma.rn.ftz.f32 	%f40, %f29, %f31, %f39;
 	fma.rn.ftz.f32 	%f41, %f27, %f30, %f38;
 	st.global.v2.f32 	[ray_payload], {%f41, %f40};
-	mov.u32 	%r84, 1;
+	mov.u32 	%r95, 1;
 
 BB1_6:
-	ld.global.u32 	%r23, [absorption_factor];
+	ld.global.u32 	%r33, [absorption_factor];
 	// inline asm
-	call (%rd3), _rt_callable_program_from_id_64, (%r23);
+	call (%rd3), _rt_callable_program_from_id_64, (%r33);
 	// inline asm
 	// Callseq Start 16
 	{
@@ -1030,7 +1052,7 @@ BB1_6:
 	st.param.f32	[param0+4], %f9;
 	st.param.f32	[param0+8], %f10;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r84;
+	st.param.b32	[param1+0], %r95;
 	.param .align 8 .b8 retval0[8];
 	prototype_16 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1053,13 +1075,13 @@ BB1_6:
 	ex2.approx.ftz.f32 	%f49, %f48;
 	mul.ftz.f32 	%f50, %f47, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f51, %f50;
-	mul.wide.u32 	%rd5, %r84, 8;
+	mul.wide.u32 	%rd5, %r95, 8;
 	mov.u64 	%rd6, ray_payload;
 	add.s64 	%rd7, %rd6, %rd5;
 	ld.global.v2.f32 	{%f52, %f53}, [%rd7];
-	ld.global.u32 	%r24, [scattering_factor];
+	ld.global.u32 	%r34, [scattering_factor];
 	// inline asm
-	call (%rd4), _rt_callable_program_from_id_64, (%r24);
+	call (%rd4), _rt_callable_program_from_id_64, (%r34);
 	// inline asm
 	// Callseq Start 17
 	{
@@ -1070,7 +1092,7 @@ BB1_6:
 	st.param.f32	[param0+4], %f3;
 	st.param.f32	[param0+8], %f4;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r84;
+	st.param.b32	[param1+0], %r95;
 	.param .align 8 .b8 retval0[8];
 	prototype_17 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1092,12 +1114,12 @@ BB1_6:
 	fma.rn.ftz.f32 	%f62, %f51, %f53, %f61;
 	fma.rn.ftz.f32 	%f63, %f49, %f52, %f60;
 	st.global.v2.f32 	[%rd7], {%f63, %f62};
-	add.s32 	%r84, %r84, 1;
+	add.s32 	%r95, %r95, 1;
 
 BB1_7:
-	ld.global.u32 	%r25, [absorption_factor];
+	ld.global.u32 	%r35, [absorption_factor];
 	// inline asm
-	call (%rd8), _rt_callable_program_from_id_64, (%r25);
+	call (%rd8), _rt_callable_program_from_id_64, (%r35);
 	// inline asm
 	// Callseq Start 18
 	{
@@ -1108,7 +1130,7 @@ BB1_7:
 	st.param.f32	[param0+4], %f9;
 	st.param.f32	[param0+8], %f10;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r84;
+	st.param.b32	[param1+0], %r95;
 	.param .align 8 .b8 retval0[8];
 	prototype_18 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1131,13 +1153,13 @@ BB1_7:
 	ex2.approx.ftz.f32 	%f71, %f70;
 	mul.ftz.f32 	%f72, %f69, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f73, %f72;
-	mul.wide.u32 	%rd10, %r84, 8;
+	mul.wide.u32 	%rd10, %r95, 8;
 	mov.u64 	%rd11, ray_payload;
 	add.s64 	%rd12, %rd11, %rd10;
 	ld.global.v2.f32 	{%f74, %f75}, [%rd12];
-	ld.global.u32 	%r26, [scattering_factor];
+	ld.global.u32 	%r36, [scattering_factor];
 	// inline asm
-	call (%rd9), _rt_callable_program_from_id_64, (%r26);
+	call (%rd9), _rt_callable_program_from_id_64, (%r36);
 	// inline asm
 	// Callseq Start 19
 	{
@@ -1148,7 +1170,7 @@ BB1_7:
 	st.param.f32	[param0+4], %f3;
 	st.param.f32	[param0+8], %f4;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r84;
+	st.param.b32	[param1+0], %r95;
 	.param .align 8 .b8 retval0[8];
 	prototype_19 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1170,16 +1192,16 @@ BB1_7:
 	fma.rn.ftz.f32 	%f84, %f73, %f75, %f83;
 	fma.rn.ftz.f32 	%f85, %f71, %f74, %f82;
 	st.global.v2.f32 	[%rd12], {%f85, %f84};
-	add.s32 	%r84, %r84, 1;
+	add.s32 	%r95, %r95, 1;
 
 BB1_8:
 	setp.lt.u32	%p6, %r3, 4;
 	@%p6 bra 	BB1_10;
 
 BB1_9:
-	ld.global.u32 	%r27, [absorption_factor];
+	ld.global.u32 	%r37, [absorption_factor];
 	// inline asm
-	call (%rd13), _rt_callable_program_from_id_64, (%r27);
+	call (%rd13), _rt_callable_program_from_id_64, (%r37);
 	// inline asm
 	// Callseq Start 20
 	{
@@ -1190,7 +1212,7 @@ BB1_9:
 	st.param.f32	[param0+4], %f9;
 	st.param.f32	[param0+8], %f10;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r84;
+	st.param.b32	[param1+0], %r95;
 	.param .align 8 .b8 retval0[8];
 	prototype_20 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1213,13 +1235,13 @@ BB1_9:
 	ex2.approx.ftz.f32 	%f93, %f92;
 	mul.ftz.f32 	%f94, %f91, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f95, %f94;
-	mul.wide.u32 	%rd21, %r84, 8;
+	mul.wide.u32 	%rd21, %r95, 8;
 	mov.u64 	%rd22, ray_payload;
 	add.s64 	%rd23, %rd22, %rd21;
 	ld.global.v2.f32 	{%f96, %f97}, [%rd23];
-	ld.global.u32 	%r28, [scattering_factor];
+	ld.global.u32 	%r38, [scattering_factor];
 	// inline asm
-	call (%rd14), _rt_callable_program_from_id_64, (%r28);
+	call (%rd14), _rt_callable_program_from_id_64, (%r38);
 	// inline asm
 	// Callseq Start 21
 	{
@@ -1230,7 +1252,7 @@ BB1_9:
 	st.param.f32	[param0+4], %f3;
 	st.param.f32	[param0+8], %f4;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r84;
+	st.param.b32	[param1+0], %r95;
 	.param .align 8 .b8 retval0[8];
 	prototype_21 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1252,11 +1274,11 @@ BB1_9:
 	fma.rn.ftz.f32 	%f106, %f95, %f97, %f105;
 	fma.rn.ftz.f32 	%f107, %f93, %f96, %f104;
 	st.global.v2.f32 	[%rd23], {%f107, %f106};
-	ld.global.u32 	%r29, [absorption_factor];
+	ld.global.u32 	%r39, [absorption_factor];
 	// inline asm
-	call (%rd15), _rt_callable_program_from_id_64, (%r29);
+	call (%rd15), _rt_callable_program_from_id_64, (%r39);
 	// inline asm
-	add.s32 	%r35, %r84, 1;
+	add.s32 	%r45, %r95, 1;
 	// Callseq Start 22
 	{
 	.reg .b32 temp_param_reg;
@@ -1266,7 +1288,7 @@ BB1_9:
 	st.param.f32	[param0+4], %f9;
 	st.param.f32	[param0+8], %f10;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r35;
+	st.param.b32	[param1+0], %r45;
 	.param .align 8 .b8 retval0[8];
 	prototype_22 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1289,12 +1311,12 @@ BB1_9:
 	ex2.approx.ftz.f32 	%f115, %f114;
 	mul.ftz.f32 	%f116, %f113, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f117, %f116;
-	mul.wide.u32 	%rd24, %r35, 8;
+	mul.wide.u32 	%rd24, %r45, 8;
 	add.s64 	%rd25, %rd22, %rd24;
 	ld.global.v2.f32 	{%f118, %f119}, [%rd25];
-	ld.global.u32 	%r30, [scattering_factor];
+	ld.global.u32 	%r40, [scattering_factor];
 	// inline asm
-	call (%rd16), _rt_callable_program_from_id_64, (%r30);
+	call (%rd16), _rt_callable_program_from_id_64, (%r40);
 	// inline asm
 	// Callseq Start 23
 	{
@@ -1305,7 +1327,7 @@ BB1_9:
 	st.param.f32	[param0+4], %f3;
 	st.param.f32	[param0+8], %f4;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r35;
+	st.param.b32	[param1+0], %r45;
 	.param .align 8 .b8 retval0[8];
 	prototype_23 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1327,11 +1349,11 @@ BB1_9:
 	fma.rn.ftz.f32 	%f128, %f117, %f119, %f127;
 	fma.rn.ftz.f32 	%f129, %f115, %f118, %f126;
 	st.global.v2.f32 	[%rd25], {%f129, %f128};
-	ld.global.u32 	%r31, [absorption_factor];
+	ld.global.u32 	%r41, [absorption_factor];
 	// inline asm
-	call (%rd17), _rt_callable_program_from_id_64, (%r31);
+	call (%rd17), _rt_callable_program_from_id_64, (%r41);
 	// inline asm
-	add.s32 	%r36, %r84, 2;
+	add.s32 	%r46, %r95, 2;
 	// Callseq Start 24
 	{
 	.reg .b32 temp_param_reg;
@@ -1341,7 +1363,7 @@ BB1_9:
 	st.param.f32	[param0+4], %f9;
 	st.param.f32	[param0+8], %f10;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r36;
+	st.param.b32	[param1+0], %r46;
 	.param .align 8 .b8 retval0[8];
 	prototype_24 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1364,12 +1386,12 @@ BB1_9:
 	ex2.approx.ftz.f32 	%f137, %f136;
 	mul.ftz.f32 	%f138, %f135, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f139, %f138;
-	mul.wide.u32 	%rd26, %r36, 8;
+	mul.wide.u32 	%rd26, %r46, 8;
 	add.s64 	%rd27, %rd22, %rd26;
 	ld.global.v2.f32 	{%f140, %f141}, [%rd27];
-	ld.global.u32 	%r32, [scattering_factor];
+	ld.global.u32 	%r42, [scattering_factor];
 	// inline asm
-	call (%rd18), _rt_callable_program_from_id_64, (%r32);
+	call (%rd18), _rt_callable_program_from_id_64, (%r42);
 	// inline asm
 	// Callseq Start 25
 	{
@@ -1380,7 +1402,7 @@ BB1_9:
 	st.param.f32	[param0+4], %f3;
 	st.param.f32	[param0+8], %f4;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r36;
+	st.param.b32	[param1+0], %r46;
 	.param .align 8 .b8 retval0[8];
 	prototype_25 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1402,11 +1424,11 @@ BB1_9:
 	fma.rn.ftz.f32 	%f150, %f139, %f141, %f149;
 	fma.rn.ftz.f32 	%f151, %f137, %f140, %f148;
 	st.global.v2.f32 	[%rd27], {%f151, %f150};
-	ld.global.u32 	%r33, [absorption_factor];
+	ld.global.u32 	%r43, [absorption_factor];
 	// inline asm
-	call (%rd19), _rt_callable_program_from_id_64, (%r33);
+	call (%rd19), _rt_callable_program_from_id_64, (%r43);
 	// inline asm
-	add.s32 	%r37, %r84, 3;
+	add.s32 	%r47, %r95, 3;
 	// Callseq Start 26
 	{
 	.reg .b32 temp_param_reg;
@@ -1416,7 +1438,7 @@ BB1_9:
 	st.param.f32	[param0+4], %f9;
 	st.param.f32	[param0+8], %f10;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r37;
+	st.param.b32	[param1+0], %r47;
 	.param .align 8 .b8 retval0[8];
 	prototype_26 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1439,12 +1461,12 @@ BB1_9:
 	ex2.approx.ftz.f32 	%f159, %f158;
 	mul.ftz.f32 	%f160, %f157, 0fBFB8AA3B;
 	ex2.approx.ftz.f32 	%f161, %f160;
-	mul.wide.u32 	%rd28, %r37, 8;
+	mul.wide.u32 	%rd28, %r47, 8;
 	add.s64 	%rd29, %rd22, %rd28;
 	ld.global.v2.f32 	{%f162, %f163}, [%rd29];
-	ld.global.u32 	%r34, [scattering_factor];
+	ld.global.u32 	%r44, [scattering_factor];
 	// inline asm
-	call (%rd20), _rt_callable_program_from_id_64, (%r34);
+	call (%rd20), _rt_callable_program_from_id_64, (%r44);
 	// inline asm
 	// Callseq Start 27
 	{
@@ -1455,7 +1477,7 @@ BB1_9:
 	st.param.f32	[param0+4], %f3;
 	st.param.f32	[param0+8], %f4;
 	.param .b32 param1;
-	st.param.b32	[param1+0], %r37;
+	st.param.b32	[param1+0], %r47;
 	.param .align 8 .b8 retval0[8];
 	prototype_27 : .callprototype (.param .align 8 .b8 _[8]) _ (.param .align 4 .b8 _[12], .param .b32 _);
 	call (retval0), 
@@ -1477,128 +1499,147 @@ BB1_9:
 	fma.rn.ftz.f32 	%f172, %f161, %f163, %f171;
 	fma.rn.ftz.f32 	%f173, %f159, %f162, %f170;
 	st.global.v2.f32 	[%rd29], {%f173, %f172};
-	add.s32 	%r84, %r84, 4;
-	setp.lt.u32	%p7, %r84, %r2;
+	add.s32 	%r95, %r95, 4;
+	setp.lt.u32	%p7, %r95, %r2;
 	@%p7 bra 	BB1_9;
 
 BB1_10:
 	ld.global.u32 	%r11, [ray_payload+80];
-	ld.global.u32 	%r38, [max_recursion_depth];
-	setp.gt.u32	%p8, %r11, %r38;
+	ld.global.u32 	%r48, [max_recursion_depth];
+	setp.gt.u32	%p8, %r11, %r48;
 	@%p8 bra 	BB1_12;
 	bra.uni 	BB1_11;
 
 BB1_12:
-	mov.u32 	%r69, 0;
-	st.global.u32 	[ray_payload+80], %r69;
-	ld.global.f32 	%f187, [current_ray+20];
-	ld.global.f32 	%f186, [current_ray+16];
-	ld.global.f32 	%f185, [current_ray+12];
-	ld.global.u32 	%r70, [index+8];
-	ld.global.u32 	%r71, [index+4];
-	ld.global.u32 	%r72, [index];
-	mov.u64 	%rd92, traverse_backup_buffer;
-	cvta.global.u64 	%rd33, %rd92;
-	mov.u32 	%r67, 1;
-	mov.u32 	%r68, 4;
-	mov.u64 	%rd91, 0;
-	// inline asm
-	call (%rd32), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd91, %rd91, %rd91, %rd91);
-	// inline asm
-	atom.add.u32 	%r73, [%rd32], 1;
-	mul.lo.s32 	%r74, %r73, 9;
-	// inline asm
-	mov.b32 	%r45, %f2;
-	// inline asm
-	add.s32 	%r75, %r74, 1;
-	cvt.u64.u32	%rd40, %r75;
-	// inline asm
-	call (%rd38), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd40, %rd91, %rd91, %rd91);
-	// inline asm
-	st.u32 	[%rd38], %r45;
-	// inline asm
-	mov.b32 	%r48, %f3;
-	// inline asm
-	add.s32 	%r76, %r74, 2;
-	cvt.u64.u32	%rd46, %r76;
-	// inline asm
-	call (%rd44), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd46, %rd91, %rd91, %rd91);
-	// inline asm
-	st.u32 	[%rd44], %r48;
-	// inline asm
-	mov.b32 	%r51, %f4;
-	// inline asm
-	add.s32 	%r77, %r74, 3;
-	cvt.u64.u32	%rd52, %r77;
-	// inline asm
-	call (%rd50), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd52, %rd91, %rd91, %rd91);
-	// inline asm
-	st.u32 	[%rd50], %r51;
-	// inline asm
-	mov.b32 	%r54, %f185;
-	// inline asm
-	add.s32 	%r78, %r74, 4;
-	cvt.u64.u32	%rd58, %r78;
-	// inline asm
-	call (%rd56), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd58, %rd91, %rd91, %rd91);
-	// inline asm
-	st.u32 	[%rd56], %r54;
-	// inline asm
-	mov.b32 	%r57, %f186;
-	// inline asm
-	add.s32 	%r79, %r74, 5;
-	cvt.u64.u32	%rd64, %r79;
-	// inline asm
-	call (%rd62), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd64, %rd91, %rd91, %rd91);
-	// inline asm
-	st.u32 	[%rd62], %r57;
-	// inline asm
-	mov.b32 	%r60, %f187;
-	// inline asm
-	add.s32 	%r80, %r74, 6;
-	cvt.u64.u32	%rd70, %r80;
-	// inline asm
-	call (%rd68), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd70, %rd91, %rd91, %rd91);
-	// inline asm
-	st.u32 	[%rd68], %r60;
-	add.s32 	%r81, %r74, 7;
-	cvt.u64.u32	%rd76, %r81;
-	// inline asm
-	call (%rd74), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd76, %rd91, %rd91, %rd91);
-	// inline asm
-	st.u32 	[%rd74], %r72;
-	add.s32 	%r82, %r74, 8;
-	cvt.u64.u32	%rd82, %r82;
-	// inline asm
-	call (%rd80), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd82, %rd91, %rd91, %rd91);
-	// inline asm
-	st.u32 	[%rd80], %r71;
-	add.s32 	%r83, %r74, 9;
-	cvt.u64.u32	%rd88, %r83;
-	// inline asm
-	call (%rd86), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd88, %rd91, %rd91, %rd91);
-	// inline asm
-	st.u32 	[%rd86], %r70;
-	bra.uni 	BB1_13;
+	mov.u32 	%r53, 0;
+	st.global.u32 	[ray_payload+80], %r53;
+	ld.global.u32 	%r12, [ray_payload+88];
+	setp.eq.s32	%p9, %r12, 0;
+	@%p9 bra 	BB1_14;
+
+	ld.global.u32 	%r54, [problem_size];
+	ld.global.u32 	%r55, [problem_size+4];
+	mul.lo.s32 	%r56, %r55, %r54;
+	div.u32 	%r99, %r12, %r56;
+	rem.u32 	%r57, %r12, %r99;
+	div.u32 	%r100, %r57, %r54;
+	rem.u32 	%r101, %r57, %r54;
+	bra.uni 	BB1_15;
 
 BB1_11:
-	add.s32 	%r42, %r11, 1;
+	add.s32 	%r52, %r11, 1;
 	mov.u64 	%rd31, ray_payload;
-	st.global.u32 	[ray_payload+80], %r42;
+	st.global.u32 	[ray_payload+80], %r52;
 	ld.global.f32 	%f181, [step_size];
 	ld.global.f32 	%f179, [current_ray+20];
 	ld.global.f32 	%f178, [current_ray+16];
 	ld.global.f32 	%f177, [current_ray+12];
-	ld.global.u32 	%r39, [ox_entry_node];
+	ld.global.u32 	%r49, [ox_entry_node];
 	cvta.global.u64 	%rd30, %rd31;
-	mov.u32 	%r40, 0;
+	mov.u32 	%r50, 0;
 	mov.f32 	%f180, 0f00000000;
-	mov.u32 	%r41, 96;
+	mov.u32 	%r51, 96;
 	// inline asm
-	call _rt_trace_64, (%r39, %f2, %f3, %f4, %f177, %f178, %f179, %r40, %f180, %f181, %rd30, %r41);
+	call _rt_trace_64, (%r49, %f2, %f3, %f4, %f177, %f178, %f179, %r50, %f180, %f181, %rd30, %r51);
 	// inline asm
+	bra.uni 	BB1_16;
 
-BB1_13:
+BB1_14:
+	ld.global.u32 	%r101, [index];
+	ld.global.u32 	%r100, [index+4];
+	ld.global.u32 	%r99, [index+8];
+
+BB1_15:
+	ld.global.f32 	%f184, [current_ray+8];
+	ld.global.f32 	%f183, [current_ray+4];
+	ld.global.f32 	%f182, [current_ray];
+	ld.global.f32 	%f187, [current_ray+20];
+	ld.global.f32 	%f186, [current_ray+16];
+	ld.global.f32 	%f185, [current_ray+12];
+	mov.u64 	%rd92, traverse_backup_buffer;
+	cvta.global.u64 	%rd33, %rd92;
+	mov.u32 	%r82, 1;
+	mov.u32 	%r83, 4;
+	mov.u64 	%rd91, 0;
+	// inline asm
+	call (%rd32), _rt_buffer_get_64, (%rd33, %r82, %r83, %rd91, %rd91, %rd91, %rd91);
+	// inline asm
+	atom.add.u32 	%r84, [%rd32], 1;
+	mul.lo.s32 	%r85, %r84, 9;
+	// inline asm
+	mov.b32 	%r60, %f182;
+	// inline asm
+	add.s32 	%r86, %r85, 1;
+	cvt.u64.u32	%rd40, %r86;
+	// inline asm
+	call (%rd38), _rt_buffer_get_64, (%rd33, %r82, %r83, %rd40, %rd91, %rd91, %rd91);
+	// inline asm
+	st.u32 	[%rd38], %r60;
+	// inline asm
+	mov.b32 	%r63, %f183;
+	// inline asm
+	add.s32 	%r87, %r85, 2;
+	cvt.u64.u32	%rd46, %r87;
+	// inline asm
+	call (%rd44), _rt_buffer_get_64, (%rd33, %r82, %r83, %rd46, %rd91, %rd91, %rd91);
+	// inline asm
+	st.u32 	[%rd44], %r63;
+	// inline asm
+	mov.b32 	%r66, %f184;
+	// inline asm
+	add.s32 	%r88, %r85, 3;
+	cvt.u64.u32	%rd52, %r88;
+	// inline asm
+	call (%rd50), _rt_buffer_get_64, (%rd33, %r82, %r83, %rd52, %rd91, %rd91, %rd91);
+	// inline asm
+	st.u32 	[%rd50], %r66;
+	// inline asm
+	mov.b32 	%r69, %f185;
+	// inline asm
+	add.s32 	%r89, %r85, 4;
+	cvt.u64.u32	%rd58, %r89;
+	// inline asm
+	call (%rd56), _rt_buffer_get_64, (%rd33, %r82, %r83, %rd58, %rd91, %rd91, %rd91);
+	// inline asm
+	st.u32 	[%rd56], %r69;
+	// inline asm
+	mov.b32 	%r72, %f186;
+	// inline asm
+	add.s32 	%r90, %r85, 5;
+	cvt.u64.u32	%rd64, %r90;
+	// inline asm
+	call (%rd62), _rt_buffer_get_64, (%rd33, %r82, %r83, %rd64, %rd91, %rd91, %rd91);
+	// inline asm
+	st.u32 	[%rd62], %r72;
+	// inline asm
+	mov.b32 	%r75, %f187;
+	// inline asm
+	add.s32 	%r91, %r85, 6;
+	cvt.u64.u32	%rd70, %r91;
+	// inline asm
+	call (%rd68), _rt_buffer_get_64, (%rd33, %r82, %r83, %rd70, %rd91, %rd91, %rd91);
+	// inline asm
+	st.u32 	[%rd68], %r75;
+	add.s32 	%r92, %r85, 7;
+	cvt.u64.u32	%rd76, %r92;
+	// inline asm
+	call (%rd74), _rt_buffer_get_64, (%rd33, %r82, %r83, %rd76, %rd91, %rd91, %rd91);
+	// inline asm
+	st.u32 	[%rd74], %r101;
+	add.s32 	%r93, %r85, 8;
+	cvt.u64.u32	%rd82, %r93;
+	// inline asm
+	call (%rd80), _rt_buffer_get_64, (%rd33, %r82, %r83, %rd82, %rd91, %rd91, %rd91);
+	// inline asm
+	st.u32 	[%rd80], %r100;
+	add.s32 	%r94, %r85, 9;
+	cvt.u64.u32	%rd88, %r94;
+	// inline asm
+	call (%rd86), _rt_buffer_get_64, (%rd33, %r82, %r83, %rd88, %rd91, %rd91, %rd91);
+	// inline asm
+	st.u32 	[%rd86], %r99;
+
+BB1_16:
 	ret;
 }
 

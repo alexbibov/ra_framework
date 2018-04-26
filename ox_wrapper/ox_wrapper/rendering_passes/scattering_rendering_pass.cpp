@@ -50,12 +50,18 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
         OxMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, OxProgram::Source::file, "__ox_miss_scattered__"), OxRayTypeCollection{ OxRayType::scattered } } }
     , m_traverse_backup_buffer{ targetSceneSection().context(), ray_caster.numberOfRays() }
     , m_importance_directions_buffer{ targetSceneSection().context().createBuffer<float2>(OxBufferKind::input, num_scattering_integral_importance_directions*(1 + num_spectra_pairs_supported)) }
-    , m_recaster{ m_traverse_backup_buffer, castBufferToType<OxRayRadiancePayload>(m_ray_caster.outputBuffer()), OxRayType::unknown, ray_marching_step_size }
+    , m_recaster{ m_ray_caster.getGeneratorDimensions(), m_traverse_backup_buffer, castBufferToType<OxRayRadiancePayload>(m_ray_caster.outputBuffer()), OxRayType::unknown, ray_marching_step_size }
 {
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
         .setVariableValue("num_spectra_pairs_supported", m_num_spectra_pairs_supported);
     static_cast<OxProgram&>(static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).getProgram())
         .setVariableValue("num_spectra_pairs_supported", m_num_spectra_pairs_supported);
+
+    static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
+        .setVariableValue("problem_size", m_ray_caster.getGeneratorDimensions());
+    static_cast<OxProgram&>(static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).getProgram())
+        .setVariableValue("problem_size", m_ray_caster.getGeneratorDimensions());
+
 
     setMaxRecursionDepth(max_recursion_depth);
     setRayMarchingStepSize(ray_marching_step_size);

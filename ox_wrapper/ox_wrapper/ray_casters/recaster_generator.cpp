@@ -234,6 +234,7 @@ private:
 
 
 OxRecasterGenerator::OxRecasterGenerator(
+    uint3 const& original_problem_size,
     OxTraverseBackupBuffer const& traverse_backup_buffer, 
     OxBuffer<OxRayRadiancePayload> const& output_buffer, 
     OxRayType recasted_ray_type, float recasted_ray_parametric_length):
@@ -246,10 +247,12 @@ OxRecasterGenerator::OxRecasterGenerator(
 {
     getRayGenerationShader().setVariableValue("ray_type", static_cast<unsigned int>(recasted_ray_type));
     getRayGenerationShader().setVariableValue("ray_parametric_length", recasted_ray_parametric_length);
+    getRayGenerationShader().setVariableValue("problem_size", original_problem_size);
     // getRayGenerationShader().assignBuffer("traverse_backup_buffer", traverse_backup_buffer.getRawBuffer());
 }
 
 OxRecasterGenerator::OxRecasterGenerator(
+    uint3 const& original_problem_size,
     OxTraverseBackupBuffer const& traverse_backup_buffer, 
     OxBuffer<OxRayRadiancePayloadSimple> const& output_buffer, 
     OxRayType recasted_ray_type, float recasted_ray_parametric_length) :
@@ -262,10 +265,12 @@ OxRecasterGenerator::OxRecasterGenerator(
 {
     getRayGenerationShader().setVariableValue("ray_type", static_cast<unsigned int>(recasted_ray_type));
     getRayGenerationShader().setVariableValue("ray_parametric_length", recasted_ray_parametric_length);
+    getRayGenerationShader().setVariableValue("problem_size", original_problem_size);
     // getRayGenerationShader().assignBuffer("traverse_backup_buffer", traverse_backup_buffer.getRawBuffer());
 }
 
 OxRecasterGenerator::OxRecasterGenerator(
+    uint3 const& original_problem_size,
     OxTraverseBackupBuffer const& traverse_backup_buffer, 
     OxBuffer<OxRayRadiancePayloadMonochromatic> const& output_buffer, 
     OxRayType recasted_ray_type, float recasted_ray_parametric_length) :
@@ -278,10 +283,12 @@ OxRecasterGenerator::OxRecasterGenerator(
 {
     getRayGenerationShader().setVariableValue("ray_type", static_cast<unsigned int>(recasted_ray_type));
     getRayGenerationShader().setVariableValue("ray_parametric_length", recasted_ray_parametric_length);
+    getRayGenerationShader().setVariableValue("problem_size", original_problem_size);
     // getRayGenerationShader().assignBuffer("traverse_backup_buffer", traverse_backup_buffer.getRawBuffer());
 }
 
 OxRecasterGenerator::OxRecasterGenerator(
+    uint3 const& original_problem_size,
     OxTraverseBackupBuffer const& traverse_backup_buffer, 
     OxBuffer<OxRayOcclusionPayload> const& output_buffer, 
     OxRayType recasted_ray_type, float recasted_ray_parametric_length) :
@@ -294,6 +301,7 @@ OxRecasterGenerator::OxRecasterGenerator(
 {
     getRayGenerationShader().setVariableValue("ray_type", static_cast<unsigned int>(recasted_ray_type));
     getRayGenerationShader().setVariableValue("ray_parametric_length", recasted_ray_parametric_length);
+    getRayGenerationShader().setVariableValue("problem_size", original_problem_size);
     // getRayGenerationShader().assignBuffer("traverse_backup_buffer", traverse_backup_buffer.getRawBuffer());
 }
 

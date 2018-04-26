@@ -15,6 +15,7 @@ rtDeclareVariable(unsigned int, dimension, , "Dimension of the output buffer");
 rtDeclareVariable(unsigned int, payload_type, , "Type of payload");
 rtDeclareVariable(unsigned int, ray_type, , "Type of relaunched rays");
 rtDeclareVariable(float, ray_parametric_length, , "Parametric length of recasted ray");
+rtDeclareVariable(uint3, problem_size, , "Original size of the problem");
 
 rtDeclareVariable(unsigned int, index, rtLaunchIndex, "Thread index");
 
@@ -85,6 +86,7 @@ RT_PROGRAM void __ox_generate__(void)
         {
             unsigned int idx = output_buffer_index.x;
             OxRayRadiancePayload payload = ox_radiance_payload_1d_out[idx];
+            payload.tracing_depth_and_aux.z = idx;
             rtTrace(ox_entry_node, current_ray, payload);
             ox_radiance_payload_1d_out[idx] = payload;
             break;
@@ -94,6 +96,7 @@ RT_PROGRAM void __ox_generate__(void)
         {
             uint2 idx = make_uint2(output_buffer_index.x, output_buffer_index.y);
             OxRayRadiancePayload payload = ox_radiance_payload_2d_out[idx];
+            payload.tracing_depth_and_aux.z = idx.y*problem_size.x + idx.x;
             rtTrace(ox_entry_node, current_ray, payload);
             ox_radiance_payload_2d_out[idx] = payload;
             break;
@@ -103,6 +106,11 @@ RT_PROGRAM void __ox_generate__(void)
         {
             OxRayRadiancePayload payload = ox_radiance_payload_3d_out[output_buffer_index];
             rtTrace(ox_entry_node, current_ray, payload);
+
+            payload.tracing_depth_and_aux.z = 
+                output_buffer_index.z*problem_size.x*problem_size.y 
+                + output_buffer_index.y*problem_size.x + output_buffer_index.x;
+
             ox_radiance_payload_3d_out[output_buffer_index] = payload;
             break;
         }
