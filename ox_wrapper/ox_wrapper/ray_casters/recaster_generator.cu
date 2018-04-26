@@ -85,7 +85,6 @@ RT_PROGRAM void __ox_generate__(void)
         {
             unsigned int idx = output_buffer_index.x;
             OxRayRadiancePayload payload = ox_radiance_payload_1d_out[idx];
-            payload.tracing_depth_and_aux.z = idx;
             rtTrace(ox_entry_node, current_ray, payload);
             ox_radiance_payload_1d_out[idx] = payload;
             break;
@@ -96,9 +95,6 @@ RT_PROGRAM void __ox_generate__(void)
             uint2 idx = make_uint2(output_buffer_index.x, output_buffer_index.y);
             OxRayRadiancePayload payload = ox_radiance_payload_2d_out[idx];
             rtTrace(ox_entry_node, current_ray, payload);
-
-            payload.tracing_depth_and_aux.z = idx.x
-
             ox_radiance_payload_2d_out[idx] = payload;
             break;
         }

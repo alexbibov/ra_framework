@@ -185,6 +185,9 @@ BB0_17:
 	ld.global.f32 	%f207, [current_ray+20];
 	ld.global.f32 	%f206, [current_ray+16];
 	ld.global.f32 	%f205, [current_ray+12];
+	ld.global.u32 	%r80, [index+8];
+	ld.global.u32 	%r81, [index+4];
+	ld.global.u32 	%r82, [index];
 	mov.u64 	%rd94, traverse_backup_buffer;
 	cvta.global.u64 	%rd35, %rd94;
 	mov.u32 	%r77, 1;
@@ -193,13 +196,13 @@ BB0_17:
 	// inline asm
 	call (%rd34), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd93, %rd93, %rd93, %rd93);
 	// inline asm
-	atom.add.u32 	%r80, [%rd34], 1;
-	mul.lo.s32 	%r81, %r80, 9;
+	atom.add.u32 	%r83, [%rd34], 1;
+	mul.lo.s32 	%r84, %r83, 9;
 	// inline asm
 	mov.b32 	%r55, %f202;
 	// inline asm
-	add.s32 	%r82, %r81, 1;
-	cvt.u64.u32	%rd42, %r82;
+	add.s32 	%r85, %r84, 1;
+	cvt.u64.u32	%rd42, %r85;
 	// inline asm
 	call (%rd40), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd42, %rd93, %rd93, %rd93);
 	// inline asm
@@ -207,8 +210,8 @@ BB0_17:
 	// inline asm
 	mov.b32 	%r58, %f203;
 	// inline asm
-	add.s32 	%r83, %r81, 2;
-	cvt.u64.u32	%rd48, %r83;
+	add.s32 	%r86, %r84, 2;
+	cvt.u64.u32	%rd48, %r86;
 	// inline asm
 	call (%rd46), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd48, %rd93, %rd93, %rd93);
 	// inline asm
@@ -216,8 +219,8 @@ BB0_17:
 	// inline asm
 	mov.b32 	%r61, %f204;
 	// inline asm
-	add.s32 	%r84, %r81, 3;
-	cvt.u64.u32	%rd54, %r84;
+	add.s32 	%r87, %r84, 3;
+	cvt.u64.u32	%rd54, %r87;
 	// inline asm
 	call (%rd52), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd54, %rd93, %rd93, %rd93);
 	// inline asm
@@ -225,8 +228,8 @@ BB0_17:
 	// inline asm
 	mov.b32 	%r64, %f205;
 	// inline asm
-	add.s32 	%r85, %r81, 4;
-	cvt.u64.u32	%rd60, %r85;
+	add.s32 	%r88, %r84, 4;
+	cvt.u64.u32	%rd60, %r88;
 	// inline asm
 	call (%rd58), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd60, %rd93, %rd93, %rd93);
 	// inline asm
@@ -234,8 +237,8 @@ BB0_17:
 	// inline asm
 	mov.b32 	%r67, %f206;
 	// inline asm
-	add.s32 	%r86, %r81, 5;
-	cvt.u64.u32	%rd66, %r86;
+	add.s32 	%r89, %r84, 5;
+	cvt.u64.u32	%rd66, %r89;
 	// inline asm
 	call (%rd64), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd66, %rd93, %rd93, %rd93);
 	// inline asm
@@ -243,33 +246,30 @@ BB0_17:
 	// inline asm
 	mov.b32 	%r70, %f207;
 	// inline asm
-	add.s32 	%r87, %r81, 6;
-	cvt.u64.u32	%rd72, %r87;
+	add.s32 	%r90, %r84, 6;
+	cvt.u64.u32	%rd72, %r90;
 	// inline asm
 	call (%rd70), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd72, %rd93, %rd93, %rd93);
 	// inline asm
 	st.u32 	[%rd70], %r70;
-	ld.global.u32 	%r88, [index];
-	add.s32 	%r89, %r81, 7;
-	cvt.u64.u32	%rd78, %r89;
+	add.s32 	%r91, %r84, 7;
+	cvt.u64.u32	%rd78, %r91;
 	// inline asm
 	call (%rd76), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd78, %rd93, %rd93, %rd93);
 	// inline asm
-	st.u32 	[%rd76], %r88;
-	ld.global.u32 	%r90, [index+4];
-	add.s32 	%r91, %r81, 8;
-	cvt.u64.u32	%rd84, %r91;
+	st.u32 	[%rd76], %r82;
+	add.s32 	%r92, %r84, 8;
+	cvt.u64.u32	%rd84, %r92;
 	// inline asm
 	call (%rd82), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd84, %rd93, %rd93, %rd93);
 	// inline asm
-	st.u32 	[%rd82], %r90;
-	ld.global.u32 	%r92, [index+8];
-	add.s32 	%r93, %r81, 9;
+	st.u32 	[%rd82], %r81;
+	add.s32 	%r93, %r84, 9;
 	cvt.u64.u32	%rd90, %r93;
 	// inline asm
 	call (%rd88), _rt_buffer_get_64, (%rd35, %r77, %r78, %rd90, %rd93, %rd93, %rd93);
 	// inline asm
-	st.u32 	[%rd88], %r92;
+	st.u32 	[%rd88], %r80;
 	bra.uni 	BB0_18;
 
 BB0_3:
@@ -1494,6 +1494,9 @@ BB1_12:
 	ld.global.f32 	%f187, [current_ray+20];
 	ld.global.f32 	%f186, [current_ray+16];
 	ld.global.f32 	%f185, [current_ray+12];
+	ld.global.u32 	%r70, [index+8];
+	ld.global.u32 	%r71, [index+4];
+	ld.global.u32 	%r72, [index];
 	mov.u64 	%rd92, traverse_backup_buffer;
 	cvta.global.u64 	%rd33, %rd92;
 	mov.u32 	%r67, 1;
@@ -1502,13 +1505,13 @@ BB1_12:
 	// inline asm
 	call (%rd32), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd91, %rd91, %rd91, %rd91);
 	// inline asm
-	atom.add.u32 	%r70, [%rd32], 1;
-	mul.lo.s32 	%r71, %r70, 9;
+	atom.add.u32 	%r73, [%rd32], 1;
+	mul.lo.s32 	%r74, %r73, 9;
 	// inline asm
 	mov.b32 	%r45, %f2;
 	// inline asm
-	add.s32 	%r72, %r71, 1;
-	cvt.u64.u32	%rd40, %r72;
+	add.s32 	%r75, %r74, 1;
+	cvt.u64.u32	%rd40, %r75;
 	// inline asm
 	call (%rd38), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd40, %rd91, %rd91, %rd91);
 	// inline asm
@@ -1516,8 +1519,8 @@ BB1_12:
 	// inline asm
 	mov.b32 	%r48, %f3;
 	// inline asm
-	add.s32 	%r73, %r71, 2;
-	cvt.u64.u32	%rd46, %r73;
+	add.s32 	%r76, %r74, 2;
+	cvt.u64.u32	%rd46, %r76;
 	// inline asm
 	call (%rd44), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd46, %rd91, %rd91, %rd91);
 	// inline asm
@@ -1525,8 +1528,8 @@ BB1_12:
 	// inline asm
 	mov.b32 	%r51, %f4;
 	// inline asm
-	add.s32 	%r74, %r71, 3;
-	cvt.u64.u32	%rd52, %r74;
+	add.s32 	%r77, %r74, 3;
+	cvt.u64.u32	%rd52, %r77;
 	// inline asm
 	call (%rd50), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd52, %rd91, %rd91, %rd91);
 	// inline asm
@@ -1534,8 +1537,8 @@ BB1_12:
 	// inline asm
 	mov.b32 	%r54, %f185;
 	// inline asm
-	add.s32 	%r75, %r71, 4;
-	cvt.u64.u32	%rd58, %r75;
+	add.s32 	%r78, %r74, 4;
+	cvt.u64.u32	%rd58, %r78;
 	// inline asm
 	call (%rd56), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd58, %rd91, %rd91, %rd91);
 	// inline asm
@@ -1543,8 +1546,8 @@ BB1_12:
 	// inline asm
 	mov.b32 	%r57, %f186;
 	// inline asm
-	add.s32 	%r76, %r71, 5;
-	cvt.u64.u32	%rd64, %r76;
+	add.s32 	%r79, %r74, 5;
+	cvt.u64.u32	%rd64, %r79;
 	// inline asm
 	call (%rd62), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd64, %rd91, %rd91, %rd91);
 	// inline asm
@@ -1552,33 +1555,30 @@ BB1_12:
 	// inline asm
 	mov.b32 	%r60, %f187;
 	// inline asm
-	add.s32 	%r77, %r71, 6;
-	cvt.u64.u32	%rd70, %r77;
+	add.s32 	%r80, %r74, 6;
+	cvt.u64.u32	%rd70, %r80;
 	// inline asm
 	call (%rd68), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd70, %rd91, %rd91, %rd91);
 	// inline asm
 	st.u32 	[%rd68], %r60;
-	ld.global.u32 	%r78, [index];
-	add.s32 	%r79, %r71, 7;
-	cvt.u64.u32	%rd76, %r79;
+	add.s32 	%r81, %r74, 7;
+	cvt.u64.u32	%rd76, %r81;
 	// inline asm
 	call (%rd74), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd76, %rd91, %rd91, %rd91);
 	// inline asm
-	st.u32 	[%rd74], %r78;
-	ld.global.u32 	%r80, [index+4];
-	add.s32 	%r81, %r71, 8;
-	cvt.u64.u32	%rd82, %r81;
+	st.u32 	[%rd74], %r72;
+	add.s32 	%r82, %r74, 8;
+	cvt.u64.u32	%rd82, %r82;
 	// inline asm
 	call (%rd80), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd82, %rd91, %rd91, %rd91);
 	// inline asm
-	st.u32 	[%rd80], %r80;
-	ld.global.u32 	%r82, [index+8];
-	add.s32 	%r83, %r71, 9;
+	st.u32 	[%rd80], %r71;
+	add.s32 	%r83, %r74, 9;
 	cvt.u64.u32	%rd88, %r83;
 	// inline asm
 	call (%rd86), _rt_buffer_get_64, (%rd33, %r67, %r68, %rd88, %rd91, %rd91, %rd91);
 	// inline asm
-	st.u32 	[%rd86], %r82;
+	st.u32 	[%rd86], %r70;
 	bra.uni 	BB1_13;
 
 BB1_11:
