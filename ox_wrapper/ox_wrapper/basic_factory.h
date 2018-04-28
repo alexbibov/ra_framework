@@ -22,6 +22,8 @@ public:
     // required by OxEntity interface
     bool isValid() const override;
 
+    OxContext const& context() const;
+
     // programs
 public:
     OxProgram createProgram(std::string const& source, OxProgram::Source source_type, std::string const& program_name) const;

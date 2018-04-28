@@ -44,6 +44,20 @@ std::string correctPath(std::string const& path)
     return corrected_path;
 }
 
+void luaRegisterGeneralRoutines(OxInit const& init)
+{
+    util::lua_support::LuaState::registerFunction("ox_logger_path", [&init]()->std::string {return init.loggerPath(); });
+    util::lua_support::LuaState::registerFunction("ox_alive_entities", &OxEntity::aliveEntities);
+
+    util::lua_support::LuaState::registerFunction(
+        "ox_set_context_stack_size",
+        [&init](size_t size_in_bytes)
+        {
+            init.context().setStackSize(size_in_bytes);
+        }
+    );
+}
+
 }
 
 
@@ -59,6 +73,7 @@ OxInit::OxInit(
     // initialize system parameters
     m_logging_path = corrected_global_path_prefix + "/ox_wrapper.html";
     uint32_t num_entry_points = 1U;
+    size_t context_stack_size = 4096U;
     std::vector<std::string> asset_directories{};
     {
         util::Optional<std::string> settings_source = util::misc::readAsciiTextFromSourceFile(full_path_to_settings);
@@ -113,7 +128,21 @@ OxInit::OxInit(
             {
                 util::Log::retrieve()->out("Unable to read entry \"num_entry_points\" while parsing "
                     "ox_wrapper JSON settings file \"" + path_to_settings + "\". The entry is either not found or is "
-                    "having invalid format (unsigned number was expected)", util::LogMessageType::exclamation);
+                    "having invalid format (unsigned number was expected) The system will revert to the default value of " 
+                    + std::to_string(num_entry_points), util::LogMessageType::exclamation);
+            }
+
+            if ((p = j.find("context_stack_size")) != j.end()
+                && p->is_number_unsigned())
+            {
+                context_stack_size = *p;
+            }
+            else
+            {
+                util::Log::retrieve()->out("Unable to read entry \"context_stack_size\" while parsing "
+                    "ox_wrapper JSON settings file \"" + path_to_settings + "\". The entry is either not found or is "
+                    "having invalid format (unsigned number was expected). The system will revert to the default value of " 
+                    + std::to_string(context_stack_size), util::LogMessageType::exclamation);
             }
 
             if ((p = j.find("asset_directories")) != j.end()
@@ -146,12 +175,12 @@ OxInit::OxInit(
         m_context.reset(new OxContext{ asset_directories, num_entry_points });
         m_factories_sentinel.reset(new OxFactoryInitializerSentinel{ *m_context });
         m_context->setStringName("OptiX context");
+        m_context->setStackSize(context_stack_size);
     }
 
     // register some auxiliary functions in Lua
     {
-        util::lua_support::LuaState::registerFunction("ox_logger_path", [this]()->std::string {return loggerPath(); });
-        util::lua_support::LuaState::registerFunction("ox_alive_entities", &OxEntity::aliveEntities);
+        luaRegisterGeneralRoutines(*this);
     }
 }
 

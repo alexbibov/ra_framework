@@ -1162,6 +1162,11 @@ bool OxBasicFactory::isValid() const
     return true;
 }
 
+OxContext const& OxBasicFactory::context() const
+{
+    return m_context;
+}
+
 OxProgram OxBasicFactory::createProgram(std::string const& source, OxProgram::Source source_type, std::string const& program_name) const
 {
     return m_context.createProgram(source, source_type, program_name);

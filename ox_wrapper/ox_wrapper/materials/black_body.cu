@@ -14,6 +14,7 @@ rtDeclareVariable(OxRayRadiancePayload, radiance_payload, rtPayload, );
 rtDeclareVariable(OxRayRadiancePayloadSimple, radiance_payload_simple, rtPayload, );
 rtDeclareVariable(OxRayRadiancePayloadMonochromatic, radiance_payload_monochromatic, rtPayload, );
 rtDeclareVariable(OxRayOcclusionPayload, occlusion_payload, rtPayload, );
+rtDeclareVariable(float, intersection_distance, rtIntersectionDistance, "Parametric distance from ray origin to the intersection");
 
 RT_PROGRAM void __ox_any_hit__()
 {
@@ -21,22 +22,30 @@ RT_PROGRAM void __ox_any_hit__()
     {
     case OxRayPayloadType::radiance:
         memset(radiance_payload.spectral_radiance, 0, constants::max_spectra_pairs_supported * sizeof(float2));
-        radiance_payload.depth = make_float2(0.f, 0.f);
+
+        if (!radiance_payload.depth.x) radiance_payload.depth.x = intersection_distance;
+        radiance_payload.depth.y += intersection_distance;
         break;
 
     case OxRayPayloadType::radiance_simple:
         radiance_payload_simple.spectral_radiance = make_float2(0.f, 0.f);
-        radiance_payload_simple.depth = make_float2(0.f, 0.f);
+
+        if (!radiance_payload.depth.x) radiance_payload.depth.x = intersection_distance;
+        radiance_payload.depth.y += intersection_distance;
         break;
 
     case OxRayPayloadType::monochromatic:
         radiance_payload_monochromatic.spectral_radiance = 0.f;
-        radiance_payload_monochromatic.depth = make_float2(0.f, 0.f);
+
+        if (!radiance_payload.depth.x) radiance_payload.depth.x = intersection_distance;
+        radiance_payload.depth.y += intersection_distance;
         break;
 
     case OxRayPayloadType::occlusion:
         occlusion_payload.is_occluded = true;
-        occlusion_payload.depth = make_float2(0.f, 0.f);
+
+        if (!radiance_payload.depth.x) radiance_payload.depth.x = intersection_distance;
+        radiance_payload.depth.y += intersection_distance;
         break;
     }
 

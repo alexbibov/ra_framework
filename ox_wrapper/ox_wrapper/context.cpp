@@ -81,6 +81,12 @@ OxContext::~OxContext()
     LOG_OPTIX_ERROR(m_optix_context, rtContextDestroy(m_optix_context));
 }
 
+void OxContext::setStackSize(size_t size_in_bytes) const
+{
+    LOG_OPTIX_ERROR(m_optix_context,
+        rtContextSetStackSize(m_optix_context, static_cast<RTsize>(size_in_bytes)));
+}
+
 OxProgram OxContext::createProgram(std::string const& source, OxProgram::Source source_type, std::string const& program_name) const
 {
     if (source_type == OxProgram::Source::file)

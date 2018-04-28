@@ -404,6 +404,8 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
 
     if (!file_exists || !m_append)
         stream_flags |= std::ios_base::trunc;
+    else if (file_exists && m_append)
+        stream_flags |= std::ios_base::app;
 
     std::fstream stream{ m_path, stream_flags };
     if (!stream) return false;

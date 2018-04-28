@@ -185,6 +185,8 @@ RT_PROGRAM void __ox_closest_hit__(void)
 
             uint3 idx = ray_payload.tracing_depth_and_aux.z ?
                 linear_index_to_3d_index(ray_payload.tracing_depth_and_aux.z) : index;
+            // ray_payload.tracing_depth_and_aux.z = 0U;
+
             pack_ray_info(current_ray.origin, current_ray.direction, idx);
         }
     }
@@ -240,6 +242,8 @@ RT_PROGRAM void __ox_miss__(void)
 
             uint3 idx = ray_payload.tracing_depth_and_aux.z ?
                 linear_index_to_3d_index(ray_payload.tracing_depth_and_aux.z) : index;
+            // ray_payload.tracing_depth_and_aux.z = 0U;
+
             pack_ray_info(current_ray.origin, current_ray.direction, idx);
         }
     }

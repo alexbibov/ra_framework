@@ -12,7 +12,7 @@ planet_circle:setStringName("planet_circle_shape")
 atmospheric_circle = OxCircle.new(
     1.0, --[Circle center X coordinate]
     0.0, --[Circle center Y coordinate]
-    1.1 --[Circle radius]
+    1.0 --[Circle radius]
 )
 atmospheric_circle:setStringName("atmosphere_circle_shape")
 
