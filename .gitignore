@@ -50,4 +50,7 @@
 # Merge originals 
 *.orig
 
+# MATLAB data files
+*.mat
+
 
