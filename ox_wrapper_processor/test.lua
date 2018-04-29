@@ -1,5 +1,6 @@
 num_rays = 100    -- total number of rays to cast
 frequency_pairs = 2    -- number of frequency pairs to support (means 4 frquencies in total in this case)
+ox_set_context_stack_size(2048)
 
 -- create planet and atmosphere that encloses it
 planet_circle = OxCircle.new(
@@ -43,7 +44,7 @@ atmospheric_circle:setStringName("atmosphere_circle_shape")
 parallel_ray_generator = OxParallelRayGenerator.new(
     num_rays, --[Total number of rays to cast]
     2, --[Opening of the emitter]
-    -2, --[Position of the emitter]
+    -1, --[Position of the emitter]
     -3.14/2, --[Rotation of the emitter]
     frequency_pairs --[Number of spectral pairs to support]
 )
@@ -51,7 +52,7 @@ parallel_ray_generator = OxParallelRayGenerator.new(
 -- write per-spectrum intensities for rays casted by the parallel ray generator
 spectral_flux = {}
 for i = 1, num_rays*frequency_pairs do
-    e = float2.new(1.5, 1.5)
+    e = float2.new(100, 100)
     spectral_flux[i] = e
 end
 parallel_ray_generator:updateSpectralFluxBuffer(spectral_flux)
@@ -100,7 +101,7 @@ atmospheric_circle:setMaterialAssembly(OxMaterialAssembly.new())
     be constructed for the given set of geometry objects. The algorithm used to construct acceleration structure
     is provided to the input of OxGeometryGroup constructor.
 ]]
-earth_geometry_group = OxGeometryGroup.new(OxBVHAlgorithm["trbvh"])
+earth_geometry_group = OxGeometryGroup.new(OxBVHAlgorithm["none"])
 earth_geometry_group:beginConstruction()
 earth_geometry_group:addGeometry(atmospheric_circle)
 earth_geometry_group:addGeometry(planet_circle)
@@ -113,7 +114,7 @@ earth_geometry_group:endConstruction()
     the only parameter accepted by constructor of OxSceneSection is algorithm to use for construction of the corresponding
     acceleration structure (acceleration structure = BVH in this case)
 ]]
-scene_section = OxSceneSection.new(OxBVHAlgorithm["trbvh"])
+scene_section = OxSceneSection.new(OxBVHAlgorithm["none"])
 scene_section:beginConstruction()
 scene_section:addGeometryGroup(earth_geometry_group)
 scene_section:endConstruction()
@@ -123,7 +124,7 @@ scattering_rendering_pass = OxScatteringRenderingPass.new(
     parallel_ray_generator,    -- ray generator employed by the scattering pass
     2,    -- number of spectral pairs supported by the scattering pass (must be equal to that of the ray generator)
     10,   -- maximal depth of recursion
-    0.05,    -- ray marching step size
+    0.01,    -- ray marching step size
     1    -- number of importance directions used to approximate the scattering integral
 )
 

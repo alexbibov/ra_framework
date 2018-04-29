@@ -7,5 +7,6 @@
 	 "ox_wrapper/rendering_passes/ptx",
 	 "ox_wrapper/shapes/ptx",
 	 "ox_wrapper/materials/ptx"
-	]
+	],
+"context_stack_size": 8192
 }

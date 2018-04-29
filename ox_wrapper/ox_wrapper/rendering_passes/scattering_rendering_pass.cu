@@ -61,16 +61,13 @@ using namespace ox_wrapper;
 
 __device__ uint3 linear_index_to_3d_index(unsigned int idx)
 {
-    unsigned int const layer_size = problem_size.x*problem_size.y;
-    unsigned int const scanline_size = problem_size.x;
+    unsigned int layer_idx = idx / (problem_size.x*problem_size.y);
+    unsigned int aux = idx - layer_idx * problem_size.x*problem_size.y;
+    
+    unsigned int scanline_idx = aux / problem_size.x;
+    unsigned int ray_idx = aux - scanline_idx * problem_size.x;
 
-    unsigned int layer_idx = idx / layer_size;
-    unsigned int aux = idx % layer_idx;
-
-    unsigned int scanline_idx = aux / scanline_size;
-    unsigned int ray_idx = aux % scanline_size;
-
-    return make_uint3(ray_idx, scanline_idx, layer_idx);
+    return optix::make_uint3(ray_idx, scanline_idx, layer_idx);
 }
 
 __device__ float sign(float x)
@@ -126,7 +123,7 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
         float2 S = make_float2(0.f, 0.f);
 
         // scattering component is only calculated when scattering is enabled
-        /*for (int j = 0; j < num_importance_directions; ++j)
+        for (int j = 0; j < num_importance_directions; ++j)
         {
             OxRayRadiancePayloadSimple scattered_payload;
             scattered_payload.spectral_radiance = make_float2(0.f, 0.f);
@@ -147,9 +144,9 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
 
             S += scattered_payload.spectral_radiance
                 * phase_function(p, importance_direction, direction_of_interest, i) * sin(importance_direction.x);
-        }*/
+        }
 
-        float2 sigma_S_p_2 = /*num_importance_directions ? scattering_factor(p_2, i) :*/ make_float2(0.f, 0.f);
+        float2 sigma_S_p_2 = num_importance_directions ? scattering_factor(p_2, i) : make_float2(0.f, 0.f);
         float2 phi = expf(-(absorption_factor(p_2, i) + sigma_S_p_2)*step);
 
         ray_payload.spectral_radiance[i] =
@@ -164,6 +161,7 @@ RT_PROGRAM void __ox_closest_hit__(void)
     ray_payload.tracing_depth_and_aux.y = MAX(0, static_cast<int>(ray_payload.tracing_depth_and_aux.y) + dS);
     float3 p{ current_ray.origin + intersection_distance*current_ray.direction };
 
+    
     if (dS > 0)    // the ray has entered object
     {
         ray_payload.depth.x = intersection_distance;
@@ -172,10 +170,12 @@ RT_PROGRAM void __ox_closest_hit__(void)
         ++ray_payload.tracing_depth_and_aux.x;
         if (ray_payload.tracing_depth_and_aux.x <= max_recursion_depth)
         {
+            float const correction = step_size*1e-2f;
+
             Ray subsurface_ray = make_Ray(
-                p + (step_size*1e-5f)*current_ray.direction,
+                p + correction*current_ray.direction,
                 current_ray.direction,
-                static_cast<unsigned int>(OxRayType::unknown), 0.f, step_size);
+                static_cast<unsigned int>(OxRayType::unknown), 0.f, step_size + correction);
 
             rtTrace(ox_entry_node, subsurface_ray, ray_payload);
         }
@@ -183,8 +183,8 @@ RT_PROGRAM void __ox_closest_hit__(void)
         {
             ray_payload.tracing_depth_and_aux.x = 0U;
 
-            uint3 idx = ray_payload.tracing_depth_and_aux.z ?
-                linear_index_to_3d_index(ray_payload.tracing_depth_and_aux.z) : index;
+            uint3 idx = ray_payload.tracing_depth_and_aux.z > 0 ?
+                linear_index_to_3d_index(ray_payload.tracing_depth_and_aux.z - 1) : index;
             // ray_payload.tracing_depth_and_aux.z = 0U;
 
             pack_ray_info(current_ray.origin, current_ray.direction, idx);
@@ -203,8 +203,10 @@ RT_PROGRAM void __ox_closest_hit__(void)
         ++ray_payload.tracing_depth_and_aux.x;
         if (ray_payload.tracing_depth_and_aux.x <= max_recursion_depth)
         {
+            float const correction = step_size * 1e-2f;
+
             Ray next_iteration_ray = make_Ray(
-                p + (step_size*1e-5f)*current_ray.direction,
+                p + correction*current_ray.direction,
                 current_ray.direction,
                 static_cast<unsigned int>(OxRayType::unknown), 0.f, RT_DEFAULT_MAX);
 
@@ -217,7 +219,7 @@ RT_PROGRAM void __ox_closest_hit__(void)
 
 RT_PROGRAM void __ox_miss__(void)
 {
-    if (ray_payload.tracing_depth_and_aux.y > 0)    // "miss" has happened inside of medium
+    if (ray_payload.tracing_depth_and_aux.y >= 1)    // "miss" has happened inside of medium
     {
         float3 p{ current_ray.origin + step_size * current_ray.direction };
         float3 p_2{ current_ray.origin + step_size * .5f * current_ray.direction };
@@ -240,11 +242,12 @@ RT_PROGRAM void __ox_miss__(void)
         {
             ray_payload.tracing_depth_and_aux.x = 0U;
 
-            uint3 idx = ray_payload.tracing_depth_and_aux.z ?
-                linear_index_to_3d_index(ray_payload.tracing_depth_and_aux.z) : index;
+            uint3 idx = ray_payload.tracing_depth_and_aux.z >= 1 ?
+                /*optix::make_uint3(ray_payload.tracing_depth_and_aux.z - 1, 0, 0)*/
+                linear_index_to_3d_index(ray_payload.tracing_depth_and_aux.z - 1) : index;
             // ray_payload.tracing_depth_and_aux.z = 0U;
 
-            pack_ray_info(current_ray.origin, current_ray.direction, idx);
+            pack_ray_info(p, current_ray.direction, idx);
         }
     }
 

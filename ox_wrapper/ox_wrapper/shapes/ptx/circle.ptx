@@ -70,155 +70,104 @@
 	.param .u32 _Z16__ox_intersect__i_param_0
 )
 {
-	.reg .pred 	%p<12>;
+	.reg .pred 	%p<8>;
 	.reg .b16 	%rs<5>;
-	.reg .f32 	%f<85>;
-	.reg .b32 	%r<25>;
+	.reg .f32 	%f<48>;
+	.reg .b32 	%r<15>;
 
 
-	ld.global.f32 	%f14, [ray];
-	ld.global.v2.f32 	{%f15, %f16}, [center];
-	sub.ftz.f32 	%f1, %f14, %f15;
-	ld.global.f32 	%f19, [ray+4];
-	sub.ftz.f32 	%f2, %f19, %f16;
-	ld.global.f32 	%f3, [ray+12];
-	ld.global.f32 	%f4, [ray+16];
-	mul.ftz.f32 	%f20, %f4, %f4;
-	fma.rn.ftz.f32 	%f5, %f3, %f3, %f20;
-	mul.ftz.f32 	%f21, %f4, %f2;
-	fma.rn.ftz.f32 	%f6, %f3, %f1, %f21;
-	mul.ftz.f32 	%f22, %f2, %f2;
-	fma.rn.ftz.f32 	%f23, %f1, %f1, %f22;
-	ld.global.f32 	%f24, [radius];
-	mul.ftz.f32 	%f25, %f24, %f24;
-	sub.ftz.f32 	%f26, %f23, %f25;
-	mul.ftz.f32 	%f27, %f6, %f6;
-	mul.ftz.f32 	%f28, %f5, %f26;
-	sub.ftz.f32 	%f7, %f27, %f28;
-	setp.leu.ftz.f32	%p1, %f7, 0f00000000;
+	ld.global.f32 	%f15, [ray];
+	ld.global.f32 	%f16, [ray+12];
+	ld.global.f32 	%f17, [ray+16];
+	mul.f32 	%f18, %f17, %f17;
+	fma.rn.f32 	%f19, %f16, %f16, %f18;
+	sqrt.rn.f32 	%f20, %f19;
+	rcp.rn.f32 	%f21, %f20;
+	mul.f32 	%f1, %f16, %f21;
+	mul.f32 	%f2, %f17, %f21;
+	ld.global.v2.f32 	{%f22, %f23}, [center];
+	sub.f32 	%f3, %f15, %f22;
+	ld.global.f32 	%f26, [ray+4];
+	sub.f32 	%f4, %f26, %f23;
+	mul.f32 	%f27, %f2, %f4;
+	fma.rn.f32 	%f5, %f1, %f3, %f27;
+	mul.f32 	%f28, %f4, %f4;
+	fma.rn.f32 	%f29, %f3, %f3, %f28;
+	ld.global.f32 	%f30, [radius];
+	mul.f32 	%f31, %f30, %f30;
+	sub.f32 	%f32, %f29, %f31;
+	mul.f32 	%f33, %f5, %f5;
+	sub.f32 	%f6, %f33, %f32;
+	setp.leu.f32	%p1, %f6, 0f00000000;
 	@%p1 bra 	BB0_9;
 
-	sqrt.approx.ftz.f32 	%f29, %f7;
-	neg.ftz.f32 	%f30, %f6;
-	sub.ftz.f32 	%f31, %f30, %f29;
-	div.approx.ftz.f32 	%f8, %f31, %f5;
-	sub.ftz.f32 	%f32, %f29, %f6;
-	div.approx.ftz.f32 	%f9, %f32, %f5;
+	sqrt.rn.f32 	%f34, %f6;
+	neg.f32 	%f35, %f5;
+	sub.f32 	%f7, %f35, %f34;
+	sub.f32 	%f8, %f34, %f5;
 	ld.global.u32 	%r3, [num_materials];
 	setp.eq.s32	%p2, %r3, 0;
 	@%p2 bra 	BB0_9;
 
-	fma.rn.ftz.f32 	%f10, %f3, %f9, %f1;
-	fma.rn.ftz.f32 	%f11, %f4, %f9, %f2;
-	fma.rn.ftz.f32 	%f12, %f3, %f8, %f1;
-	fma.rn.ftz.f32 	%f13, %f4, %f8, %f2;
-	mov.u32 	%r24, 0;
+	fma.rn.f32 	%f9, %f1, %f8, %f3;
+	fma.rn.f32 	%f10, %f2, %f8, %f4;
+	mul.f32 	%f36, %f10, %f10;
+	fma.rn.f32 	%f11, %f9, %f9, %f36;
+	fma.rn.f32 	%f12, %f1, %f7, %f3;
+	fma.rn.f32 	%f13, %f2, %f7, %f4;
+	mul.f32 	%f37, %f13, %f13;
+	fma.rn.f32 	%f14, %f12, %f12, %f37;
+	mov.u32 	%r14, 0;
+	sqrt.rn.f32 	%f44, %f11;
+	rcp.rn.f32 	%f45, %f44;
+	sqrt.rn.f32 	%f39, %f14;
+	rcp.rn.f32 	%f40, %f39;
 
 BB0_3:
 	// inline asm
-	call (%r5), _rt_potential_intersection, (%f8);
+	call (%r5), _rt_potential_intersection, (%f7);
 	// inline asm
 	setp.eq.s32	%p3, %r5, 0;
 	mov.u16 	%rs4, 1;
 	@%p3 bra 	BB0_5;
 
-	abs.ftz.f32 	%f34, %f12;
-	abs.ftz.f32 	%f35, %f13;
-	add.ftz.f32 	%f36, %f34, %f35;
-	mov.f32 	%f37, 0f00000000;
-	abs.ftz.f32 	%f38, %f37;
-	add.ftz.f32 	%f39, %f36, %f38;
-	min.ftz.f32 	%f40, %f34, %f35;
-	max.ftz.f32 	%f41, %f34, %f35;
-	min.ftz.f32 	%f42, %f41, %f38;
-	max.ftz.f32 	%f43, %f41, %f38;
-	mov.b32 	 %r8, %f43;
-	and.b32  	%r9, %r8, -33554432;
-	mov.u32 	%r10, 2122317824;
-	sub.s32 	%r11, %r10, %r9;
-	mov.b32 	 %f44, %r11;
-	mul.ftz.f32 	%f45, %f42, %f44;
-	mul.ftz.f32 	%f46, %f40, %f44;
-	mul.ftz.f32 	%f47, %f43, %f44;
-	mul.ftz.f32 	%f48, %f45, %f45;
-	fma.rn.ftz.f32 	%f49, %f46, %f46, %f48;
-	fma.rn.ftz.f32 	%f50, %f47, %f47, %f49;
-	sqrt.approx.ftz.f32 	%f51, %f50;
-	add.s32 	%r12, %r9, 8388608;
-	mov.b32 	 %f52, %r12;
-	mul.ftz.f32 	%f53, %f51, %f52;
-	setp.leu.ftz.f32	%p4, %f39, %f43;
-	selp.f32	%f54, %f39, %f53, %p4;
-	setp.eq.ftz.f32	%p5, %f43, 0f7F800000;
-	rcp.approx.ftz.f32 	%f55, %f54;
-	selp.f32	%f56, 0f00000000, %f55, %p5;
-	mul.ftz.f32 	%f57, %f12, %f56;
-	mul.ftz.f32 	%f58, %f13, %f56;
-	st.global.f32 	[normal], %f57;
-	st.global.f32 	[normal+4], %f58;
-	mov.u32 	%r13, 0;
-	st.global.u32 	[normal+8], %r13;
+	mul.f32 	%f41, %f12, %f40;
+	mul.f32 	%f42, %f13, %f40;
+	st.global.f32 	[normal], %f41;
+	st.global.f32 	[normal+4], %f42;
+	mov.u32 	%r8, 0;
+	st.global.u32 	[normal+8], %r8;
 	// inline asm
-	call (%r6), _rt_report_intersection, (%r24);
+	call (%r6), _rt_report_intersection, (%r14);
 	// inline asm
-	setp.eq.s32	%p6, %r6, 0;
-	selp.u16	%rs4, 1, 0, %p6;
+	setp.eq.s32	%p4, %r6, 0;
+	selp.u16	%rs4, 1, 0, %p4;
 
 BB0_5:
-	setp.eq.s16	%p7, %rs4, 0;
-	@%p7 bra 	BB0_8;
+	setp.eq.s16	%p5, %rs4, 0;
+	@%p5 bra 	BB0_8;
 
 	// inline asm
-	call (%r14), _rt_potential_intersection, (%f9);
+	call (%r9), _rt_potential_intersection, (%f8);
 	// inline asm
-	setp.eq.s32	%p8, %r14, 0;
-	@%p8 bra 	BB0_8;
+	setp.eq.s32	%p6, %r9, 0;
+	@%p6 bra 	BB0_8;
 
-	abs.ftz.f32 	%f60, %f10;
-	abs.ftz.f32 	%f61, %f11;
-	add.ftz.f32 	%f62, %f60, %f61;
-	mov.f32 	%f63, 0f00000000;
-	abs.ftz.f32 	%f64, %f63;
-	add.ftz.f32 	%f65, %f62, %f64;
-	min.ftz.f32 	%f66, %f60, %f61;
-	max.ftz.f32 	%f67, %f60, %f61;
-	min.ftz.f32 	%f68, %f67, %f64;
-	max.ftz.f32 	%f69, %f67, %f64;
-	mov.b32 	 %r17, %f69;
-	and.b32  	%r18, %r17, -33554432;
-	mov.u32 	%r19, 2122317824;
-	sub.s32 	%r20, %r19, %r18;
-	mov.b32 	 %f70, %r20;
-	mul.ftz.f32 	%f71, %f68, %f70;
-	mul.ftz.f32 	%f72, %f66, %f70;
-	mul.ftz.f32 	%f73, %f69, %f70;
-	mul.ftz.f32 	%f74, %f71, %f71;
-	fma.rn.ftz.f32 	%f75, %f72, %f72, %f74;
-	fma.rn.ftz.f32 	%f76, %f73, %f73, %f75;
-	sqrt.approx.ftz.f32 	%f77, %f76;
-	add.s32 	%r21, %r18, 8388608;
-	mov.b32 	 %f78, %r21;
-	mul.ftz.f32 	%f79, %f77, %f78;
-	setp.leu.ftz.f32	%p9, %f65, %f69;
-	selp.f32	%f80, %f65, %f79, %p9;
-	setp.eq.ftz.f32	%p10, %f69, 0f7F800000;
-	rcp.approx.ftz.f32 	%f81, %f80;
-	selp.f32	%f82, 0f00000000, %f81, %p10;
-	mul.ftz.f32 	%f83, %f10, %f82;
-	mul.ftz.f32 	%f84, %f11, %f82;
-	st.global.f32 	[normal], %f83;
-	st.global.f32 	[normal+4], %f84;
-	mov.u32 	%r22, 0;
-	st.global.u32 	[normal+8], %r22;
+	mul.f32 	%f46, %f9, %f45;
+	mul.f32 	%f47, %f10, %f45;
+	st.global.f32 	[normal], %f46;
+	st.global.f32 	[normal+4], %f47;
+	mov.u32 	%r12, 0;
+	st.global.u32 	[normal+8], %r12;
 	// inline asm
-	call (%r15), _rt_report_intersection, (%r24);
+	call (%r10), _rt_report_intersection, (%r14);
 	// inline asm
 
 BB0_8:
-	add.s32 	%r24, %r24, 1;
-	ld.global.u32 	%r23, [num_materials];
-	setp.lt.u32	%p11, %r24, %r23;
-	@%p11 bra 	BB0_3;
+	add.s32 	%r14, %r14, 1;
+	ld.global.u32 	%r13, [num_materials];
+	setp.lt.u32	%p7, %r14, %r13;
+	@%p7 bra 	BB0_3;
 
 BB0_9:
 	ret;
@@ -239,23 +188,23 @@ BB0_9:
 	cvta.to.global.u64 	%rd2, %rd1;
 	ld.global.f32 	%f1, [center];
 	ld.global.f32 	%f2, [radius];
-	sub.ftz.f32 	%f3, %f1, %f2;
+	sub.f32 	%f3, %f1, %f2;
 	st.global.f32 	[%rd2], %f3;
 	ld.global.f32 	%f4, [center+4];
 	ld.global.f32 	%f5, [radius];
-	sub.ftz.f32 	%f6, %f4, %f5;
+	sub.f32 	%f6, %f4, %f5;
 	st.global.f32 	[%rd2+4], %f6;
-	mov.u32 	%r1, -1138501878;
+	mov.u32 	%r1, -803929351;
 	st.global.u32 	[%rd2+8], %r1;
 	ld.global.f32 	%f7, [center];
 	ld.global.f32 	%f8, [radius];
-	add.ftz.f32 	%f9, %f7, %f8;
+	add.f32 	%f9, %f7, %f8;
 	st.global.f32 	[%rd2+12], %f9;
 	ld.global.f32 	%f10, [center+4];
 	ld.global.f32 	%f11, [radius];
-	add.ftz.f32 	%f12, %f10, %f11;
+	add.f32 	%f12, %f10, %f11;
 	st.global.f32 	[%rd2+16], %f12;
-	mov.u32 	%r2, 1008981770;
+	mov.u32 	%r2, 786163455;
 	st.global.u32 	[%rd2+20], %r2;
 	ret;
 }

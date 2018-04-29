@@ -30,7 +30,7 @@ rtBuffer<optix::float2, 1> ox_init_flux_buffer;
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
-__device__ optix::float2 rotate_point(optix::float2 point_to_rotate, optix::float2 center_of_rotation, optix::float2 cs)
+__device__ optix::float2 rotate_point_2d(optix::float2 point_to_rotate, optix::float2 center_of_rotation, optix::float2 cs)
 {
     point_to_rotate -= center_of_rotation;
 
@@ -49,11 +49,11 @@ RT_PROGRAM void __ox_generate__(void)
     optix::float3 origin{ -emitter_size / 2.f + emitter_size / (num_rays - 1) * index + emitter_position, 0.f, 0.f };
 
     optix::float2 cs = optix::make_float2(cosf(emitter_rotation), sinf(emitter_rotation));
-    optix::float2 rotated_point = rotate_point(optix::float2{ origin.x, origin.y }, optix::float2{ emitter_position, 0 }, cs);
-    optix::float2 rotated_tip = rotate_point(optix::float2{ origin.x, 1 }, optix::float2{ emitter_position, 0 }, cs);
+    optix::float2 rotated_point = rotate_point_2d(optix::float2{ origin.x, origin.y }, optix::float2{ emitter_position, 0 }, cs);
+    optix::float2 rotated_tip = rotate_point_2d(optix::float2{ origin.x, 1 }, optix::float2{ emitter_position, 0 }, cs);
     
     origin.x = rotated_point.x; origin.y = rotated_point.y;
-    optix::float3 direction = optix::make_float3(rotated_tip - rotated_point, 0);
+    optix::float3 direction = optix::normalize(optix::make_float3(rotated_tip - rotated_point, 0));
     optix::Ray ray = optix::make_Ray(origin, direction, static_cast<unsigned int>(ox_wrapper::OxRayType::unknown), 0.f, RT_DEFAULT_MAX);
     
     unsigned int const ns{ MIN(ox_wrapper::constants::max_spectra_pairs_supported, num_spectra_pairs_supported) };
@@ -61,8 +61,10 @@ RT_PROGRAM void __ox_generate__(void)
     ox_wrapper::OxRayRadiancePayload payload{};
     memcpy(payload.spectral_radiance, &ox_init_flux_buffer[ns*index], sizeof(optix::float2)*ns);
     payload.tracing_depth_and_aux = make_uint4(0U, 0U, 0U, 0U);
-
     rtTrace(ox_entry_node, ray, payload);
+
+    /*payload.spectral_radiance[2].x = origin.x; payload.spectral_radiance[2].y = origin.y;
+    payload.spectral_radiance[3].x = direction.x; payload.spectral_radiance[3].y = direction.y;*/
 
     ox_output_buffer[index] = payload;
 }

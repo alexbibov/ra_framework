@@ -86,7 +86,8 @@ RT_PROGRAM void __ox_generate__(void)
         {
             unsigned int idx = output_buffer_index.x;
             OxRayRadiancePayload payload = ox_radiance_payload_1d_out[idx];
-            payload.tracing_depth_and_aux.z = idx;
+            payload.tracing_depth_and_aux.z = idx + 1;
+            ++payload.tracing_depth_and_aux.w;
             rtTrace(ox_entry_node, current_ray, payload);
             ox_radiance_payload_1d_out[idx] = payload;
             break;
@@ -96,7 +97,7 @@ RT_PROGRAM void __ox_generate__(void)
         {
             uint2 idx = make_uint2(output_buffer_index.x, output_buffer_index.y);
             OxRayRadiancePayload payload = ox_radiance_payload_2d_out[idx];
-            payload.tracing_depth_and_aux.z = idx.y*problem_size.x + idx.x;
+            payload.tracing_depth_and_aux.z = idx.y*problem_size.x + idx.x + 1;
             rtTrace(ox_entry_node, current_ray, payload);
             ox_radiance_payload_2d_out[idx] = payload;
             break;
@@ -108,7 +109,7 @@ RT_PROGRAM void __ox_generate__(void)
             
             payload.tracing_depth_and_aux.z =
                 output_buffer_index.z*problem_size.x*problem_size.y
-                + output_buffer_index.y*problem_size.x + output_buffer_index.x;
+                + output_buffer_index.y*problem_size.x + output_buffer_index.x + 1;
             
             rtTrace(ox_entry_node, current_ray, payload);
 
@@ -125,7 +126,7 @@ RT_PROGRAM void __ox_generate__(void)
         {
             unsigned int idx = output_buffer_index.x;
             OxRayRadiancePayloadSimple payload = ox_radiance_payload_simple_1d_out[idx];
-            payload.tracing_depth_and_aux.z = idx;
+            payload.tracing_depth_and_aux.z = idx + 1;
             rtTrace(ox_entry_node, current_ray, payload);
             ox_radiance_payload_simple_1d_out[idx] = payload;
             break;
@@ -135,7 +136,7 @@ RT_PROGRAM void __ox_generate__(void)
         {
             uint2 idx = make_uint2(output_buffer_index.x, output_buffer_index.y);
             OxRayRadiancePayloadSimple payload = ox_radiance_payload_simple_2d_out[idx];
-            payload.tracing_depth_and_aux.z = idx.y*problem_size.x + idx.x;
+            payload.tracing_depth_and_aux.z = idx.y*problem_size.x + idx.x + 1;
             rtTrace(ox_entry_node, current_ray, payload);
             ox_radiance_payload_simple_2d_out[idx] = payload;
             break;
@@ -147,7 +148,7 @@ RT_PROGRAM void __ox_generate__(void)
 
             payload.tracing_depth_and_aux.z =
                 output_buffer_index.z*problem_size.x*problem_size.y
-                + output_buffer_index.y*problem_size.x + output_buffer_index.x;
+                + output_buffer_index.y*problem_size.x + output_buffer_index.x + 1;
             
             rtTrace(ox_entry_node, current_ray, payload);
             
@@ -164,7 +165,7 @@ RT_PROGRAM void __ox_generate__(void)
         {
             unsigned int idx = output_buffer_index.x;
             OxRayRadiancePayloadMonochromatic payload = ox_radiance_payload_monochromatic_1d_out[idx];
-            payload.tracing_depth_and_aux.z = idx;
+            payload.tracing_depth_and_aux.z = idx + 1;
             rtTrace(ox_entry_node, current_ray, payload);
             ox_radiance_payload_monochromatic_1d_out[idx] = payload;
             break;
@@ -174,7 +175,7 @@ RT_PROGRAM void __ox_generate__(void)
         {
             uint2 idx = make_uint2(output_buffer_index.x, output_buffer_index.y);
             OxRayRadiancePayloadMonochromatic payload = ox_radiance_payload_monochromatic_2d_out[idx];
-            payload.tracing_depth_and_aux.z = idx.y*problem_size.x + idx.x;
+            payload.tracing_depth_and_aux.z = idx.y*problem_size.x + idx.x + 1;
             rtTrace(ox_entry_node, current_ray, payload);
             ox_radiance_payload_monochromatic_2d_out[idx] = payload;
             break;
@@ -186,7 +187,7 @@ RT_PROGRAM void __ox_generate__(void)
 
             payload.tracing_depth_and_aux.z =
                 output_buffer_index.z*problem_size.x*problem_size.y
-                + output_buffer_index.y*problem_size.x + output_buffer_index.x;
+                + output_buffer_index.y*problem_size.x + output_buffer_index.x + 1;
 
             rtTrace(ox_entry_node, current_ray, payload);
             
