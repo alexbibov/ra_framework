@@ -52,5 +52,6 @@
 
 # MATLAB data files
 *.mat
+!demos/**/*.mat
 
 
