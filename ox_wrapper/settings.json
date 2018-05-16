@@ -6,7 +6,8 @@
 	 "ox_wrapper/ray_casters/ptx",
 	 "ox_wrapper/rendering_passes/ptx",
 	 "ox_wrapper/shapes/ptx",
-	 "ox_wrapper/materials/ptx"
+	 "ox_wrapper/materials/ptx",
+	 "../demos/gomos/"
 	],
 "context_stack_size": 8192
 }

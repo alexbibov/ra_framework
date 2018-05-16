@@ -615,9 +615,9 @@ RTvariable OxProgram::declare_variable_object(std::string const& name)
         THROW_OPTIX_ERROR(nativeOptiXContextHandle(), optix_rc = rtProgramDeclareVariable(m_native_optix_program.get(), name.c_str(), &rv));
 
         if (optix_rc != RT_SUCCESS)
-            throw OxException{ (R"**(Unable to declare OptiX variable ")**" + name
+            THROW_OX_WRAPPER_ERROR(R"**(Unable to declare OptiX variable ")**" + name
                 + R"**(" for program ")**"
-                + getStringName() + R"**(")**").c_str() };
+                + getStringName() + R"**(")**");
     }
 
     return rv;

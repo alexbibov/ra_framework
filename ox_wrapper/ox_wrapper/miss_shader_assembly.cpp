@@ -33,7 +33,7 @@ OxMissShaderAssembly::OxMissShaderAssembly(std::vector<OxMissShader> const& miss
 
             log_message += " are already in use in this assembly";
 
-            throw OxException{ log_message.c_str(), __FILE__, __FUNCTION__, __LINE__ };
+            THROW_OX_WRAPPER_ERROR(log_message);
         }
 
         used_ray_types_mask |= current_mask;

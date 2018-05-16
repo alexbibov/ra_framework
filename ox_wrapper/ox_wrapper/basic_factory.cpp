@@ -1225,7 +1225,7 @@ OxAbstractBuffer OxBasicFactory::createBuffer(OxBasicBufferFormat buffer_format,
     case OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
         return m_context.createBuffer<OxRayOcclusionPayload>(buffer_kind, width);
     default:
-        throw OxException{ "Unknown buffer format", __FILE__, __FUNCTION__, __LINE__ };
+        THROW_OX_WRAPPER_ERROR("Unknown buffer format");
     }
 }
 
@@ -1282,7 +1282,7 @@ OxAbstractBuffer OxBasicFactory::createBuffer(OxBasicBufferFormat buffer_format,
     case OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
         return m_context.createBuffer<OxRayOcclusionPayload>(buffer_kind, width, height);
     default:
-        throw OxException{ "Unknown buffer format", __FILE__, __FUNCTION__, __LINE__ };
+        THROW_OX_WRAPPER_ERROR("Unknown buffer format");
     }
 }
 
@@ -1339,7 +1339,7 @@ OxAbstractBuffer OxBasicFactory::createBuffer(OxBasicBufferFormat buffer_format,
     case OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
         return m_context.createBuffer<OxRayOcclusionPayload>(buffer_kind, width, height, depth);
     default:
-        throw OxException{ "Unknown buffer format", __FILE__, __FUNCTION__, __LINE__ };
+        THROW_OX_WRAPPER_ERROR("Unknown buffer format");
     }
 }
 

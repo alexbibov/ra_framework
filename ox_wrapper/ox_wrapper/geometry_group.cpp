@@ -33,23 +33,21 @@ void OxGeometryGroup::addGeometry(OxGeometry const& geometry)
 {
     if (!m_construction_begun)
     {
-        throw OxException{ ("Error while adding geometry \"" + geometry.getStringName() + "\" into geometry group \""
-            + getStringName() + "\": beginConstruction() command bracked must be invoked prior to construction of geometry groups").c_str(),
-            __FILE__, __FUNCTION__, __LINE__ };
+        THROW_OX_WRAPPER_ERROR("Error while adding geometry \"" + geometry.getStringName() + "\" into geometry group \""
+            + getStringName() + "\": beginConstruction() command bracked must be invoked prior to construction of geometry groups");
     }
 
     if (m_construction_finished)
     {
-        throw OxException{ ("Error while adding geometry \"" + geometry.getStringName() + "\" into geometry group \""
+        THROW_OX_WRAPPER_ERROR("Error while adding geometry \"" + geometry.getStringName() + "\" into geometry group \""
         + getStringName() + "\": construction of the geometry group has already been finalized. When finalized, geometry groups "
-        "become effectively immutable and no new geometries can be added into them").c_str(),
-        __FILE__, __FUNCTION__, __LINE__ };
+        "become effectively immutable and no new geometries can be added into them");
     }
 
     if (!geometry.isValid())
     {
-        throw OxException{ ("Geometry \"" + geometry.getStringName() + "\" added into geometry group \""
-            + getStringName() + "\" is not valid").c_str(), __FILE__, __FUNCTION__, __LINE__ }; 
+        THROW_OX_WRAPPER_ERROR("Geometry \"" + geometry.getStringName() + "\" added into geometry group \""
+            + getStringName() + "\" is not valid"); 
     }
 
     m_list_of_geometries.push_back(geometry);

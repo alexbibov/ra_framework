@@ -1,19 +1,24 @@
-num_rays = 100    -- total number of rays to cast
+num_rays = 100000    -- total number of rays to cast
 frequency_pairs = 2    -- number of frequency pairs to support (means 4 frquencies in total in this case)
 ox_set_context_stack_size(2048)
 
+planet_location = float2.new(1.0, 0.0)    -- X and Y coordinates of the center of the planet
+planet_radius = 0.5    -- radius of the planet
+atmosphere_thickness = 0.5    -- thickness of atmosphere
+
 -- create planet and atmosphere that encloses it
 planet_circle = OxCircle.new(
-    1.0, --[X-coordinate of the planet center]
-    0.0, --[Y-coordinate of the planet center]
-    0.5 --[Circle radius]
+    planet_location.x,
+    planet_location.y,
+    planet_radius
 )
+
 planet_circle:setStringName("planet_circle_shape")
 
 atmospheric_circle = OxCircle.new(
-    1.0, --[Circle center X coordinate]
-    0.0, --[Circle center Y coordinate]
-    1.0 --[Circle radius]
+    planet_location.x,
+    planet_location.y,
+    planet_radius + atmosphere_thickness
 )
 atmospheric_circle:setStringName("atmosphere_circle_shape")
 
@@ -119,6 +124,18 @@ scene_section:beginConstruction()
 scene_section:addGeometryGroup(earth_geometry_group)
 scene_section:endConstruction()
 
+
+absorption_factor_shader = OxProgram.new(
+    "absorption_factor_shader.ptx",
+    OxProgramSource["file"],
+    "exponential_decay_absorption"
+)
+absorption_factor_shader:setStringName("exponential_decay_absorption")
+absorption_factor_shader:setVariableValue("planet_location", planet_location)
+absorption_factor_shader:setVariableValue("planet_radius", planet_radius)
+absorption_factor_shader:setVariableValue("atmosphere_thickness", atmosphere_thickness)
+
+
 scattering_rendering_pass = OxScatteringRenderingPass.new(
     scene_section,    -- scene section, to which the scattering pass will be applied
     parallel_ray_generator,    -- ray generator employed by the scattering pass
@@ -127,6 +144,8 @@ scattering_rendering_pass = OxScatteringRenderingPass.new(
     0.01,    -- ray marching step size
     1    -- number of importance directions used to approximate the scattering integral
 )
+
+scattering_rendering_pass:setAbsorptionProbabilityShader(absorption_factor_shader)
 
 importance_directions = { float2.new(0.0, 3.14) }
 for i = 2, frequency_pairs + 1 do

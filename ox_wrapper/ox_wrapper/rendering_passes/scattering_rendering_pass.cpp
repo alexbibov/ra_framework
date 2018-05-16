@@ -225,7 +225,7 @@ void OxScatteringRenderingPass::setScatteringPhaseFunctionShader(OxProgram const
 
 void OxScatteringRenderingPass::render() const
 {
-    data_store_agents::OxMatlabV4 exporter{ "debug.mat", true };
+    // data_store_agents::OxMatlabV4 exporter{ "debug.mat", true };
 
     applyMaterialAssemblyToSceneSection(targetSceneSection(), m_surface_material_assembly);
     m_ray_caster.setMissShaderAssembly(m_miss_shader_assembly);
@@ -237,8 +237,8 @@ void OxScatteringRenderingPass::render() const
     unsigned int num_not_converged_rays = 
         *makeBufferMapSentry(m_traverse_backup_buffer.readBuffer(), OxBufferMapKind::read).address();
 
-    exporter.save(m_ray_caster.outputBuffer(), 0, OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD, "debug_output_0");
-    exporter.save(m_traverse_backup_buffer.readBuffer(), 0, OxBasicBufferFormat::UINT, "debug_traverse_backup_0");
+    // exporter.save(m_ray_caster.outputBuffer(), 0, OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD, "debug_output_0");
+    // exporter.save(m_traverse_backup_buffer.readBuffer(), 0, OxBasicBufferFormat::UINT, "debug_traverse_backup_0");
 
     uint32_t count{ 1U };
     while (num_not_converged_rays > 0)
@@ -257,8 +257,8 @@ void OxScatteringRenderingPass::render() const
             *makeBufferMapSentry(m_traverse_backup_buffer.readBuffer(), OxBufferMapKind::read).address();
 
 
-        exporter.save(m_ray_caster.outputBuffer(), 0, OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD, "debug_output_" + std::to_string(count));
-        exporter.save(m_traverse_backup_buffer.readBuffer(), 0, OxBasicBufferFormat::UINT, "debug_traverse_backup_" + std::to_string(count));
+        // exporter.save(m_ray_caster.outputBuffer(), 0, OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD, "debug_output_" + std::to_string(count));
+        // exporter.save(m_traverse_backup_buffer.readBuffer(), 0, OxBasicBufferFormat::UINT, "debug_traverse_backup_" + std::to_string(count));
 
         ++count;
     }

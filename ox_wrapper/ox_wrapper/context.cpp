@@ -29,10 +29,17 @@ std::string getPathAnchor(std::string const& path)
 
 util::Optional<std::string> getPathToAsset(std::string const& asset_name, std::vector<std::string> const& asset_search_directories)
 {
-    std::string anchor = '/' + getPathAnchor(asset_name);
     std::ifstream ifile;
-
     std::string target_path;
+
+    ifile.open(asset_name);
+    if (ifile)
+    {
+        ifile.close();
+        return util::Optional<std::string>{asset_name};
+    }
+
+    std::string anchor = '/' + getPathAnchor(asset_name);
     bool asset_found{ false };
     for (auto const& asset_dir : asset_search_directories)
     {
@@ -63,12 +70,12 @@ OxContext::OxContext(std::vector<std::string> const& asset_directories, uint32_t
 
     if (optix_rc == RT_ERROR_NO_DEVICE)
     {
-        throw OxException{ "OptiX is not supported by the GPU installed in the host system" };
+        THROW_OX_WRAPPER_ERROR("OptiX is not supported by the GPU installed in the host system");
     }
 
     if (optix_rc == RT_ERROR_INVALID_VALUE)
     {
-        throw OxException{ "OptiX context cannot be initialized: invalid value" };
+        THROW_OX_WRAPPER_ERROR("OptiX context cannot be initialized: invalid value");
     }
 
     LOG_OPTIX_ERROR(m_optix_context, rtContextSetEntryPointCount(m_optix_context, num_entry_points));
@@ -93,7 +100,7 @@ OxProgram OxContext::createProgram(std::string const& source, OxProgram::Source 
     {
         auto path_to_asset = getPathToAsset(source, m_asset_directories);
         if (!path_to_asset.isValid())
-            throw OxException{ ("Unable to locate asset \"" + source + "\"").c_str(), __FILE__, __FUNCTION__, __LINE__ };
+            THROW_OX_WRAPPER_ERROR("Unable to locate asset \"" + source + "\"");
 
         return OxProgramAttorney<OxContext>::createOptiXProgram(*this, path_to_asset, OxProgram::Source::file, program_name);
     }
@@ -126,6 +133,6 @@ std::string OxContext::retrieveStringAsset(std::string const& source) const
         return util::misc::readAsciiTextFromSourceFile(path_to_asset);
     }
     else
-        throw OxException{ ("Unable to retrieve asset \"" + source + "\"").c_str(), __FILE__, __FUNCTION__, __LINE__ };
+        THROW_OX_WRAPPER_ERROR("Unable to retrieve asset \"" + source + "\"");
 }
 

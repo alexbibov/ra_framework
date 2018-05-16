@@ -55,7 +55,7 @@ OxMaterialAssembly::OxMaterialAssembly(std::vector<OxMaterial> const& materials)
 
             log_message += " have already been assigned in this material assembly";
 
-            throw OxException{ log_message.c_str(), __FILE__, __FUNCTION__, __LINE__ };
+            THROW_OX_WRAPPER_ERROR(log_message);
         }
 
         THROW_OPTIX_ERROR(nativeOptiXContextHandle(),

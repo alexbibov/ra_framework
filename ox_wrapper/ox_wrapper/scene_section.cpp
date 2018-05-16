@@ -68,22 +68,20 @@ void OxSceneSection::addGeometryGroup(OxGeometryGroup const& geometry_group)
 {
     if (!m_construction_begun)
     {
-        throw OxException{ ("Error while adding geometry group \"" + geometry_group.getStringName() + "\" into scene section \""
-            + getStringName() + "\": beginConstruction() command bracked must be invoked prior to construction of scene sections").c_str(),
-        __FILE__, __FUNCTION__, __LINE__ };
+        THROW_OX_WRAPPER_ERROR("Error while adding geometry group \"" + geometry_group.getStringName() + "\" into scene section \""
+            + getStringName() + "\": beginConstruction() command bracked must be invoked prior to construction of scene sections");
     }
     if (m_construction_finished)
     {
-        throw OxException{ ("Error while adding geometry group \"" + geometry_group.getStringName() + "\" into scene section \""
+        THROW_OX_WRAPPER_ERROR("Error while adding geometry group \"" + geometry_group.getStringName() + "\" into scene section \""
             + getStringName() + "\": construction of the scene section has already been finalized. When finalized, scene sections "
-            "become effectively immutable and no new geometry groups can be added into them").c_str(),
-            __FILE__, __FUNCTION__, __LINE__ };
+            "become effectively immutable and no new geometry groups can be added into them");
     }
 
     if (!geometry_group.isValid())
     {
-        throw OxException{ ("Geometry group \"" + geometry_group.getStringName() + "\" attempted to be added into scene section \""
-            + getStringName() + "\" is not valid").c_str(), __FILE__, __FUNCTION__, __LINE__ };
+        THROW_OX_WRAPPER_ERROR("Geometry group \"" + geometry_group.getStringName() + "\" attempted to be added into scene section \""
+            + getStringName() + "\" is not valid");
     }
 
     m_geometry_groups.push_back(geometry_group);
@@ -93,22 +91,21 @@ void OxSceneSection::addSceneSection(OxSceneSection const& scene_section)
 {
     if (!m_construction_begun)
     {
-        throw OxException{ ("Error while joining scene section \"" + getStringName() 
+        THROW_OX_WRAPPER_ERROR("Error while joining scene section \"" + getStringName()
         + "\" with scene section \"" + scene_section.getStringName() + "\": before the joining operation the former scene section "
-            "should have been initialized for construction by invoking beginConstruction() command bracket").c_str(),
-        __FILE__, __FUNCTION__, __LINE__ };
+            "should have been initialized for construction by invoking beginConstruction() command bracket");
     }
     if (m_construction_finished)
     {
-        throw OxException{ ("Error while joining scene section \"" + getStringName()
+        THROW_OX_WRAPPER_ERROR("Error while joining scene section \"" + getStringName()
         + "\" with scene section\"" + scene_section.getStringName() + "\": construction of the former scene section "
-            "has already been finalized").c_str(), __FILE__, __FUNCTION__, __LINE__ };
+            "has already been finalized");
     }
 
     if (!scene_section.isValid())
     {
-        throw OxException{ ("Scene section \"" + scene_section.getStringName() + "\" attempted to be joined with "
-        "scene section \"" + getStringName() + "\" is not valid").c_str(), __FILE__, __FUNCTION__, __LINE__ };
+        THROW_OX_WRAPPER_ERROR("Scene section \"" + scene_section.getStringName() + "\" attempted to be joined with "
+        "scene section \"" + getStringName() + "\" is not valid");
     }
 
     m_attached_scene_sections.push_back(scene_section);

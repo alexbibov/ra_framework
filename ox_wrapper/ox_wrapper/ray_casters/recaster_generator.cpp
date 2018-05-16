@@ -33,7 +33,7 @@ std::string create_output_buffer_binding_name(OxAbstractBuffer const& output_buf
         break;
 
     default:
-        throw OxException{ "unknown payload type", __FILE__, __FUNCTION__, __LINE__ };
+        THROW_OX_WRAPPER_ERROR("unknown payload type");
     }
 
     switch (output_buffer.getDimension())
@@ -51,7 +51,7 @@ std::string create_output_buffer_binding_name(OxAbstractBuffer const& output_buf
         break;
 
     default:
-        throw OxException{ "unknown buffer dimension", __FILE__, __FUNCTION__, __LINE__ };
+        THROW_OX_WRAPPER_ERROR("unknown buffer dimension");
     }
 
     return rv;

@@ -142,11 +142,10 @@ OxRaycastersFactory::OxRaycastersFactory(OxContext const& context) :
                 {
                     uint32_t num_elements = p->numberOfRays() * p->getNumberOfSpectraPairsSupported();
                     if (data.size() != num_elements)
-                        throw OxException{ ("Error while updating spectral flux buffer of parallel ray generator \""
+                        THROW_OX_WRAPPER_ERROR("Error while updating spectral flux buffer of parallel ray generator \""
                             + p->getStringName() + "\": updateSpectralFluxBuffer(...) must supply "
                             + std::to_string(num_elements)
-                            + " elements, but " + std::to_string(data.size()) + " elements were provided instead").c_str(),
-                            __FILE__, __FUNCTION__, __LINE__ };
+                            + " elements, but " + std::to_string(data.size()) + " elements were provided instead");
 
                 auto converted_data = lua_support::LuaTable::toVector<float2>(data);
                 float2* p_destinations = p->mapSpectralFluxBuffer();
@@ -222,7 +221,7 @@ OxRaycastersFactory::OxRaycastersFactory(OxContext const& context) :
                             dynamic_cast<OxBuffer<OxRayOcclusionPayload> const&>(output_buffer),
                             recasted_ray_type, recasted_ray_parametric_length);
                     default:
-                        throw OxException{ "unknown payload type", __FILE__, __FUNCTION__, __LINE__ };
+                        THROW_OX_WRAPPER_ERROR("unknown payload type");
                     }
                 },
 
@@ -251,7 +250,7 @@ OxRaycastersFactory::OxRaycastersFactory(OxContext const& context) :
                             dynamic_cast<OxBuffer<OxRayOcclusionPayload> const&>(output_buffer),
                             recasted_ray_type);
                     default:
-                        throw OxException{ "unknown payload type", __FILE__, __FUNCTION__, __LINE__ };
+                        THROW_OX_WRAPPER_ERROR("unknown payload type");
                     }
                 }
             )

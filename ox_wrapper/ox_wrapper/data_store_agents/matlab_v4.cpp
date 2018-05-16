@@ -9,6 +9,8 @@
 #include <vector>
 #include <cstddef>
 #include <algorithm>
+#include <filesystem>
+
 
 using namespace ox_wrapper;
 using namespace ox_wrapper::data_store_agents;
@@ -16,49 +18,34 @@ using namespace ox_wrapper::data_store_agents;
 
 namespace {
 
-enum class MatlabV4NumericDataFormat : unsigned char
-{
-    double_precision_fp = 0,
-    single_precision_fp,
-    signed_32bit_integer,
-    signed_16bit_integer,
-    unsigned_16bit_integer,
-    unsigned_8bit_integer
-};
-
-enum class MatlabV4MatrixType : unsigned char
-{
-    numeric = 0,
-    text,
-    sparse
-};
-
 enum class Endianness : unsigned char
 {
     little_endian = 0,
-    big_endian, 
+    big_endian,
     unknown
+};
+
+struct VariableInfoAndOffset
+{
+    OxMatlabV4::VariableInfo info;
+    std::streamoff offset_in_stream;
 };
 
 Endianness getEndianness()
 {
     union {
-        char bytes[4];
-        uint32_t integer;
+        char bytes[2];
+        uint16_t integer;
     }endiannes_check_helper;
 
-    endiannes_check_helper.integer = 0x01020304;
+    endiannes_check_helper.integer = 0x0102;
     if (endiannes_check_helper.bytes[0] == 0x01
-        && endiannes_check_helper.bytes[1] == 0x02
-        && endiannes_check_helper.bytes[2] == 0x03
-        && endiannes_check_helper.bytes[3] == 0x04)
+        && endiannes_check_helper.bytes[1] == 0x02)
     {
         return Endianness::big_endian;
     }
-    else if (endiannes_check_helper.bytes[0] == 0x04
-        && endiannes_check_helper.bytes[1] == 0x03
-        && endiannes_check_helper.bytes[2] == 0x02
-        && endiannes_check_helper.bytes[3] == 0x01)
+    else if (endiannes_check_helper.bytes[0] == 0x02
+        && endiannes_check_helper.bytes[1] == 0x01)
     {
         return Endianness::little_endian;
     }
@@ -67,11 +54,11 @@ Endianness getEndianness()
 }
 
 template<typename T>
-T convertEndianness(Endianness target_endianness, T value)
+T convertEndianness(Endianness source_endianness, T value)
 {
-    assert(target_endianness != Endianness::unknown);
+    assert(source_endianness != Endianness::unknown);
 
-    if (getEndianness() != target_endianness)
+    if (getEndianness() != source_endianness)
     {
         union coversion_helper {
             char data[sizeof(T)];
@@ -90,39 +77,100 @@ T convertEndianness(Endianness target_endianness, T value)
         return value;
 }
 
-MatlabV4NumericDataFormat getNumericDataFormatFromMatlabV4Header(uint32_t header)
+Endianness getEndiannessFromMatlabV4Header(uint32_t header)
 {
-    header /= 10;
-    return static_cast<MatlabV4NumericDataFormat>(header % 10);
+    if (header / 1000 == 1) return Endianness::big_endian;
+    else if (header / 1000 == 0) return Endianness::little_endian;
+    else return Endianness::unknown;
 }
 
-MatlabV4MatrixType getMatrixTypeFromMatlabV4Header(uint32_t header)
+OxMatlabV4::MatlabV4NumericDataFormat getNumericDataFormatFromMatlabV4Header(uint32_t header)
 {
-    return static_cast<MatlabV4MatrixType>(header % 10);
+    header -= header - header % 1000;
+    header -= header - header % 100;
+    return static_cast<OxMatlabV4::MatlabV4NumericDataFormat>(header / 10);
 }
 
-void unpackHeader(uint32_t header, Endianness& endianness, MatlabV4NumericDataFormat& data_format, MatlabV4MatrixType& matrix_type)
+OxMatlabV4::MatlabV4MatrixType getMatrixTypeFromMatlabV4Header(uint32_t header)
 {
-    if (header / 1000 == 1) endianness = Endianness::big_endian;
-    else if (header / 1000 == 0) endianness = Endianness::little_endian;
-    else endianness = Endianness::unknown;
-    header -= (header / 1000) * 1000;
+    return static_cast<OxMatlabV4::MatlabV4MatrixType>(header % 10);
+}
 
+void unpackHeader(uint32_t header, Endianness& endianness, 
+    OxMatlabV4::MatlabV4NumericDataFormat& data_format, OxMatlabV4::MatlabV4MatrixType& matrix_type)
+{
+    endianness = getEndiannessFromMatlabV4Header(header);
     data_format = getNumericDataFormatFromMatlabV4Header(header);
     matrix_type = getMatrixTypeFromMatlabV4Header(header);
 }
 
-uint32_t packHeader(MatlabV4NumericDataFormat data_format, MatlabV4MatrixType matrix_type)
+uint32_t packHeader(OxMatlabV4::MatlabV4NumericDataFormat data_format, 
+    OxMatlabV4::MatlabV4MatrixType matrix_type)
 {
     Endianness endianness = getEndianness();
     if (endianness == Endianness::unknown)
-        throw OxException{ "unknown host machine endianness" };
+        THROW_OX_WRAPPER_ERROR("unknown host machine endianness");
 
     uint32_t header = static_cast<uint32_t>(endianness) * 1000;
     header += static_cast<uint32_t>(data_format) * 10;
     header += static_cast<uint32_t>(matrix_type);
 
     return header;
+}
+
+uint32_t readHeaderFromStream(std::istream& input_stream)
+{
+    uint32_t header{};
+    input_stream.read(reinterpret_cast<char*>(&header), sizeof(uint32_t));
+    if (header > 255)
+        header = convertEndianness(Endianness::big_endian, header);
+    return header;
+}
+
+unsigned char getElementSizeFromDataTypeAndFormat(OxMatlabV4::MatlabV4MatrixType type, OxMatlabV4::MatlabV4NumericDataFormat format)
+{
+    switch (type)
+    {
+    case OxMatlabV4::MatlabV4MatrixType::numeric:
+        switch (format)
+        {
+        case OxMatlabV4::MatlabV4NumericDataFormat::double_precision_fp:
+            return 8U;
+        case OxMatlabV4::MatlabV4NumericDataFormat::single_precision_fp:
+        case OxMatlabV4::MatlabV4NumericDataFormat::signed_32bit_integer:
+            return 4U;
+        case OxMatlabV4::MatlabV4NumericDataFormat::signed_16bit_integer:
+        case OxMatlabV4::MatlabV4NumericDataFormat::unsigned_16bit_integer:
+            return 2U;
+        case OxMatlabV4::MatlabV4NumericDataFormat::unsigned_8bit_integer:
+            return 1U;
+        default:
+            THROW_OX_WRAPPER_ERROR("Unknown Matlab V4 data format");
+        }
+        break;
+
+    case OxMatlabV4::MatlabV4MatrixType::text:
+        return 4U;
+
+    case OxMatlabV4::MatlabV4MatrixType::sparse:
+        THROW_OX_WRAPPER_ERROR("It appears that an access attempt to a sparse variable stored in Matlab V4 file "
+            "has been made, however currently operations on sparse data types are not supported");
+
+    default:
+        THROW_OX_WRAPPER_ERROR("Unknown Matlab V4 data type");
+    }
+}
+
+size_t getVariableBodySize(OxMatlabV4::VariableInfo const& variable_info, bool count_only_real_part = false)
+{
+    return variable_info.num_rows*variable_info.num_columns
+        *getElementSizeFromDataTypeAndFormat(variable_info.type, variable_info.format)
+        *(variable_info.is_complex && !count_only_real_part ? 2U : 1U);
+}
+
+size_t getVariableFullSize(OxMatlabV4::VariableInfo const& variable_info)
+{
+    return getVariableBodySize(variable_info) + 20 + variable_info.name.length() + 1;
 }
 
 bool findVariable(std::istream& input_stream, std::string const& variable_name,
@@ -134,22 +182,31 @@ bool findVariable(std::istream& input_stream, std::string const& variable_name,
     bool is_found = false;
     while (!is_found && input_stream)
     {
-        input_stream.read(reinterpret_cast<char*>(&header), sizeof(uint32_t));
+        uint32_t h{};
+        h = readHeaderFromStream(input_stream);
+        auto source_endianness = getEndiannessFromMatlabV4Header(h);
 
-        input_stream.read(reinterpret_cast<char*>(&variable_num_rows), sizeof(uint32_t));
-        input_stream.read(reinterpret_cast<char*>(&variable_num_columns), sizeof(uint32_t));
-
+        uint32_t nrows{}, ncols{};
+        input_stream.read(reinterpret_cast<char*>(&nrows), sizeof(uint32_t));
+        input_stream.read(reinterpret_cast<char*>(&ncols), sizeof(uint32_t));
+        nrows = convertEndianness(source_endianness, nrows);
+        ncols = convertEndianness(source_endianness, ncols);
+        
         uint32_t imaginary{};
         input_stream.read(reinterpret_cast<char*>(&imaginary), sizeof(uint32_t));
 
         uint32_t variable_name_length{};
         input_stream.read(reinterpret_cast<char*>(&variable_name_length), sizeof(uint32_t));
+        variable_name_length = convertEndianness(source_endianness, variable_name_length);
 
         std::vector<char> var_name(variable_name_length);
         input_stream.read(var_name.data(), variable_name_length);
 
         if (std::string{ var_name.begin(), var_name.end() } == variable_name)
         {
+            header = h;
+            variable_num_rows = nrows;
+            variable_num_columns = ncols;
             is_complex = imaginary != 0;
             auto current_pos = input_stream.tellg();
             input_stream.seekg(0, std::istream::beg);
@@ -158,106 +215,284 @@ bool findVariable(std::istream& input_stream, std::string const& variable_name,
         }
         else
         {
-            size_t data_element_size{};
-            switch (getNumericDataFormatFromMatlabV4Header(header))
-            {
-            case MatlabV4NumericDataFormat::double_precision_fp:
-                data_element_size = 8U;
-                break;
+            OxMatlabV4::VariableInfo var_info{
+                std::string{var_name.begin(), var_name.end()},
+                nrows, ncols, imaginary != 0,
+                getMatrixTypeFromMatlabV4Header(header),
+                getNumericDataFormatFromMatlabV4Header(header)
+            };
 
-            case MatlabV4NumericDataFormat::single_precision_fp:
-            case MatlabV4NumericDataFormat::signed_32bit_integer:
-                data_element_size = 4U;
-                break;
-
-            case MatlabV4NumericDataFormat::signed_16bit_integer:
-            case MatlabV4NumericDataFormat::unsigned_16bit_integer:
-                data_element_size = 2U;
-                break;
-
-            case MatlabV4NumericDataFormat::unsigned_8bit_integer:
-                data_element_size = 1U;
-                break;
-            }
-
-            size_t data_to_skip = (is_complex ? 2U : 1U) * variable_num_rows * variable_num_columns * data_element_size;
-            input_stream.seekg(data_to_skip, std::ios::cur);
+            input_stream.seekg(getVariableBodySize(var_info), std::ios::cur);
         }
     }
 
     return is_found;
 }
 
+std::vector<VariableInfoAndOffset> buildVariableInfoVector(std::istream& stream, std::streamoff start_position = 0U)
+{
+    std::vector<VariableInfoAndOffset> rv{};
+
+    stream.seekg(start_position, std::ios::beg);
+    while (stream)
+    {
+        uint32_t header{};
+        uint32_t num_rows{}, num_columns{};
+        uint32_t imaginary{};
+        uint32_t variable_name_length{};
+        std::vector<char> var_name{};
+
+        header = readHeaderFromStream(stream);
+        OxMatlabV4::MatlabV4MatrixType type{};
+        OxMatlabV4::MatlabV4NumericDataFormat format{};
+        Endianness source_endianness;
+        unpackHeader(header, source_endianness, format, type);
+
+        stream.read(reinterpret_cast<char*>(&num_rows), sizeof(uint32_t));
+        stream.read(reinterpret_cast<char*>(&num_columns), sizeof(uint32_t));
+        num_rows = convertEndianness(source_endianness, num_rows);
+        num_columns = convertEndianness(source_endianness, num_columns);
+
+        stream.read(reinterpret_cast<char*>(&imaginary), sizeof(uint32_t));
+
+        stream.read(reinterpret_cast<char*>(&variable_name_length), sizeof(uint32_t));
+        variable_name_length = convertEndianness(source_endianness, variable_name_length);
+
+        var_name.resize(variable_name_length);
+        stream.read(var_name.data(), variable_name_length);
+
+        auto current_stream_position = stream.tellg();
+        stream.seekg(0, std::ios::beg);
+        std::streamoff variable_offset = current_stream_position - stream.tellg();
+        stream.seekg(variable_offset + getVariableBodySize(rv.back().info), std::ios::beg);
+
+        rv.push_back(VariableInfoAndOffset{
+            OxMatlabV4::VariableInfo{
+            std::string{ var_name.begin(), var_name.end() },
+            num_rows, num_columns, imaginary != 0, type, format },
+            variable_offset });
+    }
+
+    return rv;
+}
+
+
 template<typename T> struct type_conversion_helper_c_to_matlab_v4;
 
 template<> struct type_conversion_helper_c_to_matlab_v4<float>
 {
-    static constexpr MatlabV4NumericDataFormat format = MatlabV4NumericDataFormat::single_precision_fp;
-    static constexpr MatlabV4MatrixType type = MatlabV4MatrixType::numeric;
+    static constexpr OxMatlabV4::MatlabV4NumericDataFormat format = OxMatlabV4::MatlabV4NumericDataFormat::single_precision_fp;
+    static constexpr OxMatlabV4::MatlabV4MatrixType type = OxMatlabV4::MatlabV4MatrixType::numeric;
 };
 
 template<> struct type_conversion_helper_c_to_matlab_v4<double>
 {
-    static constexpr MatlabV4NumericDataFormat format = MatlabV4NumericDataFormat::double_precision_fp;
-    static constexpr MatlabV4MatrixType type = MatlabV4MatrixType::numeric;
+    static constexpr OxMatlabV4::MatlabV4NumericDataFormat format = OxMatlabV4::MatlabV4NumericDataFormat::double_precision_fp;
+    static constexpr OxMatlabV4::MatlabV4MatrixType type = OxMatlabV4::MatlabV4MatrixType::numeric;
 };
 
 template<> struct type_conversion_helper_c_to_matlab_v4<int32_t>
 {
-    static constexpr MatlabV4NumericDataFormat format = MatlabV4NumericDataFormat::signed_32bit_integer;
-    static constexpr MatlabV4MatrixType type = MatlabV4MatrixType::numeric;
+    static constexpr OxMatlabV4::MatlabV4NumericDataFormat format = OxMatlabV4::MatlabV4NumericDataFormat::signed_32bit_integer;
+    static constexpr OxMatlabV4::MatlabV4MatrixType type = OxMatlabV4::MatlabV4MatrixType::numeric;
 };
 
 template<> struct type_conversion_helper_c_to_matlab_v4<int16_t>
 {
-    static constexpr MatlabV4NumericDataFormat format = MatlabV4NumericDataFormat::signed_16bit_integer;
-    static constexpr MatlabV4MatrixType type = MatlabV4MatrixType::numeric;
+    static constexpr OxMatlabV4::MatlabV4NumericDataFormat format = OxMatlabV4::MatlabV4NumericDataFormat::signed_16bit_integer;
+    static constexpr OxMatlabV4::MatlabV4MatrixType type = OxMatlabV4::MatlabV4MatrixType::numeric;
 };
 
 template<> struct type_conversion_helper_c_to_matlab_v4<uint16_t>
 {
-    static constexpr MatlabV4NumericDataFormat format = MatlabV4NumericDataFormat::unsigned_16bit_integer;
-    static constexpr MatlabV4MatrixType type = MatlabV4MatrixType::numeric;
+    static constexpr OxMatlabV4::MatlabV4NumericDataFormat format = OxMatlabV4::MatlabV4NumericDataFormat::unsigned_16bit_integer;
+    static constexpr OxMatlabV4::MatlabV4MatrixType type = OxMatlabV4::MatlabV4MatrixType::numeric;
 };
 
 template<> struct type_conversion_helper_c_to_matlab_v4<uint8_t>
 {
-    static constexpr MatlabV4NumericDataFormat format = MatlabV4NumericDataFormat::unsigned_8bit_integer;
-    static constexpr MatlabV4MatrixType type = MatlabV4MatrixType::numeric;
+    static constexpr OxMatlabV4::MatlabV4NumericDataFormat format = OxMatlabV4::MatlabV4NumericDataFormat::unsigned_8bit_integer;
+    static constexpr OxMatlabV4::MatlabV4MatrixType type = OxMatlabV4::MatlabV4MatrixType::numeric;
 };
 
 template<typename T>
-void writeVariable(std::ostream& stream, std::string const& variable_name, 
+void writeVariable(std::fstream& stream, std::string const& source_path, std::string const& variable_name,
     uint32_t num_rows, uint32_t num_columns,
     std::vector<T> const& real_data, std::vector<T> const* p_imaginary_data = nullptr)
 {
-    if (real_data.size() != num_rows * num_columns 
+    if (real_data.size() != num_rows * num_columns
         || p_imaginary_data && p_imaginary_data->size() != num_rows * num_columns)
-        throw OxException{ ("Unable to write variable \"" + variable_name
-            + "\" into MATLAB v4 file: dimension mismatch").c_str() };
+        THROW_OX_WRAPPER_ERROR("Unable to write variable \"" + variable_name
+            + "\" into MATLAB v4 file: dimension mismatch");
 
-    uint32_t header = packHeader(
-        type_conversion_helper_c_to_matlab_v4<T>::format, 
-        type_conversion_helper_c_to_matlab_v4<T>::type);
-    stream.write(reinterpret_cast<char const*>(&header), sizeof(uint32_t));
+    std::streamoff variable_write_offset{};
+    {
+        stream.seekp(0, std::ios::end);
+        auto end_of_stream = stream.tellp();
 
-    stream.write(reinterpret_cast<char const*>(&num_rows), sizeof(uint32_t));
-    stream.write(reinterpret_cast<char const*>(&num_columns), sizeof(uint32_t));
+        stream.seekp(0, std::ios::beg);
+        variable_write_offset = end_of_stream - stream.tellp();
+    }
 
-    uint32_t imaginary = static_cast<uint32_t>(p_imaginary_data != nullptr);
-    stream.write(reinterpret_cast<char const*>(&imaginary), sizeof(uint32_t));
+    long long variable_size_growth{ 0ll };
+    size_t variable_size_in_bytes = num_rows * num_columns
+        *getElementSizeFromDataTypeAndFormat(type_conversion_helper_c_to_matlab_v4<T>::type, type_conversion_helper_c_to_matlab_v4<T>::format)
+        *(p_imaginary_data ? 2U : 1U);
+    {
+        uint32_t header{};
+        uint32_t nrows{}, ncolumns{};
+        bool is_complex{};
 
-    uint32_t name_length = static_cast<uint32_t>(variable_name.length() + 1);
-    stream.write(reinterpret_cast<char const*>(&name_length), sizeof(uint32_t));
-    stream.write(variable_name.c_str(), name_length);
+        if (findVariable(stream, variable_name, header, nrows, ncolumns, is_complex, variable_write_offset))
+        {
+            OxMatlabV4::MatlabV4NumericDataFormat format{};
+            OxMatlabV4::MatlabV4MatrixType type{};
+            Endianness source_endianness{};
 
-    stream.write(reinterpret_cast<char const*>(real_data.data()), sizeof(T)*real_data.size());
-    if (imaginary)
-        stream.write(reinterpret_cast<char const*>(p_imaginary_data->data()), sizeof(T)*p_imaginary_data->size());
+            unpackHeader(header, source_endianness, format, type);
+            size_t variable_old_size_in_bytes = nrows * ncolumns * getElementSizeFromDataTypeAndFormat(type, format) * (is_complex ? 2U : 1U);
+            variable_size_growth = static_cast<long long>(variable_size_in_bytes) - static_cast<long long>(variable_old_size_in_bytes);
+        }
+    }
+
+    auto write_variable_routine = [&stream](VariableInfoAndOffset& info_and_offset, char const* p_real_data, char const* p_imaginary_data)
+    {
+        size_t variable_header_size = getVariableFullSize(info_and_offset.info) - getVariableBodySize(info_and_offset.info);
+        stream.seekp(info_and_offset.offset_in_stream - variable_header_size, std::ios::beg);
+
+        uint32_t header = packHeader(
+            type_conversion_helper_c_to_matlab_v4<T>::format,
+            type_conversion_helper_c_to_matlab_v4<T>::type);
+        stream.write(reinterpret_cast<char const*>(&header), sizeof(uint32_t));
+
+        stream.write(reinterpret_cast<char const*>(&info_and_offset.info.num_rows), sizeof(uint32_t));
+        stream.write(reinterpret_cast<char const*>(&info_and_offset.info.num_columns), sizeof(uint32_t));
+
+        uint32_t imaginary = static_cast<uint32_t>(info_and_offset.info.is_complex);
+        stream.write(reinterpret_cast<char const*>(&imaginary), sizeof(uint32_t));
+
+        uint32_t name_length = static_cast<uint32_t>(info_and_offset.info.name.length() + 1);
+        stream.write(reinterpret_cast<char const*>(&name_length), sizeof(uint32_t));
+        stream.write(info_and_offset.info.name.c_str(), name_length);
+
+        size_t variable_segment_size = getVariableBodySize(info_and_offset.info, true);
+
+        stream.write(p_real_data, variable_segment_size);
+        if (imaginary)
+            stream.write(p_imaginary_data, variable_segment_size);
+    };
+
+    auto fetch_variable_routine = [&stream](VariableInfoAndOffset& info_and_offset)->std::vector<char>
+    {
+        size_t total_bytes_to_read = getVariableFullSize(info_and_offset.info);
+        size_t variable_header_size = total_bytes_to_read - getVariableBodySize(info_and_offset.info);
+        stream.seekg(info_and_offset.offset_in_stream - variable_header_size, std::ios::beg);
+
+        std::vector<char> data(total_bytes_to_read);
+        stream.write(data.data(), total_bytes_to_read);
+
+        return data;
+    };
+
+    auto set_stream_eof = [&stream, &source_path](std::streamoff target_offset)
+    {
+        stream.close();
+        
+        std::filesystem::path p{ source_path };
+        std::error_code ec{};
+        std::filesystem::resize_file(p, target_offset, ec);
+        if (ec)
+        {
+            THROW_OX_WRAPPER_ERROR("Unable to set end-of-file marker to file \"" + source_path + "\":" + ec.message());
+        }
+
+        stream.open(source_path);
+        stream.seekp(0, std::ios::end);
+    };
+
+
+
+    VariableInfoAndOffset target_variable_info_and_offset{
+        OxMatlabV4::VariableInfo{ variable_name, num_rows, num_columns, p_imaginary_data != nullptr,
+        type_conversion_helper_c_to_matlab_v4<T>::type, type_conversion_helper_c_to_matlab_v4<T>::format },
+        variable_write_offset };
+
+    char const* p_target_real_data = reinterpret_cast<char const*>(real_data.data());
+    char const* p_target_imag_data = p_imaginary_data ? reinterpret_cast<char const*>(p_imaginary_data->data()) : nullptr;
+
+    if (variable_size_growth < 0)
+    {
+        // variable's shrunk in size
+
+        auto following_variables = buildVariableInfoVector(stream, variable_write_offset + variable_size_in_bytes);
+        write_variable_routine(target_variable_info_and_offset, p_target_real_data, p_target_imag_data);
+
+        for (auto& info_and_offset : following_variables)
+        {
+            auto cache_data = fetch_variable_routine(info_and_offset);
+            stream.write(cache_data.data(), cache_data.size());
+        }
+        
+        {
+            // write EOF marker
+            auto cur = stream.tellp();
+            stream.seekp(0, std::ios::beg);
+            size_t eof_marker_offset = cur - stream.tellp();
+            set_stream_eof(eof_marker_offset);
+        }
+    }
+    else if (variable_size_growth > 0)
+    {
+        // variable's grown in size
+
+        auto following_variables = buildVariableInfoVector(stream, variable_write_offset + variable_size_in_bytes);
+
+        if (following_variables.size())
+        {
+            std::list<std::vector<char>> cache_data0{}, cache_data1{};
+            decltype(following_variables)::iterator q = following_variables.begin();
+
+            while (q != following_variables.end() || cache_data1.size())
+            {
+                long long next_overlap = variable_size_growth;
+
+                for (; q != following_variables.end() && next_overlap > 0; ++q)
+                {
+                    cache_data0.push_back(fetch_variable_routine(*q));
+                    next_overlap -= getVariableFullSize(q->info);
+                }
+
+                if (!cache_data1.size())
+                    write_variable_routine(target_variable_info_and_offset, p_target_real_data, p_target_imag_data);
+                else
+                {
+                    for (auto& variable : cache_data1)
+                    {
+                        stream.write(variable.data(), variable.size());
+                    }
+
+                    cache_data1.clear();
+                }
+
+                std::swap(cache_data0, cache_data1);
+            }
+        }
+        else
+        {
+            write_variable_routine(target_variable_info_and_offset, p_target_real_data, p_target_imag_data);
+        }
+    }
+    else
+    {
+        // the size of variable hasn't changed
+
+        write_variable_routine(target_variable_info_and_offset, p_target_real_data, p_target_imag_data);
+    }
+    
 }
 
 
-struct variable_info
+struct variable_contents_info
 {
     uint32_t num_rows;
     uint32_t num_columns;
@@ -267,7 +502,7 @@ struct variable_info
 
 template<typename T>
 std::pair<std::vector<T>, std::vector<T>> readVariable(std::istream& stream,
-    std::string const& variable_name, variable_info& info)
+    std::string const& variable_name, variable_contents_info& info)
 {
     uint32_t header{};
     uint32_t num_rows{}, num_columns{};
@@ -277,84 +512,84 @@ std::pair<std::vector<T>, std::vector<T>> readVariable(std::istream& stream,
     if (!findVariable(stream, variable_name, header, 
         num_rows, num_columns, is_complex, variable_offset))
     {
-        throw OxException{ "Unable to fetch data from MATLAB v4 variable \""
-        + variable_name + "\": the variable cannot be found" };
+        THROW_OX_WRAPPER_ERROR("Unable to fetch data from MATLAB v4 variable \""
+        + variable_name + "\": the variable cannot be found");
     }
 
     info.num_rows = num_rows;
     info.num_columns = num_columns;
     info.is_complex = is_complex;
 
-    Endianness endianness;
-    MatlabV4NumericDataFormat data_format;
-    MatlabV4MatrixType data_type;
-    unpackHeader(header, endianness, data_format, data_type);
+    Endianness source_endianness;
+    OxMatlabV4::MatlabV4NumericDataFormat data_format;
+    OxMatlabV4::MatlabV4MatrixType data_type;
+    unpackHeader(header, source_endianness, data_format, data_type);
 
     if (data_format != type_conversion_helper_c_to_matlab_v4<T>::format)
     {
-        throw OxException{ "Unable to fetch data from variable \"" + variable_name
-        + "\": data format mismatch" };
+        THROW_OX_WRAPPER_ERROR("Unable to fetch data from variable \"" + variable_name
+        + "\": data format mismatch");
     }
 
     auto fetch_data = 
-        [num_rows, num_columns, endianness, data_format, data_type, &stream]
+        [num_rows, num_columns, source_endianness, data_format, data_type, &stream]
         (std::vector<T>& out)
     {
         out.resize(num_rows*num_columns);
 
         switch (data_type)
         {
-        case MatlabV4MatrixType::numeric:
+        case OxMatlabV4::MatlabV4MatrixType::numeric:
         {
             for (size_t i = 0U; i < num_rows*num_columns; ++i)
             {
                 switch (data_format)
                 {
-                case MatlabV4NumericDataFormat::double_precision_fp:
+                case OxMatlabV4::MatlabV4NumericDataFormat::double_precision_fp:
                 {
                     double aux;
                     stream.read(reinterpret_cast<char*>(&aux), sizeof(double));
-                    out[i] = static_cast<T>(convertEndianness(endianness, aux));
+                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
                     break;
                 }
 
-                case MatlabV4NumericDataFormat::single_precision_fp:
+                case OxMatlabV4::MatlabV4NumericDataFormat::single_precision_fp:
                 {
                     float aux;
                     stream.read(reinterpret_cast<char*>(&aux), sizeof(float));
-                    out[i] = static_cast<T>(convertEndianness(endianness, aux));
+                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
                     break;
                 }
 
-                case MatlabV4NumericDataFormat::signed_32bit_integer:
+                case OxMatlabV4::MatlabV4NumericDataFormat::signed_32bit_integer:
                 {
                     int32_t aux;
                     stream.read(reinterpret_cast<char*>(&aux), sizeof(int32_t));
-                    out[i] = static_cast<T>(convertEndianness(endianness, aux));
+                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
                     break;
                 }
 
-                case MatlabV4NumericDataFormat::signed_16bit_integer:
+                case OxMatlabV4::MatlabV4NumericDataFormat::signed_16bit_integer:
                 {
                     int16_t aux;
                     stream.read(reinterpret_cast<char*>(&aux), sizeof(int16_t));
-                    out[i] = static_cast<T>(convertEndianness(endianness, aux));
+                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
                     break;
                 }
 
-                case MatlabV4NumericDataFormat::unsigned_16bit_integer:
+                case OxMatlabV4::MatlabV4NumericDataFormat::unsigned_16bit_integer:
                 {
                     uint16_t aux;
                     stream.read(reinterpret_cast<char*>(&aux), sizeof(uint16_t));
-                    out[i] = static_cast<T>(convertEndianness(endianness, aux));
+                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
                     break;
                 }
 
-                case MatlabV4NumericDataFormat::unsigned_8bit_integer:
+                case OxMatlabV4::MatlabV4NumericDataFormat::unsigned_8bit_integer:
                 {
                     uint8_t aux;
                     stream.read(reinterpret_cast<char*>(&aux), sizeof(uint8_t));
-                    out[i] = static_cast<T>(convertEndianness(endianness, aux));
+                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
                     break;
                 }
                 }
@@ -363,11 +598,11 @@ std::pair<std::vector<T>, std::vector<T>> readVariable(std::istream& stream,
             break;
         }
 
-        case MatlabV4MatrixType::text:
-            throw OxException{ "MATLAB v4 text variables are not supported" };
+        case OxMatlabV4::MatlabV4MatrixType::text:
+            THROW_OX_WRAPPER_ERROR("MATLAB v4 text variables are not supported");
 
-        case MatlabV4MatrixType::sparse:
-            throw OxException{ "MATLAB v4 sparse variables are not supported" };
+        case OxMatlabV4::MatlabV4MatrixType::sparse:
+            THROW_OX_WRAPPER_ERROR("MATLAB v4 sparse variables are not supported");
         }
     };
 
@@ -379,6 +614,9 @@ std::pair<std::vector<T>, std::vector<T>> readVariable(std::istream& stream,
 
     return rv;
 }
+
+
+
 
 }
 
@@ -410,11 +648,13 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
     std::fstream stream{ m_path, stream_flags };
     if (!stream) return false;
 
-    // not that data is stored in the destination variable in transposed form
+    // not that the data are stored in the destination variable in transposed form
     uint32_t num_rows = static_cast<uint32_t>(source_buffer.getWidth());
     uint32_t height = static_cast<uint32_t>(source_buffer.getHeight());
     uint32_t depth = static_cast<uint32_t>(source_buffer.getDepth());
     uint32_t num_columns = height * depth;
+   
+
     {
         uint32_t const num_data_elements = num_rows * num_columns;
         auto mapping = makeBufferMapSentry(source_buffer, OxBufferMapKind::read, level);
@@ -426,7 +666,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
             std::vector<float> src_data(num_data_elements);
             float const* p_raw_src_data = static_cast<float const*>(mapping.address());
             std::copy(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin());
-            writeVariable(stream, variable_name, num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, num_rows, num_columns, src_data);
             break;
         }
             
@@ -441,7 +681,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[2 * i + 1] = p_raw_src_data[i].y;
             }
 
-            writeVariable(stream, variable_name, 2 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 2 * num_rows, num_columns, src_data);
             break;
         }
             
@@ -457,7 +697,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[3 * i + 2] = p_raw_src_data[i].z;
             }
 
-            writeVariable(stream, variable_name, 3 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 3 * num_rows, num_columns, src_data);
             break;
         }
             
@@ -474,7 +714,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[4 * i + 3] = p_raw_src_data[i].w;
             }
 
-            writeVariable(stream, variable_name, 4 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 4 * num_rows, num_columns, src_data);
             break;
         }
             
@@ -484,7 +724,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
             int const* p_raw_src_data = static_cast<int const*>(mapping.address());
             std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                 [](int e)->int32_t {return static_cast<int32_t>(e); });
-            writeVariable(stream, variable_name, num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, num_rows, num_columns, src_data);
             break;
         }
 
@@ -499,7 +739,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[2 * i + 1] = static_cast<int32_t>(p_raw_src_data[i].y);
             }
 
-            writeVariable(stream, variable_name, 2 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 2 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -515,7 +755,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[3 * i + 2] = static_cast<int32_t>(p_raw_src_data[i].z);
             }
 
-            writeVariable(stream, variable_name, 3 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 3 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -532,7 +772,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[4 * i + 3] = static_cast<int32_t>(p_raw_src_data[i].w);
             }
 
-            writeVariable(stream, variable_name, 4 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 4 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -542,7 +782,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
             unsigned int const* p_raw_src_data = static_cast<unsigned int const*>(mapping.address());
             std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                 [](unsigned int e)->int32_t {return static_cast<int32_t>(e); });
-            writeVariable(stream, variable_name, num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, num_rows, num_columns, src_data);
             break;
         }
 
@@ -557,7 +797,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[2 * i + 1] = static_cast<int32_t>(p_raw_src_data[i].y);
             }
 
-            writeVariable(stream, variable_name, 2 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 2 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -573,7 +813,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[3 * i + 2] = static_cast<int32_t>(p_raw_src_data[i].z);
             }
 
-            writeVariable(stream, variable_name, 3 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 3 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -590,7 +830,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[4 * i + 3] = static_cast<int32_t>(p_raw_src_data[i].w);
             }
 
-            writeVariable(stream, variable_name, 4 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 4 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -600,7 +840,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
             char const* p_raw_src_data = static_cast<char const*>(mapping.address());
             std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                 [](char e)->uint8_t {return static_cast<uint8_t>(e); });
-            writeVariable(stream, variable_name, num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, num_rows, num_columns, src_data);
             break;
         }
 
@@ -615,7 +855,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[2 * i + 1] = static_cast<uint8_t>(p_raw_src_data[i].y);
             }
 
-            writeVariable(stream, variable_name, 2 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 2 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -631,7 +871,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[3 * i + 2] = static_cast<uint8_t>(p_raw_src_data[i].z);
             }
 
-            writeVariable(stream, variable_name, 3 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 3 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -648,7 +888,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[4 * i + 3] = static_cast<uint8_t>(p_raw_src_data[i].w);
             }
 
-            writeVariable(stream, variable_name, 4 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 4 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -658,7 +898,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
             unsigned char const* p_raw_src_data = static_cast<unsigned char const*>(mapping.address());
             std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                 [](unsigned char e)->uint8_t {return static_cast<uint8_t>(e); });
-            writeVariable(stream, variable_name, num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, num_rows, num_columns, src_data);
             break;
         }
 
@@ -673,7 +913,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[2 * i + 1] = static_cast<uint8_t>(p_raw_src_data[i].y);
             }
 
-            writeVariable(stream, variable_name, 2 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 2 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -689,7 +929,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[3 * i + 2] = static_cast<uint8_t>(p_raw_src_data[i].z);
             }
 
-            writeVariable(stream, variable_name, 3 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 3 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -706,7 +946,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[4 * i + 3] = static_cast<uint8_t>(p_raw_src_data[i].w);
             }
 
-            writeVariable(stream, variable_name, 4 * num_rows, num_columns, src_data);
+            writeVariable(stream, m_path, variable_name, 4 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -751,7 +991,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                     }
                 }
 
-                writeVariable(stream, variable_name + "__spectral_radiance", num_rows*scale, num_columns, src_data);
+                writeVariable(stream, m_path, variable_name + "__spectral_radiance", num_rows*scale, num_columns, src_data);
             }
 
 
@@ -782,7 +1022,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                         src_data[2 * i + 1] = aux_ptr->y;
                     }
 
-                    writeVariable(stream, variable_name + "__depth", 2 * num_rows, num_columns, src_data);
+                    writeVariable(stream, m_path, variable_name + "__depth", 2 * num_rows, num_columns, src_data);
                 }
 
                 {
@@ -804,7 +1044,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                         src_data[4 * i + 3] = static_cast<int32_t>(aux_ptr->w);
                     }
 
-                    writeVariable(stream, variable_name + "__trace_recursion_depth_and_aux", 4 * num_rows, num_columns, src_data);
+                    writeVariable(stream, m_path, variable_name + "__trace_recursion_depth_and_aux", 4 * num_rows, num_columns, src_data);
                 }
             }
 
@@ -823,7 +1063,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 std::vector<int32_t> src_data(num_data_elements);
                 std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                     [](OxRayOcclusionPayload const& e)->int32_t {return static_cast<int32_t>(e.is_occluded); });
-                writeVariable(stream, variable_name + "__is_occluded", num_rows, num_columns, src_data);
+                writeVariable(stream, m_path, variable_name + "__is_occluded", num_rows, num_columns, src_data);
             }
 
 
@@ -833,7 +1073,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 std::vector<int32_t> src_data(num_data_elements);
                 std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                     [](OxRayOcclusionPayload const& e)->int32_t {return static_cast<int32_t>(e.tracing_depth); });
-                writeVariable(stream, variable_name + "__trace_recursion_depth", num_rows, num_columns, src_data);
+                writeVariable(stream, m_path, variable_name + "__trace_recursion_depth", num_rows, num_columns, src_data);
             }
 
             {
@@ -848,7 +1088,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                     src_data[2 * i + 1] = p_raw_src_data[i].depth.y;
                 }
 
-                writeVariable(stream, variable_name + "__is_occluded", 2 * num_rows, num_columns, src_data);
+                writeVariable(stream, m_path, variable_name + "__is_occluded", 2 * num_rows, num_columns, src_data);
             }
 
             break;
@@ -886,7 +1126,7 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
         case OxBasicBufferFormat::FLOAT3:
         case OxBasicBufferFormat::FLOAT4:
         {
-            variable_info info;
+            variable_contents_info info;
             auto data = readVariable<float>(stream, variable_name, info);
 
             if (info.is_complex)
@@ -958,7 +1198,7 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
         case OxBasicBufferFormat::INT3:
         case OxBasicBufferFormat::INT4:
         {
-            variable_info info;
+            variable_contents_info info;
             auto data = readVariable<int32_t>(stream, variable_name, info);
 
             if (info.is_complex)
@@ -1030,7 +1270,7 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
         case OxBasicBufferFormat::UINT3:
         case OxBasicBufferFormat::UINT4:
         {
-            variable_info info;
+            variable_contents_info info;
             auto data = readVariable<int32_t>(stream, variable_name, info);
 
             if (info.is_complex)
@@ -1102,7 +1342,7 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
         case OxBasicBufferFormat::CHAR3:
         case OxBasicBufferFormat::CHAR4:
         {
-            variable_info info;
+            variable_contents_info info;
             auto data = readVariable<uint8_t>(stream, variable_name, info);
 
             if (info.is_complex)
@@ -1174,7 +1414,7 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
         case OxBasicBufferFormat::UCHAR3:
         case OxBasicBufferFormat::UCHAR4:
         {
-            variable_info info;
+            variable_contents_info info;
             auto data = readVariable<uint8_t>(stream, variable_name, info);
 
             if (info.is_complex)
@@ -1252,7 +1492,7 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
             {
                 // read spectral radiance data
 
-                variable_info info{};
+                variable_contents_info info{};
                 auto data = readVariable<float>(stream, variable_name + "__spectral_radiance", info);
 
                 if (info.is_complex)
@@ -1311,7 +1551,7 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
             {
                 // read depth data
 
-                variable_info info{};
+                variable_contents_info info{};
                 auto data = readVariable<float>(stream, variable_name + "__depth", info);
 
                 if (info.is_complex)
@@ -1354,7 +1594,7 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
             {
                 // read tracing recursion depth and auxiliary data
 
-                variable_info info{};
+                variable_contents_info info{};
                 auto data = readVariable<int32_t>(stream, variable_name + "__trace_recursion_depth_and_aux", info);
 
                 if (info.is_complex)
@@ -1405,7 +1645,7 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
             {
                 // read occlusion mask
 
-                variable_info info{};
+                variable_contents_info info{};
                 auto data = readVariable<int32_t>(stream, variable_name + "__is_occluded", info);
 
                 if (info.is_complex)
@@ -1436,7 +1676,7 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
             {
                 // read tracing recursion depth
 
-                variable_info info{};
+                variable_contents_info info{};
                 auto data = readVariable<int32_t>(stream, variable_name + "__trace_recursion_depth", info);
 
                 if (info.is_complex)
@@ -1467,7 +1707,7 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
             {
                 // read depth data
 
-                variable_info info{};
+                variable_contents_info info{};
                 auto data = readVariable<float>(stream, variable_name + "__depth", info);
 
                 if (info.is_complex)
