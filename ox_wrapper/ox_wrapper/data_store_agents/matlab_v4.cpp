@@ -86,9 +86,7 @@ Endianness getEndiannessFromMatlabV4Header(uint32_t header)
 
 OxMatlabV4::MatlabV4NumericDataFormat getNumericDataFormatFromMatlabV4Header(uint32_t header)
 {
-    header -= header - header % 1000;
-    header -= header - header % 100;
-    return static_cast<OxMatlabV4::MatlabV4NumericDataFormat>(header / 10);
+    return static_cast<OxMatlabV4::MatlabV4NumericDataFormat>(header % 100 / 10);
 }
 
 OxMatlabV4::MatlabV4MatrixType getMatrixTypeFromMatlabV4Header(uint32_t header)
@@ -122,6 +120,7 @@ uint32_t readHeaderFromStream(std::istream& input_stream)
 {
     uint32_t header{};
     input_stream.read(reinterpret_cast<char*>(&header), sizeof(uint32_t));
+
     if (header > 255)
         header = convertEndianness(Endianness::big_endian, header);
     return header;
@@ -177,10 +176,14 @@ bool findVariable(std::istream& input_stream, std::string const& variable_name,
     uint32_t& header, uint32_t& variable_num_rows, uint32_t& variable_num_columns,
     bool& is_complex, std::streamoff& variable_offset)
 {
-    input_stream.seekg(0, std::istream::beg);
+    input_stream.seekg(0, std::ios::beg);
+    auto stream_beginning = input_stream.tellg();
+    input_stream.seekg(0, std::ios::end);
+    std::streamoff stream_size = input_stream.tellg() - stream_beginning;
+    input_stream.seekg(0, std::ios::beg);
     
     bool is_found = false;
-    while (!is_found && input_stream)
+    while (input_stream.tellg() - stream_beginning < stream_size && !is_found)
     {
         uint32_t h{};
         h = readHeaderFromStream(input_stream);
@@ -202,7 +205,7 @@ bool findVariable(std::istream& input_stream, std::string const& variable_name,
         std::vector<char> var_name(variable_name_length);
         input_stream.read(var_name.data(), variable_name_length);
 
-        if (std::string{ var_name.begin(), var_name.end() } == variable_name)
+        if (std::string{ var_name.data() } == variable_name)
         {
             header = h;
             variable_num_rows = nrows;
@@ -216,15 +219,17 @@ bool findVariable(std::istream& input_stream, std::string const& variable_name,
         else
         {
             OxMatlabV4::VariableInfo var_info{
-                std::string{var_name.begin(), var_name.end()},
+                std::string{ var_name.data() },
                 nrows, ncols, imaginary != 0,
-                getMatrixTypeFromMatlabV4Header(header),
-                getNumericDataFormatFromMatlabV4Header(header)
+                getMatrixTypeFromMatlabV4Header(h),
+                getNumericDataFormatFromMatlabV4Header(h)
             };
 
             input_stream.seekg(getVariableBodySize(var_info), std::ios::cur);
         }
     }
+
+    if (!input_stream.good()) input_stream.clear();
 
     return is_found;
 }
@@ -233,8 +238,13 @@ std::vector<VariableInfoAndOffset> buildVariableInfoVector(std::istream& stream,
 {
     std::vector<VariableInfoAndOffset> rv{};
 
+    stream.seekg(0, std::ios::beg);
+    auto stream_begin = stream.tellg();
+    stream.seekg(0, std::ios::end);
+    std::streamoff stream_size = stream.tellg() - stream_begin;
+
     stream.seekg(start_position, std::ios::beg);
-    while (stream)
+    while (stream.tellg() - stream_begin < stream_size)
     {
         uint32_t header{};
         uint32_t num_rows{}, num_columns{};
@@ -264,13 +274,14 @@ std::vector<VariableInfoAndOffset> buildVariableInfoVector(std::istream& stream,
         auto current_stream_position = stream.tellg();
         stream.seekg(0, std::ios::beg);
         std::streamoff variable_offset = current_stream_position - stream.tellg();
-        stream.seekg(variable_offset + getVariableBodySize(rv.back().info), std::ios::beg);
 
         rv.push_back(VariableInfoAndOffset{
             OxMatlabV4::VariableInfo{
-            std::string{ var_name.begin(), var_name.end() },
-            num_rows, num_columns, imaginary != 0, type, format },
-            variable_offset });
+                std::string{ var_name.data() },
+                num_rows, num_columns, imaginary != 0, type, format },
+                variable_offset });
+
+        stream.seekg(variable_offset + getVariableBodySize(rv.back().info), std::ios::beg);
     }
 
     return rv;
@@ -316,7 +327,8 @@ template<> struct type_conversion_helper_c_to_matlab_v4<uint8_t>
 };
 
 template<typename T>
-void writeVariable(std::fstream& stream, std::string const& source_path, std::string const& variable_name,
+void writeVariable(std::fstream& stream, int stream_open_mode_flags, 
+    std::string const& source_path, std::string const& variable_name,
     uint32_t num_rows, uint32_t num_columns,
     std::vector<T> const& real_data, std::vector<T> const* p_imaginary_data = nullptr)
 {
@@ -326,12 +338,21 @@ void writeVariable(std::fstream& stream, std::string const& source_path, std::st
             + "\" into MATLAB v4 file: dimension mismatch");
 
     std::streamoff variable_write_offset{};
-    {
-        stream.seekp(0, std::ios::end);
-        auto end_of_stream = stream.tellp();
 
-        stream.seekp(0, std::ios::beg);
-        variable_write_offset = end_of_stream - stream.tellp();
+    OxMatlabV4::VariableInfo variable_info{ 
+        variable_name, num_rows, num_columns, p_imaginary_data != nullptr,
+        type_conversion_helper_c_to_matlab_v4<T>::type,
+        type_conversion_helper_c_to_matlab_v4<T>::format };
+
+    {
+        stream.seekg(0, std::ios::end);
+        auto end_of_stream = stream.tellg();
+
+        stream.seekg(0, std::ios::beg);
+        variable_write_offset = end_of_stream - stream.tellg();
+
+        size_t variable_header_size = getVariableFullSize(variable_info) - getVariableBodySize(variable_info);
+        variable_write_offset += variable_header_size;
     }
 
     long long variable_size_growth{ 0ll };
@@ -389,12 +410,12 @@ void writeVariable(std::fstream& stream, std::string const& source_path, std::st
         stream.seekg(info_and_offset.offset_in_stream - variable_header_size, std::ios::beg);
 
         std::vector<char> data(total_bytes_to_read);
-        stream.write(data.data(), total_bytes_to_read);
+        stream.read(data.data(), total_bytes_to_read);
 
         return data;
     };
 
-    auto set_stream_eof = [&stream, &source_path](std::streamoff target_offset)
+    auto set_stream_eof = [&stream, &source_path, stream_open_mode_flags](std::streamoff target_offset)
     {
         stream.close();
         
@@ -406,16 +427,13 @@ void writeVariable(std::fstream& stream, std::string const& source_path, std::st
             THROW_OX_WRAPPER_ERROR("Unable to set end-of-file marker to file \"" + source_path + "\":" + ec.message());
         }
 
-        stream.open(source_path);
+        stream.open(source_path, stream_open_mode_flags);
         stream.seekp(0, std::ios::end);
     };
 
 
 
-    VariableInfoAndOffset target_variable_info_and_offset{
-        OxMatlabV4::VariableInfo{ variable_name, num_rows, num_columns, p_imaginary_data != nullptr,
-        type_conversion_helper_c_to_matlab_v4<T>::type, type_conversion_helper_c_to_matlab_v4<T>::format },
-        variable_write_offset };
+    VariableInfoAndOffset target_variable_info_and_offset{ variable_info, variable_write_offset };
 
     char const* p_target_real_data = reinterpret_cast<char const*>(real_data.data());
     char const* p_target_imag_data = p_imaginary_data ? reinterpret_cast<char const*>(p_imaginary_data->data()) : nullptr;
@@ -424,28 +442,26 @@ void writeVariable(std::fstream& stream, std::string const& source_path, std::st
     {
         // variable's shrunk in size
 
-        auto following_variables = buildVariableInfoVector(stream, variable_write_offset + variable_size_in_bytes);
+        auto following_variables = buildVariableInfoVector(stream, variable_write_offset + variable_size_in_bytes - variable_size_growth);
         write_variable_routine(target_variable_info_and_offset, p_target_real_data, p_target_imag_data);
 
+        std::streamoff next_offset_to_write = variable_write_offset + variable_size_in_bytes;
         for (auto& info_and_offset : following_variables)
         {
             auto cache_data = fetch_variable_routine(info_and_offset);
+            stream.seekp(next_offset_to_write, std::ios::beg);
             stream.write(cache_data.data(), cache_data.size());
+
+            next_offset_to_write += cache_data.size();
         }
         
-        {
-            // write EOF marker
-            auto cur = stream.tellp();
-            stream.seekp(0, std::ios::beg);
-            size_t eof_marker_offset = cur - stream.tellp();
-            set_stream_eof(eof_marker_offset);
-        }
+        set_stream_eof(next_offset_to_write);
     }
     else if (variable_size_growth > 0)
     {
         // variable's grown in size
 
-        auto following_variables = buildVariableInfoVector(stream, variable_write_offset + variable_size_in_bytes);
+        auto following_variables = buildVariableInfoVector(stream, variable_write_offset + variable_size_in_bytes - variable_size_growth);
 
         if (following_variables.size())
         {
@@ -637,13 +653,13 @@ bool OxMatlabV4::isValid() const
 bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
     OxBasicBufferFormat source_buffer_format, std::string const& variable_name)
 {
-    auto stream_flags = std::ios_base::out | std::ios_base::binary;
+    auto stream_flags = std::ios_base::in | std::ios_base::out | std::ios_base::binary;
     bool file_exists = util::misc::doesFileExist(m_path);
 
     if (!file_exists || !m_append)
         stream_flags |= std::ios_base::trunc;
-    else if (file_exists && m_append)
-        stream_flags |= std::ios_base::app;
+    /*else if (file_exists && m_append)
+        stream_flags |= std::ios_base::app;*/
 
     std::fstream stream{ m_path, stream_flags };
     if (!stream) return false;
@@ -666,7 +682,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
             std::vector<float> src_data(num_data_elements);
             float const* p_raw_src_data = static_cast<float const*>(mapping.address());
             std::copy(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin());
-            writeVariable(stream, m_path, variable_name, num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, num_rows, num_columns, src_data);
             break;
         }
             
@@ -681,7 +697,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[2 * i + 1] = p_raw_src_data[i].y;
             }
 
-            writeVariable(stream, m_path, variable_name, 2 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 2 * num_rows, num_columns, src_data);
             break;
         }
             
@@ -697,7 +713,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[3 * i + 2] = p_raw_src_data[i].z;
             }
 
-            writeVariable(stream, m_path, variable_name, 3 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 3 * num_rows, num_columns, src_data);
             break;
         }
             
@@ -714,7 +730,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[4 * i + 3] = p_raw_src_data[i].w;
             }
 
-            writeVariable(stream, m_path, variable_name, 4 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 4 * num_rows, num_columns, src_data);
             break;
         }
             
@@ -724,7 +740,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
             int const* p_raw_src_data = static_cast<int const*>(mapping.address());
             std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                 [](int e)->int32_t {return static_cast<int32_t>(e); });
-            writeVariable(stream, m_path, variable_name, num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, num_rows, num_columns, src_data);
             break;
         }
 
@@ -739,7 +755,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[2 * i + 1] = static_cast<int32_t>(p_raw_src_data[i].y);
             }
 
-            writeVariable(stream, m_path, variable_name, 2 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 2 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -755,7 +771,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[3 * i + 2] = static_cast<int32_t>(p_raw_src_data[i].z);
             }
 
-            writeVariable(stream, m_path, variable_name, 3 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 3 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -772,7 +788,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[4 * i + 3] = static_cast<int32_t>(p_raw_src_data[i].w);
             }
 
-            writeVariable(stream, m_path, variable_name, 4 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 4 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -782,7 +798,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
             unsigned int const* p_raw_src_data = static_cast<unsigned int const*>(mapping.address());
             std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                 [](unsigned int e)->int32_t {return static_cast<int32_t>(e); });
-            writeVariable(stream, m_path, variable_name, num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, num_rows, num_columns, src_data);
             break;
         }
 
@@ -797,7 +813,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[2 * i + 1] = static_cast<int32_t>(p_raw_src_data[i].y);
             }
 
-            writeVariable(stream, m_path, variable_name, 2 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 2 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -813,7 +829,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[3 * i + 2] = static_cast<int32_t>(p_raw_src_data[i].z);
             }
 
-            writeVariable(stream, m_path, variable_name, 3 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 3 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -830,7 +846,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[4 * i + 3] = static_cast<int32_t>(p_raw_src_data[i].w);
             }
 
-            writeVariable(stream, m_path, variable_name, 4 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 4 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -840,7 +856,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
             char const* p_raw_src_data = static_cast<char const*>(mapping.address());
             std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                 [](char e)->uint8_t {return static_cast<uint8_t>(e); });
-            writeVariable(stream, m_path, variable_name, num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, num_rows, num_columns, src_data);
             break;
         }
 
@@ -855,7 +871,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[2 * i + 1] = static_cast<uint8_t>(p_raw_src_data[i].y);
             }
 
-            writeVariable(stream, m_path, variable_name, 2 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 2 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -871,7 +887,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[3 * i + 2] = static_cast<uint8_t>(p_raw_src_data[i].z);
             }
 
-            writeVariable(stream, m_path, variable_name, 3 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 3 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -888,7 +904,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[4 * i + 3] = static_cast<uint8_t>(p_raw_src_data[i].w);
             }
 
-            writeVariable(stream, m_path, variable_name, 4 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 4 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -898,7 +914,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
             unsigned char const* p_raw_src_data = static_cast<unsigned char const*>(mapping.address());
             std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                 [](unsigned char e)->uint8_t {return static_cast<uint8_t>(e); });
-            writeVariable(stream, m_path, variable_name, num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, num_rows, num_columns, src_data);
             break;
         }
 
@@ -913,7 +929,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[2 * i + 1] = static_cast<uint8_t>(p_raw_src_data[i].y);
             }
 
-            writeVariable(stream, m_path, variable_name, 2 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 2 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -929,7 +945,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[3 * i + 2] = static_cast<uint8_t>(p_raw_src_data[i].z);
             }
 
-            writeVariable(stream, m_path, variable_name, 3 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 3 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -946,7 +962,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 src_data[4 * i + 3] = static_cast<uint8_t>(p_raw_src_data[i].w);
             }
 
-            writeVariable(stream, m_path, variable_name, 4 * num_rows, num_columns, src_data);
+            writeVariable(stream, stream_flags, m_path, variable_name, 4 * num_rows, num_columns, src_data);
             break;
         }
 
@@ -991,7 +1007,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                     }
                 }
 
-                writeVariable(stream, m_path, variable_name + "__spectral_radiance", num_rows*scale, num_columns, src_data);
+                writeVariable(stream, stream_flags, m_path, variable_name + "__spectral_radiance", num_rows*scale, num_columns, src_data);
             }
 
 
@@ -1022,7 +1038,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                         src_data[2 * i + 1] = aux_ptr->y;
                     }
 
-                    writeVariable(stream, m_path, variable_name + "__depth", 2 * num_rows, num_columns, src_data);
+                    writeVariable(stream, stream_flags, m_path, variable_name + "__depth", 2 * num_rows, num_columns, src_data);
                 }
 
                 {
@@ -1044,7 +1060,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                         src_data[4 * i + 3] = static_cast<int32_t>(aux_ptr->w);
                     }
 
-                    writeVariable(stream, m_path, variable_name + "__trace_recursion_depth_and_aux", 4 * num_rows, num_columns, src_data);
+                    writeVariable(stream, stream_flags, m_path, variable_name + "__trace_recursion_depth_and_aux", 4 * num_rows, num_columns, src_data);
                 }
             }
 
@@ -1063,7 +1079,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 std::vector<int32_t> src_data(num_data_elements);
                 std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                     [](OxRayOcclusionPayload const& e)->int32_t {return static_cast<int32_t>(e.is_occluded); });
-                writeVariable(stream, m_path, variable_name + "__is_occluded", num_rows, num_columns, src_data);
+                writeVariable(stream, stream_flags, m_path, variable_name + "__is_occluded", num_rows, num_columns, src_data);
             }
 
 
@@ -1073,7 +1089,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                 std::vector<int32_t> src_data(num_data_elements);
                 std::transform(p_raw_src_data, p_raw_src_data + num_data_elements, src_data.begin(),
                     [](OxRayOcclusionPayload const& e)->int32_t {return static_cast<int32_t>(e.tracing_depth); });
-                writeVariable(stream, m_path, variable_name + "__trace_recursion_depth", num_rows, num_columns, src_data);
+                writeVariable(stream, stream_flags, m_path, variable_name + "__trace_recursion_depth", num_rows, num_columns, src_data);
             }
 
             {
@@ -1088,7 +1104,7 @@ bool OxMatlabV4::save(OxAbstractBuffer const& source_buffer, uint32_t level,
                     src_data[2 * i + 1] = p_raw_src_data[i].depth.y;
                 }
 
-                writeVariable(stream, m_path, variable_name + "__is_occluded", 2 * num_rows, num_columns, src_data);
+                writeVariable(stream, stream_flags, m_path, variable_name + "__is_occluded", 2 * num_rows, num_columns, src_data);
             }
 
             break;

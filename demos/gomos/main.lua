@@ -1,4 +1,4 @@
-num_rays = 100000    -- total number of rays to cast
+num_rays = 1000    -- total number of rays to cast
 frequency_pairs = 2    -- number of frequency pairs to support (means 4 frquencies in total in this case)
 ox_set_context_stack_size(2048)
 
@@ -158,4 +158,4 @@ scattering_rendering_pass:render()    -- execute ray-tracing
 output_buffer = parallel_ray_generator:outputBuffer()
 
 matlab_v4_data_store_agent = OxMatlabV4.new("test.mat")
-matlab_v4_data_store_agent:save(output_buffer, 0, OxBufferFormat["RAY_RADIANCE_PAYLOAD"], "output")
+matlab_v4_data_store_agent:save(output_buffer, 0, OxBufferFormat["RAY_RADIANCE_PAYLOAD"], "output1")
