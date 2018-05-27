@@ -154,6 +154,7 @@
     <ClCompile Include="ox_wrapper\data_store_agents\data_store_agents_factory.cpp">
       <Filter>ox_wrapper\data_store_agents</Filter>
     </ClCompile>
+    <ClCompile Include="ox_wrapper\lua_utility_functions_library.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ox_wrapper\buffer.h">
@@ -327,6 +328,7 @@
     <ClInclude Include="ox_wrapper\data_store_agents\ox_wrapper_data_store_agents_fwd.h">
       <Filter>ox_wrapper\data_store_agents</Filter>
     </ClInclude>
+    <ClInclude Include="ox_wrapper\lua_utility_functions_library.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ox_wrapper\buffer_tuner.inl">

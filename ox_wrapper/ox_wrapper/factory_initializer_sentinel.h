@@ -7,6 +7,7 @@
 #include "ox_wrapper/ray_casters/ox_wrapper_ray_casters_fwd.h"
 #include "ox_wrapper/rendering_passes/ox_wrapper_rendering_passes_fwd.h"
 #include "ox_wrapper/data_store_agents/ox_wrapper_data_store_agents_fwd.h"
+#include "ox_wrapper/lua_utility_functions_library.h"
 
 namespace ox_wrapper {
 
@@ -36,6 +37,7 @@ private:
     ray_casters::OxRaycastersFactory* m_raycasters_factory;
     rendering_passes::OxRenderingPassesFactory* m_rendering_passes_factory;
     data_store_agents::OxDataStoreAgentsFactory* m_data_store_agents_factory;
+    lua_libs::OxLuaLibsMainRegistrar m_lua_libs_main_registrar;
 };
 
 }

@@ -99,10 +99,16 @@ struct Variable
     }
 };
 
-struct LuaTable
+class LuaTable
 {
+    friend class LuaState;
+
+public:
+    
     using table_type = sol::table;
 
+
+public:
 
     template<typename T>
     static std::vector<T> toVector(table_type const& table)
@@ -142,6 +148,26 @@ struct LuaTable
             rv.set(i + 1, vector[i]);
         return rv;
     }
+
+
+public:
+
+    template<typename ... Args>
+    void registerFunction(std::string const& name, Args const& ... args) 
+    { 
+        m_table.set_function(name, args...); 
+    }
+
+    LuaTable registerTable(std::string const& name)
+    {
+        return LuaTable{ m_table.create_named(name) };
+    }
+
+private:
+    LuaTable(table_type&& lua_table);
+
+private:
+    table_type m_table;
 };
 
 
@@ -179,6 +205,13 @@ public:
     {
         initialize();
         m_lua_state->new_enum(name, std::forward<MemberArgs>(args)...);
+    }
+
+    static LuaTable registerTable(std::string const& name)
+    {
+        initialize();
+        sol::table new_table = m_lua_state->create_named_table(name);
+        return LuaTable{ std::move(new_table) };
     }
 
     static void shutdown();

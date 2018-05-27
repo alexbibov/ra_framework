@@ -517,6 +517,90 @@ struct variable_contents_info
 
 
 template<typename T>
+void fetchVariableDataFromStream(std::istream& stream, uint32_t num_elements, Endianness source_endianness,
+    OxMatlabV4::MatlabV4NumericDataFormat data_format, OxMatlabV4::MatlabV4MatrixType data_type,
+    std::vector<T>& out)
+{
+    out.resize(num_elements);
+
+    switch (data_type)
+    {
+    case OxMatlabV4::MatlabV4MatrixType::numeric:
+    {
+        for (size_t i = 0U; i < num_elements; ++i)
+        {
+            switch (data_format)
+            {
+            case OxMatlabV4::MatlabV4NumericDataFormat::double_precision_fp:
+            {
+                double aux;
+                stream.read(reinterpret_cast<char*>(&aux), sizeof(double));
+                out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
+                break;
+            }
+
+            case OxMatlabV4::MatlabV4NumericDataFormat::single_precision_fp:
+            {
+                float aux;
+                stream.read(reinterpret_cast<char*>(&aux), sizeof(float));
+                out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
+                break;
+            }
+
+            case OxMatlabV4::MatlabV4NumericDataFormat::signed_32bit_integer:
+            {
+                int32_t aux;
+                stream.read(reinterpret_cast<char*>(&aux), sizeof(int32_t));
+                out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
+                break;
+            }
+
+            case OxMatlabV4::MatlabV4NumericDataFormat::signed_16bit_integer:
+            {
+                int16_t aux;
+                stream.read(reinterpret_cast<char*>(&aux), sizeof(int16_t));
+                out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
+                break;
+            }
+
+            case OxMatlabV4::MatlabV4NumericDataFormat::unsigned_16bit_integer:
+            {
+                uint16_t aux;
+                stream.read(reinterpret_cast<char*>(&aux), sizeof(uint16_t));
+                out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
+                break;
+            }
+
+            case OxMatlabV4::MatlabV4NumericDataFormat::unsigned_8bit_integer:
+            {
+                uint8_t aux;
+                stream.read(reinterpret_cast<char*>(&aux), sizeof(uint8_t));
+                out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
+                break;
+            }
+            }
+        }
+
+        break;
+    }
+
+    case OxMatlabV4::MatlabV4MatrixType::text:
+        THROW_OX_WRAPPER_ERROR("MATLAB v4 text variables are not supported");
+
+    case OxMatlabV4::MatlabV4MatrixType::sparse:
+        THROW_OX_WRAPPER_ERROR("MATLAB v4 sparse variables are not supported");
+    }
+}
+
+template<typename FromT, typename ToT>
+std::vector<ToT> convertVector(std::vector<FromT> const& source)
+{
+    std::vector<ToT> 
+
+    
+}
+
+template<typename T>
 std::pair<std::vector<T>, std::vector<T>> readVariable(std::istream& stream,
     std::string const& variable_name, variable_contents_info& info)
 {
@@ -541,92 +625,49 @@ std::pair<std::vector<T>, std::vector<T>> readVariable(std::istream& stream,
     OxMatlabV4::MatlabV4MatrixType data_type;
     unpackHeader(header, source_endianness, data_format, data_type);
 
-    if (data_format != type_conversion_helper_c_to_matlab_v4<T>::format)
-    {
-        THROW_OX_WRAPPER_ERROR("Unable to fetch data from variable \"" + variable_name
-        + "\": data format mismatch");
-    }
-
-    auto fetch_data = 
-        [num_rows, num_columns, source_endianness, data_format, data_type, &stream]
-        (std::vector<T>& out)
-    {
-        out.resize(num_rows*num_columns);
-
-        switch (data_type)
-        {
-        case OxMatlabV4::MatlabV4MatrixType::numeric:
-        {
-            for (size_t i = 0U; i < num_rows*num_columns; ++i)
-            {
-                switch (data_format)
-                {
-                case OxMatlabV4::MatlabV4NumericDataFormat::double_precision_fp:
-                {
-                    double aux;
-                    stream.read(reinterpret_cast<char*>(&aux), sizeof(double));
-                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
-                    break;
-                }
-
-                case OxMatlabV4::MatlabV4NumericDataFormat::single_precision_fp:
-                {
-                    float aux;
-                    stream.read(reinterpret_cast<char*>(&aux), sizeof(float));
-                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
-                    break;
-                }
-
-                case OxMatlabV4::MatlabV4NumericDataFormat::signed_32bit_integer:
-                {
-                    int32_t aux;
-                    stream.read(reinterpret_cast<char*>(&aux), sizeof(int32_t));
-                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
-                    break;
-                }
-
-                case OxMatlabV4::MatlabV4NumericDataFormat::signed_16bit_integer:
-                {
-                    int16_t aux;
-                    stream.read(reinterpret_cast<char*>(&aux), sizeof(int16_t));
-                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
-                    break;
-                }
-
-                case OxMatlabV4::MatlabV4NumericDataFormat::unsigned_16bit_integer:
-                {
-                    uint16_t aux;
-                    stream.read(reinterpret_cast<char*>(&aux), sizeof(uint16_t));
-                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
-                    break;
-                }
-
-                case OxMatlabV4::MatlabV4NumericDataFormat::unsigned_8bit_integer:
-                {
-                    uint8_t aux;
-                    stream.read(reinterpret_cast<char*>(&aux), sizeof(uint8_t));
-                    out[i] = static_cast<T>(convertEndianness(source_endianness, aux));
-                    break;
-                }
-                }
-            }
-
-            break;
-        }
-
-        case OxMatlabV4::MatlabV4MatrixType::text:
-            THROW_OX_WRAPPER_ERROR("MATLAB v4 text variables are not supported");
-
-        case OxMatlabV4::MatlabV4MatrixType::sparse:
-            THROW_OX_WRAPPER_ERROR("MATLAB v4 sparse variables are not supported");
-        }
-    };
-
     std::pair<std::vector<T>, std::vector<T>> rv;
     
-    stream.seekg(variable_offset, std::ios::beg);
-    fetch_data(rv.first);
-    if (is_complex) fetch_data(rv.second);
+    if(data_format == OxMatlabV4::MatlabV4NumericDataFormat::double_precision_fp
+        && type_conversion_helper_c_to_matlab_v4<T>::format == OxMatlabV4::MatlabV4NumericDataFormat::single_precision_fp)
+    {
+        // in case if the source data is in double precision format, convert it to single-precision
+        // as OxBuffer is unable to store double-precision data
+
+        stream.seekg(variable_offset, std::ios::beg);
+
+        std::vector<double> aux{};
+        fetchVariableDataFromStream(stream, num_rows*num_columns, source_endianness,
+            OxMatlabV4::MatlabV4NumericDataFormat::double_precision_fp, data_type, aux);
+
+        rv.first.resize(aux.size());
+
+        std::transform(aux.begin(), aux.end(), rv.first.begin(),
+            [](double e)->T {return static_cast<T>(e); });
+
+
+        if (info.is_complex)
+        {
+            fetchVariableDataFromStream(stream, num_rows*num_columns, source_endianness,
+                OxMatlabV4::MatlabV4NumericDataFormat::double_precision_fp, data_type, aux);
+
+            rv.second.resize(aux.size());
+
+            std::transform(aux.begin(), aux.end(), rv.second.begin(),
+                [](double e)->T {return static_cast<T>(e); });
+        }
+    }
+    else
+    {
+        if (data_format != type_conversion_helper_c_to_matlab_v4<T>::format)
+        {
+            THROW_OX_WRAPPER_ERROR("Unable to fetch data from variable \"" + variable_name
+                + "\": data format mismatch");
+        }
+
+        stream.seekg(variable_offset, std::ios::beg);
+        fetchVariableDataFromStream(stream, num_rows*num_columns, source_endianness, data_format, data_type, rv.first);
+        if (is_complex) fetchVariableDataFromStream(stream, num_rows*num_columns, source_endianness, data_format, data_type, rv.second);
+    }
 
     return rv;
 }

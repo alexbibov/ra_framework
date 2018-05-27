@@ -125,6 +125,7 @@
     <ClCompile Include="ox_wrapper\contract_with_context.cpp" />
     <ClCompile Include="ox_wrapper\contract_with_programs.cpp" />
     <ClCompile Include="ox_wrapper\init.cpp" />
+    <ClCompile Include="ox_wrapper\lua_utility_functions_library.cpp" />
     <ClCompile Include="ox_wrapper\material.cpp" />
     <ClCompile Include="ox_wrapper\materials\black_body.cpp" />
     <ClCompile Include="ox_wrapper\materials\materials_factory.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="ox_wrapper\entity.h" />
     <ClInclude Include="ox_wrapper\exception.h" />
     <ClInclude Include="ox_wrapper\factory_initializer_sentinel.h" />
+    <ClInclude Include="ox_wrapper\lua_utility_functions_library.h" />
     <ClInclude Include="ox_wrapper\ox_wrapper_fwd.h" />
     <ClInclude Include="ox_wrapper\geometry.h" />
     <ClInclude Include="ox_wrapper\geometry_group.h" />

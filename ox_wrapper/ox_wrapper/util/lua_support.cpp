@@ -34,3 +34,8 @@ void LuaState::initialize()
         m_lua_state->open_libraries(sol::lib::base, sol::lib::math, sol::lib::io, sol::lib::os);
     }
 }
+
+LuaTable::LuaTable(table_type&& lua_table):
+    m_table{ std::move(lua_table) }
+{
+}
