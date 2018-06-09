@@ -20,7 +20,7 @@ public:
 
     ~OxInit();
     
-    OxContext const& context() const;
+    OxContext& context() const;
     util::Log const& logger() const;
     std::string loggerPath() const;
 

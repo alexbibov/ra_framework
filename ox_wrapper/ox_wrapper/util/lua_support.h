@@ -158,6 +158,29 @@ public:
         m_table.set_function(name, args...); 
     }
 
+    template<typename RegistrantType, typename InitializerType, typename ... MemberArgs>
+    LuaTable registerType(std::string const& name, InitializerType initializer, MemberArgs ... args)
+    {
+        sol::usertype<RegistrantType> utype{ "new", initializer, args... };
+        table_type table = m_table.set_usertype(name, utype);
+        return LuaTable{ std::move(table) };
+    }
+
+    template<typename RegistrantType, typename BasesType, typename InitializerType, typename ... MemberArgs>
+    LuaTable registerSubType(std::string const& name, BasesType bases, InitializerType initializer, MemberArgs ... args)
+    {
+        sol::usertype<RegistrantType> utype{ "new", initializer, sol::base_classes, bases, args... };
+        table_type table = m_table.set_usertype(name, utype) 
+        return LuaTable{ std::move(table) };
+    }
+
+    template<typename ... MemberArgs>
+    LuaTable registerEnum(std::string const& name, MemberArgs ... args)
+    {
+        table_type table = m_table.new_enum(name, std::forward<MemberArgs>(args)...);
+        return LuaTable{ std::move(table) };
+    }
+
     LuaTable registerTable(std::string const& name)
     {
         return LuaTable{ m_table.create_named(name) };
@@ -185,26 +208,35 @@ public:
     }
 
     template<typename RegistrantType, typename InitializerType, typename ... MemberArgs>
-    static void registerType(std::string const& name, InitializerType initializer, MemberArgs ... args)
+    static LuaTable registerType(std::string const& name, InitializerType initializer, MemberArgs ... args)
     {
         initialize();
         sol::usertype<RegistrantType> utype{ "new", initializer, args... };
         m_lua_state->set_usertype(name, utype);
+        
+        sol::table table = (*m_lua_state)[name];
+        return LuaTable{ std::move(table) };
     }
 
     template<typename RegistrantType, typename BasesType, typename InitializerType, typename ... MemberArgs>
-    static void registerSubType(std::string const& name, BasesType bases, InitializerType initializer, MemberArgs ... args)
+    static LuaTable registerSubType(std::string const& name, BasesType bases, InitializerType initializer, MemberArgs ... args)
     {
         initialize();
         sol::usertype<RegistrantType> utype{ "new", initializer, sol::base_classes, bases, args... };
         m_lua_state->set_usertype(name, utype);
+
+        sol::table table = (*m_lua_state)[name];
+        return LuaTable{ std::move(table) };
     }
     
     template<typename ... MemberArgs>
-    static void registerEnum(std::string const& name, MemberArgs ... args)
+    static LuaTable registerEnum(std::string const& name, MemberArgs ... args)
     {
         initialize();
         m_lua_state->new_enum(name, std::forward<MemberArgs>(args)...);
+
+        sol::table table = (*m_lua_state)[name];
+        return LuaTable{ std::move(table) };
     }
 
     static LuaTable registerTable(std::string const& name)
@@ -212,6 +244,12 @@ public:
         initialize();
         sol::table new_table = m_lua_state->create_named_table(name);
         return LuaTable{ std::move(new_table) };
+    }
+
+    static LuaTable retrieveTable(std::string const& name)
+    {
+        sol::table table = (*m_lua_state)[name];
+        return LuaTable{ std::move(table) };
     }
 
     static void shutdown();

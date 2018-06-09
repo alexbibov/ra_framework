@@ -73,6 +73,8 @@ public:
     size_t getWidth() const;
     size_t getHeight() const;
     size_t getDepth() const;
+    size_t getElementSize() const;
+    size_t getCapacityInBytes() const;
 
     // required by OxEntity interface
     bool isValid() const override;

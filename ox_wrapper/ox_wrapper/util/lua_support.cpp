@@ -31,7 +31,7 @@ void LuaState::initialize()
     if (!m_lua_state)
     {
         m_lua_state.reset(new sol::state{});
-        m_lua_state->open_libraries(sol::lib::base, sol::lib::math, sol::lib::io, sol::lib::os);
+        m_lua_state->open_libraries(sol::lib::base, sol::lib::math, sol::lib::io, sol::lib::os, sol::lib::string);
     }
 }
 

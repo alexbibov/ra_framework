@@ -76,9 +76,6 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
     setAbsorptionProbabilityShader(absorption_probability_shader);
     setScatteringProbabilityShader(scattering_probability_shader);
     setScatteringPhaseFunctionShader(scattering_phase_function_shader);
-
-    static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
-        .assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.writeBuffer());
     
     static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
         .assignBuffer("importance_directions_buffer", m_importance_directions_buffer);
@@ -86,9 +83,6 @@ OxScatteringRenderingPass::OxScatteringRenderingPass(
         .assignBuffer("importance_directions_buffer", m_importance_directions_buffer);
     static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown))
         .getProgram().assignBuffer("importance_directions_buffer", m_importance_directions_buffer);
-
-    static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).getProgram().
-        assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.writeBuffer());
 }
 
 OxScatteringRenderingPass::OxScatteringRenderingPass(
@@ -225,7 +219,11 @@ void OxScatteringRenderingPass::setScatteringPhaseFunctionShader(OxProgram const
 
 void OxScatteringRenderingPass::render() const
 {
-    // data_store_agents::OxMatlabV4 exporter{ "debug.mat", true };
+    static_cast<OxProgram&>(static_cast<OxMaterial&>(m_surface_material_assembly.getMaterialByRayType(OxRayType::unknown)).getClosestHitShader())
+        .assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.writeBuffer());
+
+    static_cast<OxMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(OxRayType::unknown)).getProgram()
+        .assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.writeBuffer());
 
     applyMaterialAssemblyToSceneSection(targetSceneSection(), m_surface_material_assembly);
     m_ray_caster.setMissShaderAssembly(m_miss_shader_assembly);
@@ -236,9 +234,6 @@ void OxScatteringRenderingPass::render() const
 
     unsigned int num_not_converged_rays = 
         *makeBufferMapSentry(m_traverse_backup_buffer.readBuffer(), OxBufferMapKind::read).address();
-
-    // exporter.save(m_ray_caster.outputBuffer(), 0, OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD, "debug_output_0");
-    // exporter.save(m_traverse_backup_buffer.readBuffer(), 0, OxBasicBufferFormat::UINT, "debug_traverse_backup_0");
 
     uint32_t count{ 1U };
     while (num_not_converged_rays > 0)

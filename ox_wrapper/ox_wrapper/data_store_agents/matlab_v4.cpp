@@ -1815,5 +1815,20 @@ bool OxMatlabV4::load(OxAbstractBuffer& destination_buffer, uint32_t level, OxBa
     return true;
 }
 
+std::list<OxMatlabV4::VariableInfo> OxMatlabV4::getVariables() const
+{
+    std::ifstream ifile{ m_path, std::ios::in | std::ios::binary };
+    if (!ifile) return std::list<VariableInfo>{};
+
+    std::vector<VariableInfoAndOffset> aux = buildVariableInfoVector(ifile, 0);
+
+    std::list<VariableInfo> rv{};
+    for (auto& e : aux)
+    {
+        rv.push_back(e.info);
+    }
+    return rv;
+}
+
 
 

@@ -59,14 +59,22 @@ public:
     //! Returns 'true' in case if OptiX context IS in erroneous state; returns 'false' otherwise
     bool hasErrors() const;
 
-    // required by OxEntity interface
+    //! required by OxEntity interface
     bool isValid() const override;
 
-    // reads requested string asset
+    //! reads requested string asset
     std::string retrieveStringAsset(std::string const& source) const;
+
+    //! adds custom asset look-up directory
+    void addAssetCustomLookUpDirectory(std::string const& directory);
+
+    //! clear custom asset directory look-up cache
+    void clearAssetCustomDirectoryLookUpCache();
 
 private:
     std::vector<std::string> m_asset_directories;
+    size_t m_default_asset_directories_cache_size;
+    size_t m_first_custom_asset_directory_idx;
     RTcontext m_optix_context;
     mutable RTresult m_error_state;
 };

@@ -750,6 +750,8 @@ void luaRegisterBufferTypes()
         "getWidth", &OxAbstractBuffer::getWidth,
         "getHeight", &OxAbstractBuffer::getHeight,
         "getDepth", &OxAbstractBuffer::getDepth,
+        "getElementSize", &OxAbstractBuffer::getElementSize,
+        "getCapacityInBytes", &OxAbstractBuffer::getCapacityInBytes,
         "isValid", &OxAbstractBuffer::isValid
     );
 }

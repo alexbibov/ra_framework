@@ -57,6 +57,8 @@ public:
         OxBasicBufferFormat destination_buffer_format,
         std::string const& variable_name);
 
+    std::list<VariableInfo> getVariables() const;
+
 private:
     std::string m_path;
     bool m_append;

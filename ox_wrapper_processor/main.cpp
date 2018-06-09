@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <tclap/CmdLine.h>
 
 #include "../ox_wrapper/ox_wrapper/init.h"
@@ -65,16 +65,29 @@ int main(int argc, char* argv[])
                 std::cout << "OX_WRAPPER v " << OX_WRAPPER_VERSION_MAJOR << "." << OX_WRAPPER_VERSION_MINOR << " "
                     << OX_WRAPPER_VERSION_SUFFIX << " (" << OX_WRAPPER_VERSION_CODENAME << ") Interactive Mode" << std::endl;
                 
-                std::cout << std::endl <<
-                    "   *******   **     **       *******  ******** *******   **     ** ****     **" << std::endl <<
-                    "  **/////** //**   **       /**////**/**///// /**////** /**    /**/**/**   /**" << std::endl <<
-                    " **     //** //** **        /**   /**/**      /**   /** /**    /**/**//**  /**" << std::endl <<
-                    "/**      /**  //***         /******* /******* /*******  /**    /**/** //** /**" << std::endl <<
-                    "/**      /**   **/**        /**////  /**////  /**///**  /**    /**/**  //**/**" << std::endl <<
-                    "//**     **   ** //**       /**      /**      /**  //** /**    /**/**   //****" << std::endl <<
-                    " //*******   **   //**      /**      /********/**   //**//******* /**    //***" << std::endl <<
-                    "  ///////   //     //       //       //////// //     //  ///////  //      ///" << std::endl << std::endl;
-
+                std::cout << std::endl << R"TTT(
+                              _____                    _____          
+                             /\    \                  /\    \         
+                            /::\    \                /::\    \        
+                           /::::\    \              /::::\    \       
+                          /::::::\    \            /::::::\    \      
+                         /:::/\:::\    \          /:::/\:::\    \     
+                        /:::/__\:::\    \        /:::/__\:::\    \    
+                       /::::\   \:::\    \      /::::\   \:::\    \   
+                      /::::::\   \:::\    \    /::::::\   \:::\    \  
+                     /:::/\:::\   \:::\____\  /:::/\:::\   \:::\    \ 
+                    /:::/  \:::\   \:::|    |/:::/  \:::\   \:::\____\
+                    \::/   |::::\  /:::|____|\::/    \:::\  /:::/    /
+                     \/____|:::::\/:::/    /  \/____/ \:::\/:::/    / 
+                           |:::::::::/    /            \::::::/    /  
+                           |::|\::::/    /              \::::/    /   
+                           |::| \::/____/               /:::/    /    
+                           |::|  ~|                    /:::/    /     
+                           |::|   |                   /:::/    /      
+                           \::|   |                  /:::/    /       
+                            \:|   |                  \::/    /        
+                             \|___|                   \/____/     
+                )TTT" << std::endl;
 
                 while (true)
                 {
@@ -98,47 +111,6 @@ int main(int argc, char* argv[])
 
             
         }
-
-        
-        // initialize OX_WRAPPER
-        /*{
-            
-            ox_wrapper::shapes::OxCircle atmospheric_circle{ ox.context(), 2.f, 1.1f, 1.1f };
-            ox_wrapper::shapes::OxCircle planet_circle{ ox.context(), 2.f, 1.1f, 1.f };
-            ox_wrapper::ray_casters::OxParallelRayGenerator parallel_ray_generator{ ox.context(), num_rays.getValue(), 2.f, -2.f, -3.14f / 2.f, 2 };
-
-            // define materials
-            {
-                ox_wrapper::materials::OxBlackBody black_body{ ox.context(), ox_wrapper::OxRayPayloadType::radiance };
-                ox_wrapper::OxMaterialAssembly planet_ma{ black_body };
-                planet_circle.setMaterialAssembly(planet_ma);
-                atmospheric_circle.setMaterialAssembly(ox_wrapper::OxMaterialAssembly{});
-            }
-
-
-            // initialize geometry group corresponding to Earth object 
-            ox_wrapper::OxGeometryGroup earth_geometry_group{ ox.context(), ox_wrapper::OxBVHAlgorithm::trbvh };
-            {
-                earth_geometry_group.beginConstruction();
-                earth_geometry_group.addGeometry(atmospheric_circle);
-                earth_geometry_group.addGeometry(planet_circle);
-                earth_geometry_group.endConstruction();
-            }
-
-            // initialize scene section
-            ox_wrapper::OxSceneSection scene_section{ parallel_ray_generator, ox_wrapper::OxBVHAlgorithm::trbvh };
-            {
-                scene_section.beginConstruction();
-                scene_section.addGeometryGroup(earth_geometry_group);
-                scene_section.endConstruction();
-            }
-
-            // initialize render pass
-            ox_wrapper::rendering_passes::OxScatteringRenderingPass scattering_pass{ scene_section, 2, max_recursion_depth.getValue(), .01f, num_rays.getValue() };
-            
-            
-            
-        }*/
         
     }
     catch (TCLAP::ArgException& e)
@@ -150,6 +122,5 @@ int main(int argc, char* argv[])
         std::cout << std::string{ "ox_wrapper has thrown exception: \"" } +e.what() + "\"" << std::endl;
     }
 
-    std::cout << "alive entities:" << ox_wrapper::OxEntity::aliveEntities() << std::endl;
     return EXIT_SUCCESS;
 }

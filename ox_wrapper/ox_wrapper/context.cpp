@@ -64,6 +64,7 @@ util::Optional<std::string> getPathToAsset(std::string const& asset_name, std::v
 
 OxContext::OxContext(std::vector<std::string> const& asset_directories, uint32_t num_entry_points/* = 1U*/):
     m_asset_directories{ asset_directories },
+    m_default_asset_directories_cache_size{ m_asset_directories.size() },
     m_error_state{ RT_SUCCESS }
 {
     RTresult optix_rc = rtContextCreate(&m_optix_context);
@@ -134,5 +135,15 @@ std::string OxContext::retrieveStringAsset(std::string const& source) const
     }
     else
         THROW_OX_WRAPPER_ERROR("Unable to retrieve asset \"" + source + "\"");
+}
+
+void OxContext::addAssetCustomLookUpDirectory(std::string const& directory)
+{
+    m_asset_directories.push_back(directory);
+}
+
+void OxContext::clearAssetCustomDirectoryLookUpCache()
+{
+    m_asset_directories.erase(m_asset_directories.begin() + m_default_asset_directories_cache_size, m_asset_directories.end());
 }
 

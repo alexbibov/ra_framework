@@ -63,8 +63,5 @@ RT_PROGRAM void __ox_generate__(void)
     payload.tracing_depth_and_aux = make_uint4(0U, 0U, 0U, 0U);
     rtTrace(ox_entry_node, ray, payload);
 
-    /*payload.spectral_radiance[2].x = origin.x; payload.spectral_radiance[2].y = origin.y;
-    payload.spectral_radiance[3].x = direction.x; payload.spectral_radiance[3].y = direction.y;*/
-
     ox_output_buffer[index] = payload;
 }

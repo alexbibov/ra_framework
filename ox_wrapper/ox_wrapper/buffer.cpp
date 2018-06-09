@@ -24,38 +24,43 @@ void OxAbstractBuffer::unmap(unsigned int mipmap_level) const
 OxBufferDimension OxAbstractBuffer::getDimension() const
 {
     unsigned int dim{};
-    rtBufferGetDimensionality(m_native_optix_buffer.get(), &dim);
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferGetDimensionality(m_native_optix_buffer.get(), &dim));
     return static_cast<OxBufferDimension>(dim);
 }
 
 void OxAbstractBuffer::getSize(size_t* width, size_t* height, size_t* depth) const
 {
     OxBufferDimension dim = getDimension();
+
+    RTsize w{}, h{}, d{};
+
     switch (dim)
     {
     case OxBufferDimension::_1D:
-        rtBufferGetSize1D(m_native_optix_buffer.get(), width);
-        *height = 1U;
-        *depth = 1U;
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferGetSize1D(m_native_optix_buffer.get(), &w));
+        h = 1U;
+        d = 1U;
         break;
     case OxBufferDimension::_2D:
-        rtBufferGetSize2D(m_native_optix_buffer.get(), width, height);
-        *depth = 1U;
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferGetSize2D(m_native_optix_buffer.get(), &w, &h));
+        d = 1U;
         break;
     case OxBufferDimension::_3D:
-        rtBufferGetSize3D(m_native_optix_buffer.get(), width, height, depth);
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferGetSize3D(m_native_optix_buffer.get(), &w, &h, &d));
         break;
     default:
-        *width = *height = *depth = static_cast<unsigned int>(-1);
+        w = h = d = static_cast<RTsize>(-1);
         break;
     }
+
+    *width = w; *height = h; *depth = d;
 }
 
 size_t OxAbstractBuffer::getWidth() const
 {
     size_t w{};
-    rtBufferGetSize1D(m_native_optix_buffer.get(), &w);
-    return w;
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferGetSize1D(m_native_optix_buffer.get(), &w));
+    return static_cast<size_t>(w);
 }
 
 size_t OxAbstractBuffer::getHeight() const
@@ -63,14 +68,14 @@ size_t OxAbstractBuffer::getHeight() const
     size_t w{}, h{};
     if (static_cast<unsigned char>(getDimension()) >= 2)
     {
-        rtBufferGetSize2D(m_native_optix_buffer.get(), &w, &h);
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferGetSize2D(m_native_optix_buffer.get(), &w, &h));
     }
     else
     {
         h = 1U;
     }
 
-    return h;
+    return static_cast<size_t>(h);
 }
 
 size_t OxAbstractBuffer::getDepth() const
@@ -78,14 +83,27 @@ size_t OxAbstractBuffer::getDepth() const
     RTsize w{}, h{}, d{};
     if (getDimension() == OxBufferDimension::_3D)
     {
-        rtBufferGetSize3D(m_native_optix_buffer.get(), &w, &h, &d);
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferGetSize3D(m_native_optix_buffer.get(), &w, &h, &d));
     }
     else
     {
         d = 1U;
     }
 
-    return d;
+    return static_cast<size_t>(d);
+}
+
+size_t OxAbstractBuffer::getElementSize() const
+{
+    RTsize element_size{};
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferGetElementSize(m_native_optix_buffer.get(), &element_size));
+
+    return static_cast<size_t>(element_size);
+}
+
+size_t OxAbstractBuffer::getCapacityInBytes() const
+{
+    return getWidth()*getHeight()*getDepth()*getElementSize();
 }
 
 bool OxAbstractBuffer::isValid() const

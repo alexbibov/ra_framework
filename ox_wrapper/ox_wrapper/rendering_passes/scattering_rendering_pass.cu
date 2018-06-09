@@ -15,11 +15,11 @@ rtDeclareVariable(optix::uint, max_recursion_depth, , "Maximal depth of recursio
 rtDeclareVariable(optix::uint, num_spectra_pairs_supported, , "Number of wavelengths in use");
 rtDeclareVariable(optix::uint, num_importance_directions, , );
 
-typedef rtCallableProgramId<optix::float2(optix::float3, unsigned int)> absorption_factor_program_id_type;
-typedef rtCallableProgramId<optix::float2(optix::float3, unsigned int)> scattering_factor_program_id_type;
+typedef rtCallableProgramId<optix::float2(optix::float3, unsigned int)> factor_program_id_type;
+typedef rtCallableProgramId<optix::float2(optix::float3, unsigned int)> factor_program_id_type;
 typedef rtCallableProgramId<optix::float2(optix::float3, optix::float2, optix::float2, unsigned int)> phase_function_program_id_type; 
-rtDeclareVariable(absorption_factor_program_id_type, absorption_factor, , );
-rtDeclareVariable(scattering_factor_program_id_type, scattering_factor, , );
+rtDeclareVariable(factor_program_id_type, absorption_factor, , );
+rtDeclareVariable(factor_program_id_type, scattering_factor, , );
 rtDeclareVariable(phase_function_program_id_type, phase_function, , );
 
 rtDeclareVariable(ox_wrapper::OxRayRadiancePayload, ray_payload, rtPayload, "Current ray payload");
@@ -147,7 +147,7 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
         }
 
         float2 sigma_S_p_2 = num_importance_directions ? scattering_factor(p_2, i) : make_float2(0.f, 0.f);
-        float2 phi = expf(-(absorption_factor(p_2, i) + sigma_S_p_2)*step);
+        float2 phi = expf(-(absorption_factor(p_2, i) /*+ sigma_S_p_2*/)*step);
 
         ray_payload.spectral_radiance[i] =
             ray_payload.spectral_radiance[i] * phi

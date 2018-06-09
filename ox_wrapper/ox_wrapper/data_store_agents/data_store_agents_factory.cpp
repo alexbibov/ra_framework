@@ -51,7 +51,7 @@ OxDataStoreAgentsFactory::OxDataStoreAgentsFactory(OxContext const& context) :
 
     // Register factory functions in Lua
     {
-        lua_support::LuaState::registerSubType<OxMatlabV4>(
+        lua_support::LuaTable ox_matlab_v4_table = lua_support::LuaState::registerSubType<OxMatlabV4>(
             "OxMatlabV4",
 
             lua_support::ListOfBaseClasses::make_initializer(
@@ -71,7 +71,34 @@ OxDataStoreAgentsFactory::OxDataStoreAgentsFactory(OxContext const& context) :
             ),
 
             "save", &OxMatlabV4::save,
-            "load", &OxMatlabV4::load
+            "load", &OxMatlabV4::load,
+            "getVariables", &OxMatlabV4::getVariables
         );
+
+        ox_matlab_v4_table.registerEnum("VariableDataFormat",
+            "DOUBLE", OxMatlabV4::MatlabV4NumericDataFormat::double_precision_fp,
+            "FLOAT", OxMatlabV4::MatlabV4NumericDataFormat::single_precision_fp,
+            "INT32", OxMatlabV4::MatlabV4NumericDataFormat::signed_32bit_integer,
+            "INT16", OxMatlabV4::MatlabV4NumericDataFormat::signed_16bit_integer,
+            "UINT16", OxMatlabV4::MatlabV4NumericDataFormat::unsigned_16bit_integer,
+            "UINT8", OxMatlabV4::MatlabV4NumericDataFormat::unsigned_8bit_integer);
+        
+        ox_matlab_v4_table.registerEnum("VariableDataType",
+            "NUMERIC", OxMatlabV4::MatlabV4MatrixType::numeric,
+            "TEXT", OxMatlabV4::MatlabV4MatrixType::text,
+            "SPARSE", OxMatlabV4::MatlabV4MatrixType::sparse);
+
+        ox_matlab_v4_table.registerType<OxMatlabV4::VariableInfo>(
+            "VariableInfo",
+            lua_support::NoConstructor::make_initializer(),
+            "name", &OxMatlabV4::VariableInfo::name,
+            "number_of_rows", &OxMatlabV4::VariableInfo::num_rows,
+            "number_of_columns", &OxMatlabV4::VariableInfo::num_columns,
+            "is_complex", &OxMatlabV4::VariableInfo::is_complex,
+            "type", &OxMatlabV4::VariableInfo::type,
+            "format", &OxMatlabV4::VariableInfo::format
+            );
+
+        
     }
 }

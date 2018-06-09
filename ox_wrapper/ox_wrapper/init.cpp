@@ -48,14 +48,13 @@ void luaRegisterGeneralRoutines(OxInit const& init)
 {
     util::lua_support::LuaState::registerFunction("ox_logger_path", [&init]()->std::string {return init.loggerPath(); });
     util::lua_support::LuaState::registerFunction("ox_alive_entities", &OxEntity::aliveEntities);
-
-    util::lua_support::LuaState::registerFunction(
-        "ox_set_context_stack_size",
-        [&init](size_t size_in_bytes)
-        {
-            init.context().setStackSize(size_in_bytes);
-        }
-    );
+    util::lua_support::LuaState::registerFunction("ox_set_context_stack_size",
+        [&init](size_t size_in_bytes) { init.context().setStackSize(size_in_bytes); });
+    util::lua_support::LuaState::registerFunction("ox_add_asset_look_up_directory",
+        [&init](std::string const& directory) { init.context().addAssetCustomLookUpDirectory(directory); });
+    util::lua_support::LuaState::registerFunction("ox_clear_asset_look_up_directory_cache",
+        [&init]() { init.context().clearAssetCustomDirectoryLookUpCache(); });
+    util::lua_support::LuaState::registerFunction("ox_is_context_valid", [&init]()->bool {return init.context().isValid(); });
 }
 
 }
@@ -200,7 +199,7 @@ OxInit::~OxInit()
     m_logging_stream.close();
 }
 
-OxContext const& OxInit::context() const
+OxContext& OxInit::context() const
 {
     return *m_context;
 }
