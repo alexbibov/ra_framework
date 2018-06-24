@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_MATERIALS_BLACK_BODY_H
-#define OX_WRAPPER_MATERIALS_BLACK_BODY_H
+#ifndef RA_MATERIALS_BLACK_BODY_H
+#define RA_MATERIALS_BLACK_BODY_H
 
 #include "ra/materials/ra_materials_fwd.h"
 #include "ra/ray_payloads.h"

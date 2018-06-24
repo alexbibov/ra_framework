@@ -1227,7 +1227,7 @@ RaAbstractBuffer RaBasicFactory::createBuffer(RaBasicBufferFormat buffer_format,
     case RaBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
         return m_context.createBuffer<RaRayOcclusionPayload>(buffer_kind, width);
     default:
-        THROW_OX_WRAPPER_ERROR("Unknown buffer format");
+        THROW_RA_ERROR("Unknown buffer format");
     }
 }
 
@@ -1284,7 +1284,7 @@ RaAbstractBuffer RaBasicFactory::createBuffer(RaBasicBufferFormat buffer_format,
     case RaBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
         return m_context.createBuffer<RaRayOcclusionPayload>(buffer_kind, width, height);
     default:
-        THROW_OX_WRAPPER_ERROR("Unknown buffer format");
+        THROW_RA_ERROR("Unknown buffer format");
     }
 }
 
@@ -1341,7 +1341,7 @@ RaAbstractBuffer RaBasicFactory::createBuffer(RaBasicBufferFormat buffer_format,
     case RaBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
         return m_context.createBuffer<RaRayOcclusionPayload>(buffer_kind, width, height, depth);
     default:
-        THROW_OX_WRAPPER_ERROR("Unknown buffer format");
+        THROW_RA_ERROR("Unknown buffer format");
     }
 }
 

@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_TRANSFORM_H
-#define OX_WRAPPER_TRANSFORM_H
+#ifndef RA_TRANSFORM_H
+#define RA_TRANSFORM_H
 
 #include "optix.h"
 

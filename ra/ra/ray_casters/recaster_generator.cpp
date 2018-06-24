@@ -33,7 +33,7 @@ std::string create_output_buffer_binding_name(RaAbstractBuffer const& output_buf
         break;
 
     default:
-        THROW_OX_WRAPPER_ERROR("unknown payload type");
+        THROW_RA_ERROR("unknown payload type");
     }
 
     switch (output_buffer.getDimension())
@@ -51,7 +51,7 @@ std::string create_output_buffer_binding_name(RaAbstractBuffer const& output_buf
         break;
 
     default:
-        THROW_OX_WRAPPER_ERROR("unknown buffer dimension");
+        THROW_RA_ERROR("unknown buffer dimension");
     }
 
     return rv;

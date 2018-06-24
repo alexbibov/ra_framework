@@ -16,7 +16,7 @@ void LuaState::executeScript(std::string const& source_code)
     }
     catch (sol::error& e)
     {
-        THROW_OX_WRAPPER_ERROR(e.what());
+        THROW_RA_ERROR(e.what());
     }
 }
 

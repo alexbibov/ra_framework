@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_MATERIALS_MATERIALS_FACTORY_H
-#define OX_WRAPPER_MATERIALS_MATERIALS_FACTORY_H
+#ifndef RA_MATERIALS_MATERIALS_FACTORY_H
+#define RA_MATERIALS_MATERIALS_FACTORY_H
 
 #include "ra/context.h"
 #include "ra/materials/black_body.h"

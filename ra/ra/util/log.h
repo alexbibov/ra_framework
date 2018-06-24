@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_UTIL_LOG_H
-#define OX_WRAPPER_UTIL_LOG_H
+#ifndef RA_UTIL_LOG_H
+#define RA_UTIL_LOG_H
 
 #include <iomanip>
 #include <sstream>

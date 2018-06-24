@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_UTIL_OPTIONAL_H
-#define OX_WRAPPER_UTIL_OPTIONAL_H
+#ifndef RA_UTIL_OPTIONAL_H
+#define RA_UTIL_OPTIONAL_H
 
 #include <stdexcept>
 #include <utility>

@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_UTIL_LUA_SUPPORT_H
-#define OX_WRAPPER_UTIL_LUA_SUPPORT_H
+#ifndef RA_UTIL_LUA_SUPPORT_H
+#define RA_UTIL_LUA_SUPPORT_H
 
 #include "../../_3rd_party/sol2/sol.hpp"
 #include "static_vector.h"

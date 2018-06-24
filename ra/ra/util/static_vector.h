@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_UTIL_STATIC_VECTOR_H
-#define OX_WRAPPER_UTIL_STATIC_VECTOR_H
+#ifndef RA_UTIL_STATIC_VECTOR_H
+#define RA_UTIL_STATIC_VECTOR_H
 
 #include <cstdint>
 #include <initializer_list>

@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_CONTEXT_H
-#define OX_WRAPPER_CONTEXT_H
+#ifndef RA_CONTEXT_H
+#define RA_CONTEXT_H
 
 #include <string>
 #include <memory>

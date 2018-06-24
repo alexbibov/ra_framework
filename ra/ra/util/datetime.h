@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_UTIL_DATE_TIME_H
-#define OX_WRAPPER_UTIL_DATE_TIME_H
+#ifndef RA_UTIL_DATE_TIME_H
+#define RA_UTIL_DATE_TIME_H
 
 #include <stdint.h>
 #include <string>

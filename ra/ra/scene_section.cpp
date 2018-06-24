@@ -68,19 +68,19 @@ void RaSceneSection::addGeometryGroup(RaGeometryGroup const& geometry_group)
 {
     if (!m_construction_begun)
     {
-        THROW_OX_WRAPPER_ERROR("Error while adding geometry group \"" + geometry_group.getStringName() + "\" into scene section \""
+        THROW_RA_ERROR("Error while adding geometry group \"" + geometry_group.getStringName() + "\" into scene section \""
             + getStringName() + "\": beginConstruction() command bracked must be invoked prior to construction of scene sections");
     }
     if (m_construction_finished)
     {
-        THROW_OX_WRAPPER_ERROR("Error while adding geometry group \"" + geometry_group.getStringName() + "\" into scene section \""
+        THROW_RA_ERROR("Error while adding geometry group \"" + geometry_group.getStringName() + "\" into scene section \""
             + getStringName() + "\": construction of the scene section has already been finalized. When finalized, scene sections "
             "become effectively immutable and no new geometry groups can be added into them");
     }
 
     if (!geometry_group.isValid())
     {
-        THROW_OX_WRAPPER_ERROR("Geometry group \"" + geometry_group.getStringName() + "\" attempted to be added into scene section \""
+        THROW_RA_ERROR("Geometry group \"" + geometry_group.getStringName() + "\" attempted to be added into scene section \""
             + getStringName() + "\" is not valid");
     }
 
@@ -91,20 +91,20 @@ void RaSceneSection::addSceneSection(RaSceneSection const& scene_section)
 {
     if (!m_construction_begun)
     {
-        THROW_OX_WRAPPER_ERROR("Error while joining scene section \"" + getStringName()
+        THROW_RA_ERROR("Error while joining scene section \"" + getStringName()
         + "\" with scene section \"" + scene_section.getStringName() + "\": before the joining operation the former scene section "
             "should have been initialized for construction by invoking beginConstruction() command bracket");
     }
     if (m_construction_finished)
     {
-        THROW_OX_WRAPPER_ERROR("Error while joining scene section \"" + getStringName()
+        THROW_RA_ERROR("Error while joining scene section \"" + getStringName()
         + "\" with scene section\"" + scene_section.getStringName() + "\": construction of the former scene section "
             "has already been finalized");
     }
 
     if (!scene_section.isValid())
     {
-        THROW_OX_WRAPPER_ERROR("Scene section \"" + scene_section.getStringName() + "\" attempted to be joined with "
+        THROW_RA_ERROR("Scene section \"" + scene_section.getStringName() + "\" attempted to be joined with "
         "scene section \"" + getStringName() + "\" is not valid");
     }
 

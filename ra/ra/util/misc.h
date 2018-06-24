@@ -1,9 +1,9 @@
-#ifndef OX_WRAPPER_UTIL_MISC_H
-#define OX_WRAPPER_UTIL_MISC_H
+#ifndef RA_UTIL_MISC_H
+#define RA_UTIL_MISC_H
 
 #include "../version.h"
 
-#ifdef OX_WRAPPER_USE_CPU_INTRINSICS
+#ifdef RA_USE_CPU_INTRINSICS
 #include <intrin.h>
 #endif
 

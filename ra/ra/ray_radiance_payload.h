@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_RAY_RADIANCE_PAYLOAD_H
-#define OX_WRAPPER_RAY_RADIANCE_PAYLOAD_H
+#ifndef RA_RAY_RADIANCE_PAYLOAD_H
+#define RA_RAY_RADIANCE_PAYLOAD_H
 
 #include "constants.h"
 #include "optixu/optixu_vector_types.h"

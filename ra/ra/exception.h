@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_EXCEPTION_H
-#define OX_WRAPPER_EXCEPTION_H
+#ifndef RA_EXCEPTION_H
+#define RA_EXCEPTION_H
 
 #include "ra/util/log.h"
 
@@ -37,12 +37,12 @@ namespace ra {
 }
 
 
-#define LOG_OX_WRAPPER_ERROR(err_msg)\
+#define LOG_RA_ERROR(err_msg)\
 { util::Log::retrieve()->out("ERROR: " + std::string{(err_msg)}\
     + "in function " + __FUNCTION__ ", line" + std::to_string(__LINE__)\
     + "(" + __FILE__ + ")", util::LogMessageType::error); }
 
-#define THROW_OX_WRAPPER_ERROR(err_msg)\
+#define THROW_RA_ERROR(err_msg)\
 { util::Log::retrieve()->out("ERROR: " + std::string{(err_msg)}\
     + "in function " + __FUNCTION__ ", line" + std::to_string(__LINE__)\
     + "(" + __FILE__ + ")", util::LogMessageType::error);\

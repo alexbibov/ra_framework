@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_MISS_SHADER_ASSEMBLY_H
-#define OX_WRAPPER_MISS_SHADER_ASSEMBLY_H
+#ifndef RA_MISS_SHADER_ASSEMBLY_H
+#define RA_MISS_SHADER_ASSEMBLY_H
 
 #include "ra/ra_fwd.h"
 #include "ra/miss_shader.h"

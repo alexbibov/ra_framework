@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_DATA_STORE_AGENTS_MATLAB_V4_H
-#define OX_WRAPPER_DATA_STORE_AGENTS_MATLAB_V4_H
+#ifndef RA_DATA_STORE_AGENTS_MATLAB_V4_H
+#define RA_DATA_STORE_AGENTS_MATLAB_V4_H
 
 #include "ra/entity.h"
 #include "ra/buffer.h"

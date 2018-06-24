@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_DATA_STORE_AGENTS_FACTORY_H
-#define OX_WRAPPER_DATA_STORE_AGENTS_FACTORY_H
+#ifndef RA_DATA_STORE_AGENTS_FACTORY_H
+#define RA_DATA_STORE_AGENTS_FACTORY_H
 
 #include "ra/entity.h"
 #include "ra/ra_fwd.h"

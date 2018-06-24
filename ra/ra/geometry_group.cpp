@@ -33,20 +33,20 @@ void RaGeometryGroup::addGeometry(RaGeometry const& geometry)
 {
     if (!m_construction_begun)
     {
-        THROW_OX_WRAPPER_ERROR("Error while adding geometry \"" + geometry.getStringName() + "\" into geometry group \""
+        THROW_RA_ERROR("Error while adding geometry \"" + geometry.getStringName() + "\" into geometry group \""
             + getStringName() + "\": beginConstruction() command bracked must be invoked prior to construction of geometry groups");
     }
 
     if (m_construction_finished)
     {
-        THROW_OX_WRAPPER_ERROR("Error while adding geometry \"" + geometry.getStringName() + "\" into geometry group \""
+        THROW_RA_ERROR("Error while adding geometry \"" + geometry.getStringName() + "\" into geometry group \""
         + getStringName() + "\": construction of the geometry group has already been finalized. When finalized, geometry groups "
         "become effectively immutable and no new geometries can be added into them");
     }
 
     if (!geometry.isValid())
     {
-        THROW_OX_WRAPPER_ERROR("Geometry \"" + geometry.getStringName() + "\" added into geometry group \""
+        THROW_RA_ERROR("Geometry \"" + geometry.getStringName() + "\" added into geometry group \""
             + getStringName() + "\" is not valid"); 
     }
 

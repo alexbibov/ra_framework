@@ -55,7 +55,7 @@ RaMaterialAssembly::RaMaterialAssembly(std::vector<RaMaterial> const& materials)
 
             log_message += " have already been assigned in this material assembly";
 
-            THROW_OX_WRAPPER_ERROR(log_message);
+            THROW_RA_ERROR(log_message);
         }
 
         THROW_OPTIX_ERROR(nativeOptiXContextHandle(),

@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_MATERIAL_H
-#define OX_WRAPPER_MATERIAL_H
+#ifndef RA_MATERIAL_H
+#define RA_MATERIAL_H
 
 #include "optix.h"
 

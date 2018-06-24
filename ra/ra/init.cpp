@@ -109,9 +109,9 @@ RaInit::RaInit(
             if (!GetComputerName(host_computer_name, &host_computer_name_length))
                 wcscpy_s(host_computer_name, L"UNKNOWN_HOST");
 
-            std::string log_name = "OX_WRAPPER \"" + util::misc::wstringToAsciiString(host_computer_name) + "\""
-                + "v " + std::to_string(OX_WRAPPER_VERSION_MAJOR) + "." + std::to_string(OX_WRAPPER_VERSION_MINOR)
-                + OX_WRAPPER_VERSION_SUFFIX + " (" + OX_WRAPPER_VERSION_CODENAME + ")";
+            std::string log_name = "RA \"" + util::misc::wstringToAsciiString(host_computer_name) + "\""
+                + "v " + std::to_string(RA_VERSION_MAJOR) + "." + std::to_string(RA_VERSION_MINOR)
+                + RA_VERSION_SUFFIX + " (" + RA_VERSION_CODENAME + ")";
             util::Log::create(m_logging_stream, log_name, time_zone_bias, dts);
         }
 

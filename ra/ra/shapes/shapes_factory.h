@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_SHAPES_FACTORY_H
-#define OX_WRAPPER_SHAPER_FACTORY_H
+#ifndef RA_SHAPES_FACTORY_H
+#define RA_SHAPER_FACTORY_H
 
 #include "../context.h"
 

@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_FACTORY_INITIALIZER_SENTINEL_H
-#define OX_WRAPPER_FACTORY_INITIALIZER_SENTINEL_H
+#ifndef RA_FACTORY_INITIALIZER_SENTINEL_H
+#define RA_FACTORY_INITIALIZER_SENTINEL_H
 
 #include "ra/ra_fwd.h"
 #include "ra/shapes/ra_shapes_fwd.h"

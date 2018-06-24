@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_TRANSFORMABLE_H
-#define OX_WRAPPER_TRANSFORMABLE_H
+#ifndef RA_TRANSFORMABLE_H
+#define RA_TRANSFORMABLE_H
 
 #include "transform.h"
 

@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_CONSTANTS_H
-#define OX_WRAPPER_CONSTANTS_H
+#ifndef RA_CONSTANTS_H
+#define RA_CONSTANTS_H
 
 #include <cstdint>
 

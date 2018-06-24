@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_CONTRACT_WITH_CONTEXT_H
-#define OX_WRAPPER_CONTRACT_WITH_CONTEXT_H
+#ifndef RA_CONTRACT_WITH_CONTEXT_H
+#define RA_CONTRACT_WITH_CONTEXT_H
 
 #include "optix.h"
 #include "ra_fwd.h"

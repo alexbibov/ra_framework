@@ -33,7 +33,7 @@ RaMissShaderAssembly::RaMissShaderAssembly(std::vector<RaMissShader> const& miss
 
             log_message += " are already in use in this assembly";
 
-            THROW_OX_WRAPPER_ERROR(log_message);
+            THROW_RA_ERROR(log_message);
         }
 
         used_ray_types_mask |= current_mask;

@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_RAY_CASTERS_PARALLEL_RAY_GENERATOR_H
-#define OX_WRAPPER_RAY_CASTERS_PARALLEL_RAY_GENERATOR_H
+#ifndef RA_RAY_CASTERS_PARALLEL_RAY_GENERATOR_H
+#define RA_RAY_CASTERS_PARALLEL_RAY_GENERATOR_H
 
 #include "../ray_generator_with_output_buffer.h"
 #include "../buffer.h"

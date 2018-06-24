@@ -17,7 +17,7 @@ RaContractWithRaContext::RaContractWithRaContext(RaContext const& optix_context_
 RaContractWithRaContext& RaContractWithRaContext::operator=(RaContractWithRaContext const& other)
 {
     if (&m_optix_context_wrapper_ref != &other.m_optix_context_wrapper_ref)
-        THROW_OX_WRAPPER_ERROR("Unable to assign ra objects belonging to different contexts");
+        THROW_RA_ERROR("Unable to assign ra objects belonging to different contexts");
 
     return *this;
 }

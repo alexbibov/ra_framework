@@ -139,7 +139,7 @@ RaRenderingPassesFactory::RaRenderingPassesFactory(RaContext const& context):
             uint32_t num_spectra_pairs_supported = p->getNumberOfSpectraPairsSupported();
             uint32_t num_elements = num_importance_directions * (1 + num_spectra_pairs_supported);
             if (data.size() != num_elements)
-                THROW_OX_WRAPPER_ERROR("updateImportanceDirections(...) must supply " +
+                THROW_RA_ERROR("updateImportanceDirections(...) must supply " +
                     std::to_string(num_elements) + " elements, but " 
                     + std::to_string(data.size()) + " elements were provided instead");
 

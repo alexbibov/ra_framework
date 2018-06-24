@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_INIT_H
-#define OX_WRAPPER_INIT_H
+#ifndef RA_INIT_H
+#define RA_INIT_H
 
 #include "ra/ra_fwd.h"
 #include "ra/util/log.h"

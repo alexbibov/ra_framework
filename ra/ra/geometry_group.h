@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_GEOMETRY_GROUP
-#define OX_WRAPPER_GEOMETRY_GROUP
+#ifndef RA_GEOMETRY_GROUP
+#define RA_GEOMETRY_GROUP
 
 #include "optix.h"
 

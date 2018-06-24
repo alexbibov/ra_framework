@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_PROGRAM_H
-#define OX_WRAPPER_PROGRAM_H
+#ifndef RA_PROGRAM_H
+#define RA_PROGRAM_H
 
 #include <string>
 #include <map>

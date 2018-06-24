@@ -45,7 +45,7 @@ int8_t ra::util::misc::getFirstHighBit(uint64_t mask)
 {
     int8_t rv{ -1 };
 
-#ifdef OX_WRAPPER_USE_CPU_INTRINSICS
+#ifdef RA_USE_CPU_INTRINSICS
     unsigned long set_bit_index{};
     _BitScanReverse64(&set_bit_index, static_cast<unsigned long long>(mask));
     rv = static_cast<int8_t>(set_bit_index) - 1;

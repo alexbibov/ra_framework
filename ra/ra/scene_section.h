@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_SCENE_SECTION_H
-#define OX_WRAPPER_SCENE_SECTION_H
+#ifndef RA_SCENE_SECTION_H
+#define RA_SCENE_SECTION_H
 
 #include "optix.h"
 #include "ra/ra_fwd.h"

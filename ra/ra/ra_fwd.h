@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_OX_WRAPPER_FWD_H
-#define OX_WRAPPER_OX_WRAPPER_FWD_H
+#ifndef RA_RA_FWD_H
+#define RA_RA_FWD_H
 
 namespace ra {
 class RaEntity;

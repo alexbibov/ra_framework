@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_BUFFER_H
-#define OX_WRAPPER_BUFFER_H
+#ifndef RA_BUFFER_H
+#define RA_BUFFER_H
 
 #include <memory>
 

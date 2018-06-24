@@ -107,7 +107,7 @@ uint32_t packHeader(RaMatlabV4::MatlabV4NumericDataFormat data_format,
 {
     Endianness endianness = getEndianness();
     if (endianness == Endianness::unknown)
-        THROW_OX_WRAPPER_ERROR("unknown host machine endianness");
+        THROW_RA_ERROR("unknown host machine endianness");
 
     uint32_t header = static_cast<uint32_t>(endianness) * 1000;
     header += static_cast<uint32_t>(data_format) * 10;
@@ -144,7 +144,7 @@ unsigned char getElementSizeFromDataTypeAndFormat(RaMatlabV4::MatlabV4MatrixType
         case RaMatlabV4::MatlabV4NumericDataFormat::unsigned_8bit_integer:
             return 1U;
         default:
-            THROW_OX_WRAPPER_ERROR("Unknown Matlab V4 data format");
+            THROW_RA_ERROR("Unknown Matlab V4 data format");
         }
         break;
 
@@ -152,11 +152,11 @@ unsigned char getElementSizeFromDataTypeAndFormat(RaMatlabV4::MatlabV4MatrixType
         return 4U;
 
     case RaMatlabV4::MatlabV4MatrixType::sparse:
-        THROW_OX_WRAPPER_ERROR("It appears that an access attempt to a sparse variable stored in Matlab V4 file "
+        THROW_RA_ERROR("It appears that an access attempt to a sparse variable stored in Matlab V4 file "
             "has been made, however currently operations on sparse data types are not supported");
 
     default:
-        THROW_OX_WRAPPER_ERROR("Unknown Matlab V4 data type");
+        THROW_RA_ERROR("Unknown Matlab V4 data type");
     }
 }
 
@@ -334,7 +334,7 @@ void writeVariable(std::fstream& stream, int stream_open_mode_flags,
 {
     if (real_data.size() != num_rows * num_columns
         || p_imaginary_data && p_imaginary_data->size() != num_rows * num_columns)
-        THROW_OX_WRAPPER_ERROR("Unable to write variable \"" + variable_name
+        THROW_RA_ERROR("Unable to write variable \"" + variable_name
             + "\" into MATLAB v4 file: dimension mismatch");
 
     std::streamoff variable_write_offset{};
@@ -424,7 +424,7 @@ void writeVariable(std::fstream& stream, int stream_open_mode_flags,
         std::filesystem::resize_file(p, target_offset, ec);
         if (ec)
         {
-            THROW_OX_WRAPPER_ERROR("Unable to set end-of-file marker to file \"" + source_path + "\":" + ec.message());
+            THROW_RA_ERROR("Unable to set end-of-file marker to file \"" + source_path + "\":" + ec.message());
         }
 
         stream.open(source_path, stream_open_mode_flags);
@@ -585,10 +585,10 @@ void fetchVariableDataFromStream(std::istream& stream, uint32_t num_elements, En
     }
 
     case RaMatlabV4::MatlabV4MatrixType::text:
-        THROW_OX_WRAPPER_ERROR("MATLAB v4 text variables are not supported");
+        THROW_RA_ERROR("MATLAB v4 text variables are not supported");
 
     case RaMatlabV4::MatlabV4MatrixType::sparse:
-        THROW_OX_WRAPPER_ERROR("MATLAB v4 sparse variables are not supported");
+        THROW_RA_ERROR("MATLAB v4 sparse variables are not supported");
     }
 }
 
@@ -612,7 +612,7 @@ std::pair<std::vector<T>, std::vector<T>> readVariable(std::istream& stream,
     if (!findVariable(stream, variable_name, header, 
         num_rows, num_columns, is_complex, variable_offset))
     {
-        THROW_OX_WRAPPER_ERROR("Unable to fetch data from MATLAB v4 variable \""
+        THROW_RA_ERROR("Unable to fetch data from MATLAB v4 variable \""
         + variable_name + "\": the variable cannot be found");
     }
 
@@ -660,7 +660,7 @@ std::pair<std::vector<T>, std::vector<T>> readVariable(std::istream& stream,
     {
         if (data_format != type_conversion_helper_c_to_matlab_v4<T>::format)
         {
-            THROW_OX_WRAPPER_ERROR("Unable to fetch data from variable \"" + variable_name
+            THROW_RA_ERROR("Unable to fetch data from variable \"" + variable_name
                 + "\": data format mismatch");
         }
 

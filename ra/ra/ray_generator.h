@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_RAY_GENERATOR_H
-#define OX_WRAPPER_RAY_GENERATOR_H
+#ifndef RA_RAY_GENERATOR_H
+#define RA_RAY_GENERATOR_H
 
 #include <cstdint>
 #include "ra/ra_fwd.h"

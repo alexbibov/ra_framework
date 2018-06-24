@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_SHAPES_CIRCLE_H
-#define OX_WRAPPER_SHAPES_CIRCLE_H
+#ifndef RA_SHAPES_CIRCLE_H
+#define RA_SHAPES_CIRCLE_H
 
 #include "../geometry.h"
 

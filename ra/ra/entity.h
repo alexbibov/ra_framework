@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_ENTITY_H
-#define OX_WRAPPER_ENTITY_H
+#ifndef RA_ENTITY_H
+#define RA_ENTITY_H
 
 #include <thread>
 #include <string>

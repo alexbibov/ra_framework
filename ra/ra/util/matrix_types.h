@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_UTIL_MATRIX_TYPES_H
-#define OX_WRAPPER_UTIL_MATRIX_TYPES_H
+#ifndef RA_UTIL_MATRIX_TYPES_H
+#define RA_UTIL_MATRIX_TYPES_H
 
 namespace ra{ namespace util{
 

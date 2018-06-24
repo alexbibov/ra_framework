@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_MISS_SHADER_H
-#define OX_WRAPPER_MISS_SHADER_H
+#ifndef RA_MISS_SHADER_H
+#define RA_MISS_SHADER_H
 
 #include "ra/ra_fwd.h"
 #include "ra/contract_with_context.h"

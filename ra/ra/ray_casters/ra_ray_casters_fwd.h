@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_RAY_CASTERS_FWD_H
-#define OX_WRAPPER_RAY_CASTERS_FWD_H
+#ifndef RA_RAY_CASTERS_FWD_H
+#define RA_RAY_CASTERS_FWD_H
 
 namespace ra { namespace ray_casters {
 

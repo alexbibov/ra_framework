@@ -71,12 +71,12 @@ RaContext::RaContext(std::vector<std::string> const& asset_directories, uint32_t
 
     if (optix_rc == RT_ERROR_NO_DEVICE)
     {
-        THROW_OX_WRAPPER_ERROR("OptiX is not supported by the GPU installed in the host system");
+        THROW_RA_ERROR("OptiX is not supported by the GPU installed in the host system");
     }
 
     if (optix_rc == RT_ERROR_INVALID_VALUE)
     {
-        THROW_OX_WRAPPER_ERROR("OptiX context cannot be initialized: invalid value");
+        THROW_RA_ERROR("OptiX context cannot be initialized: invalid value");
     }
 
     LOG_OPTIX_ERROR(m_optix_context, rtContextSetEntryPointCount(m_optix_context, num_entry_points));
@@ -101,7 +101,7 @@ RaProgram RaContext::createProgram(std::string const& source, RaProgram::Source 
     {
         auto path_to_asset = getPathToAsset(source, m_asset_directories);
         if (!path_to_asset.isValid())
-            THROW_OX_WRAPPER_ERROR("Unable to locate asset \"" + source + "\"");
+            THROW_RA_ERROR("Unable to locate asset \"" + source + "\"");
 
         return RaProgramAttorney<RaContext>::createOptiXProgram(*this, path_to_asset, RaProgram::Source::file, program_name);
     }
@@ -134,7 +134,7 @@ std::string RaContext::retrieveStringAsset(std::string const& source) const
         return util::misc::readAsciiTextFromSourceFile(path_to_asset);
     }
     else
-        THROW_OX_WRAPPER_ERROR("Unable to retrieve asset \"" + source + "\"");
+        THROW_RA_ERROR("Unable to retrieve asset \"" + source + "\"");
 }
 
 void RaContext::addAssetCustomLookUpDirectory(std::string const& directory)

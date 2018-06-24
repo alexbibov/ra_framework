@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_SHAPES_FWD_H
-#define OX_WRAPPER_SHAPES_FWD_H
+#ifndef RA_SHAPES_FWD_H
+#define RA_SHAPES_FWD_H
 
 namespace ra { namespace shapes {
 

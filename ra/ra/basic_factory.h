@@ -1,5 +1,5 @@
-#ifndef OX_WRAPPER_BASIC_FACTORY
-#define OX_WRAPPER_BASIC_FACTORY
+#ifndef RA_BASIC_FACTORY
+#define RA_BASIC_FACTORY
 
 #include <vector>
 

@@ -142,7 +142,7 @@ RaRaycastersFactory::RaRaycastersFactory(RaContext const& context) :
                 {
                     uint32_t num_elements = p->numberOfRays() * p->getNumberOfSpectraPairsSupported();
                     if (data.size() != num_elements)
-                        THROW_OX_WRAPPER_ERROR("Error while updating spectral flux buffer of parallel ray generator \""
+                        THROW_RA_ERROR("Error while updating spectral flux buffer of parallel ray generator \""
                             + p->getStringName() + "\": updateSpectralFluxBuffer(...) must supply "
                             + std::to_string(num_elements)
                             + " elements, but " + std::to_string(data.size()) + " elements were provided instead");
@@ -221,7 +221,7 @@ RaRaycastersFactory::RaRaycastersFactory(RaContext const& context) :
                             dynamic_cast<RaBuffer<RaRayOcclusionPayload> const&>(output_buffer),
                             recasted_ray_type, recasted_ray_parametric_length);
                     default:
-                        THROW_OX_WRAPPER_ERROR("unknown payload type");
+                        THROW_RA_ERROR("unknown payload type");
                     }
                 },
 
@@ -250,7 +250,7 @@ RaRaycastersFactory::RaRaycastersFactory(RaContext const& context) :
                             dynamic_cast<RaBuffer<RaRayOcclusionPayload> const&>(output_buffer),
                             recasted_ray_type);
                     default:
-                        THROW_OX_WRAPPER_ERROR("unknown payload type");
+                        THROW_RA_ERROR("unknown payload type");
                     }
                 }
             )
