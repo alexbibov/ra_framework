@@ -155,6 +155,9 @@
       <Filter>ra\data_store_agents</Filter>
     </ClCompile>
     <ClCompile Include="ra\lua_utility_functions_library.cpp" />
+    <ClCompile Include="ra\shapes\sphere.cpp">
+      <Filter>ra\shapes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ra\buffer.h">
@@ -329,6 +332,9 @@
       <Filter>ra\data_store_agents</Filter>
     </ClInclude>
     <ClInclude Include="ra\lua_utility_functions_library.h" />
+    <ClInclude Include="ra\shapes\sphere.h">
+      <Filter>ra\shapes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ra\buffer_tuner.inl">
@@ -351,6 +357,9 @@
     </None>
     <None Include="ra\rendering_passes\scattering_rendering_pass_default_shader_config.cu">
       <Filter>ra\rendering_passes</Filter>
+    </None>
+    <None Include="ra\shapes\sphere.cu">
+      <Filter>ra\shapes</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

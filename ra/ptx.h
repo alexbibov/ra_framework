@@ -9,7 +9,7 @@
 //#define PTX_POLYGON "ra/shapes/ptx/polygon.ptx"
 
 //3D shapes
-//#define PTX_SPHERE "ra/shapes/ptx/sphere.ptx"
+#define PTX_SPHERE "ra/shapes/ptx/sphere.ptx"
 //#define PTX_BOX "ra/shapes/ptx/box.ptx"
 //#define PTX_PYRAMID "ra/shapes/ptx/pyramid.ptx"
 //#define PTX_MESH "ra/shapes/ptx/mesh.ptx"

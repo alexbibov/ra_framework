@@ -4,6 +4,7 @@
 namespace ra { namespace shapes {
 
 class RaCircle;
+class RaSphere;
 class RaShapesFactory;
 
 }}

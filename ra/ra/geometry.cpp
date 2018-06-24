@@ -81,7 +81,7 @@ void RaGeometry::update(RaObjectHandle top_scene_object) const
         && static_cast<RaMaterialAssembly&>(m_geometry_blueprint->material_assembly).isValid())
     {
         RaMaterialAssemblyAttorney<RaGeometry>::updateMaterialAssembly(m_geometry_blueprint->material_assembly, top_scene_object);
-        getRaProgramFromDeclarationOffset().setVariableValue("num_materials",
+        getRaProgramFromDeclarationOffset().setVariableValue("ra_num_materials",
             static_cast<unsigned int>(static_cast<RaMaterialAssembly&>(m_geometry_blueprint->material_assembly).getMaterialCount()));
     }
 }

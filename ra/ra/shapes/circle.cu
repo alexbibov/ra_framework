@@ -5,9 +5,9 @@
 
 using namespace optix;
 
-rtDeclareVariable(optix::float2, center, ,);
+rtDeclareVariable(optix::float2, location, , "location of circle");
 rtDeclareVariable(float, radius, , "radius of circle");
-rtDeclareVariable(unsigned int, num_materials, , "number of materials attached to geometry primitive");
+rtDeclareVariable(unsigned int, ra_num_materials, , "number of materials attached to geometry primitive");
 
 rtDeclareVariable(optix::Ray, ray, rtCurrentRay, "currently traversed ray");
 
@@ -18,9 +18,9 @@ RT_PROGRAM void __ra_intersect__(int primitive_id)
 {
     float2 s{ ray.origin.x, ray.origin.y };
     float2 d{ ray.direction.x, ray.direction.y };
-    d = optix::normalize(d);
+    // d = optix::normalize(d);
 
-    float2 aux{ s - center };
+    float2 aux{ s - location };
     // float a{ dot(d, d) };
     float b{ dot(aux, d) };
     float c{ dot(aux, aux) - radius * radius };
@@ -32,7 +32,7 @@ RT_PROGRAM void __ra_intersect__(int primitive_id)
         float t1 = (-b - D)/* / a*/;
         float t2 = (-b + D)/* / a*/;
         
-        for (unsigned int i = 0; i < num_materials; ++i)
+        for (unsigned int i = 0; i < ra_num_materials; ++i)
         {
             bool check_second{ true };
 
@@ -62,10 +62,10 @@ RT_PROGRAM void __ra_intersect__(int primitive_id)
 
 RT_PROGRAM void __ra_aabb__(int primitive_id, float aabb[6])
 {
-    aabb[0] = center.x - radius;
-    aabb[1] = center.y - radius;
+    aabb[0] = location.x - radius;
+    aabb[1] = location.y - radius;
     aabb[2] = -1e10f;
-    aabb[3] = center.x + radius;
-    aabb[4] = center.y + radius;
+    aabb[3] = location.x + radius;
+    aabb[4] = location.y + radius;
     aabb[5] = 1e-10f;
 }

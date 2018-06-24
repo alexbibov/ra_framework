@@ -147,6 +147,7 @@
     <ClCompile Include="ra\scene_section.cpp" />
     <ClCompile Include="ra\shapes\circle.cpp" />
     <ClCompile Include="ra\shapes\shapes_factory.cpp" />
+    <ClCompile Include="ra\shapes\sphere.cpp" />
     <ClCompile Include="ra\transform.cpp" />
     <ClCompile Include="ra\transformable.cpp" />
     <ClCompile Include="ra\traverse_backup_buffer.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="ra\shapes\circle.h" />
     <ClInclude Include="ra\shapes\ra_shapes_fwd.h" />
     <ClInclude Include="ra\shapes\shapes_factory.h" />
+    <ClInclude Include="ra\shapes\sphere.h" />
     <ClInclude Include="ra\transform.h" />
     <ClInclude Include="ra\transformable.h" />
     <ClInclude Include="ra\traverse_backup_buffer.h" />
@@ -224,6 +226,7 @@
     <None Include="ra\rendering_passes\scattering_rendering_pass.cu" />
     <None Include="ra\rendering_passes\scattering_rendering_pass_default_shader_config.cu" />
     <None Include="ra\shapes\circle.cu" />
+    <None Include="ra\shapes\sphere.cu" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="config.xml" />
