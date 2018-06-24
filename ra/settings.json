@@ -1,0 +1,12 @@
+{
+"logging_path" : "ra_log.html",
+"num_entry_points" : 1,
+"asset_directories" : 
+	[
+	 "ra/ray_casters/ptx",
+	 "ra/rendering_passes/ptx",
+	 "ra/shapes/ptx",
+	 "ra/materials/ptx"
+	],
+"context_stack_size": 8192
+}

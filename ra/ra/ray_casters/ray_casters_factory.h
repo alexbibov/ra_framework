@@ -1,0 +1,54 @@
+#ifndef OX_WRAPPER_RAYCASTERS_RAYCASTERS_FACTORY_H
+#define OX_WRAPPER_RAYCASTERS_RAYCASTERS_FACTORY_H
+
+#include "ra_ray_casters_fwd.h"
+#include "ra/ra_fwd.h"
+#include "ra/context.h"
+#include "ra/ray_payloads.h"
+
+namespace ra { namespace ray_casters {
+
+class OxRaycastersFactory final : public OxEntity
+{
+public:
+    static OxRaycastersFactory* initialize(OxContext const& context);
+    static void shutdown();
+    static OxRaycastersFactory* retrieve();
+
+public:
+    // required by OxEntity interface
+    bool isValid() const override;
+
+    // OxParallelRayGenerator
+public:
+    OxParallelRayGenerator createParallelRayGenerator(uint32_t num_rays, float emitter_size,
+        float emitter_position = 0.f, float emitter_rotation = 0.f,
+        uint8_t num_spectra_pairs_supported = constants::max_spectra_pairs_supported,
+        uint32_t entry_point_index = 0U) const;
+    
+    // OxRecasterGenerator
+public:
+    OxRecasterGenerator createRecasterGenerator(uint3 const& original_problem_size, OxTraverseBackupBuffer const& traverse_backup_buffer,
+        OxBuffer<OxRayRadiancePayload> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length = 1.e27f) const;
+    OxRecasterGenerator createRecasterGenerator(uint3 const& original_problem_size, OxTraverseBackupBuffer const& traverse_backup_buffer,
+        OxBuffer<OxRayRadiancePayloadSimple> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length = 1.e27f) const;
+    OxRecasterGenerator createRecasterGenerator(uint3 const& original_problem_size, OxTraverseBackupBuffer const& traverse_backup_buffer,
+        OxBuffer<OxRayRadiancePayloadMonochromatic> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length = 1.e27f) const;
+    OxRecasterGenerator createRecasterGenerator(uint3 const& original_problem_size, OxTraverseBackupBuffer const& traverse_backup_buffer,
+        OxBuffer<OxRayOcclusionPayload> const& output_buffer, OxRayType recasted_ray_type, float recasted_ray_parametric_length = 1.e27f) const;
+
+    OxTraverseBackupBuffer createTraverseBackupBuffer(size_t max_ray_storage_capacity);
+
+
+private:
+    OxRaycastersFactory(OxContext const& context);
+
+private:
+    OxContext const& m_context;
+    
+};
+
+
+}}
+
+#endif

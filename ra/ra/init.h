@@ -1,0 +1,41 @@
+#ifndef OX_WRAPPER_INIT_H
+#define OX_WRAPPER_INIT_H
+
+#include "ra/ra_fwd.h"
+#include "ra/util/log.h"
+#include "ra/factory_initializer_sentinel.h"
+
+#include <memory>
+#include <fstream>
+
+namespace ra
+{
+
+class OxInit final
+{
+public:
+    OxInit(
+        std::string const& global_path_prefix,
+        std::string const& path_to_settings);
+
+    ~OxInit();
+    
+    OxContext& context() const;
+    util::Log const& logger() const;
+    std::string loggerPath() const;
+
+    void executeLuaScriptFromSource(std::string const& lua_source_file) const;
+
+private:
+    std::unique_ptr<OxContext> m_context;
+    std::string m_path_to_settings_json;
+    std::string m_logging_path;
+
+    std::ofstream m_logging_stream;
+
+    std::unique_ptr<OxFactoryInitializerSentinel> m_factories_sentinel;
+};
+
+}
+
+#endif
