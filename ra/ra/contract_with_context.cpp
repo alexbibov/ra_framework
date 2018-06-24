@@ -3,18 +3,18 @@
 
 using namespace ra;
 
-OxContext const& OxContractWithOxContext::context() const
+RaContext const& RaContractWithRaContext::context() const
 {
     return m_optix_context_wrapper_ref;
 }
 
-OxContractWithOxContext::OxContractWithOxContext(OxContext const& optix_context_wrapper) :
+RaContractWithRaContext::RaContractWithRaContext(RaContext const& optix_context_wrapper) :
     m_optix_context_wrapper_ref{ optix_context_wrapper }
 {
 
 }
 
-OxContractWithOxContext& OxContractWithOxContext::operator=(OxContractWithOxContext const& other)
+RaContractWithRaContext& RaContractWithRaContext::operator=(RaContractWithRaContext const& other)
 {
     if (&m_optix_context_wrapper_ref != &other.m_optix_context_wrapper_ref)
         THROW_OX_WRAPPER_ERROR("Unable to assign ra objects belonging to different contexts");
@@ -22,7 +22,7 @@ OxContractWithOxContext& OxContractWithOxContext::operator=(OxContractWithOxCont
     return *this;
 }
 
-RTcontext OxContractWithOxContext::nativeOptiXContextHandle() const
+RTcontext RaContractWithRaContext::nativeOptiXContextHandle() const
 {
     return m_optix_context_wrapper_ref.m_optix_context;
 }

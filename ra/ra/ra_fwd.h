@@ -2,31 +2,31 @@
 #define OX_WRAPPER_OX_WRAPPER_FWD_H
 
 namespace ra {
-class OxEntity;
-class OxEntityId;
-class OxContext;
-class OxContractWithOxContext;
-class OxProgram;
-class OxContractWithOxPrograms;
-class OxAbstractBuffer;
-template<typename T> class OxBuffer;
-template<typename T> class OxBufferMapSentry;
-class OxScene;
-class OxSceneSection;
-class OxGeometryGroup;
+class RaEntity;
+class RaEntityId;
+class RaContext;
+class RaContractWithRaContext;
+class RaProgram;
+class RaContractWithRaPrograms;
+class RaAbstractBuffer;
+template<typename T> class RaBuffer;
+template<typename T> class RaBufferMapSentry;
+class RaScene;
+class RaSceneSection;
+class RaGeometryGroup;
 class OptiXVariableGeometryGroup;
-class OxGeometry;
-class OxTransform;
-class OxTransformable;
-class OxMaterial;
-class OxMaterialAssembly;
-class OxRayGenerator;
-class OxMissShader;
-class OxMissShaderAssembly;
-class OxFactoryInitializerSentinel;
-class OxBasicFactory;
-class OxRayGeneratorWithOutputBuffer;
-class OxTraverseBackupBuffer;
+class RaGeometry;
+class RaTransform;
+class RaTransformable;
+class RaMaterial;
+class RaMaterialAssembly;
+class RaRayGenerator;
+class RaMissShader;
+class RaMissShaderAssembly;
+class RaFactoryInitializerSentinel;
+class RaBasicFactory;
+class RaRayGeneratorWithOutputBuffer;
+class RaTraverseBackupBuffer;
 }
 
 #endif

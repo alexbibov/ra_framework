@@ -3,23 +3,23 @@
 
 using namespace ra;
 
-OxMaterial::OxMaterial(
-    util::Optional<OxProgram> const& closest_hit_shader, 
-    util::Optional<OxProgram> const& any_hit_shader, 
-    OxRayTypeCollection const& supported_ray_types/* = RayTypeCollection{ 1U, OxRayType::unknown }*/)
-    : OxContractWithOxContext{ 
+RaMaterial::RaMaterial(
+    util::Optional<RaProgram> const& closest_hit_shader, 
+    util::Optional<RaProgram> const& any_hit_shader, 
+    RaRayTypeCollection const& supported_ray_types/* = RayTypeCollection{ 1U, RaRayType::unknown }*/)
+    : RaContractWithRaContext{ 
         closest_hit_shader.isValid() ? 
-        static_cast<OxProgram const&>(closest_hit_shader).context()
-        : static_cast<OxProgram const&>(any_hit_shader).context() 
+        static_cast<RaProgram const&>(closest_hit_shader).context()
+        : static_cast<RaProgram const&>(any_hit_shader).context() 
      }
-    , OxContractWithOxPrograms{ 
+    , RaContractWithRaPrograms{ 
         closest_hit_shader.isValid() && any_hit_shader.isValid() ?
-        std::initializer_list<OxProgram>{
-            static_cast<OxProgram const&>(closest_hit_shader),
-            static_cast<OxProgram const&>(any_hit_shader) }
+        std::initializer_list<RaProgram>{
+            static_cast<RaProgram const&>(closest_hit_shader),
+            static_cast<RaProgram const&>(any_hit_shader) }
         : closest_hit_shader.isValid() ? 
-            std::initializer_list<OxProgram>{ static_cast<OxProgram const&>(closest_hit_shader) }
-            : std::initializer_list<OxProgram>{ static_cast<OxProgram const&>(any_hit_shader)} }
+            std::initializer_list<RaProgram>{ static_cast<RaProgram const&>(closest_hit_shader) }
+            : std::initializer_list<RaProgram>{ static_cast<RaProgram const&>(any_hit_shader)} }
     , m_supported_ray_types{ supported_ray_types }
     , m_closest_hit_program_offset{ closest_hit_shader.isValid() ? 0 : -1 }
     , m_any_hit_program_offset{ 
@@ -71,42 +71,42 @@ OxMaterial::OxMaterial(
     }
 }
 
-util::Optional<OxProgram> OxMaterial::getClosestHitShader() const
+util::Optional<RaProgram> RaMaterial::getClosestHitShader() const
 {
     if (m_closest_hit_program_offset >= 0) 
     {
-        return getOxProgramFromDeclarationOffset(m_closest_hit_program_offset);
+        return getRaProgramFromDeclarationOffset(m_closest_hit_program_offset);
     }
     else
     {
-        return util::Optional<OxProgram>{};
+        return util::Optional<RaProgram>{};
     }
 }
 
-util::Optional<OxProgram> OxMaterial::getAnyHitShader() const
+util::Optional<RaProgram> RaMaterial::getAnyHitShader() const
 {
     if (m_any_hit_program_offset >= 0)
     {
-        return util::Optional<OxProgram>{getOxProgramFromDeclarationOffset(m_any_hit_program_offset)};
+        return util::Optional<RaProgram>{getRaProgramFromDeclarationOffset(m_any_hit_program_offset)};
     }
     else
     {
-        return util::Optional<OxProgram>{};
+        return util::Optional<RaProgram>{};
     }
 }
 
-OxRayTypeCollection OxMaterial::supportedRayTypes() const
+RaRayTypeCollection RaMaterial::supportedRayTypes() const
 {
     return m_supported_ray_types;
 }
 
-bool ra::OxMaterial::supportsRayType(OxRayType ray_type) const
+bool ra::RaMaterial::supportsRayType(RaRayType ray_type) const
 {
     return std::find(m_supported_ray_types.begin(), m_supported_ray_types.end(), ray_type) 
         != m_supported_ray_types.end();
 }
 
-bool OxMaterial::isValid() const
+bool RaMaterial::isValid() const
 {
     RTresult res;
     LOG_OPTIX_ERROR(nativeOptiXContextHandle(), res = rtMaterialValidate(m_native_material.get()));
@@ -114,7 +114,7 @@ bool OxMaterial::isValid() const
     bool programs_valid{ true };
     for (size_t i = 0U; i < getAttachedProgramsCount(); ++i)
     {
-        if (!getOxProgramFromDeclarationOffset(static_cast<uint32_t>(i)).isValid())
+        if (!getRaProgramFromDeclarationOffset(static_cast<uint32_t>(i)).isValid())
         {
             programs_valid = false;
             break;
@@ -124,11 +124,11 @@ bool OxMaterial::isValid() const
     return res == RT_SUCCESS && programs_valid;
 }
 
-void OxMaterial::update(OxObjectHandle top_scene_object) const
+void RaMaterial::update(RaObjectHandle top_scene_object) const
 {
     if (m_closest_hit_program_offset >= 0)
-        getOxProgramFromDeclarationOffset(m_closest_hit_program_offset).setVariableValue("ox_entry_node", top_scene_object);
+        getRaProgramFromDeclarationOffset(m_closest_hit_program_offset).setVariableValue("ra_entry_node", top_scene_object);
 
     if (m_any_hit_program_offset >= 0)
-        getOxProgramFromDeclarationOffset(m_any_hit_program_offset).setVariableValue("ox_entry_node", top_scene_object);
+        getRaProgramFromDeclarationOffset(m_any_hit_program_offset).setVariableValue("ra_entry_node", top_scene_object);
 }

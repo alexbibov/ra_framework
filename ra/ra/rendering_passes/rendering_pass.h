@@ -6,17 +6,17 @@
 
 namespace ra { namespace rendering_passes {
 
-class OxRenderingPass
+class RaRenderingPass
 {
 public:
-    OxRenderingPass(OxSceneSection const& scene_section);
+    RaRenderingPass(RaSceneSection const& scene_section);
 
-    OxSceneSection const& targetSceneSection() const;
+    RaSceneSection const& targetSceneSection() const;
 
     virtual void render() const = 0;
 
 private:
-    OxSceneSection const& m_scene_section;
+    RaSceneSection const& m_scene_section;
 };
 
 }}

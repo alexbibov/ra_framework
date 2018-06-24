@@ -31,11 +31,11 @@ int main(int argc, char* argv[])
 {
     try
     {
-        TCLAP::CmdLine cmd{ "OX_WRAPPER demonstration demo based on Gomos OptiX project", ' ', "0.1" };
+        TCLAP::CmdLine cmd{ "RA demonstration demo based on Gomos OptiX project", ' ', "0.1" };
 
         TCLAP::ValueArg<std::string> lua_script{ "s", "lua_script", "input script written in LUA", false, "", "string" };
-        TCLAP::ValueArg<std::string> ra_path{ "", "ox_lib", "Path to OX_WRAPPER library", true, "", "string" };
-        TCLAP::ValueArg<std::string> path_to_settings{ "", "path_to_settings", "Path to OX_WRAPPER settings JSON file", true, "", "string" };
+        TCLAP::ValueArg<std::string> ra_path{ "", "ra_lib", "Path to RA library", true, "", "string" };
+        TCLAP::ValueArg<std::string> path_to_settings{ "", "path_to_settings", "Path to RA settings JSON file", true, "", "string" };
 
         cmd.add(lua_script);
         cmd.add(ra_path);
@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
 
         // work with ra
         {
-            ra::OxInit ox{ ra_path.getValue(), path_to_settings.getValue() };
+            ra::RaInit ox{ ra_path.getValue(), path_to_settings.getValue() };
 
             std::string input_lua_script_path = lua_script.getValue();
             if (input_lua_script_path.length())
@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
                     {
                         ra::util::lua_support::LuaState::executeScript(std::string{ input_buffer });
                     }
-                    catch (ra::OxException& e)
+                    catch (ra::RaException& e)
                     {
                         std::cout << e.what() << std::endl;
                     }
@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
     {
         std::cout << "Error while parsing the command line for argument " << e.argId() << " (" << e.error() << ")" << std::endl;
     }
-    catch (ra::OxException& e)
+    catch (ra::RaException& e)
     {
         std::cout << std::string{ "ra has thrown exception: \"" } +e.what() + "\"" << std::endl;
     }

@@ -44,24 +44,24 @@ std::string correctPath(std::string const& path)
     return corrected_path;
 }
 
-void luaRegisterGeneralRoutines(OxInit const& init)
+void luaRegisterGeneralRoutines(RaInit const& init)
 {
-    util::lua_support::LuaState::registerFunction("ox_logger_path", [&init]()->std::string {return init.loggerPath(); });
-    util::lua_support::LuaState::registerFunction("ox_alive_entities", &OxEntity::aliveEntities);
-    util::lua_support::LuaState::registerFunction("ox_set_context_stack_size",
+    util::lua_support::LuaState::registerFunction("ra_logger_path", [&init]()->std::string {return init.loggerPath(); });
+    util::lua_support::LuaState::registerFunction("ra_alive_entities", &RaEntity::aliveEntities);
+    util::lua_support::LuaState::registerFunction("ra_set_context_stack_size",
         [&init](size_t size_in_bytes) { init.context().setStackSize(size_in_bytes); });
-    util::lua_support::LuaState::registerFunction("ox_add_asset_look_up_directory",
+    util::lua_support::LuaState::registerFunction("ra_add_asset_look_up_directory",
         [&init](std::string const& directory) { init.context().addAssetCustomLookUpDirectory(directory); });
-    util::lua_support::LuaState::registerFunction("ox_clear_asset_look_up_directory_cache",
+    util::lua_support::LuaState::registerFunction("ra_clear_asset_look_up_directory_cache",
         [&init]() { init.context().clearAssetCustomDirectoryLookUpCache(); });
-    util::lua_support::LuaState::registerFunction("ox_is_context_valid", [&init]()->bool {return init.context().isValid(); });
+    util::lua_support::LuaState::registerFunction("ra_is_context_valid", [&init]()->bool {return init.context().isValid(); });
 }
 
 }
 
 
 
-OxInit::OxInit(
+RaInit::RaInit(
     std::string const& global_path_prefix,
     std::string const& path_to_settings)
 {
@@ -171,8 +171,8 @@ OxInit::OxInit(
 
     // create context
     {
-        m_context.reset(new OxContext{ asset_directories, num_entry_points });
-        m_factories_sentinel.reset(new OxFactoryInitializerSentinel{ *m_context });
+        m_context.reset(new RaContext{ asset_directories, num_entry_points });
+        m_factories_sentinel.reset(new RaFactoryInitializerSentinel{ *m_context });
         m_context->setStringName("OptiX context");
         m_context->setStackSize(context_stack_size);
     }
@@ -183,7 +183,7 @@ OxInit::OxInit(
     }
 }
 
-OxInit::~OxInit()
+RaInit::~RaInit()
 {
     // Lua must be shutdown first to make sure all ra objects it has created are dead by the time the
     // context gets destroyed
@@ -192,29 +192,29 @@ OxInit::~OxInit()
     // the context and factories must be destroyed while the logger is still valid as errors may still occur during destruction
     m_factories_sentinel = nullptr;
     m_context = nullptr;
-    auto alive_entities = OxEntity::aliveEntities();
+    auto alive_entities = RaEntity::aliveEntities();
     util::Log::retrieve()->out("Alive entities: " + std::to_string(alive_entities), 
         alive_entities ? util::LogMessageType::exclamation : util::LogMessageType::information);
     util::Log::shutdown();
     m_logging_stream.close();
 }
 
-OxContext& OxInit::context() const
+RaContext& RaInit::context() const
 {
     return *m_context;
 }
 
-util::Log const& OxInit::logger() const
+util::Log const& RaInit::logger() const
 {
     return *util::Log::retrieve();
 }
 
-std::string OxInit::loggerPath() const
+std::string RaInit::loggerPath() const
 {
     return m_logging_path;
 }
 
-void OxInit::executeLuaScriptFromSource(std::string const& lua_source_file) const
+void RaInit::executeLuaScriptFromSource(std::string const& lua_source_file) const
 {
     std::ifstream ifile{ lua_source_file, std::ios::in };
     std::string lua_source_script;

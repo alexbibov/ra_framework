@@ -7,41 +7,41 @@
 
 namespace ra { namespace ray_casters {
 
-class OxRecasterGenerator : public OxRayGeneratorWithOutputBuffer
+class RaRecasterGenerator : public RaRayGeneratorWithOutputBuffer
 {
 public:
-    OxRecasterGenerator(uint3 const& original_problem_size,
-        OxTraverseBackupBuffer const& traverse_backup_buffer, 
-        OxBuffer<OxRayRadiancePayload> const& output_buffer, 
-        OxRayType recasted_ray_type, 
+    RaRecasterGenerator(uint3 const& original_problem_size,
+        RaTraverseBackupBuffer const& traverse_backup_buffer, 
+        RaBuffer<RaRayRadiancePayload> const& output_buffer, 
+        RaRayType recasted_ray_type, 
         float recasted_ray_parametric_length = 1.e27f);
 
-    OxRecasterGenerator(uint3 const& original_problem_size,
-        OxTraverseBackupBuffer const& traverse_backup_buffer, 
-        OxBuffer<OxRayRadiancePayloadSimple> const& output_buffer, 
-        OxRayType recasted_ray_type, 
+    RaRecasterGenerator(uint3 const& original_problem_size,
+        RaTraverseBackupBuffer const& traverse_backup_buffer, 
+        RaBuffer<RaRayRadiancePayloadSimple> const& output_buffer, 
+        RaRayType recasted_ray_type, 
         float recasted_ray_parametric_length = 1.e27f);
 
-    OxRecasterGenerator(uint3 const& original_problem_size,
-        OxTraverseBackupBuffer const& traverse_backup_buffer, 
-        OxBuffer<OxRayRadiancePayloadMonochromatic> const& output_buffer, 
-        OxRayType recasted_ray_type, 
+    RaRecasterGenerator(uint3 const& original_problem_size,
+        RaTraverseBackupBuffer const& traverse_backup_buffer, 
+        RaBuffer<RaRayRadiancePayloadMonochromatic> const& output_buffer, 
+        RaRayType recasted_ray_type, 
         float recasted_ray_parametric_length = 1.e27f);
 
-    OxRecasterGenerator(uint3 const& original_problem_size,
-        OxTraverseBackupBuffer const& traverse_backup_buffer, 
-        OxBuffer<OxRayOcclusionPayload> const& output_buffer, 
-        OxRayType recasted_ray_type, 
+    RaRecasterGenerator(uint3 const& original_problem_size,
+        RaTraverseBackupBuffer const& traverse_backup_buffer, 
+        RaBuffer<RaRayOcclusionPayload> const& output_buffer, 
+        RaRayType recasted_ray_type, 
         float recasted_ray_parametric_length = 1.e27f);
 
-    void update(OxObjectHandle top_scene_object) const override;
+    void update(RaObjectHandle top_scene_object) const override;
 
-    ~OxRecasterGenerator();
+    ~RaRecasterGenerator();
 
 private:
     class impl;
 
-    OxTraverseBackupBuffer m_traverse_backup_buffer;
+    RaTraverseBackupBuffer m_traverse_backup_buffer;
     std::shared_ptr<impl> m_impl;
 };
 

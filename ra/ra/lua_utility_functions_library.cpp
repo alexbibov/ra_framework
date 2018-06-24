@@ -23,14 +23,14 @@ std::string getCurrentDirectory()
 
 }
 
-OxLuaDirectoryRoutinesRegistrar::OxLuaDirectoryRoutinesRegistrar(LuaTable& parent_table)
+RaLuaDirectoryRoutinesRegistrar::RaLuaDirectoryRoutinesRegistrar(LuaTable& parent_table)
 {
-    LuaTable this_lib_table = parent_table.registerTable("OxDirectoryLib");
+    LuaTable this_lib_table = parent_table.registerTable("RaDirectoryLib");
     this_lib_table.registerFunction("get_current_directory", directory_functions::getCurrentDirectory);
 }
 
-OxLuaLibsMainRegistrar::OxLuaLibsMainRegistrar()
+RaLuaLibsMainRegistrar::RaLuaLibsMainRegistrar()
 {
-    LuaTable main_lib_table = LuaState::registerTable("OxLibs");
-    m_directory_routines_registrar = std::make_unique<OxLuaDirectoryRoutinesRegistrar>(main_lib_table);
+    LuaTable main_lib_table = LuaState::registerTable("RaLibs");
+    m_directory_routines_registrar = std::make_unique<RaLuaDirectoryRoutinesRegistrar>(main_lib_table);
 }

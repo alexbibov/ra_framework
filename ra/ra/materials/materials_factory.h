@@ -7,26 +7,26 @@
 
 namespace ra { namespace materials {
 
-class OxMaterialsFactory final : public OxEntity
+class RaMaterialsFactory final : public RaEntity
 {
 public:
-    static OxMaterialsFactory* initialize(OxContext const& context);
+    static RaMaterialsFactory* initialize(RaContext const& context);
     static void shutdown();
-    static OxMaterialsFactory* retrieve();
+    static RaMaterialsFactory* retrieve();
 
 public:
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
-    // OxBlackBody
+    // RaBlackBody
 public:
-    OxBlackBody createBlackBody(OxRayPayloadType payload_type, OxRayTypeCollection const& affected_ray_types) const;
+    RaBlackBody createBlackBody(RaRayPayloadType payload_type, RaRayTypeCollection const& affected_ray_types) const;
 
 private:
-    OxMaterialsFactory(OxContext const& context);
+    RaMaterialsFactory(RaContext const& context);
 
 private:
-    OxContext const& m_context;
+    RaContext const& m_context;
 };
 
 }}

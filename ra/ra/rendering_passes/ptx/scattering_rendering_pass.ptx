@@ -10,8 +10,8 @@
 .target sm_60
 .address_size 64
 
-	// .globl	_Z18__ox_closest_hit__v
-.global .align 4 .b8 ox_entry_node[4];
+	// .globl	_Z18__ra_closest_hit__v
+.global .align 4 .b8 ra_entry_node[4];
 .global .align 4 .f32 step_size;
 .global .align 4 .b8 problem_size[12];
 .global .align 4 .u32 max_recursion_depth;
@@ -28,7 +28,7 @@
 .global .align 4 .b8 normal[12];
 .global .align 1 .b8 importance_directions_buffer[1];
 .global .align 1 .b8 traverse_backup_buffer[1];
-.global .align 4 .b8 _ZN21rti_internal_typeinfo13ox_entry_nodeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
+.global .align 4 .b8 _ZN21rti_internal_typeinfo13ra_entry_nodeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo9step_sizeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo12problem_sizeE[8] = {82, 97, 121, 0, 12, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo19max_recursion_depthE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
@@ -67,7 +67,7 @@
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_xE;
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_yE;
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_zE;
-.global .align 16 .b8 _ZN21rti_internal_typename13ox_entry_nodeE[9] = {114, 116, 79, 98, 106, 101, 99, 116, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename13ra_entry_nodeE[9] = {114, 116, 79, 98, 106, 101, 99, 116, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename9step_sizeE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename12problem_sizeE[6] = {117, 105, 110, 116, 51, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename19max_recursion_depthE[12] = {111, 112, 116, 105, 120, 58, 58, 117, 105, 110, 116, 0};
@@ -76,13 +76,13 @@
 .global .align 16 .b8 _ZN21rti_internal_typename17absorption_factorE[23] = {102, 97, 99, 116, 111, 114, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename17scattering_factorE[23] = {102, 97, 99, 116, 111, 114, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename14phase_functionE[31] = {112, 104, 97, 115, 101, 95, 102, 117, 110, 99, 116, 105, 111, 110, 95, 112, 114, 111, 103, 114, 97, 109, 95, 105, 100, 95, 116, 121, 112, 101, 0};
-.global .align 16 .b8 _ZN21rti_internal_typename11ray_payloadE[25] = {114, 97, 58, 58, 79, 120, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 0};
-.global .align 16 .b8 _ZN21rti_internal_typename21ray_payload_scatteredE[31] = {114, 97, 58, 58, 79, 120, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 83, 105, 109, 112, 108, 101, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename11ray_payloadE[25] = {114, 97, 58, 58, 82, 97, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename21ray_payload_scatteredE[31] = {114, 97, 58, 58, 82, 97, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 83, 105, 109, 112, 108, 101, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename21intersection_distanceE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename11current_rayE[11] = {111, 112, 116, 105, 120, 58, 58, 82, 97, 121, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename5indexE[13] = {111, 112, 116, 105, 120, 58, 58, 117, 105, 110, 116, 51, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename6normalE[14] = {111, 112, 116, 105, 120, 58, 58, 102, 108, 111, 97, 116, 51, 0};
-.global .align 4 .u32 _ZN21rti_internal_typeenum13ox_entry_nodeE = 4919;
+.global .align 4 .u32 _ZN21rti_internal_typeenum13ra_entry_nodeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum9step_sizeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum12problem_sizeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum19max_recursion_depthE = 4919;
@@ -97,7 +97,7 @@
 .global .align 4 .u32 _ZN21rti_internal_typeenum11current_rayE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum5indexE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum6normalE = 4919;
-.global .align 1 .b8 _ZN21rti_internal_semantic13ox_entry_nodeE[1];
+.global .align 1 .b8 _ZN21rti_internal_semantic13ra_entry_nodeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic9step_sizeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic12problem_sizeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic19max_recursion_depthE[1];
@@ -112,7 +112,7 @@
 .global .align 16 .b8 _ZN21rti_internal_semantic11current_rayE[13] = {114, 116, 67, 117, 114, 114, 101, 110, 116, 82, 97, 121, 0};
 .global .align 16 .b8 _ZN21rti_internal_semantic5indexE[14] = {114, 116, 76, 97, 117, 110, 99, 104, 73, 110, 100, 101, 120, 0};
 .global .align 16 .b8 _ZN21rti_internal_semantic6normalE[21] = {97, 116, 116, 114, 105, 98, 117, 116, 101, 32, 97, 116, 116, 114, 78, 111, 114, 109, 97, 108, 0};
-.global .align 16 .b8 _ZN23rti_internal_annotation13ox_entry_nodeE[19] = {34, 83, 99, 101, 110, 101, 32, 101, 110, 116, 114, 121, 32, 110, 111, 100, 101, 34, 0};
+.global .align 16 .b8 _ZN23rti_internal_annotation13ra_entry_nodeE[19] = {34, 83, 99, 101, 110, 101, 32, 101, 110, 116, 114, 121, 32, 110, 111, 100, 101, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation9step_sizeE[25] = {34, 82, 97, 121, 32, 109, 97, 114, 99, 104, 105, 110, 103, 32, 115, 116, 101, 112, 32, 115, 105, 122, 101, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation12problem_sizeE[31] = {34, 79, 114, 105, 103, 105, 110, 97, 108, 32, 115, 105, 122, 101, 32, 111, 102, 32, 116, 104, 101, 32, 112, 114, 111, 98, 108, 101, 109, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation19max_recursion_depthE[53] = {34, 77, 97, 120, 105, 109, 97, 108, 32, 100, 101, 112, 116, 104, 32, 111, 102, 32, 114, 101, 99, 117, 114, 115, 105, 111, 110, 32, 102, 111, 114, 32, 115, 99, 97, 116, 116, 101, 114, 105, 110, 103, 32, 116, 114, 97, 118, 101, 114, 115, 101, 34, 0};
@@ -129,7 +129,7 @@
 .global .align 16 .b8 _ZN23rti_internal_annotation6normalE[34] = {34, 78, 111, 114, 109, 97, 108, 32, 111, 102, 32, 116, 104, 101, 32, 115, 117, 114, 102, 97, 99, 101, 32, 98, 101, 105, 110, 103, 32, 104, 105, 116, 34, 0};
 .const .align 4 .b8 __cudart_i2opi_f[24] = {65, 144, 67, 60, 153, 149, 98, 219, 192, 221, 52, 245, 209, 87, 39, 252, 41, 21, 68, 78, 110, 131, 249, 162};
 
-.visible .entry _Z18__ox_closest_hit__v(
+.visible .entry _Z18__ra_closest_hit__v(
 
 )
 {
@@ -1044,7 +1044,7 @@ BB0_98:
 
 BB0_100:
 	ld.global.f32 	%f287, [step_size];
-	ld.global.u32 	%r397, [ox_entry_node];
+	ld.global.u32 	%r397, [ra_entry_node];
 	mul.f32 	%f284, %f400, %f412;
 	mul.f32 	%f283, %f400, %f406;
 	mov.u32 	%r398, 2;
@@ -1425,7 +1425,7 @@ BB0_127:
 	fma.rn.f32 	%f361, %f364, %f370, %f9;
 	fma.rn.f32 	%f362, %f370, %f365, %f11;
 	fma.rn.f32 	%f363, %f370, %f366, %f13;
-	ld.global.u32 	%r453, [ox_entry_node];
+	ld.global.u32 	%r453, [ra_entry_node];
 	mov.u64 	%rd58, ray_payload;
 	cvta.global.u64 	%rd57, %rd58;
 	mov.u32 	%r454, 0;
@@ -1447,7 +1447,7 @@ BB0_130:
 	ld.global.f32 	%f376, [current_ray+20];
 	ld.global.f32 	%f375, [current_ray+16];
 	ld.global.f32 	%f374, [current_ray+12];
-	ld.global.u32 	%r459, [ox_entry_node];
+	ld.global.u32 	%r459, [ra_entry_node];
 	mov.u64 	%rd60, ray_payload;
 	cvta.global.u64 	%rd59, %rd60;
 	mov.u32 	%r460, 0;
@@ -1557,8 +1557,8 @@ BB0_135:
 	ret;
 }
 
-	// .globl	_Z11__ox_miss__v
-.visible .entry _Z11__ox_miss__v(
+	// .globl	_Z11__ra_miss__v
+.visible .entry _Z11__ra_miss__v(
 
 )
 {
@@ -2418,7 +2418,7 @@ BB1_95:
 
 BB1_97:
 	ld.global.f32 	%f275, [step_size];
-	ld.global.u32 	%r394, [ox_entry_node];
+	ld.global.u32 	%r394, [ra_entry_node];
 	mul.f32 	%f272, %f375, %f387;
 	mul.f32 	%f271, %f375, %f381;
 	mov.u32 	%r395, 2;
@@ -2817,7 +2817,7 @@ BB1_125:
 	ld.global.f32 	%f354, [current_ray+20];
 	ld.global.f32 	%f353, [current_ray+16];
 	ld.global.f32 	%f352, [current_ray+12];
-	ld.global.u32 	%r448, [ox_entry_node];
+	ld.global.u32 	%r448, [ra_entry_node];
 	cvta.global.u64 	%rd57, %rd58;
 	mov.u32 	%r449, 0;
 	mov.f32 	%f355, 0f00000000;
@@ -2923,8 +2923,8 @@ BB1_130:
 	ret;
 }
 
-	// .globl	_Z28__ox_closest_hit_scattered__v
-.visible .entry _Z28__ox_closest_hit_scattered__v(
+	// .globl	_Z28__ra_closest_hit_scattered__v
+.visible .entry _Z28__ra_closest_hit_scattered__v(
 
 )
 {
@@ -2947,8 +2947,8 @@ BB1_130:
 	ret;
 }
 
-	// .globl	_Z21__ox_miss_scattered__v
-.visible .entry _Z21__ox_miss_scattered__v(
+	// .globl	_Z21__ra_miss_scattered__v
+.visible .entry _Z21__ra_miss_scattered__v(
 
 )
 {
@@ -2981,7 +2981,7 @@ BB1_130:
 	fma.rn.f32 	%f16, %f13, %f6, %f12;
 	setp.lt.u32	%p2, %r1, %r2;
 	selp.f32	%f8, %f9, 0f6C4ECB8F, %p2;
-	ld.global.u32 	%r4, [ox_entry_node];
+	ld.global.u32 	%r4, [ra_entry_node];
 	mov.u64 	%rd3, ray_payload_scattered;
 	cvta.global.u64 	%rd1, %rd3;
 	mov.u32 	%r5, 2;

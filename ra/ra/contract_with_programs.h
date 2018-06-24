@@ -13,25 +13,25 @@
 
 
 namespace ra {
-    class OxContractWithOxPrograms 
+    class RaContractWithRaPrograms 
     {
     public:
-        OxProgram const* getProgramByName(std::string const& name) const;
-        OxProgram const* getProgramById(OxEntityId const& id) const;
+        RaProgram const* getProgramByName(std::string const& name) const;
+        RaProgram const* getProgramById(RaEntityId const& id) const;
 
     protected:
-        OxContractWithOxPrograms(std::initializer_list<OxProgram> init_list);
+        RaContractWithRaPrograms(std::initializer_list<RaProgram> init_list);
 
-        uint32_t getDeclarationOffsetFromId(OxEntityId const& id) const;
+        uint32_t getDeclarationOffsetFromId(RaEntityId const& id) const;
         uint32_t getDeclarationOffsetFromName(std::string const& name) const;
         RTprogram nativeOptiXProgramHandle(uint32_t declaration_offset = 0U) const;
-        OxProgram getOxProgramFromDeclarationOffset(uint32_t declaration_offset = 0U) const;
+        RaProgram getRaProgramFromDeclarationOffset(uint32_t declaration_offset = 0U) const;
         size_t getAttachedProgramsCount() const;
 
-        void replaceProgramAtOffset(OxProgram const& program, uint32_t declaration_offset = 0U);
+        void replaceProgramAtOffset(RaProgram const& program, uint32_t declaration_offset = 0U);
 
     private:
-        util::StaticVector<OxProgram, constants::max_programs_in_contract> m_programs;
+        util::StaticVector<RaProgram, constants::max_programs_in_contract> m_programs;
     };
 }
 

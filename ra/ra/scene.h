@@ -7,19 +7,19 @@
 
 namespace ra{
 
-class OxScene final : public OxEntity
+class RaScene final : public RaEntity
 {
 public:
-    OxScene();
-    void addSceneSection(OxSceneSection const& scene_section, OxRayGenerator const* ray_generator);
+    RaScene();
+    void addSceneSection(RaSceneSection const& scene_section, RaRayGenerator const* ray_generator);
 
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
     void trace() const;
 
 private:
-    std::list<std::pair<OxSceneSection, OxRayGenerator const*>> m_scene_sections;
+    std::list<std::pair<RaSceneSection, RaRayGenerator const*>> m_scene_sections;
 };
 
 }

@@ -5,19 +5,19 @@
 
 namespace ra { namespace lua_libs {
 
-class OxLuaDirectoryRoutinesRegistrar
+class RaLuaDirectoryRoutinesRegistrar
 {
 public:
-    OxLuaDirectoryRoutinesRegistrar(util::lua_support::LuaTable& parent_table);
+    RaLuaDirectoryRoutinesRegistrar(util::lua_support::LuaTable& parent_table);
 };
 
-class OxLuaLibsMainRegistrar
+class RaLuaLibsMainRegistrar
 {
 public:
-    OxLuaLibsMainRegistrar();
+    RaLuaLibsMainRegistrar();
 
 private:
-    std::unique_ptr<OxLuaDirectoryRoutinesRegistrar> m_directory_routines_registrar;
+    std::unique_ptr<RaLuaDirectoryRoutinesRegistrar> m_directory_routines_registrar;
 };
 
 }}

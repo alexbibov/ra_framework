@@ -7,27 +7,27 @@
 
 namespace ra { namespace shapes {
 
-class OxShapesFactory : public OxEntity
+class RaShapesFactory : public RaEntity
 {
 public:
-    static OxShapesFactory* initialize(OxContext const& context);
+    static RaShapesFactory* initialize(RaContext const& context);
     static void shutdown();
-    static OxShapesFactory* retrieve();
+    static RaShapesFactory* retrieve();
 
 public:
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
-    // OxCircle
+    // RaCircle
 public:
-    OxCircle createCircle(float position_x = 0.f, float position_y = 0.f, float radius = 1.f) const;
-    OxCircle createCircle(OxMaterialAssembly const& material_assembly, float position_x = 0.f, float position_y = 0.f, float radius = 1.f) const;
+    RaCircle createCircle(float position_x = 0.f, float position_y = 0.f, float radius = 1.f) const;
+    RaCircle createCircle(RaMaterialAssembly const& material_assembly, float position_x = 0.f, float position_y = 0.f, float radius = 1.f) const;
 
 private:
-    OxShapesFactory(OxContext const& context);
+    RaShapesFactory(RaContext const& context);
 
 private:
-    OxContext const& m_context;
+    RaContext const& m_context;
 };
 
 }}

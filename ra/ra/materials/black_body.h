@@ -7,10 +7,10 @@
 
 namespace ra { namespace materials {
 
-class OxBlackBody : public OxMaterial
+class RaBlackBody : public RaMaterial
 {
 public:
-    OxBlackBody(OxContext const& context, OxRayPayloadType payload_type, OxRayTypeCollection affected_ray_types);
+    RaBlackBody(RaContext const& context, RaRayPayloadType payload_type, RaRayTypeCollection affected_ray_types);
 };
 
 }}

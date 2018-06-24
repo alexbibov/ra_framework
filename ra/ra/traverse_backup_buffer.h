@@ -5,15 +5,15 @@
 
 namespace ra {
 
-class OxTraverseBackupBuffer : public OxEntity {
+class RaTraverseBackupBuffer : public RaEntity {
 public:
-    OxTraverseBackupBuffer(OxContext const& context, size_t max_ray_storage_capacity);
-    ~OxTraverseBackupBuffer();
+    RaTraverseBackupBuffer(RaContext const& context, size_t max_ray_storage_capacity);
+    ~RaTraverseBackupBuffer();
 
-    OxBuffer<unsigned int> readBuffer() const;
-    OxBuffer<unsigned int> writeBuffer() const;
+    RaBuffer<unsigned int> readBuffer() const;
+    RaBuffer<unsigned int> writeBuffer() const;
 
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
     void ping_pong() const;
@@ -22,7 +22,7 @@ public:
 
 private:
     std::shared_ptr<uint8_t> m_current_buffer_idx;
-    OxBuffer<unsigned int> m_raw_buffer[2];    // traverse backup buffer is always a ping-pong buffer
+    RaBuffer<unsigned int> m_raw_buffer[2];    // traverse backup buffer is always a ping-pong buffer
 };
 
 }

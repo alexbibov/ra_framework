@@ -8,10 +8,10 @@
 
 namespace ra { namespace data_store_agents {
 
-class OxMatlabV4 : public OxEntity
+class RaMatlabV4 : public RaEntity
 {
 public:
-    OxMatlabV4(std::string const& path, bool append = true);
+    RaMatlabV4(std::string const& path, bool append = true);
 
 public:
     enum class MatlabV4NumericDataFormat : unsigned char
@@ -42,19 +42,19 @@ public:
     };
 
 public:
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override; 
 
 public:
 
-    bool save(OxAbstractBuffer const& source_buffer,
+    bool save(RaAbstractBuffer const& source_buffer,
         uint32_t level,
-        OxBasicBufferFormat source_buffer_format,
+        RaBasicBufferFormat source_buffer_format,
         std::string const& variable_name);
 
-    bool load(OxAbstractBuffer& destination_buffer,
+    bool load(RaAbstractBuffer& destination_buffer,
         uint32_t level,
-        OxBasicBufferFormat destination_buffer_format,
+        RaBasicBufferFormat destination_buffer_format,
         std::string const& variable_name);
 
     std::list<VariableInfo> getVariables() const;

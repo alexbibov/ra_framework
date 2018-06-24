@@ -10,17 +10,17 @@
 .target sm_60
 .address_size 64
 
-	// .globl	_Z15__ox_generate__v
-.global .align 4 .b8 ox_entry_node[4];
+	// .globl	_Z15__ra_generate__v
+.global .align 4 .b8 ra_entry_node[4];
 .global .align 4 .u32 num_rays;
 .global .align 4 .f32 emitter_position;
 .global .align 4 .f32 emitter_size;
 .global .align 4 .f32 emitter_rotation;
 .global .align 4 .u32 num_spectra_pairs_supported;
 .global .align 4 .u32 index;
-.global .align 1 .b8 ox_output_buffer[1];
-.global .align 1 .b8 ox_init_flux_buffer[1];
-.global .align 4 .b8 _ZN21rti_internal_typeinfo13ox_entry_nodeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
+.global .align 1 .b8 ra_output_buffer[1];
+.global .align 1 .b8 ra_init_flux_buffer[1];
+.global .align 4 .b8 _ZN21rti_internal_typeinfo13ra_entry_nodeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo8num_raysE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo16emitter_positionE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo12emitter_sizeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
@@ -51,28 +51,28 @@
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_xE;
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_yE;
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_zE;
-.global .align 16 .b8 _ZN21rti_internal_typename13ox_entry_nodeE[9] = {114, 116, 79, 98, 106, 101, 99, 116, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename13ra_entry_nodeE[9] = {114, 116, 79, 98, 106, 101, 99, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename8num_raysE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename16emitter_positionE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename12emitter_sizeE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename16emitter_rotationE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename27num_spectra_pairs_supportedE[12] = {111, 112, 116, 105, 120, 58, 58, 117, 105, 110, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename5indexE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
-.global .align 4 .u32 _ZN21rti_internal_typeenum13ox_entry_nodeE = 4919;
+.global .align 4 .u32 _ZN21rti_internal_typeenum13ra_entry_nodeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum8num_raysE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum16emitter_positionE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum12emitter_sizeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum16emitter_rotationE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum27num_spectra_pairs_supportedE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum5indexE = 4919;
-.global .align 1 .b8 _ZN21rti_internal_semantic13ox_entry_nodeE[1];
+.global .align 1 .b8 _ZN21rti_internal_semantic13ra_entry_nodeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic8num_raysE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic16emitter_positionE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic12emitter_sizeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic16emitter_rotationE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic27num_spectra_pairs_supportedE[1];
 .global .align 16 .b8 _ZN21rti_internal_semantic5indexE[14] = {114, 116, 76, 97, 117, 110, 99, 104, 73, 110, 100, 101, 120, 0};
-.global .align 16 .b8 _ZN23rti_internal_annotation13ox_entry_nodeE[19] = {34, 83, 99, 101, 110, 101, 32, 101, 110, 116, 114, 121, 32, 110, 111, 100, 101, 34, 0};
+.global .align 16 .b8 _ZN23rti_internal_annotation13ra_entry_nodeE[19] = {34, 83, 99, 101, 110, 101, 32, 101, 110, 116, 114, 121, 32, 110, 111, 100, 101, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation8num_raysE[24] = {34, 78, 117, 109, 98, 101, 114, 32, 111, 102, 32, 99, 97, 115, 116, 101, 100, 32, 114, 97, 121, 115, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation16emitter_positionE[26] = {34, 80, 111, 115, 105, 116, 105, 111, 110, 32, 111, 102, 32, 116, 104, 101, 32, 101, 109, 105, 116, 116, 101, 114, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation12emitter_sizeE[22] = {34, 83, 105, 122, 101, 32, 111, 102, 32, 116, 104, 101, 32, 101, 109, 105, 116, 116, 101, 114, 34, 0};
@@ -81,7 +81,7 @@
 .global .align 16 .b8 _ZN23rti_internal_annotation5indexE[15] = {34, 84, 104, 114, 101, 97, 100, 32, 105, 110, 100, 101, 120, 34, 0};
 .const .align 4 .b8 __cudart_i2opi_f[24] = {65, 144, 67, 60, 153, 149, 98, 219, 192, 221, 52, 245, 209, 87, 39, 252, 41, 21, 68, 78, 110, 131, 249, 162};
 
-.visible .entry _Z15__ox_generate__v(
+.visible .entry _Z15__ra_generate__v(
 
 )
 {
@@ -505,7 +505,7 @@ BB0_46:
 	st.local.v4.f32 	[%rd16], {%f113, %f113, %f113, %f113};
 	mul.lo.s32 	%r171, %r169, %r1;
 	cvt.u64.u32	%rd39, %r171;
-	mov.u64 	%rd45, ox_init_flux_buffer;
+	mov.u64 	%rd45, ra_init_flux_buffer;
 	cvta.global.u64 	%rd38, %rd45;
 	mov.u32 	%r166, 1;
 	mov.u64 	%rd69, 0;
@@ -547,14 +547,14 @@ BB0_49:
 
 BB0_50:
 	st.local.v4.u32 	[%rd16+80], {%r170, %r170, %r170, %r170};
-	ld.global.u32 	%r172, [ox_entry_node];
+	ld.global.u32 	%r172, [ra_entry_node];
 	mov.f32 	%f121, 0f6C4ECB8F;
 	mov.u32 	%r176, 96;
 	// inline asm
 	call _rt_trace_64, (%r172, %f38, %f39, %f113, %f40, %f41, %f42, %r170, %f113, %f121, %rd44, %r176);
 	// inline asm
 	ld.global.u32 	%rd60, [index];
-	mov.u64 	%rd64, ox_output_buffer;
+	mov.u64 	%rd64, ra_output_buffer;
 	cvta.global.u64 	%rd59, %rd64;
 	mov.u64 	%rd63, 0;
 	// inline asm

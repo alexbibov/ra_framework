@@ -9,17 +9,17 @@
 
 namespace ra {
 
-    class OxException : public std::exception
+    class RaException : public std::exception
     {
     public:
-        OxException();
-        OxException(char const* description);
-        OxException(char const* description, 
+        RaException();
+        RaException(char const* description);
+        RaException(char const* description, 
             std::string const& file_name, 
             std::string const& function_name, 
             long line);
-        OxException(std::string const& description);
-        OxException(std::string const& description,
+        RaException(std::string const& description);
+        RaException(std::string const& description,
             std::string const& file_name,
             std::string const& function_name,
             long line);
@@ -46,7 +46,7 @@ namespace ra {
 { util::Log::retrieve()->out("ERROR: " + std::string{(err_msg)}\
     + "in function " + __FUNCTION__ ", line" + std::to_string(__LINE__)\
     + "(" + __FILE__ + ")", util::LogMessageType::error);\
-throw OxException{std::string{(err_msg)}, __FILE__, __FUNCTION__, __LINE__}; }
+throw RaException{std::string{(err_msg)}, __FILE__, __FUNCTION__, __LINE__}; }
 
 
 #endif

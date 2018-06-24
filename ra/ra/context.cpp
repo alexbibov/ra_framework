@@ -62,7 +62,7 @@ util::Optional<std::string> getPathToAsset(std::string const& asset_name, std::v
 }
 
 
-OxContext::OxContext(std::vector<std::string> const& asset_directories, uint32_t num_entry_points/* = 1U*/):
+RaContext::RaContext(std::vector<std::string> const& asset_directories, uint32_t num_entry_points/* = 1U*/):
     m_asset_directories{ asset_directories },
     m_default_asset_directories_cache_size{ m_asset_directories.size() },
     m_error_state{ RT_SUCCESS }
@@ -80,53 +80,53 @@ OxContext::OxContext(std::vector<std::string> const& asset_directories, uint32_t
     }
 
     LOG_OPTIX_ERROR(m_optix_context, rtContextSetEntryPointCount(m_optix_context, num_entry_points));
-    LOG_OPTIX_ERROR(m_optix_context, rtContextSetRayTypeCount(m_optix_context, static_cast<unsigned int>(OxRayType::count)));
+    LOG_OPTIX_ERROR(m_optix_context, rtContextSetRayTypeCount(m_optix_context, static_cast<unsigned int>(RaRayType::count)));
     isValid();
 }
 
-OxContext::~OxContext()
+RaContext::~RaContext()
 {
     LOG_OPTIX_ERROR(m_optix_context, rtContextDestroy(m_optix_context));
 }
 
-void OxContext::setStackSize(size_t size_in_bytes) const
+void RaContext::setStackSize(size_t size_in_bytes) const
 {
     LOG_OPTIX_ERROR(m_optix_context,
         rtContextSetStackSize(m_optix_context, static_cast<RTsize>(size_in_bytes)));
 }
 
-OxProgram OxContext::createProgram(std::string const& source, OxProgram::Source source_type, std::string const& program_name) const
+RaProgram RaContext::createProgram(std::string const& source, RaProgram::Source source_type, std::string const& program_name) const
 {
-    if (source_type == OxProgram::Source::file)
+    if (source_type == RaProgram::Source::file)
     {
         auto path_to_asset = getPathToAsset(source, m_asset_directories);
         if (!path_to_asset.isValid())
             THROW_OX_WRAPPER_ERROR("Unable to locate asset \"" + source + "\"");
 
-        return OxProgramAttorney<OxContext>::createOptiXProgram(*this, path_to_asset, OxProgram::Source::file, program_name);
+        return RaProgramAttorney<RaContext>::createOptiXProgram(*this, path_to_asset, RaProgram::Source::file, program_name);
     }
 
-    return OxProgramAttorney<OxContext>::createOptiXProgram(*this, source, source_type, program_name);
+    return RaProgramAttorney<RaContext>::createOptiXProgram(*this, source, source_type, program_name);
 }
 
-OxContext::operator bool() const
+RaContext::operator bool() const
 {
     return !hasErrors();
 }
 
-bool OxContext::hasErrors() const
+bool RaContext::hasErrors() const
 {
     return m_error_state != RT_SUCCESS;
 }
 
-bool ra::OxContext::isValid() const
+bool ra::RaContext::isValid() const
 {
     RTresult res;
     LOG_OPTIX_ERROR(m_optix_context, res = rtContextValidate(m_optix_context));
     return res == RT_SUCCESS;
 }
 
-std::string OxContext::retrieveStringAsset(std::string const& source) const
+std::string RaContext::retrieveStringAsset(std::string const& source) const
 {
     auto path_to_asset = getPathToAsset(source, m_asset_directories);
     if (path_to_asset.isValid())
@@ -137,12 +137,12 @@ std::string OxContext::retrieveStringAsset(std::string const& source) const
         THROW_OX_WRAPPER_ERROR("Unable to retrieve asset \"" + source + "\"");
 }
 
-void OxContext::addAssetCustomLookUpDirectory(std::string const& directory)
+void RaContext::addAssetCustomLookUpDirectory(std::string const& directory)
 {
     m_asset_directories.push_back(directory);
 }
 
-void OxContext::clearAssetCustomDirectoryLookUpCache()
+void RaContext::clearAssetCustomDirectoryLookUpCache()
 {
     m_asset_directories.erase(m_asset_directories.begin() + m_default_asset_directories_cache_size, m_asset_directories.end());
 }

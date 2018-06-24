@@ -10,7 +10,7 @@ using namespace ra;
 using namespace optix;
 
 
-rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
+rtDeclareVariable(rtObject, ra_entry_node, , "Scene entry node");
 rtDeclareVariable(unsigned int, dimension, , "Dimension of the output buffer");
 rtDeclareVariable(unsigned int, payload_type, , "Type of payload");
 rtDeclareVariable(unsigned int, ray_type, , "Type of relaunched rays");
@@ -32,21 +32,21 @@ rtBuffer<unsigned int, 1> traverse_backup_buffer;
 
 
 // supported output buffers
-rtBuffer<OxRayRadiancePayload, 1> ox_radiance_payload_1d_out;
-rtBuffer<OxRayRadiancePayload, 2> ox_radiance_payload_2d_out;
-rtBuffer<OxRayRadiancePayload, 3> ox_radiance_payload_3d_out;
+rtBuffer<RaRayRadiancePayload, 1> ra_radiance_payload_1d_out;
+rtBuffer<RaRayRadiancePayload, 2> ra_radiance_payload_2d_out;
+rtBuffer<RaRayRadiancePayload, 3> ra_radiance_payload_3d_out;
 
-rtBuffer<OxRayRadiancePayloadSimple, 1> ox_radiance_payload_simple_1d_out;
-rtBuffer<OxRayRadiancePayloadSimple, 2> ox_radiance_payload_simple_2d_out;
-rtBuffer<OxRayRadiancePayloadSimple, 3> ox_radiance_payload_simple_3d_out;
+rtBuffer<RaRayRadiancePayloadSimple, 1> ra_radiance_payload_simple_1d_out;
+rtBuffer<RaRayRadiancePayloadSimple, 2> ra_radiance_payload_simple_2d_out;
+rtBuffer<RaRayRadiancePayloadSimple, 3> ra_radiance_payload_simple_3d_out;
 
-rtBuffer<OxRayRadiancePayloadMonochromatic, 1> ox_radiance_payload_monochromatic_1d_out;
-rtBuffer<OxRayRadiancePayloadMonochromatic, 2> ox_radiance_payload_monochromatic_2d_out;
-rtBuffer<OxRayRadiancePayloadMonochromatic, 3> ox_radiance_payload_monochromatic_3d_out;
+rtBuffer<RaRayRadiancePayloadMonochromatic, 1> ra_radiance_payload_monochromatic_1d_out;
+rtBuffer<RaRayRadiancePayloadMonochromatic, 2> ra_radiance_payload_monochromatic_2d_out;
+rtBuffer<RaRayRadiancePayloadMonochromatic, 3> ra_radiance_payload_monochromatic_3d_out;
 
-rtBuffer<OxRayOcclusionPayload, 1> ox_occlusion_payload_1d_out;
-rtBuffer<OxRayOcclusionPayload, 2> ox_occlusion_payload_2d_out;
-rtBuffer<OxRayOcclusionPayload, 3> ox_occlusion_payload_3d_out;
+rtBuffer<RaRayOcclusionPayload, 1> ra_occlusion_payload_1d_out;
+rtBuffer<RaRayOcclusionPayload, 2> ra_occlusion_payload_2d_out;
+rtBuffer<RaRayOcclusionPayload, 3> ra_occlusion_payload_3d_out;
 
 
 __device__ void unpack_ray(float3& origin, float3& direction, uint3& output_buffer_index)
@@ -64,173 +64,173 @@ __device__ void unpack_ray(float3& origin, float3& direction, uint3& output_buff
     output_buffer_index.z = traverse_backup_buffer[9 + 9 * index];
 }
 
-RT_PROGRAM void __ox_generate__(void)
+RT_PROGRAM void __ra_generate__(void)
 {
     float3 origin, direction;
     uint3 output_buffer_index;
     unpack_ray(origin, direction, output_buffer_index);
 /*
-    ox_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[2].x = origin.x;
-    ox_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[2].y = origin.y;
-    ox_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[3].x = direction.x;
-    ox_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[3].y = direction.y;*/
+    ra_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[2].x = origin.x;
+    ra_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[2].y = origin.y;
+    ra_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[3].x = direction.x;
+    ra_radiance_payload_1d_out[output_buffer_index.x].spectral_radiance[3].y = direction.y;*/
 
     Ray current_ray = make_Ray(origin, direction, ray_type, 0.f, ray_parametric_length);
 
-    switch (static_cast<OxRayPayloadType>(payload_type))
+    switch (static_cast<RaRayPayloadType>(payload_type))
     {
-    case OxRayPayloadType::radiance:
+    case RaRayPayloadType::radiance:
         switch (dimension)
         {
         case 1:
         {
             unsigned int idx = output_buffer_index.x;
-            OxRayRadiancePayload payload = ox_radiance_payload_1d_out[idx];
+            RaRayRadiancePayload payload = ra_radiance_payload_1d_out[idx];
             payload.tracing_depth_and_aux.z = idx + 1;
             ++payload.tracing_depth_and_aux.w;
-            rtTrace(ox_entry_node, current_ray, payload);
-            ox_radiance_payload_1d_out[idx] = payload;
+            rtTrace(ra_entry_node, current_ray, payload);
+            ra_radiance_payload_1d_out[idx] = payload;
             break;
         }
 
         case 2:
         {
             uint2 idx = make_uint2(output_buffer_index.x, output_buffer_index.y);
-            OxRayRadiancePayload payload = ox_radiance_payload_2d_out[idx];
+            RaRayRadiancePayload payload = ra_radiance_payload_2d_out[idx];
             payload.tracing_depth_and_aux.z = idx.y*problem_size.x + idx.x + 1;
-            rtTrace(ox_entry_node, current_ray, payload);
-            ox_radiance_payload_2d_out[idx] = payload;
+            rtTrace(ra_entry_node, current_ray, payload);
+            ra_radiance_payload_2d_out[idx] = payload;
             break;
         }
 
         case 3:
         {
-            OxRayRadiancePayload payload = ox_radiance_payload_3d_out[output_buffer_index];
+            RaRayRadiancePayload payload = ra_radiance_payload_3d_out[output_buffer_index];
             
             payload.tracing_depth_and_aux.z =
                 output_buffer_index.z*problem_size.x*problem_size.y
                 + output_buffer_index.y*problem_size.x + output_buffer_index.x + 1;
             
-            rtTrace(ox_entry_node, current_ray, payload);
+            rtTrace(ra_entry_node, current_ray, payload);
 
-            ox_radiance_payload_3d_out[output_buffer_index] = payload;
+            ra_radiance_payload_3d_out[output_buffer_index] = payload;
             break;
         }
         }
         break;
 
-    case OxRayPayloadType::radiance_simple:
+    case RaRayPayloadType::radiance_simple:
         switch (dimension)
         {
         case 1:
         {
             unsigned int idx = output_buffer_index.x;
-            OxRayRadiancePayloadSimple payload = ox_radiance_payload_simple_1d_out[idx];
+            RaRayRadiancePayloadSimple payload = ra_radiance_payload_simple_1d_out[idx];
             payload.tracing_depth_and_aux.z = idx + 1;
-            rtTrace(ox_entry_node, current_ray, payload);
-            ox_radiance_payload_simple_1d_out[idx] = payload;
+            rtTrace(ra_entry_node, current_ray, payload);
+            ra_radiance_payload_simple_1d_out[idx] = payload;
             break;
         }
 
         case 2:
         {
             uint2 idx = make_uint2(output_buffer_index.x, output_buffer_index.y);
-            OxRayRadiancePayloadSimple payload = ox_radiance_payload_simple_2d_out[idx];
+            RaRayRadiancePayloadSimple payload = ra_radiance_payload_simple_2d_out[idx];
             payload.tracing_depth_and_aux.z = idx.y*problem_size.x + idx.x + 1;
-            rtTrace(ox_entry_node, current_ray, payload);
-            ox_radiance_payload_simple_2d_out[idx] = payload;
+            rtTrace(ra_entry_node, current_ray, payload);
+            ra_radiance_payload_simple_2d_out[idx] = payload;
             break;
         }
 
         case 3:
         {
-            OxRayRadiancePayloadSimple payload = ox_radiance_payload_simple_3d_out[output_buffer_index];
+            RaRayRadiancePayloadSimple payload = ra_radiance_payload_simple_3d_out[output_buffer_index];
 
             payload.tracing_depth_and_aux.z =
                 output_buffer_index.z*problem_size.x*problem_size.y
                 + output_buffer_index.y*problem_size.x + output_buffer_index.x + 1;
             
-            rtTrace(ox_entry_node, current_ray, payload);
+            rtTrace(ra_entry_node, current_ray, payload);
             
-            ox_radiance_payload_simple_3d_out[output_buffer_index] = payload;
+            ra_radiance_payload_simple_3d_out[output_buffer_index] = payload;
             break;
         }
         }
         break;
 
-    case OxRayPayloadType::monochromatic:
+    case RaRayPayloadType::monochromatic:
         switch (dimension)
         {
         case 1:
         {
             unsigned int idx = output_buffer_index.x;
-            OxRayRadiancePayloadMonochromatic payload = ox_radiance_payload_monochromatic_1d_out[idx];
+            RaRayRadiancePayloadMonochromatic payload = ra_radiance_payload_monochromatic_1d_out[idx];
             payload.tracing_depth_and_aux.z = idx + 1;
-            rtTrace(ox_entry_node, current_ray, payload);
-            ox_radiance_payload_monochromatic_1d_out[idx] = payload;
+            rtTrace(ra_entry_node, current_ray, payload);
+            ra_radiance_payload_monochromatic_1d_out[idx] = payload;
             break;
         }
 
         case 2:
         {
             uint2 idx = make_uint2(output_buffer_index.x, output_buffer_index.y);
-            OxRayRadiancePayloadMonochromatic payload = ox_radiance_payload_monochromatic_2d_out[idx];
+            RaRayRadiancePayloadMonochromatic payload = ra_radiance_payload_monochromatic_2d_out[idx];
             payload.tracing_depth_and_aux.z = idx.y*problem_size.x + idx.x + 1;
-            rtTrace(ox_entry_node, current_ray, payload);
-            ox_radiance_payload_monochromatic_2d_out[idx] = payload;
+            rtTrace(ra_entry_node, current_ray, payload);
+            ra_radiance_payload_monochromatic_2d_out[idx] = payload;
             break;
         }
 
         case 3:
         {
-            OxRayRadiancePayloadMonochromatic payload = ox_radiance_payload_monochromatic_3d_out[output_buffer_index];
+            RaRayRadiancePayloadMonochromatic payload = ra_radiance_payload_monochromatic_3d_out[output_buffer_index];
 
             payload.tracing_depth_and_aux.z =
                 output_buffer_index.z*problem_size.x*problem_size.y
                 + output_buffer_index.y*problem_size.x + output_buffer_index.x + 1;
 
-            rtTrace(ox_entry_node, current_ray, payload);
+            rtTrace(ra_entry_node, current_ray, payload);
             
-            ox_radiance_payload_monochromatic_3d_out[output_buffer_index] = payload;
+            ra_radiance_payload_monochromatic_3d_out[output_buffer_index] = payload;
             break;
         }
         }
         break;
 
-    case OxRayPayloadType::occlusion:
+    case RaRayPayloadType::occlusion:
         switch (dimension)
         {
         case 1:
         {
             unsigned int idx = output_buffer_index.x;
-            OxRayOcclusionPayload payload = ox_occlusion_payload_1d_out[idx];
+            RaRayOcclusionPayload payload = ra_occlusion_payload_1d_out[idx];
             // payload.tracing_depth_and_aux.z = idx;
-            rtTrace(ox_entry_node, current_ray, payload);
-            ox_occlusion_payload_1d_out[idx] = payload;
+            rtTrace(ra_entry_node, current_ray, payload);
+            ra_occlusion_payload_1d_out[idx] = payload;
             break;
         }
 
         case 2:
         {
             uint2 idx = make_uint2(output_buffer_index.x, output_buffer_index.y);
-            OxRayOcclusionPayload payload = ox_occlusion_payload_2d_out[idx];
+            RaRayOcclusionPayload payload = ra_occlusion_payload_2d_out[idx];
             // payload.tracing_depth_and_aux.z = idx.y*problem_size.x + idx.x;
-            rtTrace(ox_entry_node, current_ray, payload);
-            ox_occlusion_payload_2d_out[idx] = payload;
+            rtTrace(ra_entry_node, current_ray, payload);
+            ra_occlusion_payload_2d_out[idx] = payload;
             break;
         }
 
         case 3:
         {
-            OxRayOcclusionPayload payload = ox_occlusion_payload_3d_out[output_buffer_index];
+            RaRayOcclusionPayload payload = ra_occlusion_payload_3d_out[output_buffer_index];
 
             /*payload.tracing_depth_and_aux.z =
                 output_buffer_index.z*problem_size.x*problem_size.y
                 + output_buffer_index.y*problem_size.x + output_buffer_index.x;*/
 
-            rtTrace(ox_entry_node, current_ray, payload);
+            rtTrace(ra_entry_node, current_ray, payload);
             
-            ox_occlusion_payload_3d_out[output_buffer_index] = payload;
+            ra_occlusion_payload_3d_out[output_buffer_index] = payload;
             break;
         }
         }

@@ -10,8 +10,8 @@
 .target sm_60
 .address_size 64
 
-	// .globl	_Z15__ox_generate__v
-.global .align 4 .b8 ox_entry_node[4];
+	// .globl	_Z15__ra_generate__v
+.global .align 4 .b8 ra_entry_node[4];
 .global .align 4 .u32 dimension;
 .global .align 4 .u32 payload_type;
 .global .align 4 .u32 ray_type;
@@ -19,19 +19,19 @@
 .global .align 4 .b8 problem_size[12];
 .global .align 4 .u32 index;
 .global .align 1 .b8 traverse_backup_buffer[1];
-.global .align 1 .b8 ox_radiance_payload_1d_out[1];
-.global .align 1 .b8 ox_radiance_payload_2d_out[1];
-.global .align 1 .b8 ox_radiance_payload_3d_out[1];
-.global .align 1 .b8 ox_radiance_payload_simple_1d_out[1];
-.global .align 1 .b8 ox_radiance_payload_simple_2d_out[1];
-.global .align 1 .b8 ox_radiance_payload_simple_3d_out[1];
-.global .align 1 .b8 ox_radiance_payload_monochromatic_1d_out[1];
-.global .align 1 .b8 ox_radiance_payload_monochromatic_2d_out[1];
-.global .align 1 .b8 ox_radiance_payload_monochromatic_3d_out[1];
-.global .align 1 .b8 ox_occlusion_payload_1d_out[1];
-.global .align 1 .b8 ox_occlusion_payload_2d_out[1];
-.global .align 1 .b8 ox_occlusion_payload_3d_out[1];
-.global .align 4 .b8 _ZN21rti_internal_typeinfo13ox_entry_nodeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
+.global .align 1 .b8 ra_radiance_payload_1d_out[1];
+.global .align 1 .b8 ra_radiance_payload_2d_out[1];
+.global .align 1 .b8 ra_radiance_payload_3d_out[1];
+.global .align 1 .b8 ra_radiance_payload_simple_1d_out[1];
+.global .align 1 .b8 ra_radiance_payload_simple_2d_out[1];
+.global .align 1 .b8 ra_radiance_payload_simple_3d_out[1];
+.global .align 1 .b8 ra_radiance_payload_monochromatic_1d_out[1];
+.global .align 1 .b8 ra_radiance_payload_monochromatic_2d_out[1];
+.global .align 1 .b8 ra_radiance_payload_monochromatic_3d_out[1];
+.global .align 1 .b8 ra_occlusion_payload_1d_out[1];
+.global .align 1 .b8 ra_occlusion_payload_2d_out[1];
+.global .align 1 .b8 ra_occlusion_payload_3d_out[1];
+.global .align 4 .b8 _ZN21rti_internal_typeinfo13ra_entry_nodeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo9dimensionE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo12payload_typeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
 .global .align 4 .b8 _ZN21rti_internal_typeinfo8ray_typeE[8] = {82, 97, 121, 0, 4, 0, 0, 0};
@@ -62,28 +62,28 @@
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_xE;
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_yE;
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_zE;
-.global .align 16 .b8 _ZN21rti_internal_typename13ox_entry_nodeE[9] = {114, 116, 79, 98, 106, 101, 99, 116, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename13ra_entry_nodeE[9] = {114, 116, 79, 98, 106, 101, 99, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename9dimensionE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename12payload_typeE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename8ray_typeE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename21ray_parametric_lengthE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename12problem_sizeE[6] = {117, 105, 110, 116, 51, 0};
 .global .align 16 .b8 _ZN21rti_internal_typename5indexE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
-.global .align 4 .u32 _ZN21rti_internal_typeenum13ox_entry_nodeE = 4919;
+.global .align 4 .u32 _ZN21rti_internal_typeenum13ra_entry_nodeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum9dimensionE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum12payload_typeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum8ray_typeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum21ray_parametric_lengthE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum12problem_sizeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum5indexE = 4919;
-.global .align 1 .b8 _ZN21rti_internal_semantic13ox_entry_nodeE[1];
+.global .align 1 .b8 _ZN21rti_internal_semantic13ra_entry_nodeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic9dimensionE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic12payload_typeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic8ray_typeE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic21ray_parametric_lengthE[1];
 .global .align 1 .b8 _ZN21rti_internal_semantic12problem_sizeE[1];
 .global .align 16 .b8 _ZN21rti_internal_semantic5indexE[14] = {114, 116, 76, 97, 117, 110, 99, 104, 73, 110, 100, 101, 120, 0};
-.global .align 16 .b8 _ZN23rti_internal_annotation13ox_entry_nodeE[19] = {34, 83, 99, 101, 110, 101, 32, 101, 110, 116, 114, 121, 32, 110, 111, 100, 101, 34, 0};
+.global .align 16 .b8 _ZN23rti_internal_annotation13ra_entry_nodeE[19] = {34, 83, 99, 101, 110, 101, 32, 101, 110, 116, 114, 121, 32, 110, 111, 100, 101, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation9dimensionE[33] = {34, 68, 105, 109, 101, 110, 115, 105, 111, 110, 32, 111, 102, 32, 116, 104, 101, 32, 111, 117, 116, 112, 117, 116, 32, 98, 117, 102, 102, 101, 114, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation12payload_typeE[18] = {34, 84, 121, 112, 101, 32, 111, 102, 32, 112, 97, 121, 108, 111, 97, 100, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation8ray_typeE[26] = {34, 84, 121, 112, 101, 32, 111, 102, 32, 114, 101, 108, 97, 117, 110, 99, 104, 101, 100, 32, 114, 97, 121, 115, 34, 0};
@@ -91,7 +91,7 @@
 .global .align 16 .b8 _ZN23rti_internal_annotation12problem_sizeE[31] = {34, 79, 114, 105, 103, 105, 110, 97, 108, 32, 115, 105, 122, 101, 32, 111, 102, 32, 116, 104, 101, 32, 112, 114, 111, 98, 108, 101, 109, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation5indexE[15] = {34, 84, 104, 114, 101, 97, 100, 32, 105, 110, 100, 101, 120, 34, 0};
 
-.visible .entry _Z15__ox_generate__v(
+.visible .entry _Z15__ra_generate__v(
 
 )
 {
@@ -217,7 +217,7 @@ BB0_27:
 	add.u64 	%rd215, %SP, 336;
 	cvta.to.local.u64 	%rd222, %rd215;
 	cvt.u32.u64	%r299, %rd2;
-	mov.u64 	%rd223, ox_radiance_payload_2d_out;
+	mov.u64 	%rd223, ra_radiance_payload_2d_out;
 	cvta.global.u64 	%rd210, %rd223;
 	mov.u32 	%r297, 2;
 	mov.u32 	%r298, 96;
@@ -245,7 +245,7 @@ BB0_27:
 	mad.lo.s32 	%r310, %r308, %r299, %r309;
 	add.s32 	%r311, %r310, 1;
 	st.local.u32 	[%rd222+88], %r311;
-	ld.global.u32 	%r294, [ox_entry_node];
+	ld.global.u32 	%r294, [ra_entry_node];
 	mov.f32 	%f286, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r294, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f286, %f7, %rd215, %r298);
@@ -289,7 +289,7 @@ BB0_19:
 	add.u64 	%rd125, %SP, 80;
 	cvta.to.local.u64 	%rd132, %rd125;
 	cvt.u32.u64	%r131, %rd1;
-	mov.u64 	%rd133, ox_radiance_payload_monochromatic_2d_out;
+	mov.u64 	%rd133, ra_radiance_payload_monochromatic_2d_out;
 	cvta.global.u64 	%rd120, %rd133;
 	mov.u32 	%r129, 2;
 	mov.u32 	%r130, 32;
@@ -308,7 +308,7 @@ BB0_19:
 	mad.lo.s32 	%r142, %r140, %r141, %r131;
 	add.s32 	%r143, %r142, 1;
 	st.local.u32 	[%rd132+24], %r143;
-	ld.global.u32 	%r126, [ox_entry_node];
+	ld.global.u32 	%r126, [ra_entry_node];
 	mov.f32 	%f90, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r126, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f90, %f7, %rd125, %r130);
@@ -343,7 +343,7 @@ BB0_21:
 	add.u64 	%rd170, %SP, 176;
 	cvta.to.local.u64 	%rd177, %rd170;
 	cvt.u32.u64	%r215, %rd2;
-	mov.u64 	%rd178, ox_radiance_payload_simple_2d_out;
+	mov.u64 	%rd178, ra_radiance_payload_simple_2d_out;
 	cvta.global.u64 	%rd165, %rd178;
 	mov.u32 	%r213, 2;
 	mov.u32 	%r214, 32;
@@ -359,7 +359,7 @@ BB0_21:
 	mad.lo.s32 	%r226, %r224, %r215, %r225;
 	add.s32 	%r227, %r226, 1;
 	st.local.u32 	[%rd177+24], %r227;
-	ld.global.u32 	%r210, [ox_entry_node];
+	ld.global.u32 	%r210, [ra_entry_node];
 	mov.f32 	%f158, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r210, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f158, %f7, %rd170, %r214);
@@ -388,7 +388,7 @@ BB0_8:
 BB0_13:
 	add.u64 	%rd80, %SP, 16;
 	cvta.to.local.u64 	%rd87, %rd80;
-	mov.u64 	%rd88, ox_occlusion_payload_2d_out;
+	mov.u64 	%rd88, ra_occlusion_payload_2d_out;
 	cvta.global.u64 	%rd75, %rd88;
 	mov.u32 	%r67, 2;
 	mov.u32 	%r68, 16;
@@ -399,7 +399,7 @@ BB0_13:
 	ld.v2.f32 	{%f38, %f39}, [%rd74+8];
 	st.local.v2.f32 	[%rd87+8], {%f38, %f39};
 	st.local.v2.u32 	[%rd87], {%r69, %r70};
-	ld.global.u32 	%r64, [ox_entry_node];
+	ld.global.u32 	%r64, [ra_entry_node];
 	mov.f32 	%f36, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r64, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f36, %f7, %rd80, %r68);
@@ -416,7 +416,7 @@ BB0_13:
 BB0_28:
 	add.u64 	%rd230, %SP, 432;
 	cvta.to.local.u64 	%rd237, %rd230;
-	mov.u64 	%rd238, ox_radiance_payload_1d_out;
+	mov.u64 	%rd238, ra_radiance_payload_1d_out;
 	cvta.global.u64 	%rd225, %rd238;
 	mov.u32 	%r326, 96;
 	// inline asm
@@ -443,7 +443,7 @@ BB0_28:
 	ld.local.u32 	%r336, [%rd237+92];
 	add.s32 	%r337, %r336, 1;
 	st.local.u32 	[%rd237+92], %r337;
-	ld.global.u32 	%r322, [ox_entry_node];
+	ld.global.u32 	%r322, [ra_entry_node];
 	mov.f32 	%f366, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r322, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f366, %f7, %rd230, %r326);
@@ -476,7 +476,7 @@ BB0_25:
 	add.u64 	%rd200, %SP, 240;
 	cvta.to.local.u64 	%rd207, %rd200;
 	cvt.u32.u64	%r268, %rd3;
-	mov.u64 	%rd208, ox_radiance_payload_3d_out;
+	mov.u64 	%rd208, ra_radiance_payload_3d_out;
 	cvta.global.u64 	%rd195, %rd208;
 	mov.u32 	%r266, 3;
 	mov.u32 	%r267, 96;
@@ -507,7 +507,7 @@ BB0_25:
 	mad.lo.s32 	%r282, %r279, %r280, %r281;
 	add.s32 	%r283, %r282, 1;
 	st.local.u32 	[%rd207+88], %r283;
-	ld.global.u32 	%r263, [ox_entry_node];
+	ld.global.u32 	%r263, [ra_entry_node];
 	mov.f32 	%f206, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r263, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f206, %f7, %rd200, %r267);
@@ -536,7 +536,7 @@ BB0_25:
 BB0_20:
 	add.u64 	%rd140, %SP, 112;
 	cvta.to.local.u64 	%rd147, %rd140;
-	mov.u64 	%rd148, ox_radiance_payload_monochromatic_1d_out;
+	mov.u64 	%rd148, ra_radiance_payload_monochromatic_1d_out;
 	cvta.global.u64 	%rd135, %rd148;
 	mov.u32 	%r158, 32;
 	// inline asm
@@ -551,7 +551,7 @@ BB0_20:
 	st.local.f32 	[%rd147], %f114;
 	add.s32 	%r167, %r1, 1;
 	st.local.u32 	[%rd147+24], %r167;
-	ld.global.u32 	%r154, [ox_entry_node];
+	ld.global.u32 	%r154, [ra_entry_node];
 	mov.f32 	%f112, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r154, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f112, %f7, %rd140, %r158);
@@ -575,7 +575,7 @@ BB0_17:
 	add.u64 	%rd110, %SP, 48;
 	cvta.to.local.u64 	%rd117, %rd110;
 	cvt.u32.u64	%r100, %rd3;
-	mov.u64 	%rd118, ox_radiance_payload_monochromatic_3d_out;
+	mov.u64 	%rd118, ra_radiance_payload_monochromatic_3d_out;
 	cvta.global.u64 	%rd105, %rd118;
 	mov.u32 	%r98, 3;
 	mov.u32 	%r99, 32;
@@ -597,7 +597,7 @@ BB0_17:
 	mad.lo.s32 	%r114, %r111, %r112, %r113;
 	add.s32 	%r115, %r114, 1;
 	st.local.u32 	[%rd117+24], %r115;
-	ld.global.u32 	%r95, [ox_entry_node];
+	ld.global.u32 	%r95, [ra_entry_node];
 	mov.f32 	%f68, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r95, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f68, %f7, %rd110, %r99);
@@ -617,7 +617,7 @@ BB0_17:
 BB0_22:
 	add.u64 	%rd185, %SP, 208;
 	cvta.to.local.u64 	%rd192, %rd185;
-	mov.u64 	%rd193, ox_radiance_payload_simple_1d_out;
+	mov.u64 	%rd193, ra_radiance_payload_simple_1d_out;
 	cvta.global.u64 	%rd180, %rd193;
 	mov.u32 	%r242, 32;
 	// inline asm
@@ -629,7 +629,7 @@ BB0_22:
 	st.local.v4.f32 	[%rd192], {%f184, %f185, %f186, %f187};
 	add.s32 	%r251, %r1, 1;
 	st.local.u32 	[%rd192+24], %r251;
-	ld.global.u32 	%r238, [ox_entry_node];
+	ld.global.u32 	%r238, [ra_entry_node];
 	mov.f32 	%f182, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r238, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f182, %f7, %rd185, %r242);
@@ -646,7 +646,7 @@ BB0_22:
 BB0_14:
 	add.u64 	%rd95, %SP, 32;
 	cvta.to.local.u64 	%rd102, %rd95;
-	mov.u64 	%rd103, ox_occlusion_payload_1d_out;
+	mov.u64 	%rd103, ra_occlusion_payload_1d_out;
 	cvta.global.u64 	%rd90, %rd103;
 	mov.u32 	%r83, 16;
 	// inline asm
@@ -656,7 +656,7 @@ BB0_14:
 	ld.v2.f32 	{%f54, %f55}, [%rd89+8];
 	st.local.v2.f32 	[%rd102+8], {%f54, %f55};
 	st.local.v2.u32 	[%rd102], {%r84, %r85};
-	ld.global.u32 	%r79, [ox_entry_node];
+	ld.global.u32 	%r79, [ra_entry_node];
 	mov.f32 	%f52, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r79, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f52, %f7, %rd95, %r83);
@@ -677,7 +677,7 @@ BB0_5:
 	add.u64 	%rd155, %SP, 144;
 	cvta.to.local.u64 	%rd162, %rd155;
 	cvt.u32.u64	%r184, %rd3;
-	mov.u64 	%rd163, ox_radiance_payload_simple_3d_out;
+	mov.u64 	%rd163, ra_radiance_payload_simple_3d_out;
 	cvta.global.u64 	%rd150, %rd163;
 	mov.u32 	%r182, 3;
 	mov.u32 	%r183, 32;
@@ -696,7 +696,7 @@ BB0_5:
 	mad.lo.s32 	%r198, %r195, %r196, %r197;
 	add.s32 	%r199, %r198, 1;
 	st.local.u32 	[%rd162+24], %r199;
-	ld.global.u32 	%r179, [ox_entry_node];
+	ld.global.u32 	%r179, [ra_entry_node];
 	mov.f32 	%f134, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r179, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f134, %f7, %rd155, %r183);
@@ -716,7 +716,7 @@ BB0_11:
 
 	add.u64 	%rd65, %SP, 0;
 	cvta.to.local.u64 	%rd72, %rd65;
-	mov.u64 	%rd73, ox_occlusion_payload_3d_out;
+	mov.u64 	%rd73, ra_occlusion_payload_3d_out;
 	cvta.global.u64 	%rd60, %rd73;
 	mov.u32 	%r52, 3;
 	mov.u32 	%r53, 16;
@@ -727,7 +727,7 @@ BB0_11:
 	ld.v2.f32 	{%f22, %f23}, [%rd59+8];
 	st.local.v2.f32 	[%rd72+8], {%f22, %f23};
 	st.local.v2.u32 	[%rd72], {%r54, %r55};
-	ld.global.u32 	%r49, [ox_entry_node];
+	ld.global.u32 	%r49, [ra_entry_node];
 	mov.f32 	%f20, 0f00000000;
 	// inline asm
 	call _rt_trace_64, (%r49, %f8, %f9, %f10, %f11, %f12, %f13, %r2, %f20, %f7, %rd65, %r53);

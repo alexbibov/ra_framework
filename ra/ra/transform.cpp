@@ -4,8 +4,8 @@
 
 using namespace ra;
 
-OxTransform::OxTransform(OxContext const& optix_context):
-    OxContractWithOxContext{ optix_context }
+RaTransform::RaTransform(RaContext const& optix_context):
+    RaContractWithRaContext{ optix_context }
 {
     RTtransform native_handle;
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformCreate(nativeOptiXContextHandle(), &native_handle));
@@ -23,8 +23,8 @@ OxTransform::OxTransform(OxContext const& optix_context):
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformSetMatrix(native_handle, 0, t, t));
 }
 
-OxTransform::OxTransform(OxContext const& optix_context, util::mat4x4 const& transform):
-    OxContractWithOxContext{ optix_context }
+RaTransform::RaTransform(RaContext const& optix_context, util::mat4x4 const& transform):
+    RaContractWithRaContext{ optix_context }
 {
     RTtransform native_handle;
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformCreate(nativeOptiXContextHandle(), &native_handle));
@@ -45,7 +45,7 @@ OxTransform::OxTransform(OxContext const& optix_context, util::mat4x4 const& tra
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformSetMatrix(m_native_transform.get(), 0, t, NULL));
 }
 
-void OxTransform::setMatrix(util::mat4x4 const& transformation_matrix)
+void RaTransform::setMatrix(util::mat4x4 const& transformation_matrix)
 {
     float t[16] = {
         transformation_matrix._11, transformation_matrix._12, transformation_matrix._13, transformation_matrix._14,
@@ -56,7 +56,7 @@ void OxTransform::setMatrix(util::mat4x4 const& transformation_matrix)
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformSetMatrix(m_native_transform.get(), 0, t, NULL));
 }
 
-util::mat4x4 ra::OxTransform::getMatrix() const
+util::mat4x4 ra::RaTransform::getMatrix() const
 {
     float t[16];
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtTransformGetMatrix(m_native_transform.get(), 0, t, NULL));
@@ -69,7 +69,7 @@ util::mat4x4 ra::OxTransform::getMatrix() const
     };
 }
 
-OxTransform& OxTransform::operator*(util::mat4x4 const& transformation_matrix)
+RaTransform& RaTransform::operator*(util::mat4x4 const& transformation_matrix)
 {
     util::mat4x4 A = this->getMatrix();
     util::mat4x4 const& B = transformation_matrix;
@@ -147,7 +147,7 @@ OxTransform& OxTransform::operator*(util::mat4x4 const& transformation_matrix)
     return *this;
 }
 
-bool OxTransform::isValid() const
+bool RaTransform::isValid() const
 {
     RTresult res;
     LOG_OPTIX_ERROR(nativeOptiXContextHandle(), res = rtTransformValidate(m_native_transform.get()));

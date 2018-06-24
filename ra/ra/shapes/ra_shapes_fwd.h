@@ -3,8 +3,8 @@
 
 namespace ra { namespace shapes {
 
-class OxCircle;
-class OxShapesFactory;
+class RaCircle;
+class RaShapesFactory;
 
 }}
 

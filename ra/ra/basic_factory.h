@@ -11,73 +11,73 @@
 
 namespace ra {
 
-class OxBasicFactory : public OxEntity
+class RaBasicFactory : public RaEntity
 {
 public:
-    static OxBasicFactory* initialize(OxContext const& context);
+    static RaBasicFactory* initialize(RaContext const& context);
     static void shutdown();
-    static OxBasicFactory* retrieve();
+    static RaBasicFactory* retrieve();
 
 public:
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
-    OxContext const& context() const;
+    RaContext const& context() const;
 
     // programs
 public:
-    OxProgram createProgram(std::string const& source, OxProgram::Source source_type, std::string const& program_name) const;
+    RaProgram createProgram(std::string const& source, RaProgram::Source source_type, std::string const& program_name) const;
     
     // buffers
 public:
-    OxAbstractBuffer createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width) const;
-    OxAbstractBuffer createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height) const;
-    OxAbstractBuffer createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height, size_t depth) const;
+    RaAbstractBuffer createBuffer(RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width) const;
+    RaAbstractBuffer createBuffer(RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width, size_t height) const;
+    RaAbstractBuffer createBuffer(RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width, size_t height, size_t depth) const;
 
     // materials
 public:
-    OxMaterial createMaterial(util::Optional<OxProgram> const& closest_hit_shader,
-        util::Optional<OxProgram> const& any_hit_shader, 
-        OxRayTypeCollection const& supported_ray_types = OxRayTypeCollection{ OxRayType::unknown }) const;
-    OxMaterialAssembly createMaterialAssembly(std::vector<OxMaterial> const& materials) const;
-    OxMaterialAssembly createDummyMaterialAssembly() const;
+    RaMaterial createMaterial(util::Optional<RaProgram> const& closest_hit_shader,
+        util::Optional<RaProgram> const& any_hit_shader, 
+        RaRayTypeCollection const& supported_ray_types = RaRayTypeCollection{ RaRayType::unknown }) const;
+    RaMaterialAssembly createMaterialAssembly(std::vector<RaMaterial> const& materials) const;
+    RaMaterialAssembly createDummyMaterialAssembly() const;
 
     // geometries
 public:
-    OxGeometry createGeometry(OxProgram const& intersection_shader, OxProgram const& aabb_shader) const;
-    OxGeometry createGeometry(OxProgram const& intersection_shader, OxProgram const& aabb_shader,
-        OxMaterialAssembly const& material_assembly) const;
-    OxGeometryGroup createGeometryGroup(OxBVHAlgorithm acceleration_structure_construction_algorithm) const;
+    RaGeometry createGeometry(RaProgram const& intersection_shader, RaProgram const& aabb_shader) const;
+    RaGeometry createGeometry(RaProgram const& intersection_shader, RaProgram const& aabb_shader,
+        RaMaterialAssembly const& material_assembly) const;
+    RaGeometryGroup createGeometryGroup(RaBVHAlgorithm acceleration_structure_construction_algorithm) const;
 
     // miss shaders
 public:
-    OxMissShader createMissShader(OxProgram const& miss_shader, 
-        OxRayTypeCollection const& supported_ray_types = OxRayTypeCollection{ OxRayType::unknown }) const;
-    OxMissShaderAssembly createMissShaderAssembly(std::vector<OxMissShader> const& miss_shaders) const;
+    RaMissShader createMissShader(RaProgram const& miss_shader, 
+        RaRayTypeCollection const& supported_ray_types = RaRayTypeCollection{ RaRayType::unknown }) const;
+    RaMissShaderAssembly createMissShaderAssembly(std::vector<RaMissShader> const& miss_shaders) const;
 
     // ray generators
 public:
-    OxRayGeneratorWithOutputBuffer createRayGenerator(OxProgram const& ray_generation_shader,
-        OxAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name,
+    RaRayGeneratorWithOutputBuffer createRayGenerator(RaProgram const& ray_generation_shader,
+        RaAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name,
         uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U,
         uint32_t entry_point_index = 0U) const;
 
-    OxRayGeneratorWithOutputBuffer createRayGenerator(OxProgram const& ray_generation_shader,
-        OxMissShaderAssembly const& miss_shader_assembly, OxAbstractBuffer const& output_buffer,
+    RaRayGeneratorWithOutputBuffer createRayGenerator(RaProgram const& ray_generation_shader,
+        RaMissShaderAssembly const& miss_shader_assembly, RaAbstractBuffer const& output_buffer,
         std::string const& output_buffer_binding_name,
         uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U,
         uint32_t entry_point_index = 0U) const;
 
     // scenes
 public:
-    OxSceneSection createSceneSection(OxBVHAlgorithm acceleration_structure_construction_algorithm) const;
-    OxScene createScene() const;
+    RaSceneSection createSceneSection(RaBVHAlgorithm acceleration_structure_construction_algorithm) const;
+    RaScene createScene() const;
 
 private:
-    OxBasicFactory(OxContext const& context);
+    RaBasicFactory(RaContext const& context);
 
 private:
-    OxContext const& m_context;
+    RaContext const& m_context;
 };
 
 }

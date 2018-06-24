@@ -7,10 +7,10 @@
 
 namespace ra { namespace ray_casters {
 
-class OxParallelRayGenerator : public OxRayGeneratorWithOutputBuffer
+class RaParallelRayGenerator : public RaRayGeneratorWithOutputBuffer
 {
 public:
-    OxParallelRayGenerator(OxContext const& context, uint32_t num_rays, 
+    RaParallelRayGenerator(RaContext const& context, uint32_t num_rays, 
         float emitter_size, float emitter_position = 0.f, float emitter_rotation = 0.f, 
         uint8_t num_spectra_pairs_supported = constants::max_spectra_pairs_supported, uint32_t entry_point_index = 0U);
 
@@ -27,11 +27,11 @@ public:
     float2* mapSpectralFluxBuffer() const;
     void unmapSpectralFluxBuffer() const;
 
-    OxRayRadiancePayload const* mapOutputbuffer() const;
+    RaRayRadiancePayload const* mapOutputbuffer() const;
     void unmapOutputBuffer() const;
 
 private:
-    OxBuffer<float2> m_spectral_flux_buffer;
+    RaBuffer<float2> m_spectral_flux_buffer;
     uint8_t m_num_spectra_pairs_supported;
 };
 

@@ -6,14 +6,14 @@
 
 using namespace ra;
 
-uint32_t OxGeometryGroup::getNumberOfGeometries() const
+uint32_t RaGeometryGroup::getNumberOfGeometries() const
 {
     unsigned int count;
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupGetChildCount(m_native_geometry_group.get(), &count));
     return static_cast<uint32_t>(count);
 }
 
-void OxGeometryGroup::beginConstruction()
+void RaGeometryGroup::beginConstruction()
 {
     if (m_construction_begun)
     {
@@ -29,7 +29,7 @@ void OxGeometryGroup::beginConstruction()
     m_construction_begun = true;
 }
 
-void OxGeometryGroup::addGeometry(OxGeometry const& geometry)
+void RaGeometryGroup::addGeometry(RaGeometry const& geometry)
 {
     if (!m_construction_begun)
     {
@@ -53,7 +53,7 @@ void OxGeometryGroup::addGeometry(OxGeometry const& geometry)
     m_list_of_geometries.push_back(geometry);
 }
 
-void OxGeometryGroup::endConstruction()
+void RaGeometryGroup::endConstruction()
 {
     if (!m_construction_begun)
     {
@@ -68,10 +68,10 @@ void OxGeometryGroup::endConstruction()
     unsigned int idx{ 0U };
     for (auto const& g : m_list_of_geometries)
     {
-        if(!OxMaterialAssemblyAttorney<OxGeometryGroup>::isDummyMaterialAssembly(g.getMaterialAssembly()))
+        if(!RaMaterialAssemblyAttorney<RaGeometryGroup>::isDummyMaterialAssembly(g.getMaterialAssembly()))
         {
             THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupSetChild(m_native_geometry_group.get(), idx,
-                OxMaterialAssemblyAttorney<OxGeometryGroup>::getNativeGeometryInstanceHandle(g.getMaterialAssembly())));
+                RaMaterialAssemblyAttorney<RaGeometryGroup>::getNativeGeometryInstanceHandle(g.getMaterialAssembly())));
         }
         ++idx;
     }
@@ -80,12 +80,12 @@ void OxGeometryGroup::endConstruction()
     m_construction_finished = true;
 }
 
-std::list<OxGeometry> const& ra::OxGeometryGroup::geometries() const
+std::list<RaGeometry> const& ra::RaGeometryGroup::geometries() const
 {
     return m_list_of_geometries;
 }
 
-bool OxGeometryGroup::isValid() const
+bool RaGeometryGroup::isValid() const
 {
     RTresult geometry_group_validation_result;
     RTresult acceleration_structure_validation_result;
@@ -106,45 +106,45 @@ bool OxGeometryGroup::isValid() const
         && (m_construction_begun && m_construction_finished);
 }
 
-RTobject OxGeometryGroup::getObjectToBeTransformed() const
+RTobject RaGeometryGroup::getObjectToBeTransformed() const
 {
     return m_native_geometry_group.get();
 }
 
-bool OxGeometryGroup::update(OxObjectHandle top_scene_object) const
+bool RaGeometryGroup::update(RaObjectHandle top_scene_object) const
 {
     bool rv{ false };
     unsigned int idx{ 0U };
     for (auto& g : m_list_of_geometries)
     {
-        if (!OxMaterialAssemblyAttorney<OxGeometryGroup>::isDummyMaterialAssembly(g.getMaterialAssembly()))
+        if (!RaMaterialAssemblyAttorney<RaGeometryGroup>::isDummyMaterialAssembly(g.getMaterialAssembly()))
         {
             THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupSetChild(m_native_geometry_group.get(), idx,
-                OxMaterialAssemblyAttorney<OxGeometryGroup>::getNativeGeometryInstanceHandle(g.getMaterialAssembly())));
+                RaMaterialAssemblyAttorney<RaGeometryGroup>::getNativeGeometryInstanceHandle(g.getMaterialAssembly())));
         }
         ++idx;
 
-        if (!rv && OxGeometryAttorney<OxGeometryGroup>::isGeometryDirty(g))
+        if (!rv && RaGeometryAttorney<RaGeometryGroup>::isGeometryDirty(g))
         {
             THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationMarkDirty(m_native_acceleration.get()));
             rv = true;
         }
 
-        OxGeometryAttorney<OxGeometryGroup>::updateGeometry(g, top_scene_object);
+        RaGeometryAttorney<RaGeometryGroup>::updateGeometry(g, top_scene_object);
     }
 
     if (rv)
     {
         for (auto& g : m_list_of_geometries)
-            OxGeometryAttorney<OxGeometryGroup>::markGeometryClean(g);
+            RaGeometryAttorney<RaGeometryGroup>::markGeometryClean(g);
     }
 
     return rv;
 }
 
-OxGeometryGroup::OxGeometryGroup(OxContext const& optix_context, OxBVHAlgorithm acceleration_structure_construction_algorithm):
-    OxContractWithOxContext{ optix_context },
-    OxTransformable{ optix_context },
+RaGeometryGroup::RaGeometryGroup(RaContext const& optix_context, RaBVHAlgorithm acceleration_structure_construction_algorithm):
+    RaContractWithRaContext{ optix_context },
+    RaTransformable{ optix_context },
     m_construction_begun{ false },
     m_construction_finished{ false }
 {
@@ -168,16 +168,16 @@ OxGeometryGroup::OxGeometryGroup(OxContext const& optix_context, OxBVHAlgorithm 
     char const* acceleration_structure_construction_algorithm_name{ nullptr };
     switch (acceleration_structure_construction_algorithm)
     {
-    case OxBVHAlgorithm::trbvh:
+    case RaBVHAlgorithm::trbvh:
         acceleration_structure_construction_algorithm_name = "Trbvh";
         break;
-    case OxBVHAlgorithm::sbvh:
+    case RaBVHAlgorithm::sbvh:
         acceleration_structure_construction_algorithm_name = "Sbvh";
         break;
-    case OxBVHAlgorithm::bvh:
+    case RaBVHAlgorithm::bvh:
         acceleration_structure_construction_algorithm_name = "Bvh";
         break;
-    case OxBVHAlgorithm::none:
+    case RaBVHAlgorithm::none:
         acceleration_structure_construction_algorithm_name = "NoAccel";
         break;
     }

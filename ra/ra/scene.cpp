@@ -4,11 +4,11 @@
 
 using namespace ra;
 
-OxScene::OxScene()
+RaScene::RaScene()
 {
 }
 
-void OxScene::addSceneSection(OxSceneSection const& scene_section, OxRayGenerator const* ray_caster)
+void RaScene::addSceneSection(RaSceneSection const& scene_section, RaRayGenerator const* ray_caster)
 {
     if (!scene_section.isValid())
         THROW_OX_WRAPPER_ERROR("Scene section \"" + scene_section.getStringName() + "\" is invalid");
@@ -19,12 +19,12 @@ void OxScene::addSceneSection(OxSceneSection const& scene_section, OxRayGenerato
     m_scene_sections.push_back(std::make_pair(scene_section, ray_caster));
 }
 
-bool OxScene::isValid() const
+bool RaScene::isValid() const
 {
     return m_scene_sections.size() > 0;
 }
 
-void OxScene::trace() const
+void RaScene::trace() const
 {
     for (auto& ss : m_scene_sections)
         ss.first.trace(*ss.second);

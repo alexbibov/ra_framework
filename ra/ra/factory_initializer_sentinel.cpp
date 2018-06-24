@@ -9,52 +9,52 @@
 
 using namespace ra;
 
-OxFactoryInitializerSentinel::OxFactoryInitializerSentinel(OxContext const& context)
+RaFactoryInitializerSentinel::RaFactoryInitializerSentinel(RaContext const& context)
 {
-    m_basic_factory = OxBasicFactory::initialize(context);
-    m_shapes_factory = shapes::OxShapesFactory::initialize(context);
-    m_materials_factory = materials::OxMaterialsFactory::initialize(context);
-    m_raycasters_factory = ray_casters::OxRaycastersFactory::initialize(context);
-    m_rendering_passes_factory = rendering_passes::OxRenderingPassesFactory::initialize(context);
-    m_data_store_agents_factory = data_store_agents::OxDataStoreAgentsFactory::initialize(context);
+    m_basic_factory = RaBasicFactory::initialize(context);
+    m_shapes_factory = shapes::RaShapesFactory::initialize(context);
+    m_materials_factory = materials::RaMaterialsFactory::initialize(context);
+    m_raycasters_factory = ray_casters::RaRaycastersFactory::initialize(context);
+    m_rendering_passes_factory = rendering_passes::RaRenderingPassesFactory::initialize(context);
+    m_data_store_agents_factory = data_store_agents::RaDataStoreAgentsFactory::initialize(context);
 }
 
-OxFactoryInitializerSentinel::~OxFactoryInitializerSentinel()
+RaFactoryInitializerSentinel::~RaFactoryInitializerSentinel()
 {
-    OxBasicFactory::shutdown();
-    shapes::OxShapesFactory::shutdown();
-    materials::OxMaterialsFactory::shutdown();
-    ray_casters::OxRaycastersFactory::shutdown();
-    rendering_passes::OxRenderingPassesFactory::shutdown();
-    data_store_agents::OxDataStoreAgentsFactory::shutdown();
+    RaBasicFactory::shutdown();
+    shapes::RaShapesFactory::shutdown();
+    materials::RaMaterialsFactory::shutdown();
+    ray_casters::RaRaycastersFactory::shutdown();
+    rendering_passes::RaRenderingPassesFactory::shutdown();
+    data_store_agents::RaDataStoreAgentsFactory::shutdown();
 }
 
-OxBasicFactory const& OxFactoryInitializerSentinel::basicFactory() const
+RaBasicFactory const& RaFactoryInitializerSentinel::basicFactory() const
 {
     return *m_basic_factory;
 }
 
-shapes::OxShapesFactory const& OxFactoryInitializerSentinel::shapesFactory() const
+shapes::RaShapesFactory const& RaFactoryInitializerSentinel::shapesFactory() const
 {
     return *m_shapes_factory;
 }
 
-materials::OxMaterialsFactory const& OxFactoryInitializerSentinel::materialsFactory() const
+materials::RaMaterialsFactory const& RaFactoryInitializerSentinel::materialsFactory() const
 {
     return *m_materials_factory;
 }
 
-ray_casters::OxRaycastersFactory const& OxFactoryInitializerSentinel::raycastersFactory() const
+ray_casters::RaRaycastersFactory const& RaFactoryInitializerSentinel::raycastersFactory() const
 {
     return *m_raycasters_factory;
 }
 
-rendering_passes::OxRenderingPassesFactory const& OxFactoryInitializerSentinel::renderingPassesFactory() const
+rendering_passes::RaRenderingPassesFactory const& RaFactoryInitializerSentinel::renderingPassesFactory() const
 {
     return *m_rendering_passes_factory;
 }
 
-data_store_agents::OxDataStoreAgentsFactory const& OxFactoryInitializerSentinel::dataStoreAgentsFactory() const
+data_store_agents::RaDataStoreAgentsFactory const& RaFactoryInitializerSentinel::dataStoreAgentsFactory() const
 {
     return *m_data_store_agents_factory;
 }

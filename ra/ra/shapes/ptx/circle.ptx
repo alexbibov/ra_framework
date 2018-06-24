@@ -10,7 +10,7 @@
 .target sm_60
 .address_size 64
 
-	// .globl	_Z16__ox_intersect__i
+	// .globl	_Z16__ra_intersect__i
 .global .align 8 .b8 center[8];
 .global .align 4 .f32 radius;
 .global .align 4 .u32 num_materials;
@@ -66,8 +66,8 @@
 .global .align 16 .b8 _ZN23rti_internal_annotation3rayE[26] = {34, 99, 117, 114, 114, 101, 110, 116, 108, 121, 32, 116, 114, 97, 118, 101, 114, 115, 101, 100, 32, 114, 97, 121, 34, 0};
 .global .align 16 .b8 _ZN23rti_internal_annotation6normalE[34] = {34, 78, 111, 114, 109, 97, 108, 32, 111, 102, 32, 116, 104, 101, 32, 115, 117, 114, 102, 97, 99, 101, 32, 98, 101, 105, 110, 103, 32, 104, 105, 116, 34, 0};
 
-.visible .entry _Z16__ox_intersect__i(
-	.param .u32 _Z16__ox_intersect__i_param_0
+.visible .entry _Z16__ra_intersect__i(
+	.param .u32 _Z16__ra_intersect__i_param_0
 )
 {
 	.reg .pred 	%p<8>;
@@ -173,10 +173,10 @@ BB0_9:
 	ret;
 }
 
-	// .globl	_Z11__ox_aabb__iPf
-.visible .entry _Z11__ox_aabb__iPf(
-	.param .u32 _Z11__ox_aabb__iPf_param_0,
-	.param .u64 _Z11__ox_aabb__iPf_param_1
+	// .globl	_Z11__ra_aabb__iPf
+.visible .entry _Z11__ra_aabb__iPf(
+	.param .u32 _Z11__ra_aabb__iPf_param_0,
+	.param .u64 _Z11__ra_aabb__iPf_param_1
 )
 {
 	.reg .f32 	%f<13>;
@@ -184,7 +184,7 @@ BB0_9:
 	.reg .b64 	%rd<3>;
 
 
-	ld.param.u64 	%rd1, [_Z11__ox_aabb__iPf_param_1];
+	ld.param.u64 	%rd1, [_Z11__ra_aabb__iPf_param_1];
 	cvta.to.global.u64 	%rd2, %rd1;
 	ld.global.f32 	%f1, [center];
 	ld.global.f32 	%f2, [radius];

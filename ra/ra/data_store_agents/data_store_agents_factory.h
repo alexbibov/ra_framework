@@ -8,25 +8,25 @@
 
 namespace ra { namespace data_store_agents {
 
-class OxDataStoreAgentsFactory : public OxEntity
+class RaDataStoreAgentsFactory : public RaEntity
 {
 public:
-    static OxDataStoreAgentsFactory* initialize(OxContext const& context);
+    static RaDataStoreAgentsFactory* initialize(RaContext const& context);
     static void shutdown();
-    static OxDataStoreAgentsFactory* retrieve();
+    static RaDataStoreAgentsFactory* retrieve();
 
 public:
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
 public:
-    OxMatlabV4 createMatlabV4Agent(std::string const& target_path, bool append_data = true);
+    RaMatlabV4 createMatlabV4Agent(std::string const& target_path, bool append_data = true);
 
 private:
-    OxDataStoreAgentsFactory(OxContext const& context);
+    RaDataStoreAgentsFactory(RaContext const& context);
 
 private:
-    OxContext const& m_context;
+    RaContext const& m_context;
 };
 
 }}

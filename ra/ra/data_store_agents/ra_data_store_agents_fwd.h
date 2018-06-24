@@ -3,8 +3,8 @@
 
 namespace ra { namespace data_store_agents {
 
-class OxMatlabV4;
-class OxDataStoreAgentsFactory;
+class RaMatlabV4;
+class RaDataStoreAgentsFactory;
 
 }}
 

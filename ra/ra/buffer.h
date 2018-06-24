@@ -15,14 +15,14 @@
 
 namespace ra {
 
-enum class OxBufferKind
+enum class RaBufferKind
 {
     input = RT_BUFFER_INPUT,
     output = RT_BUFFER_OUTPUT,
     input_output = RT_BUFFER_INPUT_OUTPUT
 };
 
-enum class OxBufferMapKind
+enum class RaBufferMapKind
 {
     read = RT_BUFFER_MAP_READ,
     write = RT_BUFFER_MAP_WRITE,
@@ -30,18 +30,18 @@ enum class OxBufferMapKind
     write_discard = RT_BUFFER_MAP_WRITE_DISCARD
 };
 
-enum class OxBufferDimension : unsigned char
+enum class RaBufferDimension : unsigned char
 {
     _1D = 1, _2D = 2, _3D = 3
 };
 
-struct OxBufferId
+struct RaBufferId
 {
     int native;
 };
 
 
-enum class OxBasicBufferFormat
+enum class RaBasicBufferFormat
 {
     FLOAT, FLOAT2, FLOAT3, FLOAT4,
     INT, INT2, INT3, INT4,
@@ -54,21 +54,21 @@ enum class OxBasicBufferFormat
 };
 
 
-template<typename T> class OxAbstractBufferAttorney;
+template<typename T> class RaAbstractBufferAttorney;
 
-class OxAbstractBuffer : public OxContractWithOxContext, public OxEntity
+class RaAbstractBuffer : public RaContractWithRaContext, public RaEntity
 {
-    friend class OxAbstractBufferAttorney<OxProgram>;
+    friend class RaAbstractBufferAttorney<RaProgram>;
 
 public:
-    virtual ~OxAbstractBuffer() = default;
+    virtual ~RaAbstractBuffer() = default;
 
-    OxBufferId getId() const;
+    RaBufferId getId() const;
 
-    void* map(OxBufferMapKind map_kind, unsigned int mipmap_level = 0U) const;
+    void* map(RaBufferMapKind map_kind, unsigned int mipmap_level = 0U) const;
     void unmap(unsigned int mipmap_level = 0U) const;
 
-    OxBufferDimension getDimension() const;
+    RaBufferDimension getDimension() const;
     void getSize(size_t* width, size_t* height, size_t* depth) const;
     size_t getWidth() const;
     size_t getHeight() const;
@@ -76,11 +76,11 @@ public:
     size_t getElementSize() const;
     size_t getCapacityInBytes() const;
 
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
 protected:
-    OxAbstractBuffer(OxContext const& context);
+    RaAbstractBuffer(RaContext const& context);
 
     RTbuffer nativeOptiXBufferHandle() const;
     void assignNativeOptixBufferHandle(RTbuffer native_optix_buffer_handle);
@@ -89,61 +89,61 @@ private:
     std::shared_ptr<RTbuffer_api> m_native_optix_buffer;
 };
 
-template<> class OxAbstractBufferAttorney<OxProgram>
+template<> class RaAbstractBufferAttorney<RaProgram>
 {
-    friend class OxProgram;
+    friend class RaProgram;
 
-    static RTbuffer getNativeOptiXBufferHandle(OxAbstractBuffer const& parent_abstract_buffer)
+    static RTbuffer getNativeOptiXBufferHandle(RaAbstractBuffer const& parent_abstract_buffer)
     {
         return parent_abstract_buffer.nativeOptiXBufferHandle();
     }
 };
 
 
-template<typename T> class OxBufferAttorney;
+template<typename T> class RaBufferAttorney;
 
 template<typename T>
-class OxBuffer final : public OxAbstractBuffer
+class RaBuffer final : public RaAbstractBuffer
 {
-    friend class OxBufferAttorney<OxContext>;
+    friend class RaBufferAttorney<RaContext>;
 
 public:
     using value_type = T;
 
 public:
-    ~OxBuffer() = default;
+    ~RaBuffer() = default;
 
 private:
 #include "buffer_tuner.inl"
-    using my_tuner_type = OxBufferTuner<T>;
+    using my_tuner_type = RaBufferTuner<T>;
 
 
-    OxBuffer(OxContext const& context,
-        OxBufferKind buffer_kind, size_t width) :
-        OxAbstractBuffer{ context }
+    RaBuffer(RaContext const& context,
+        RaBufferKind buffer_kind, size_t width) :
+        RaAbstractBuffer{ context }
     {
         assignNativeOptixBufferHandle(my_tuner_type::create_buffer(*this, buffer_kind));
         THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferSetSize1D(nativeOptiXBufferHandle(), width));
     }
 
-    OxBuffer(OxContext const& context,
-        OxBufferKind buffer_kind, size_t width, size_t height) :
-        OxAbstractBuffer{ context }
+    RaBuffer(RaContext const& context,
+        RaBufferKind buffer_kind, size_t width, size_t height) :
+        RaAbstractBuffer{ context }
     {
         assignNativeOptixBufferHandle(my_tuner_type::create_buffer(*this, buffer_kind));
         THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferSetSize2D(nativeOptiXBufferHandle(), width, height));
     }
 
-    OxBuffer(OxContext const& context,
-        OxBufferKind buffer_kind, size_t width, size_t height, size_t depth) :
-        OxAbstractBuffer{ context }
+    RaBuffer(RaContext const& context,
+        RaBufferKind buffer_kind, size_t width, size_t height, size_t depth) :
+        RaAbstractBuffer{ context }
     {
         assignNativeOptixBufferHandle(my_tuner_type::create_buffer(*this, buffer_kind));
         THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferSetSize3D(nativeOptiXBufferHandle(), width, height, depth));
     }
 
 public:
-    T * map(OxBufferMapKind map_kind, unsigned int mipmap_level = 0U) const
+    T * map(RaBufferMapKind map_kind, unsigned int mipmap_level = 0U) const
     {
         void* rv{ nullptr };
         THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferMapEx(nativeOptiXBufferHandle(), static_cast<unsigned>(map_kind), mipmap_level, nullptr, &rv));
@@ -151,54 +151,54 @@ public:
     }
 };
 
-template<> class OxBufferAttorney<OxContext>
+template<> class RaBufferAttorney<RaContext>
 {
-    friend class OxContext;
+    friend class RaContext;
 
     template<typename T>
-    static OxBuffer<T> createOptiXBuffer(OxContext const& optix_context, OxBufferKind buffer_kind, size_t width)
+    static RaBuffer<T> createOptiXBuffer(RaContext const& optix_context, RaBufferKind buffer_kind, size_t width)
     {
-        return OxBuffer<T>{ optix_context, buffer_kind, width };
+        return RaBuffer<T>{ optix_context, buffer_kind, width };
     }
 
     template<typename T>
-    static OxBuffer<T> createOptiXBuffer(OxContext const& optix_context, OxBufferKind buffer_kind, size_t width, size_t height)
+    static RaBuffer<T> createOptiXBuffer(RaContext const& optix_context, RaBufferKind buffer_kind, size_t width, size_t height)
     {
-        return OxBuffer<T>{ optix_context, buffer_kind, width, height };
+        return RaBuffer<T>{ optix_context, buffer_kind, width, height };
     }
 
     template<typename T>
-    static OxBuffer<T> createOptiXBuffer(OxContext const& optix_context, OxBufferKind buffer_kind, size_t width, size_t height, size_t depth)
+    static RaBuffer<T> createOptiXBuffer(RaContext const& optix_context, RaBufferKind buffer_kind, size_t width, size_t height, size_t depth)
     {
-        return OxBuffer<T>{ optix_context, buffer_kind, width, height, depth };
+        return RaBuffer<T>{ optix_context, buffer_kind, width, height, depth };
     }
 };
 
 template<typename T>
-util::Optional<OxBuffer<T>> castBufferToType(OxAbstractBuffer& source_buffer)
+util::Optional<RaBuffer<T>> castBufferToType(RaAbstractBuffer& source_buffer)
 {
-    OxBuffer<T>* p_dest_buffer = static_cast<OxBuffer<T>*>(&source_buffer);
+    RaBuffer<T>* p_dest_buffer = static_cast<RaBuffer<T>*>(&source_buffer);
     if (p_dest_buffer)
-        return util::Optional<OxBuffer<T>>{*p_dest_buffer};
+        return util::Optional<RaBuffer<T>>{*p_dest_buffer};
 
-    return util::Optional<OxBuffer<T>>{};
+    return util::Optional<RaBuffer<T>>{};
 }
 
 template<typename T>
-util::Optional<OxBuffer<T> const> castBufferToType(OxAbstractBuffer const& source_buffer)
+util::Optional<RaBuffer<T> const> castBufferToType(RaAbstractBuffer const& source_buffer)
 {
-    return castBufferToType<T>(const_cast<OxAbstractBuffer&>(source_buffer));
+    return castBufferToType<T>(const_cast<RaAbstractBuffer&>(source_buffer));
 }
 
 
-template<typename T> class OxBufferMapSentry;
+template<typename T> class RaBufferMapSentry;
 
 template<typename T>
-class OxBufferMapSentry final
+class RaBufferMapSentry final
 {
 public:
-    OxBufferMapSentry(OxBuffer<T> const& buffer_to_map,
-        OxBufferMapKind map_kind, unsigned int mipmap_level = 0U) :
+    RaBufferMapSentry(RaBuffer<T> const& buffer_to_map,
+        RaBufferMapKind map_kind, unsigned int mipmap_level = 0U) :
         m_mapped_buffer{ buffer_to_map },
         m_mapped_mipmap_level{ mipmap_level },
         m_addr{ m_mapped_buffer.map(map_kind, mipmap_level) }
@@ -206,67 +206,67 @@ public:
 
     }
 
-    OxBufferMapSentry(OxBufferMapSentry const&) = delete;
-    OxBufferMapSentry(OxBufferMapSentry&&) = default;
+    RaBufferMapSentry(RaBufferMapSentry const&) = delete;
+    RaBufferMapSentry(RaBufferMapSentry&&) = default;
 
-    OxBufferMapSentry& operator=(OxBufferMapSentry const&) = delete;
-    OxBufferMapSentry& operator=(OxBufferMapSentry&&) = delete;
+    RaBufferMapSentry& operator=(RaBufferMapSentry const&) = delete;
+    RaBufferMapSentry& operator=(RaBufferMapSentry&&) = delete;
 
     T* address() const { return m_addr; }
 
-    ~OxBufferMapSentry()
+    ~RaBufferMapSentry()
     {
         m_mapped_buffer.unmap(m_mapped_mipmap_level);
     }
 
 private:
-    OxBuffer<T> const& m_mapped_buffer;
+    RaBuffer<T> const& m_mapped_buffer;
     unsigned int m_mapped_mipmap_level;
     T* m_addr;
 };
 
 
 template<>
-class OxBufferMapSentry<void> final
+class RaBufferMapSentry<void> final
 {
 public:
-    OxBufferMapSentry(OxAbstractBuffer const& buffer_to_map,
-        OxBufferMapKind map_kind, unsigned int mipmap_level = 0U) :
+    RaBufferMapSentry(RaAbstractBuffer const& buffer_to_map,
+        RaBufferMapKind map_kind, unsigned int mipmap_level = 0U) :
         m_mapped_buffer{ buffer_to_map },
         m_mapped_mipmap_level{ mipmap_level },
         m_addr{ m_mapped_buffer.map(map_kind, mipmap_level) }
     {
     }
 
-    OxBufferMapSentry(OxBufferMapSentry const&) = delete;
-    OxBufferMapSentry(OxBufferMapSentry&&) = default;
+    RaBufferMapSentry(RaBufferMapSentry const&) = delete;
+    RaBufferMapSentry(RaBufferMapSentry&&) = default;
 
-    OxBufferMapSentry& operator=(OxBufferMapSentry const&) = delete;
-    OxBufferMapSentry& operator=(OxBufferMapSentry&&) = delete;
+    RaBufferMapSentry& operator=(RaBufferMapSentry const&) = delete;
+    RaBufferMapSentry& operator=(RaBufferMapSentry&&) = delete;
 
     void* address() const { return m_addr; }
 
-    ~OxBufferMapSentry()
+    ~RaBufferMapSentry()
     {
         m_mapped_buffer.unmap(m_mapped_mipmap_level);
     }
 
 private:
-    OxAbstractBuffer const& m_mapped_buffer;
+    RaAbstractBuffer const& m_mapped_buffer;
     unsigned int m_mapped_mipmap_level;
     void* m_addr;
 };
 
 
 template<typename T>
-OxBufferMapSentry<T> makeBufferMapSentry(OxBuffer<T> const& buffer,
-    OxBufferMapKind map_kind, unsigned int mipmap_level = 0U)
+RaBufferMapSentry<T> makeBufferMapSentry(RaBuffer<T> const& buffer,
+    RaBufferMapKind map_kind, unsigned int mipmap_level = 0U)
 {
-    return OxBufferMapSentry<T>{ buffer, map_kind, mipmap_level };
+    return RaBufferMapSentry<T>{ buffer, map_kind, mipmap_level };
 }
 
-OxBufferMapSentry<void> makeBufferMapSentry(OxAbstractBuffer const& buffer,
-    OxBufferMapKind map_kind, unsigned int mipmap_level = 0U);
+RaBufferMapSentry<void> makeBufferMapSentry(RaAbstractBuffer const& buffer,
+    RaBufferMapKind map_kind, unsigned int mipmap_level = 0U);
 
 }
 

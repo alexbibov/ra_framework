@@ -8,19 +8,19 @@ using namespace ra::util;
 namespace
 {
 
-static OxMaterialsFactory* p_factory_instance{ nullptr };
+static RaMaterialsFactory* p_factory_instance{ nullptr };
 
 }
 
-OxMaterialsFactory* OxMaterialsFactory::initialize(OxContext const& context)
+RaMaterialsFactory* RaMaterialsFactory::initialize(RaContext const& context)
 {
     if (!p_factory_instance)
-        p_factory_instance = new OxMaterialsFactory{ context };
+        p_factory_instance = new RaMaterialsFactory{ context };
 
     return p_factory_instance;
 }
 
-void OxMaterialsFactory::shutdown()
+void RaMaterialsFactory::shutdown()
 {
     if (p_factory_instance)
     {
@@ -29,43 +29,43 @@ void OxMaterialsFactory::shutdown()
     }
 }
 
-OxMaterialsFactory* OxMaterialsFactory::retrieve()
+RaMaterialsFactory* RaMaterialsFactory::retrieve()
 {
     return p_factory_instance;
 }
 
-bool ra::materials::OxMaterialsFactory::isValid() const
+bool ra::materials::RaMaterialsFactory::isValid() const
 {
     return p_factory_instance;
 }
 
-OxBlackBody OxMaterialsFactory::createBlackBody(OxRayPayloadType payload_type, 
-    OxRayTypeCollection const& affected_ray_types) const
+RaBlackBody RaMaterialsFactory::createBlackBody(RaRayPayloadType payload_type, 
+    RaRayTypeCollection const& affected_ray_types) const
 {
-    return OxBlackBody{ m_context, payload_type, affected_ray_types };
+    return RaBlackBody{ m_context, payload_type, affected_ray_types };
 }
 
-OxMaterialsFactory::OxMaterialsFactory(OxContext const& context) :
+RaMaterialsFactory::RaMaterialsFactory(RaContext const& context) :
     m_context{ context }
 {
-    setStringName("OxMaterialsFactory");
+    setStringName("RaMaterialsFactory");
 
     // register factory related types in Lua
     {
-        lua_support::LuaState::registerSubType<OxBlackBody>(
-            "OxBlackBody",
+        lua_support::LuaState::registerSubType<RaBlackBody>(
+            "RaBlackBody",
 
             lua_support::ListOfBaseClasses::make_initializer(
-                lua_support::BaseClass<OxEntity>{},
-                lua_support::BaseClass<OxMaterial>{}
+                lua_support::BaseClass<RaEntity>{},
+                lua_support::BaseClass<RaMaterial>{}
             ),
 
             lua_support::ListOfFactories::make_initializer(
-                [this](OxRayPayloadType payload_type, 
+                [this](RaRayPayloadType payload_type, 
                     lua_support::LuaTable::table_type const& affected_ray_types) 
                 {
                     return createBlackBody(payload_type, 
-                        lua_support::LuaTable::toStaticVector<OxRayTypeCollection::value_type, OxRayTypeCollection::capacity()>(affected_ray_types)); 
+                        lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(affected_ray_types)); 
                 }
             )
         );

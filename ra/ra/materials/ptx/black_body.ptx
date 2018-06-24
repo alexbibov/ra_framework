@@ -10,7 +10,7 @@
 .target sm_60
 .address_size 64
 
-	// .globl	_Z14__ox_any_hit__v
+	// .globl	_Z14__ra_any_hit__v
 .global .align 4 .u32 payload_type;
 .global .align 16 .b8 radiance_payload[96];
 .global .align 16 .b8 radiance_payload_simple[32];
@@ -48,10 +48,10 @@
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_yE;
 .global .align 4 .u32 _ZN21rti_internal_register14reg_rayIndex_zE;
 .global .align 16 .b8 _ZN21rti_internal_typename12payload_typeE[13] = {117, 110, 115, 105, 103, 110, 101, 100, 32, 105, 110, 116, 0};
-.global .align 16 .b8 _ZN21rti_internal_typename16radiance_payloadE[21] = {79, 120, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 0};
-.global .align 16 .b8 _ZN21rti_internal_typename23radiance_payload_simpleE[27] = {79, 120, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 83, 105, 109, 112, 108, 101, 0};
-.global .align 16 .b8 _ZN21rti_internal_typename30radiance_payload_monochromaticE[34] = {79, 120, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 77, 111, 110, 111, 99, 104, 114, 111, 109, 97, 116, 105, 99, 0};
-.global .align 16 .b8 _ZN21rti_internal_typename17occlusion_payloadE[22] = {79, 120, 82, 97, 121, 79, 99, 99, 108, 117, 115, 105, 111, 110, 80, 97, 121, 108, 111, 97, 100, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename16radiance_payloadE[21] = {82, 97, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename23radiance_payload_simpleE[27] = {82, 97, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 83, 105, 109, 112, 108, 101, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename30radiance_payload_monochromaticE[34] = {82, 97, 82, 97, 121, 82, 97, 100, 105, 97, 110, 99, 101, 80, 97, 121, 108, 111, 97, 100, 77, 111, 110, 111, 99, 104, 114, 111, 109, 97, 116, 105, 99, 0};
+.global .align 16 .b8 _ZN21rti_internal_typename17occlusion_payloadE[22] = {82, 97, 82, 97, 121, 79, 99, 99, 108, 117, 115, 105, 111, 110, 80, 97, 121, 108, 111, 97, 100, 0};
 .global .align 8 .b8 _ZN21rti_internal_typename21intersection_distanceE[6] = {102, 108, 111, 97, 116, 0};
 .global .align 4 .u32 _ZN21rti_internal_typeenum12payload_typeE = 4919;
 .global .align 4 .u32 _ZN21rti_internal_typeenum16radiance_payloadE = 4919;
@@ -72,7 +72,7 @@
 .global .align 1 .b8 _ZN23rti_internal_annotation17occlusion_payloadE[1];
 .global .align 16 .b8 _ZN23rti_internal_annotation21intersection_distanceE[58] = {34, 80, 97, 114, 97, 109, 101, 116, 114, 105, 99, 32, 100, 105, 115, 116, 97, 110, 99, 101, 32, 102, 114, 111, 109, 32, 114, 97, 121, 32, 111, 114, 105, 103, 105, 110, 32, 116, 111, 32, 116, 104, 101, 32, 105, 110, 116, 101, 114, 115, 101, 99, 116, 105, 111, 110, 34, 0};
 
-.visible .entry _Z14__ox_any_hit__v(
+.visible .entry _Z14__ra_any_hit__v(
 
 )
 {

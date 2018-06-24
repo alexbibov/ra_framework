@@ -11,37 +11,37 @@
 namespace ra {
 
 template<typename T>
-class OxMissShaderAttorney;
+class RaMissShaderAttorney;
 
-class OxMissShader : public OxContractWithOxContext, public OxContractWithOxPrograms, public OxEntity
+class RaMissShader : public RaContractWithRaContext, public RaContractWithRaPrograms, public RaEntity
 {
-    friend class OxMissShaderAttorney<OxMissShaderAssembly>;
+    friend class RaMissShaderAttorney<RaMissShaderAssembly>;
 
 public:
-    OxMissShader(OxProgram const& miss_shader, 
-        OxRayTypeCollection const& supported_ray_types = OxRayTypeCollection{ 1U, OxRayType::unknown });
-    virtual ~OxMissShader() = default;
+    RaMissShader(RaProgram const& miss_shader, 
+        RaRayTypeCollection const& supported_ray_types = RaRayTypeCollection{ 1U, RaRayType::unknown });
+    virtual ~RaMissShader() = default;
 
-    OxProgram getProgram() const;
-    OxRayTypeCollection supportedRayTypes() const;
-    bool supportsRayType(OxRayType ray_type) const;
+    RaProgram getProgram() const;
+    RaRayTypeCollection supportedRayTypes() const;
+    bool supportsRayType(RaRayType ray_type) const;
 
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
 private:
-    void apply(OxObjectHandle top_scene_object) const;
+    void apply(RaObjectHandle top_scene_object) const;
 
 private:
-    OxRayTypeCollection m_supported_ray_types;
+    RaRayTypeCollection m_supported_ray_types;
 };
 
 template<>
-class OxMissShaderAttorney<OxMissShaderAssembly>
+class RaMissShaderAttorney<RaMissShaderAssembly>
 {
-    friend class OxMissShaderAssembly;
+    friend class RaMissShaderAssembly;
 
-    static void applyMissShader(OxMissShader const& parent_miss_shader, OxObjectHandle top_scene_object)
+    static void applyMissShader(RaMissShader const& parent_miss_shader, RaObjectHandle top_scene_object)
     {
         parent_miss_shader.apply(top_scene_object);
     }

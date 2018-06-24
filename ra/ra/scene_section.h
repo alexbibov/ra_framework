@@ -10,37 +10,37 @@
 
 namespace ra {
 
-    class OxSceneSection final : public OxContractWithOxContext, public OxEntity, public OxTransformable
+    class RaSceneSection final : public RaContractWithRaContext, public RaEntity, public RaTransformable
     {
     public:
-        OxSceneSection(OxContext const& context, OxBVHAlgorithm acceleration_structure_construction_algorithm);
+        RaSceneSection(RaContext const& context, RaBVHAlgorithm acceleration_structure_construction_algorithm);
 
         void beginConstruction();
-        void addGeometryGroup(OxGeometryGroup const& geometry_group);
-        void addSceneSection(OxSceneSection const& scene_section);
+        void addGeometryGroup(RaGeometryGroup const& geometry_group);
+        void addSceneSection(RaSceneSection const& scene_section);
         void endConstruction();
 
-        std::list<OxSceneSection> const& sceneSections() const;
-        std::list<OxGeometryGroup> const& geometryGroups() const;
+        std::list<RaSceneSection> const& sceneSections() const;
+        std::list<RaGeometryGroup> const& geometryGroups() const;
 
-        // required by OxEntity interface
+        // required by RaEntity interface
         bool isValid() const override;
 
-        void trace(OxRayGenerator const& ray_caster) const;
+        void trace(RaRayGenerator const& ray_caster) const;
 
     private:
         RTobject getEntryNode() const;
-        bool _update(OxRayGenerator const& ray_caster, OxObjectHandle top_scene_object) const;
-        void _trace(OxRayGenerator const& ray_caster) const;
+        bool _update(RaRayGenerator const& ray_caster, RaObjectHandle top_scene_object) const;
+        void _trace(RaRayGenerator const& ray_caster) const;
 
-        // required by OxTransformable interface
+        // required by RaTransformable interface
         RTobject getObjectToBeTransformed() const override;
 
     private:
         std::shared_ptr<RTgroup_api> m_native_group_handle;
         std::shared_ptr<RTacceleration_api> m_native_acceleration_handle;
-        std::list<OxGeometryGroup> m_geometry_groups;
-        std::list<OxSceneSection> m_attached_scene_sections;
+        std::list<RaGeometryGroup> m_geometry_groups;
+        std::list<RaSceneSection> m_attached_scene_sections;
         bool m_construction_begun;
         bool m_construction_finished;
     };

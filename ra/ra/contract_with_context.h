@@ -6,21 +6,21 @@
 
 namespace ra {
 
-    class OxContractWithOxContext
+    class RaContractWithRaContext
     {
     public:
-        OxContext const& context() const;
+        RaContext const& context() const;
 
     protected:
-        OxContractWithOxContext(OxContext const& optix_context_wrapper);
-        virtual ~OxContractWithOxContext() = default;
+        RaContractWithRaContext(RaContext const& optix_context_wrapper);
+        virtual ~RaContractWithRaContext() = default;
 
-        OxContractWithOxContext& operator=(OxContractWithOxContext const& other);
+        RaContractWithRaContext& operator=(RaContractWithRaContext const& other);
 
         RTcontext nativeOptiXContextHandle() const;
 
     private:
-        OxContext const& m_optix_context_wrapper_ref;
+        RaContext const& m_optix_context_wrapper_ref;
     };
 
 }

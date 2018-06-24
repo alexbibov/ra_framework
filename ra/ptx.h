@@ -27,14 +27,14 @@
 
 
 // Standardized shader string names
-#define OX_SHADER_ENTRY_INTERSECTION   "__ox_intersect__"
-#define OX_SHADER_ENTRY_BOUNDING_BOX   "__ox_aabb__"
-#define OX_SHADER_ENTRY_RAY_GENERATION "__ox_generate__"
-#define OX_SHADER_ENTRY_CLOSEST_HIT    "__ox_closest_hit__"
-#define OX_SHADER_ENTRY_ANY_HIT        "__ox_any_hit__"
-#define OX_SHADER_ENTRY_MISS           "__ox_miss__"
-#define OX_SHADER_ENTRY_SELECTOR       "__ox_selector__"
-#define OX_SHADER_ENTRY_CALLABLE       "__ox_callable__"
+#define OX_SHADER_ENTRY_INTERSECTION   "__ra_intersect__"
+#define OX_SHADER_ENTRY_BOUNDING_BOX   "__ra_aabb__"
+#define OX_SHADER_ENTRY_RAY_GENERATION "__ra_generate__"
+#define OX_SHADER_ENTRY_CLOSEST_HIT    "__ra_closest_hit__"
+#define OX_SHADER_ENTRY_ANY_HIT        "__ra_any_hit__"
+#define OX_SHADER_ENTRY_MISS           "__ra_miss__"
+#define OX_SHADER_ENTRY_SELECTOR       "__ra_selector__"
+#define OX_SHADER_ENTRY_CALLABLE       "__ra_callable__"
 
 
 #endif

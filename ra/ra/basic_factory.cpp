@@ -14,40 +14,40 @@ using namespace ra::util;
 
 
 namespace {
-static OxBasicFactory* p_basic_factory_instance{ nullptr };
+static RaBasicFactory* p_basic_factory_instance{ nullptr };
 
-template<OxBasicBufferFormat format>
+template<RaBasicBufferFormat format>
 struct buffer_format_to_cpp_format;
 
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::FLOAT> { using type = float; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::FLOAT2> { using type = float2; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::FLOAT3> { using type = float3; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::FLOAT4> { using type = float4; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::FLOAT> { using type = float; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::FLOAT2> { using type = float2; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::FLOAT3> { using type = float3; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::FLOAT4> { using type = float4; };
 
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::INT> { using type = int; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::INT2> { using type = int2; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::INT3> { using type = int3; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::INT4> { using type = int4; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::INT> { using type = int; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::INT2> { using type = int2; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::INT3> { using type = int3; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::INT4> { using type = int4; };
 
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UINT> { using type = unsigned int; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UINT2> { using type = uint2; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UINT3> { using type = uint3; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UINT4> { using type = uint4; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::UINT> { using type = unsigned int; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::UINT2> { using type = uint2; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::UINT3> { using type = uint3; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::UINT4> { using type = uint4; };
 
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::CHAR> { using type = char; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::CHAR2> { using type = char2; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::CHAR3> { using type = char3; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::CHAR4> { using type = char4; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::CHAR> { using type = char; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::CHAR2> { using type = char2; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::CHAR3> { using type = char3; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::CHAR4> { using type = char4; };
 
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UCHAR> { using type = unsigned char; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UCHAR2> { using type = uchar2; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UCHAR3> { using type = uchar3; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::UCHAR4> { using type = uchar4; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::UCHAR> { using type = unsigned char; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::UCHAR2> { using type = uchar2; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::UCHAR3> { using type = uchar3; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::UCHAR4> { using type = uchar4; };
 
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD> { using type = OxRayRadiancePayload; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE> { using type = OxRayRadiancePayloadSimple; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC> { using type = OxRayRadiancePayloadMonochromatic; };
-template<> struct buffer_format_to_cpp_format<OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD> { using type = OxRayOcclusionPayload; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD> { using type = RaRayRadiancePayload; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE> { using type = RaRayRadiancePayloadSimple; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC> { using type = RaRayRadiancePayloadMonochromatic; };
+template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::RAY_OCCLUSION_PAYLOAD> { using type = RaRayOcclusionPayload; };
 
 
 
@@ -456,195 +456,195 @@ void luaRegisterGeneralTypes()
         "m44", &mat4x4::_44
         );
 
-    lua_support::LuaState::registerType<OxEntityId>(
-        "OxEntityId", lua_support::ListOfConstructors::make_initializer(lua_support::Constructor<void>{}),
-        "owningThread", &OxEntityId::owningThread,
-        "toString", &OxEntityId::toString
+    lua_support::LuaState::registerType<RaEntityId>(
+        "RaEntityId", lua_support::ListOfConstructors::make_initializer(lua_support::Constructor<void>{}),
+        "owningThread", &RaEntityId::owningThread,
+        "toString", &RaEntityId::toString
         );
 
-    lua_support::LuaState::registerType<OxEntity>(
-        "OxEntity", lua_support::NoConstructor::make_initializer(),
-        "getUniqueIdentifier", &OxEntity::getUniqueIdentifier,
-        "getStringName", &OxEntity::getStringName,
-        "setStringName", &OxEntity::setStringName
+    lua_support::LuaState::registerType<RaEntity>(
+        "RaEntity", lua_support::NoConstructor::make_initializer(),
+        "getUniqueIdentifier", &RaEntity::getUniqueIdentifier,
+        "getStringName", &RaEntity::getStringName,
+        "setStringName", &RaEntity::setStringName
         );
 }
 
 void luaRegisterRayPayloadTypes()
 {
-    lua_support::LuaState::registerType<OxRayRadiancePayload>(
-        "OxRayRadiancePayload",
+    lua_support::LuaState::registerType<RaRayRadiancePayload>(
+        "RaRayRadiancePayload",
         lua_support::ListOfConstructors::make_initializer(lua_support::Constructor<void>{}),
-        "spectral_radiance", [](OxRayRadiancePayload* p)
+        "spectral_radiance", [](RaRayRadiancePayload* p)
     {
         std::array<float2, constants::max_spectra_pairs_supported> rv{};
         for (uint32_t i = 0; i < constants::max_spectra_pairs_supported; ++i)
             rv[i] = p->spectral_radiance[i];
         return rv;
     },
-        "depth", &OxRayRadiancePayload::depth,
-        "tracing_depth_and_aux", &OxRayRadiancePayload::tracing_depth_and_aux
+        "depth", &RaRayRadiancePayload::depth,
+        "tracing_depth_and_aux", &RaRayRadiancePayload::tracing_depth_and_aux
         );
 
-    lua_support::LuaState::registerType<OxRayRadiancePayloadSimple>(
-        "OxRayRadiancePayloadSimple",
+    lua_support::LuaState::registerType<RaRayRadiancePayloadSimple>(
+        "RaRayRadiancePayloadSimple",
         lua_support::ListOfConstructors::make_initializer(lua_support::Constructor<void>{}),
-        "spectral_radiance", &OxRayRadiancePayloadSimple::spectral_radiance,
-        "depth", &OxRayRadiancePayloadSimple::depth,
-        "tracing_depth_and_aux", &OxRayRadiancePayloadSimple::tracing_depth_and_aux
+        "spectral_radiance", &RaRayRadiancePayloadSimple::spectral_radiance,
+        "depth", &RaRayRadiancePayloadSimple::depth,
+        "tracing_depth_and_aux", &RaRayRadiancePayloadSimple::tracing_depth_and_aux
         );
 
-    lua_support::LuaState::registerType<OxRayRadiancePayloadMonochromatic>(
-        "OxRayRadiancePayloadMonochromatic",
+    lua_support::LuaState::registerType<RaRayRadiancePayloadMonochromatic>(
+        "RaRayRadiancePayloadMonochromatic",
         lua_support::ListOfConstructors::make_initializer(lua_support::Constructor<void>{}),
-        "spectral_radiance", &OxRayRadiancePayloadMonochromatic::spectral_radiance,
-        "depth", &OxRayRadiancePayloadMonochromatic::depth,
-        "tracing_depth_and_aux", &OxRayRadiancePayloadMonochromatic::tracing_depth_and_aux
+        "spectral_radiance", &RaRayRadiancePayloadMonochromatic::spectral_radiance,
+        "depth", &RaRayRadiancePayloadMonochromatic::depth,
+        "tracing_depth_and_aux", &RaRayRadiancePayloadMonochromatic::tracing_depth_and_aux
         );
 
-    lua_support::LuaState::registerType<OxRayOcclusionPayload>(
-        "OxRayOcclusionPayload",
+    lua_support::LuaState::registerType<RaRayOcclusionPayload>(
+        "RaRayOcclusionPayload",
         lua_support::ListOfConstructors::make_initializer(lua_support::Constructor<void>{}),
-        "is_occluded", &OxRayOcclusionPayload::is_occluded,
-        "tracing_depth", &OxRayOcclusionPayload::tracing_depth,
-        "depth", &OxRayOcclusionPayload::depth
+        "is_occluded", &RaRayOcclusionPayload::is_occluded,
+        "tracing_depth", &RaRayOcclusionPayload::tracing_depth,
+        "depth", &RaRayOcclusionPayload::depth
         );
 
     lua_support::LuaState::registerEnum(
-        "OxRayPayloadType",
-        "radiance", OxRayPayloadType::radiance,
-        "radiance_simple", OxRayPayloadType::radiance_simple,
-        "monochromatic", OxRayPayloadType::monochromatic,
-        "occlusion", OxRayPayloadType::occlusion
+        "RaRayPayloadType",
+        "radiance", RaRayPayloadType::radiance,
+        "radiance_simple", RaRayPayloadType::radiance_simple,
+        "monochromatic", RaRayPayloadType::monochromatic,
+        "occlusion", RaRayPayloadType::occlusion
     );
 
     lua_support::LuaState::registerEnum(
-        "OxRayType",
-        "unknown", OxRayType::unknown,
-        "shadow", OxRayType::shadow,
-        "scattered", OxRayType::scattered,
-        "reflected", OxRayType::reflected
+        "RaRayType",
+        "unknown", RaRayType::unknown,
+        "shadow", RaRayType::shadow,
+        "scattered", RaRayType::scattered,
+        "reflected", RaRayType::reflected
     );
 }
 
 void luaRegisterShaderTypes()
 {
     lua_support::LuaState::registerEnum(
-        "OxProgramSource",
-        "file", OxProgram::Source::file,
-        "string", OxProgram::Source::string
+        "RaProgramSource",
+        "file", RaProgram::Source::file,
+        "string", RaProgram::Source::string
     );
 
-    lua_support::LuaState::registerType<OxObjectHandle>(
-        "OxObjectHandle",
+    lua_support::LuaState::registerType<RaObjectHandle>(
+        "RaObjectHandle",
         lua_support::ListOfConstructors::make_initializer(lua_support::Constructor<void>{}),
-        "native", &OxObjectHandle::p_native
+        "native", &RaObjectHandle::p_native
         );
 
-    lua_support::LuaState::registerType<OxProgramId>(
-        "OxProgramId",
+    lua_support::LuaState::registerType<RaProgramId>(
+        "RaProgramId",
         lua_support::ListOfConstructors::make_initializer(lua_support::Constructor<void>{}),
-        "native", &OxProgramId::native
+        "native", &RaProgramId::native
         );
 
-    lua_support::LuaState::registerSubType<OxProgram>(
-        "OxProgram",
+    lua_support::LuaState::registerSubType<RaProgram>(
+        "RaProgram",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxEntity>{}
+            lua_support::BaseClass<RaEntity>{}
         ),
 
         lua_support::ListOfFactories::make_initializer(
-            [](std::string const& source, OxProgram::Source source_type, std::string const& program_name)
+            [](std::string const& source, RaProgram::Source source_type, std::string const& program_name)
             {
                 return p_basic_factory_instance->createProgram(source, source_type, program_name);
             }
         ),
 
-        "getId", &OxProgram::getId,
+        "getId", &RaProgram::getId,
 
         "setVariableValue", lua_support::ListOfOverloads::make_initializer(
-            static_cast<void(OxProgram::*)(std::string const&, float)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, float2 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, float3 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, float4 const&)>(&OxProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, float)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, float2 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, float3 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, float4 const&)>(&RaProgram::setVariableValue),
 
-            static_cast<void(OxProgram::*)(std::string const&, int)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, int2 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, int3 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, int4 const&)>(&OxProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, int)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, int2 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, int3 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, int4 const&)>(&RaProgram::setVariableValue),
 
-            static_cast<void(OxProgram::*)(std::string const&, unsigned int)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, uint2 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, uint3 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, uint4 const&)>(&OxProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, unsigned int)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, uint2 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, uint3 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, uint4 const&)>(&RaProgram::setVariableValue),
 
-            static_cast<void(OxProgram::*)(std::string const&, mat2x2 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, mat2x3 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, mat2x4 const&)>(&OxProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, mat2x2 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, mat2x3 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, mat2x4 const&)>(&RaProgram::setVariableValue),
 
-            static_cast<void(OxProgram::*)(std::string const&, mat3x2 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, mat3x3 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, mat3x4 const&)>(&OxProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, mat3x2 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, mat3x3 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, mat3x4 const&)>(&RaProgram::setVariableValue),
 
-            static_cast<void(OxProgram::*)(std::string const&, mat4x2 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, mat4x3 const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, mat4x4 const&)>(&OxProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, mat4x2 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, mat4x3 const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, mat4x4 const&)>(&RaProgram::setVariableValue),
 
-            static_cast<void(OxProgram::*)(std::string const&, OxObjectHandle const&)>(&OxProgram::setVariableValue),
-            static_cast<void(OxProgram::*)(std::string const&, OxProgramId const&)>(&OxProgram::setVariableValue)
+            static_cast<void(RaProgram::*)(std::string const&, RaObjectHandle const&)>(&RaProgram::setVariableValue),
+            static_cast<void(RaProgram::*)(std::string const&, RaProgramId const&)>(&RaProgram::setVariableValue)
         ),
 
-        "getVariableValue1f", [](OxProgram* p, std::string const& name) { float val; p->getVariableValue(name, val); return val; },
-        "getVariableValue2f", [](OxProgram* p, std::string const& name) { float2 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue3f", [](OxProgram* p, std::string const& name) { float3 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue4f", [](OxProgram* p, std::string const& name) { float4 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue1f", [](RaProgram* p, std::string const& name) { float val; p->getVariableValue(name, val); return val; },
+        "getVariableValue2f", [](RaProgram* p, std::string const& name) { float2 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue3f", [](RaProgram* p, std::string const& name) { float3 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue4f", [](RaProgram* p, std::string const& name) { float4 val; p->getVariableValue(name, val); return val; },
 
-        "getVariableValue1i", [](OxProgram* p, std::string const& name) { int val; p->getVariableValue(name, val); return val; },
-        "getVariableValue2i", [](OxProgram* p, std::string const& name) { int2 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue3i", [](OxProgram* p, std::string const& name) { int3 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue4i", [](OxProgram* p, std::string const& name) { int4 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue1i", [](RaProgram* p, std::string const& name) { int val; p->getVariableValue(name, val); return val; },
+        "getVariableValue2i", [](RaProgram* p, std::string const& name) { int2 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue3i", [](RaProgram* p, std::string const& name) { int3 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue4i", [](RaProgram* p, std::string const& name) { int4 val; p->getVariableValue(name, val); return val; },
 
-        "getVariableValue1ui", [](OxProgram* p, std::string const& name) { unsigned int val; p->getVariableValue(name, val); return val; },
-        "getVariableValue2ui", [](OxProgram* p, std::string const& name) { uint2 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue3ui", [](OxProgram* p, std::string const& name) { uint3 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue4ui", [](OxProgram* p, std::string const& name) { uint4 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue1ui", [](RaProgram* p, std::string const& name) { unsigned int val; p->getVariableValue(name, val); return val; },
+        "getVariableValue2ui", [](RaProgram* p, std::string const& name) { uint2 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue3ui", [](RaProgram* p, std::string const& name) { uint3 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue4ui", [](RaProgram* p, std::string const& name) { uint4 val; p->getVariableValue(name, val); return val; },
 
-        "getVariableValue2x2", [](OxProgram* p, std::string const& name) { mat2x2 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue2x3", [](OxProgram* p, std::string const& name) { mat2x3 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue2x4", [](OxProgram* p, std::string const& name) { mat2x4 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue2x2", [](RaProgram* p, std::string const& name) { mat2x2 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue2x3", [](RaProgram* p, std::string const& name) { mat2x3 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue2x4", [](RaProgram* p, std::string const& name) { mat2x4 val; p->getVariableValue(name, val); return val; },
 
-        "getVariableValue3x2", [](OxProgram* p, std::string const& name) { mat3x2 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue3x3", [](OxProgram* p, std::string const& name) { mat3x3 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue3x4", [](OxProgram* p, std::string const& name) { mat3x4 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue3x2", [](RaProgram* p, std::string const& name) { mat3x2 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue3x3", [](RaProgram* p, std::string const& name) { mat3x3 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue3x4", [](RaProgram* p, std::string const& name) { mat3x4 val; p->getVariableValue(name, val); return val; },
 
-        "getVariableValue4x2", [](OxProgram* p, std::string const& name) { mat4x2 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue4x3", [](OxProgram* p, std::string const& name) { mat4x3 val; p->getVariableValue(name, val); return val; },
-        "getVariableValue4x4", [](OxProgram* p, std::string const& name) { mat4x4 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue4x2", [](RaProgram* p, std::string const& name) { mat4x2 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue4x3", [](RaProgram* p, std::string const& name) { mat4x3 val; p->getVariableValue(name, val); return val; },
+        "getVariableValue4x4", [](RaProgram* p, std::string const& name) { mat4x4 val; p->getVariableValue(name, val); return val; },
 
-        "getVariableValueObj", [](OxProgram* p, std::string const& name) { OxObjectHandle val; p->getVariableValue(name, val); return val; },
+        "getVariableValueObj", [](RaProgram* p, std::string const& name) { RaObjectHandle val; p->getVariableValue(name, val); return val; },
 
 
-        "isValid", &OxProgram::isValid,
-        "assignBuffer", &OxProgram::assignBuffer,
-        "assignProgram", &OxProgram::assignProgram,
-        "checkVariableExistance", &OxProgram::checkVariableExistance
+        "isValid", &RaProgram::isValid,
+        "assignBuffer", &RaProgram::assignBuffer,
+        "assignProgram", &RaProgram::assignProgram,
+        "checkVariableExistance", &RaProgram::checkVariableExistance
         );
 }
 
 
 template<typename T>
-void writeDataToBuffer(OxAbstractBuffer* p_buffer, size_t first_element, std::vector<T> const& data)
+void writeDataToBuffer(RaAbstractBuffer* p_buffer, size_t first_element, std::vector<T> const& data)
 {
-    T* p_buffer_data = static_cast<T*>(p_buffer->map(OxBufferMapKind::write)) + first_element;
+    T* p_buffer_data = static_cast<T*>(p_buffer->map(RaBufferMapKind::write)) + first_element;
     memcpy(p_buffer_data, data.data(), sizeof(T)*data.size());
     p_buffer->unmap();
 }
 
 template<typename T>
-void readDataFromBuffer(OxAbstractBuffer* p_buffer, size_t first_element, size_t num_elements, std::vector<T>& out_data)
+void readDataFromBuffer(RaAbstractBuffer* p_buffer, size_t first_element, size_t num_elements, std::vector<T>& out_data)
 {
-    T* p_out_data = static_cast<T*>(p_buffer->map(OxBufferMapKind::read)) + first_element;
+    T* p_out_data = static_cast<T*>(p_buffer->map(RaBufferMapKind::read)) + first_element;
     out_data.resize(num_elements);
     memcpy(out_data.data(), p_out_data, sizeof(T)*num_elements);
     p_buffer->unmap();
@@ -654,79 +654,79 @@ void readDataFromBuffer(OxAbstractBuffer* p_buffer, size_t first_element, size_t
 
 void luaRegisterBufferTypes()
 {
-    lua_support::LuaState::registerEnum("OxBufferFormat",
-        "FLOAT", OxBasicBufferFormat::FLOAT,
-        "FLOAT2", OxBasicBufferFormat::FLOAT2,
-        "FLOAT3", OxBasicBufferFormat::FLOAT3,
-        "FLOAT4", OxBasicBufferFormat::FLOAT4,
+    lua_support::LuaState::registerEnum("RaBufferFormat",
+        "FLOAT", RaBasicBufferFormat::FLOAT,
+        "FLOAT2", RaBasicBufferFormat::FLOAT2,
+        "FLOAT3", RaBasicBufferFormat::FLOAT3,
+        "FLOAT4", RaBasicBufferFormat::FLOAT4,
 
-        "INT", OxBasicBufferFormat::INT,
-        "INT2", OxBasicBufferFormat::INT2,
-        "INT3", OxBasicBufferFormat::INT3,
-        "INT4", OxBasicBufferFormat::INT4,
+        "INT", RaBasicBufferFormat::INT,
+        "INT2", RaBasicBufferFormat::INT2,
+        "INT3", RaBasicBufferFormat::INT3,
+        "INT4", RaBasicBufferFormat::INT4,
 
-        "UINT", OxBasicBufferFormat::UINT,
-        "UINT2", OxBasicBufferFormat::UINT2,
-        "UINT3", OxBasicBufferFormat::UINT3,
-        "UINT4", OxBasicBufferFormat::UINT4,
+        "UINT", RaBasicBufferFormat::UINT,
+        "UINT2", RaBasicBufferFormat::UINT2,
+        "UINT3", RaBasicBufferFormat::UINT3,
+        "UINT4", RaBasicBufferFormat::UINT4,
 
-        "CHAR", OxBasicBufferFormat::CHAR,
-        "CHAR2", OxBasicBufferFormat::CHAR2,
-        "CHAR3", OxBasicBufferFormat::CHAR3,
-        "CHAR4", OxBasicBufferFormat::CHAR4,
+        "CHAR", RaBasicBufferFormat::CHAR,
+        "CHAR2", RaBasicBufferFormat::CHAR2,
+        "CHAR3", RaBasicBufferFormat::CHAR3,
+        "CHAR4", RaBasicBufferFormat::CHAR4,
 
-        "CUHAR", OxBasicBufferFormat::UCHAR,
-        "UCHAR2", OxBasicBufferFormat::UCHAR2,
-        "UCHAR3", OxBasicBufferFormat::UCHAR3,
-        "UCHAR4", OxBasicBufferFormat::UCHAR4,
+        "CUHAR", RaBasicBufferFormat::UCHAR,
+        "UCHAR2", RaBasicBufferFormat::UCHAR2,
+        "UCHAR3", RaBasicBufferFormat::UCHAR3,
+        "UCHAR4", RaBasicBufferFormat::UCHAR4,
 
-        "RAY_RADIANCE_PAYLOAD", OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD,
-        "RAY_RADIANCE_PAYLOAD_SIMPLE", OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE,
-        "RAY_RADIANCE_PAYLOAD_MONOCHROMATIC", OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC,
-        "RAY_OCCLUSION_PAYLOAD", OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD);
+        "RAY_RADIANCE_PAYLOAD", RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD,
+        "RAY_RADIANCE_PAYLOAD_SIMPLE", RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE,
+        "RAY_RADIANCE_PAYLOAD_MONOCHROMATIC", RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC,
+        "RAY_OCCLUSION_PAYLOAD", RaBasicBufferFormat::RAY_OCCLUSION_PAYLOAD);
 
     lua_support::LuaState::registerEnum(
-        "OxBufferKind",
-        "input", OxBufferKind::input,
-        "output", OxBufferKind::output,
-        "input_output", OxBufferKind::input_output
+        "RaBufferKind",
+        "input", RaBufferKind::input,
+        "output", RaBufferKind::output,
+        "input_output", RaBufferKind::input_output
         );
 
     lua_support::LuaState::registerEnum(
-        "OxBufferDimension",
-        "_1D", OxBufferDimension::_1D,
-        "_2D", OxBufferDimension::_2D,
-        "_3D", OxBufferDimension::_3D
+        "RaBufferDimension",
+        "_1D", RaBufferDimension::_1D,
+        "_2D", RaBufferDimension::_2D,
+        "_3D", RaBufferDimension::_3D
         );
 
-    lua_support::LuaState::registerSubType<OxAbstractBuffer>(
-        "OxBuffer",
+    lua_support::LuaState::registerSubType<RaAbstractBuffer>(
+        "RaBuffer",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxEntity>{}
+            lua_support::BaseClass<RaEntity>{}
         ),
 
         lua_support::ListOfFactories::make_initializer(
-            [](OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width)
+            [](RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width)
             {
                 return p_basic_factory_instance->createBuffer(buffer_format, 
                     buffer_kind, width);
             },
 
-            [](OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height)
+            [](RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width, size_t height)
             {
                 return p_basic_factory_instance->createBuffer(buffer_format, 
                     buffer_kind, width, height);
             },
 
-            [](OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height, size_t depth)
+            [](RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width, size_t height, size_t depth)
             {
                 return p_basic_factory_instance->createBuffer(buffer_format, 
                     buffer_kind, width, height, depth);
             }
         ),
 
-        "getId", &OxAbstractBuffer::getId,
+        "getId", &RaAbstractBuffer::getId,
 
         "writeData", lua_support::ListOfOverloads::make_initializer(
             &writeDataToBuffer<float>, &writeDataToBuffer<float2>, &writeDataToBuffer<float3>, &writeDataToBuffer<float4>,
@@ -734,8 +734,8 @@ void luaRegisterBufferTypes()
             &writeDataToBuffer<int>, &writeDataToBuffer<int2>, &writeDataToBuffer<int3>, &writeDataToBuffer<int4>,
             &writeDataToBuffer<unsigned char>, &writeDataToBuffer<uchar2>, &writeDataToBuffer<uchar3>, &writeDataToBuffer<uchar4>,
             &writeDataToBuffer<char>, &writeDataToBuffer<char2>, &writeDataToBuffer<char3>, &writeDataToBuffer<char4>,
-            &writeDataToBuffer<OxRayRadiancePayload>, &writeDataToBuffer<OxRayRadiancePayloadSimple>,
-            &writeDataToBuffer<OxRayRadiancePayloadMonochromatic>, &writeDataToBuffer<OxRayOcclusionPayload>
+            &writeDataToBuffer<RaRayRadiancePayload>, &writeDataToBuffer<RaRayRadiancePayloadSimple>,
+            &writeDataToBuffer<RaRayRadiancePayloadMonochromatic>, &writeDataToBuffer<RaRayOcclusionPayload>
         ),
         "readData", lua_support::ListOfOverloads::make_initializer(
             &readDataFromBuffer<float>, &readDataFromBuffer<float2>, &readDataFromBuffer<float3>, &readDataFromBuffer<float4>,
@@ -743,113 +743,113 @@ void luaRegisterBufferTypes()
             &readDataFromBuffer<int>, &readDataFromBuffer<int2>, &readDataFromBuffer<int3>, &readDataFromBuffer<int4>,
             &readDataFromBuffer<unsigned char>, &readDataFromBuffer<uchar2>, &readDataFromBuffer<uchar3>, &readDataFromBuffer<uchar4>,
             &readDataFromBuffer<char>, &readDataFromBuffer<char2>, &readDataFromBuffer<char3>, &readDataFromBuffer<char4>,
-            &readDataFromBuffer<OxRayRadiancePayload>, &readDataFromBuffer<OxRayRadiancePayloadSimple>,
-            &readDataFromBuffer<OxRayRadiancePayloadMonochromatic>, &readDataFromBuffer<OxRayOcclusionPayload>
+            &readDataFromBuffer<RaRayRadiancePayload>, &readDataFromBuffer<RaRayRadiancePayloadSimple>,
+            &readDataFromBuffer<RaRayRadiancePayloadMonochromatic>, &readDataFromBuffer<RaRayOcclusionPayload>
         ),
-        "OxBufferDimension", &OxAbstractBuffer::getDimension,
-        "getWidth", &OxAbstractBuffer::getWidth,
-        "getHeight", &OxAbstractBuffer::getHeight,
-        "getDepth", &OxAbstractBuffer::getDepth,
-        "getElementSize", &OxAbstractBuffer::getElementSize,
-        "getCapacityInBytes", &OxAbstractBuffer::getCapacityInBytes,
-        "isValid", &OxAbstractBuffer::isValid
+        "RaBufferDimension", &RaAbstractBuffer::getDimension,
+        "getWidth", &RaAbstractBuffer::getWidth,
+        "getHeight", &RaAbstractBuffer::getHeight,
+        "getDepth", &RaAbstractBuffer::getDepth,
+        "getElementSize", &RaAbstractBuffer::getElementSize,
+        "getCapacityInBytes", &RaAbstractBuffer::getCapacityInBytes,
+        "isValid", &RaAbstractBuffer::isValid
     );
 }
 
 void luaRegisterMaterialTypes()
 {
-    lua_support::LuaState::registerSubType<OxMaterial>(
-        "OxMaterial",
+    lua_support::LuaState::registerSubType<RaMaterial>(
+        "RaMaterial",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxEntity>{}
+            lua_support::BaseClass<RaEntity>{}
         ),
 
         lua_support::ListOfFactories::make_initializer(
-            [](OxProgram closest_hit_shader, OxProgram any_hit_shader, 
+            [](RaProgram closest_hit_shader, RaProgram any_hit_shader, 
                 lua_support::LuaTable::table_type const& supported_ray_types)
             {
                 return p_basic_factory_instance->
                     createMaterial(closest_hit_shader, any_hit_shader, 
-                        lua_support::LuaTable::toStaticVector<OxRayTypeCollection::value_type, OxRayTypeCollection::capacity()>(supported_ray_types));
+                        lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
             },
 
-            [](sol::nil_t, OxProgram any_hit_shader, 
+            [](sol::nil_t, RaProgram any_hit_shader, 
                 lua_support::LuaTable::table_type const& supported_ray_types)
             {
                 return p_basic_factory_instance->
-                    createMaterial(util::Optional<OxProgram>{}, any_hit_shader, 
-                        lua_support::LuaTable::toStaticVector<OxRayTypeCollection::value_type, OxRayTypeCollection::capacity()>(supported_ray_types));
+                    createMaterial(util::Optional<RaProgram>{}, any_hit_shader, 
+                        lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
             },
 
-            [](OxProgram closest_hit_shader, sol::nil_t, 
+            [](RaProgram closest_hit_shader, sol::nil_t, 
                 lua_support::LuaTable::table_type const& supported_ray_types)
             {
                 return p_basic_factory_instance->
-                    createMaterial(closest_hit_shader, util::Optional<OxProgram>{}, 
-                        lua_support::LuaTable::toStaticVector<OxRayTypeCollection::value_type, OxRayTypeCollection::capacity()>(supported_ray_types));
+                    createMaterial(closest_hit_shader, util::Optional<RaProgram>{}, 
+                        lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
             },
 
-            [](OxProgram closest_hit_shader, OxProgram any_hit_shader)
+            [](RaProgram closest_hit_shader, RaProgram any_hit_shader)
             {
                 return p_basic_factory_instance->
                     createMaterial(closest_hit_shader, any_hit_shader);
             },
 
-            [](sol::nil_t, OxProgram any_hit_shader)
+            [](sol::nil_t, RaProgram any_hit_shader)
             {
                 return p_basic_factory_instance->
-                    createMaterial(util::Optional<OxProgram>{}, any_hit_shader);
+                    createMaterial(util::Optional<RaProgram>{}, any_hit_shader);
             },
 
-            [](OxProgram closest_hit_shader, sol::nil_t)
+            [](RaProgram closest_hit_shader, sol::nil_t)
             {
                 return p_basic_factory_instance->
-                    createMaterial(closest_hit_shader, util::Optional<OxProgram>{});
+                    createMaterial(closest_hit_shader, util::Optional<RaProgram>{});
             }
         ),
 
         "getClosestHitShader",
-            [](OxMaterial* p)
+            [](RaMaterial* p)
             {
-                util::Optional<OxProgram> rv = p->getClosestHitShader();
-                if (rv.isValid()) return sol::optional<OxProgram>{static_cast<OxProgram&>(rv)};
-                else return sol::optional<OxProgram>{};
+                util::Optional<RaProgram> rv = p->getClosestHitShader();
+                if (rv.isValid()) return sol::optional<RaProgram>{static_cast<RaProgram&>(rv)};
+                else return sol::optional<RaProgram>{};
             },
 
         "getAnyHitShader",
-            [](OxMaterial* p)
+            [](RaMaterial* p)
             {
-                util::Optional<OxProgram> rv = p->getAnyHitShader();
-                if (rv.isValid()) return sol::optional<OxProgram>{static_cast<OxProgram&>(rv)};
-                else return sol::optional<OxProgram>{};
+                util::Optional<RaProgram> rv = p->getAnyHitShader();
+                if (rv.isValid()) return sol::optional<RaProgram>{static_cast<RaProgram&>(rv)};
+                else return sol::optional<RaProgram>{};
             },
 
         "supportedRayTypes",
-            [](OxMaterial* p) -> lua_support::LuaTable::table_type
+            [](RaMaterial* p) -> lua_support::LuaTable::table_type
             {
                 auto supported_ray_types = p->supportedRayTypes();
                 return lua_support::LuaTable::staticVectorToTable(supported_ray_types);
             },
 
-        "supportsRayType", &OxMaterial::supportsRayType,
+        "supportsRayType", &RaMaterial::supportsRayType,
 
-        "isValid", &OxMaterial::isValid
+        "isValid", &RaMaterial::isValid
     );
 
 
-    lua_support::LuaState::registerSubType<OxMaterialAssembly>(
-        "OxMaterialAssembly",
+    lua_support::LuaState::registerSubType<RaMaterialAssembly>(
+        "RaMaterialAssembly",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxEntity>{}
+            lua_support::BaseClass<RaEntity>{}
         ),
 
         lua_support::ListOfFactories::make_initializer(
             [](lua_support::LuaTable::table_type const& materials)
             {
                 return p_basic_factory_instance->createMaterialAssembly(
-                    lua_support::LuaTable::toVector<OxMaterial>(materials));
+                    lua_support::LuaTable::toVector<RaMaterial>(materials));
             },
 
             [](void)
@@ -859,293 +859,293 @@ void luaRegisterMaterialTypes()
         ),
 
         "getMaterialById",
-            [](OxMaterialAssembly* p, OxEntityId id)
+            [](RaMaterialAssembly* p, RaEntityId id)
         {
-            util::Optional<OxMaterial> rv = p->getMaterialById(id);
-            if (rv.isValid()) return sol::optional<OxMaterial>{static_cast<OxMaterial&>(rv)};
-            else return sol::optional<OxMaterial>{};
+            util::Optional<RaMaterial> rv = p->getMaterialById(id);
+            if (rv.isValid()) return sol::optional<RaMaterial>{static_cast<RaMaterial&>(rv)};
+            else return sol::optional<RaMaterial>{};
         },
 
         "getMaterialByName",
-            [](OxMaterialAssembly* p, std::string const& name)
+            [](RaMaterialAssembly* p, std::string const& name)
         {
-            util::Optional<OxMaterial> rv = p->getMaterialByName(name);
-            if (rv.isValid()) return sol::optional<OxMaterial>{static_cast<OxMaterial&>(rv)};
-            else return sol::optional<OxMaterial>{};
+            util::Optional<RaMaterial> rv = p->getMaterialByName(name);
+            if (rv.isValid()) return sol::optional<RaMaterial>{static_cast<RaMaterial&>(rv)};
+            else return sol::optional<RaMaterial>{};
         },
 
         "getMaterialByRayType",
-            [](OxMaterialAssembly* p, OxRayType ray_type)
+            [](RaMaterialAssembly* p, RaRayType ray_type)
         {
-            util::Optional<OxMaterial> rv = p->getMaterialByRayType(ray_type);
-            if (rv.isValid()) return sol::optional<OxMaterial>{static_cast<OxMaterial&>(rv)};
-            else return sol::optional<OxMaterial>{};
+            util::Optional<RaMaterial> rv = p->getMaterialByRayType(ray_type);
+            if (rv.isValid()) return sol::optional<RaMaterial>{static_cast<RaMaterial&>(rv)};
+            else return sol::optional<RaMaterial>{};
         },
 
-        "getMaterialCount", &OxMaterialAssembly::getMaterialCount,
-        "isValid", &OxMaterialAssembly::isValid
+        "getMaterialCount", &RaMaterialAssembly::getMaterialCount,
+        "isValid", &RaMaterialAssembly::isValid
     );
 }
 
 void luaRegisterGeometryTypes()
 {
-    lua_support::LuaState::registerSubType<OxGeometry>(
-        "OxGeometry",
+    lua_support::LuaState::registerSubType<RaGeometry>(
+        "RaGeometry",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxEntity>{}
+            lua_support::BaseClass<RaEntity>{}
         ),
 
         lua_support::ListOfConstructors::make_initializer(
-            lua_support::Constructor<OxProgram const&, OxProgram const&>{},
-            lua_support::Constructor<OxProgram const&, OxProgram const&, OxMaterialAssembly const&>{}
+            lua_support::Constructor<RaProgram const&, RaProgram const&>{},
+            lua_support::Constructor<RaProgram const&, RaProgram const&, RaMaterialAssembly const&>{}
         ),
 
         "getMaterialAssembly", 
-            [](OxGeometry* p)
+            [](RaGeometry* p)
         {
-            util::Optional<OxMaterialAssembly> rv = p->getMaterialAssembly();
-            if (rv.isValid()) return sol::optional<OxMaterialAssembly>{static_cast<OxMaterialAssembly&>(rv)};
-            else return sol::optional<OxMaterialAssembly>{};
+            util::Optional<RaMaterialAssembly> rv = p->getMaterialAssembly();
+            if (rv.isValid()) return sol::optional<RaMaterialAssembly>{static_cast<RaMaterialAssembly&>(rv)};
+            else return sol::optional<RaMaterialAssembly>{};
         },
 
-        "setMaterialAssembly", &OxGeometry::setMaterialAssembly,
-        "getAABBShader", &OxGeometry::getAABBShader,
-        "getIntersectionShader", &OxGeometry::getIntersectionShader,
-        "getPrimitiveCount", &OxGeometry::getPrimitiveCount,
-        "isValid", &OxGeometry::isValid
+        "setMaterialAssembly", &RaGeometry::setMaterialAssembly,
+        "getAABBShader", &RaGeometry::getAABBShader,
+        "getIntersectionShader", &RaGeometry::getIntersectionShader,
+        "getPrimitiveCount", &RaGeometry::getPrimitiveCount,
+        "isValid", &RaGeometry::isValid
     );
 
     lua_support::LuaState::registerEnum(
-        "OxBVHAlgorithm", 
-        "trbvh", OxBVHAlgorithm::trbvh,
-        "sbvh", OxBVHAlgorithm::sbvh,
-        "bvh", OxBVHAlgorithm::bvh,
-        "none", OxBVHAlgorithm::none
+        "RaBVHAlgorithm", 
+        "trbvh", RaBVHAlgorithm::trbvh,
+        "sbvh", RaBVHAlgorithm::sbvh,
+        "bvh", RaBVHAlgorithm::bvh,
+        "none", RaBVHAlgorithm::none
     );
 
-    lua_support::LuaState::registerType<OxTransformable>(
-        "OxTransformable",
+    lua_support::LuaState::registerType<RaTransformable>(
+        "RaTransformable",
         lua_support::NoConstructor::make_initializer(),
-        "applyTransform", &OxTransformable::applyTransform,
-        "getTransform", &OxTransformable::getTransform
+        "applyTransform", &RaTransformable::applyTransform,
+        "getTransform", &RaTransformable::getTransform
     );
 
-    lua_support::LuaState::registerSubType<OxGeometryGroup>(
-        "OxGeometryGroup",
+    lua_support::LuaState::registerSubType<RaGeometryGroup>(
+        "RaGeometryGroup",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxEntity>{},
-            lua_support::BaseClass<OxTransformable>{}
+            lua_support::BaseClass<RaEntity>{},
+            lua_support::BaseClass<RaTransformable>{}
         ),
 
         lua_support::ListOfFactories::make_initializer(
-            [](OxBVHAlgorithm acceleration_structure_construction_algorithm)
+            [](RaBVHAlgorithm acceleration_structure_construction_algorithm)
             {
                 return p_basic_factory_instance->createGeometryGroup(acceleration_structure_construction_algorithm);
             }
         ),
 
-        "getNumberOfGeometries", &OxGeometryGroup::getNumberOfGeometries,
+        "getNumberOfGeometries", &RaGeometryGroup::getNumberOfGeometries,
 
-        "beginConstruction", &OxGeometryGroup::beginConstruction,
-        "addGeometry", &OxGeometryGroup::addGeometry,
-        "endConstruction", &OxGeometryGroup::endConstruction,
+        "beginConstruction", &RaGeometryGroup::beginConstruction,
+        "addGeometry", &RaGeometryGroup::addGeometry,
+        "endConstruction", &RaGeometryGroup::endConstruction,
 
-        "geometries", &OxGeometryGroup::geometries,
+        "geometries", &RaGeometryGroup::geometries,
 
-        "isValid", &OxGeometryGroup::isValid
+        "isValid", &RaGeometryGroup::isValid
     );
 }
 
 void luaRegisterMissShaderTypes()
 {
-    lua_support::LuaState::registerSubType<OxMissShader>(
-        "OxMissShader",
+    lua_support::LuaState::registerSubType<RaMissShader>(
+        "RaMissShader",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxEntity>{}
+            lua_support::BaseClass<RaEntity>{}
         ),
 
         lua_support::ListOfFactories::make_initializer(
-            [](OxProgram const& miss_shader,
+            [](RaProgram const& miss_shader,
                 lua_support::LuaTable::table_type const& supported_ray_types)
             {
                 return p_basic_factory_instance->createMissShader(miss_shader, 
-                    lua_support::LuaTable::toStaticVector<OxRayTypeCollection::value_type, OxRayTypeCollection::capacity()>(supported_ray_types));
+                    lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
             },
 
-            [](OxProgram const& miss_shader)
+            [](RaProgram const& miss_shader)
             {
                 return p_basic_factory_instance->createMissShader(miss_shader);
             }
         ),
 
-        "getProgram", &OxMissShader::getProgram,
+        "getProgram", &RaMissShader::getProgram,
         
         "supportedRayTypes",
-        [](OxMissShader* p)
+        [](RaMissShader* p)
         {
             auto supported_ray_types = p->supportedRayTypes();
             return lua_support::LuaTable::staticVectorToTable(supported_ray_types);
         },
 
-        "supportsRayType", &OxMissShader::supportsRayType,
+        "supportsRayType", &RaMissShader::supportsRayType,
 
-        "isValid", &OxMissShader::isValid
+        "isValid", &RaMissShader::isValid
     );
 
-    lua_support::LuaState::registerSubType<OxMissShaderAssembly>(
-        "OxMissShaderAssembly",
+    lua_support::LuaState::registerSubType<RaMissShaderAssembly>(
+        "RaMissShaderAssembly",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxEntity>{}
+            lua_support::BaseClass<RaEntity>{}
         ),
 
         lua_support::ListOfFactories::make_initializer(
             [](lua_support::LuaTable::table_type const& table)
             {
                 return p_basic_factory_instance->createMissShaderAssembly(
-                    lua_support::LuaTable::toVector<OxMissShader>(table)
+                    lua_support::LuaTable::toVector<RaMissShader>(table)
                 );
             }
         ),
 
         "getMissShaderById",
-            [](OxMissShaderAssembly* p, OxEntityId const& id)
+            [](RaMissShaderAssembly* p, RaEntityId const& id)
         {
-            util::Optional<OxMissShader> rv = p->getMissShaderById(id);
-            if (rv.isValid()) return sol::optional<OxMissShader>{static_cast<OxMissShader&>(rv)};
-            else return sol::optional<OxMissShader>{};
+            util::Optional<RaMissShader> rv = p->getMissShaderById(id);
+            if (rv.isValid()) return sol::optional<RaMissShader>{static_cast<RaMissShader&>(rv)};
+            else return sol::optional<RaMissShader>{};
         },
 
         "getMissShaderByName",
-            [](OxMissShaderAssembly* p, std::string const& name)
+            [](RaMissShaderAssembly* p, std::string const& name)
         {
-            util::Optional<OxMissShader> rv = p->getMissShaderByName(name);
-            if (rv.isValid()) return sol::optional<OxMissShader>{static_cast<OxMissShader&>(rv)};
-            else return sol::optional<OxMissShader>{};
+            util::Optional<RaMissShader> rv = p->getMissShaderByName(name);
+            if (rv.isValid()) return sol::optional<RaMissShader>{static_cast<RaMissShader&>(rv)};
+            else return sol::optional<RaMissShader>{};
         },
 
         "getMissShaderByRayType",
-            [](OxMissShaderAssembly* p, OxRayType ray_type)
+            [](RaMissShaderAssembly* p, RaRayType ray_type)
         {
-            util::Optional<OxMissShader> rv = p->getMissShaderByRayType(ray_type);
-            if (rv.isValid()) return sol::optional<OxMissShader>{static_cast<OxMissShader&>(rv)};
-            else return sol::optional<OxMissShader>{};
+            util::Optional<RaMissShader> rv = p->getMissShaderByRayType(ray_type);
+            if (rv.isValid()) return sol::optional<RaMissShader>{static_cast<RaMissShader&>(rv)};
+            else return sol::optional<RaMissShader>{};
         },
 
-        "isValid", &OxMissShaderAssembly::isValid
+        "isValid", &RaMissShaderAssembly::isValid
     );
    
 }
 
 void luaRegisterRayGeneratorTypes()
 {
-    lua_support::LuaState::registerSubType<OxRayGeneratorWithOutputBuffer>(
-        "OxRayGenerator",
+    lua_support::LuaState::registerSubType<RaRayGeneratorWithOutputBuffer>(
+        "RaRayGenerator",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxEntity>{}
+            lua_support::BaseClass<RaEntity>{}
         ),
 
         lua_support::ListOfConstructors::make_initializer(
-            lua_support::Constructor<OxProgram const&, OxAbstractBuffer const&,
+            lua_support::Constructor<RaProgram const&, RaAbstractBuffer const&,
                 std::string const&, uint32_t, uint32_t, uint32_t, uint32_t>{},
-            lua_support::Constructor<OxProgram const&, OxAbstractBuffer const&,
+            lua_support::Constructor<RaProgram const&, RaAbstractBuffer const&,
             std::string const&, uint32_t, uint32_t, uint32_t>{},
-            lua_support::Constructor<OxProgram const&, OxAbstractBuffer const&,
+            lua_support::Constructor<RaProgram const&, RaAbstractBuffer const&,
             std::string const&, uint32_t, uint32_t>{},
-            lua_support::Constructor<OxProgram const&, OxAbstractBuffer const&,
+            lua_support::Constructor<RaProgram const&, RaAbstractBuffer const&,
             std::string const&, uint32_t>{},
 
-            lua_support::Constructor<OxProgram const&, 
-                OxMissShaderAssembly const&, OxAbstractBuffer const&,
+            lua_support::Constructor<RaProgram const&, 
+                RaMissShaderAssembly const&, RaAbstractBuffer const&,
             std::string const&, uint32_t, uint32_t, uint32_t, uint32_t>{},
-            lua_support::Constructor<OxProgram const&,
-            OxMissShaderAssembly const&, OxAbstractBuffer const&,
+            lua_support::Constructor<RaProgram const&,
+            RaMissShaderAssembly const&, RaAbstractBuffer const&,
             std::string const&, uint32_t, uint32_t, uint32_t>{},
-            lua_support::Constructor<OxProgram const&,
-            OxMissShaderAssembly const&, OxAbstractBuffer const&,
+            lua_support::Constructor<RaProgram const&,
+            RaMissShaderAssembly const&, RaAbstractBuffer const&,
             std::string const&, uint32_t, uint32_t>{},
-            lua_support::Constructor<OxProgram const&,
-            OxMissShaderAssembly const&, OxAbstractBuffer const&,
+            lua_support::Constructor<RaProgram const&,
+            RaMissShaderAssembly const&, RaAbstractBuffer const&,
             std::string const&, uint32_t>{}
         ),
 
-        "getRayGenerationShader", &OxRayGenerator::getRayGenerationShader,
+        "getRayGenerationShader", &RaRayGenerator::getRayGenerationShader,
         "getMissShaderAssembly", 
-            [](OxRayGeneratorWithOutputBuffer* p)
+            [](RaRayGeneratorWithOutputBuffer* p)
             {
-                util::Optional<OxMissShaderAssembly> rv = p->getMissShaderAssembly();
-                if (rv.isValid()) return sol::optional<OxMissShaderAssembly>{static_cast<OxMissShaderAssembly&>(rv)};
-                else return sol::optional<OxMissShaderAssembly>{};
+                util::Optional<RaMissShaderAssembly> rv = p->getMissShaderAssembly();
+                if (rv.isValid()) return sol::optional<RaMissShaderAssembly>{static_cast<RaMissShaderAssembly&>(rv)};
+                else return sol::optional<RaMissShaderAssembly>{};
             },
-        "setMissShaderAssembly", &OxRayGenerator::setMissShaderAssembly,
-        "isValid", &OxRayGenerator::isValid,
-        "getGeneratorDimensions", &OxRayGenerator::getGeneratorDimensions,
-        "numberOfRays", &OxRayGenerator::numberOfRays,
-        "outputBuffer", &OxRayGeneratorWithOutputBuffer::outputBuffer
+        "setMissShaderAssembly", &RaRayGenerator::setMissShaderAssembly,
+        "isValid", &RaRayGenerator::isValid,
+        "getGeneratorDimensions", &RaRayGenerator::getGeneratorDimensions,
+        "numberOfRays", &RaRayGenerator::numberOfRays,
+        "outputBuffer", &RaRayGeneratorWithOutputBuffer::outputBuffer
     );
 }
 
 void luaRegisterSceneTypes()
 {
-    lua_support::LuaState::registerSubType<OxSceneSection>(
-        "OxSceneSection",
+    lua_support::LuaState::registerSubType<RaSceneSection>(
+        "RaSceneSection",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxEntity>{},
-            lua_support::BaseClass<OxTransformable>{}
+            lua_support::BaseClass<RaEntity>{},
+            lua_support::BaseClass<RaTransformable>{}
         ),
 
         lua_support::ListOfFactories::make_initializer(
-            [](OxBVHAlgorithm bvh_algorithm)
+            [](RaBVHAlgorithm bvh_algorithm)
             {
                 return p_basic_factory_instance->createSceneSection(bvh_algorithm); 
             }
         ),
 
-        "beginConstruction", &OxSceneSection::beginConstruction,
-        "addGeometryGroup", &OxSceneSection::addGeometryGroup,
-        "addSceneSection", &OxSceneSection::addSceneSection,
-        "endConstruction", &OxSceneSection::endConstruction,
+        "beginConstruction", &RaSceneSection::beginConstruction,
+        "addGeometryGroup", &RaSceneSection::addGeometryGroup,
+        "addSceneSection", &RaSceneSection::addSceneSection,
+        "endConstruction", &RaSceneSection::endConstruction,
 
-        "sceneSections", &OxSceneSection::sceneSections,
-        "geometryGroups", &OxSceneSection::geometryGroups,
+        "sceneSections", &RaSceneSection::sceneSections,
+        "geometryGroups", &RaSceneSection::geometryGroups,
 
-        "isValid", &OxSceneSection::isValid,
-        "trace", &OxSceneSection::trace
+        "isValid", &RaSceneSection::isValid,
+        "trace", &RaSceneSection::trace
     );
 
-    lua_support::LuaState::registerSubType<OxScene>(
-        "OxScene",
+    lua_support::LuaState::registerSubType<RaScene>(
+        "RaScene",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxEntity>{}
+            lua_support::BaseClass<RaEntity>{}
         ),
 
         lua_support::ListOfConstructors::make_initializer(
             lua_support::Constructor<void>{}
         ),
 
-        "addSceneSection", &OxScene::addSceneSection,
-        "isValid", &OxScene::isValid,
-        "trace", &OxScene::trace
+        "addSceneSection", &RaScene::addSceneSection,
+        "isValid", &RaScene::isValid,
+        "trace", &RaScene::trace
     );
 }
 
 }
 
-OxBasicFactory* ra::OxBasicFactory::initialize(OxContext const& context)
+RaBasicFactory* ra::RaBasicFactory::initialize(RaContext const& context)
 {
     if (!p_basic_factory_instance)
-        p_basic_factory_instance = new OxBasicFactory{ context };
+        p_basic_factory_instance = new RaBasicFactory{ context };
 
     return p_basic_factory_instance;
 }
 
-void OxBasicFactory::shutdown()
+void RaBasicFactory::shutdown()
 {
     if (p_basic_factory_instance)
     {
@@ -1154,274 +1154,274 @@ void OxBasicFactory::shutdown()
     }
 }
 
-OxBasicFactory* OxBasicFactory::retrieve()
+RaBasicFactory* RaBasicFactory::retrieve()
 {
     return p_basic_factory_instance;
 }
 
-bool OxBasicFactory::isValid() const
+bool RaBasicFactory::isValid() const
 {
     return true;
 }
 
-OxContext const& OxBasicFactory::context() const
+RaContext const& RaBasicFactory::context() const
 {
     return m_context;
 }
 
-OxProgram OxBasicFactory::createProgram(std::string const& source, OxProgram::Source source_type, std::string const& program_name) const
+RaProgram RaBasicFactory::createProgram(std::string const& source, RaProgram::Source source_type, std::string const& program_name) const
 {
     return m_context.createProgram(source, source_type, program_name);
 }
 
-OxAbstractBuffer OxBasicFactory::createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width) const
+RaAbstractBuffer RaBasicFactory::createBuffer(RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width) const
 {
     switch (buffer_format)
     {
-    case OxBasicBufferFormat::FLOAT:
+    case RaBasicBufferFormat::FLOAT:
         return m_context.createBuffer<float>(buffer_kind, width);
-    case OxBasicBufferFormat::FLOAT2:
+    case RaBasicBufferFormat::FLOAT2:
         return m_context.createBuffer<float2>(buffer_kind, width);
-    case OxBasicBufferFormat::FLOAT3:
+    case RaBasicBufferFormat::FLOAT3:
         return m_context.createBuffer<float3>(buffer_kind, width);
-    case OxBasicBufferFormat::FLOAT4:
+    case RaBasicBufferFormat::FLOAT4:
         return m_context.createBuffer<float4>(buffer_kind, width);
-    case OxBasicBufferFormat::INT:
+    case RaBasicBufferFormat::INT:
         return m_context.createBuffer<int>(buffer_kind, width);
-    case OxBasicBufferFormat::INT2:
+    case RaBasicBufferFormat::INT2:
         return m_context.createBuffer<int2>(buffer_kind, width);
-    case OxBasicBufferFormat::INT3:
+    case RaBasicBufferFormat::INT3:
         return m_context.createBuffer<int3>(buffer_kind, width);
-    case OxBasicBufferFormat::INT4:
+    case RaBasicBufferFormat::INT4:
         return m_context.createBuffer<int4>(buffer_kind, width);
-    case OxBasicBufferFormat::UINT:
+    case RaBasicBufferFormat::UINT:
         return m_context.createBuffer<unsigned int>(buffer_kind, width);
-    case OxBasicBufferFormat::UINT2:
+    case RaBasicBufferFormat::UINT2:
         return m_context.createBuffer<uint2>(buffer_kind, width);
-    case OxBasicBufferFormat::UINT3:
+    case RaBasicBufferFormat::UINT3:
         return m_context.createBuffer<uint3>(buffer_kind, width);
-    case OxBasicBufferFormat::UINT4:
+    case RaBasicBufferFormat::UINT4:
         return m_context.createBuffer<uint4>(buffer_kind, width);
-    case OxBasicBufferFormat::CHAR:
+    case RaBasicBufferFormat::CHAR:
         return m_context.createBuffer<char>(buffer_kind, width);
-    case OxBasicBufferFormat::CHAR2:
+    case RaBasicBufferFormat::CHAR2:
         return m_context.createBuffer<char2>(buffer_kind, width);
-    case OxBasicBufferFormat::CHAR3:
+    case RaBasicBufferFormat::CHAR3:
         return m_context.createBuffer<char3>(buffer_kind, width);
-    case OxBasicBufferFormat::CHAR4:
+    case RaBasicBufferFormat::CHAR4:
         return m_context.createBuffer<char3>(buffer_kind, width);
-    case OxBasicBufferFormat::UCHAR:
+    case RaBasicBufferFormat::UCHAR:
         return m_context.createBuffer<unsigned char>(buffer_kind, width);
-    case OxBasicBufferFormat::UCHAR2:
+    case RaBasicBufferFormat::UCHAR2:
         return m_context.createBuffer<uchar2>(buffer_kind, width);
-    case OxBasicBufferFormat::UCHAR3:
+    case RaBasicBufferFormat::UCHAR3:
         return m_context.createBuffer<uchar3>(buffer_kind, width);
-    case OxBasicBufferFormat::UCHAR4:
+    case RaBasicBufferFormat::UCHAR4:
         return m_context.createBuffer<uchar4>(buffer_kind, width);
-    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD:
-        return m_context.createBuffer<OxRayRadiancePayload>(buffer_kind, width);
-    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
-        return m_context.createBuffer<OxRayRadiancePayloadSimple>(buffer_kind, width);
-    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
-        return m_context.createBuffer<OxRayRadiancePayloadMonochromatic>(buffer_kind, width);
-    case OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
-        return m_context.createBuffer<OxRayOcclusionPayload>(buffer_kind, width);
+    case RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD:
+        return m_context.createBuffer<RaRayRadiancePayload>(buffer_kind, width);
+    case RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
+        return m_context.createBuffer<RaRayRadiancePayloadSimple>(buffer_kind, width);
+    case RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
+        return m_context.createBuffer<RaRayRadiancePayloadMonochromatic>(buffer_kind, width);
+    case RaBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
+        return m_context.createBuffer<RaRayOcclusionPayload>(buffer_kind, width);
     default:
         THROW_OX_WRAPPER_ERROR("Unknown buffer format");
     }
 }
 
-OxAbstractBuffer OxBasicFactory::createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height) const
+RaAbstractBuffer RaBasicFactory::createBuffer(RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width, size_t height) const
 {
     switch (buffer_format)
     {
-    case OxBasicBufferFormat::FLOAT:
+    case RaBasicBufferFormat::FLOAT:
         return m_context.createBuffer<float>(buffer_kind, width, height);
-    case OxBasicBufferFormat::FLOAT2:
+    case RaBasicBufferFormat::FLOAT2:
         return m_context.createBuffer<float2>(buffer_kind, width, height);
-    case OxBasicBufferFormat::FLOAT3:
+    case RaBasicBufferFormat::FLOAT3:
         return m_context.createBuffer<float3>(buffer_kind, width, height);
-    case OxBasicBufferFormat::FLOAT4:
+    case RaBasicBufferFormat::FLOAT4:
         return m_context.createBuffer<float4>(buffer_kind, width, height);
-    case OxBasicBufferFormat::INT:
+    case RaBasicBufferFormat::INT:
         return m_context.createBuffer<int>(buffer_kind, width, height);
-    case OxBasicBufferFormat::INT2:
+    case RaBasicBufferFormat::INT2:
         return m_context.createBuffer<int2>(buffer_kind, width, height);
-    case OxBasicBufferFormat::INT3:
+    case RaBasicBufferFormat::INT3:
         return m_context.createBuffer<int3>(buffer_kind, width, height);
-    case OxBasicBufferFormat::INT4:
+    case RaBasicBufferFormat::INT4:
         return m_context.createBuffer<int4>(buffer_kind, width, height);
-    case OxBasicBufferFormat::UINT:
+    case RaBasicBufferFormat::UINT:
         return m_context.createBuffer<unsigned int>(buffer_kind, width, height);
-    case OxBasicBufferFormat::UINT2:
+    case RaBasicBufferFormat::UINT2:
         return m_context.createBuffer<uint2>(buffer_kind, width, height);
-    case OxBasicBufferFormat::UINT3:
+    case RaBasicBufferFormat::UINT3:
         return m_context.createBuffer<uint3>(buffer_kind, width, height);
-    case OxBasicBufferFormat::UINT4:
+    case RaBasicBufferFormat::UINT4:
         return m_context.createBuffer<uint4>(buffer_kind, width, height);
-    case OxBasicBufferFormat::CHAR:
+    case RaBasicBufferFormat::CHAR:
         return m_context.createBuffer<char>(buffer_kind, width, height);
-    case OxBasicBufferFormat::CHAR2:
+    case RaBasicBufferFormat::CHAR2:
         return m_context.createBuffer<char2>(buffer_kind, width, height);
-    case OxBasicBufferFormat::CHAR3:
+    case RaBasicBufferFormat::CHAR3:
         return m_context.createBuffer<char3>(buffer_kind, width, height);
-    case OxBasicBufferFormat::CHAR4:
+    case RaBasicBufferFormat::CHAR4:
         return m_context.createBuffer<char3>(buffer_kind, width, height);
-    case OxBasicBufferFormat::UCHAR:
+    case RaBasicBufferFormat::UCHAR:
         return m_context.createBuffer<unsigned char>(buffer_kind, width, height);
-    case OxBasicBufferFormat::UCHAR2:
+    case RaBasicBufferFormat::UCHAR2:
         return m_context.createBuffer<uchar2>(buffer_kind, width, height);
-    case OxBasicBufferFormat::UCHAR3:
+    case RaBasicBufferFormat::UCHAR3:
         return m_context.createBuffer<uchar3>(buffer_kind, width, height);
-    case OxBasicBufferFormat::UCHAR4:
+    case RaBasicBufferFormat::UCHAR4:
         return m_context.createBuffer<uchar4>(buffer_kind, width, height);
-    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD:
-        return m_context.createBuffer<OxRayRadiancePayload>(buffer_kind, width, height);
-    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
-        return m_context.createBuffer<OxRayRadiancePayloadSimple>(buffer_kind, width, height);
-    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
-        return m_context.createBuffer<OxRayRadiancePayloadMonochromatic>(buffer_kind, width, height);
-    case OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
-        return m_context.createBuffer<OxRayOcclusionPayload>(buffer_kind, width, height);
+    case RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD:
+        return m_context.createBuffer<RaRayRadiancePayload>(buffer_kind, width, height);
+    case RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
+        return m_context.createBuffer<RaRayRadiancePayloadSimple>(buffer_kind, width, height);
+    case RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
+        return m_context.createBuffer<RaRayRadiancePayloadMonochromatic>(buffer_kind, width, height);
+    case RaBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
+        return m_context.createBuffer<RaRayOcclusionPayload>(buffer_kind, width, height);
     default:
         THROW_OX_WRAPPER_ERROR("Unknown buffer format");
     }
 }
 
-OxAbstractBuffer OxBasicFactory::createBuffer(OxBasicBufferFormat buffer_format, OxBufferKind buffer_kind, size_t width, size_t height, size_t depth) const
+RaAbstractBuffer RaBasicFactory::createBuffer(RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width, size_t height, size_t depth) const
 {
     switch (buffer_format)
     {
-    case OxBasicBufferFormat::FLOAT:
+    case RaBasicBufferFormat::FLOAT:
         return m_context.createBuffer<float>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::FLOAT2:
+    case RaBasicBufferFormat::FLOAT2:
         return m_context.createBuffer<float2>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::FLOAT3:
+    case RaBasicBufferFormat::FLOAT3:
         return m_context.createBuffer<float3>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::FLOAT4:
+    case RaBasicBufferFormat::FLOAT4:
         return m_context.createBuffer<float4>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::INT:
+    case RaBasicBufferFormat::INT:
         return m_context.createBuffer<int>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::INT2:
+    case RaBasicBufferFormat::INT2:
         return m_context.createBuffer<int2>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::INT3:
+    case RaBasicBufferFormat::INT3:
         return m_context.createBuffer<int3>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::INT4:
+    case RaBasicBufferFormat::INT4:
         return m_context.createBuffer<int4>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::UINT:
+    case RaBasicBufferFormat::UINT:
         return m_context.createBuffer<unsigned int>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::UINT2:
+    case RaBasicBufferFormat::UINT2:
         return m_context.createBuffer<uint2>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::UINT3:
+    case RaBasicBufferFormat::UINT3:
         return m_context.createBuffer<uint3>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::UINT4:
+    case RaBasicBufferFormat::UINT4:
         return m_context.createBuffer<uint4>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::CHAR:
+    case RaBasicBufferFormat::CHAR:
         return m_context.createBuffer<char>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::CHAR2:
+    case RaBasicBufferFormat::CHAR2:
         return m_context.createBuffer<char2>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::CHAR3:
+    case RaBasicBufferFormat::CHAR3:
         return m_context.createBuffer<char3>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::CHAR4:
+    case RaBasicBufferFormat::CHAR4:
         return m_context.createBuffer<char3>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::UCHAR:
+    case RaBasicBufferFormat::UCHAR:
         return m_context.createBuffer<unsigned char>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::UCHAR2:
+    case RaBasicBufferFormat::UCHAR2:
         return m_context.createBuffer<uchar2>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::UCHAR3:
+    case RaBasicBufferFormat::UCHAR3:
         return m_context.createBuffer<uchar3>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::UCHAR4:
+    case RaBasicBufferFormat::UCHAR4:
         return m_context.createBuffer<uchar4>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD:
-        return m_context.createBuffer<OxRayRadiancePayload>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
-        return m_context.createBuffer<OxRayRadiancePayloadSimple>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
-        return m_context.createBuffer<OxRayRadiancePayloadMonochromatic>(buffer_kind, width, height, depth);
-    case OxBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
-        return m_context.createBuffer<OxRayOcclusionPayload>(buffer_kind, width, height, depth);
+    case RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD:
+        return m_context.createBuffer<RaRayRadiancePayload>(buffer_kind, width, height, depth);
+    case RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD_SIMPLE:
+        return m_context.createBuffer<RaRayRadiancePayloadSimple>(buffer_kind, width, height, depth);
+    case RaBasicBufferFormat::RAY_RADIANCE_PAYLOAD_MONOCHROMATIC:
+        return m_context.createBuffer<RaRayRadiancePayloadMonochromatic>(buffer_kind, width, height, depth);
+    case RaBasicBufferFormat::RAY_OCCLUSION_PAYLOAD:
+        return m_context.createBuffer<RaRayOcclusionPayload>(buffer_kind, width, height, depth);
     default:
         THROW_OX_WRAPPER_ERROR("Unknown buffer format");
     }
 }
 
-OxMaterial OxBasicFactory::createMaterial(
-    util::Optional<OxProgram> const& closest_hit_shader, 
-    util::Optional<OxProgram> const& any_hit_shader, 
-    OxRayTypeCollection const& supported_ray_types) const
+RaMaterial RaBasicFactory::createMaterial(
+    util::Optional<RaProgram> const& closest_hit_shader, 
+    util::Optional<RaProgram> const& any_hit_shader, 
+    RaRayTypeCollection const& supported_ray_types) const
 {
-    return OxMaterial{ closest_hit_shader, any_hit_shader, supported_ray_types };
+    return RaMaterial{ closest_hit_shader, any_hit_shader, supported_ray_types };
 }
 
-OxMaterialAssembly OxBasicFactory::createMaterialAssembly(std::vector<OxMaterial> const& materials) const
+RaMaterialAssembly RaBasicFactory::createMaterialAssembly(std::vector<RaMaterial> const& materials) const
 {
-    return OxMaterialAssembly{ materials };
+    return RaMaterialAssembly{ materials };
 }
 
-OxMaterialAssembly OxBasicFactory::createDummyMaterialAssembly() const
+RaMaterialAssembly RaBasicFactory::createDummyMaterialAssembly() const
 {
-    return OxMaterialAssembly{ m_context };
+    return RaMaterialAssembly{ m_context };
 }
 
-OxGeometry OxBasicFactory::createGeometry(OxProgram const& intersection_shader, OxProgram const& aabb_shader) const
+RaGeometry RaBasicFactory::createGeometry(RaProgram const& intersection_shader, RaProgram const& aabb_shader) const
 {
-    return OxGeometry{ intersection_shader, aabb_shader };
+    return RaGeometry{ intersection_shader, aabb_shader };
 }
 
-OxGeometry OxBasicFactory::createGeometry(OxProgram const& intersection_shader, 
-    OxProgram const& aabb_shader, OxMaterialAssembly const& material_assembly) const
+RaGeometry RaBasicFactory::createGeometry(RaProgram const& intersection_shader, 
+    RaProgram const& aabb_shader, RaMaterialAssembly const& material_assembly) const
 {
-    return OxGeometry{ intersection_shader, aabb_shader, material_assembly };
+    return RaGeometry{ intersection_shader, aabb_shader, material_assembly };
 }
 
-OxGeometryGroup OxBasicFactory::createGeometryGroup(OxBVHAlgorithm acceleration_structure_construction_algorithm) const
+RaGeometryGroup RaBasicFactory::createGeometryGroup(RaBVHAlgorithm acceleration_structure_construction_algorithm) const
 {
-    return OxGeometryGroup{ m_context, acceleration_structure_construction_algorithm };
+    return RaGeometryGroup{ m_context, acceleration_structure_construction_algorithm };
 }
 
-OxMissShader OxBasicFactory::createMissShader(OxProgram const& miss_shader, 
-    OxRayTypeCollection const& supported_ray_types/* = OxRayTypeCollection{ OxRayType::unknown }*/) const
+RaMissShader RaBasicFactory::createMissShader(RaProgram const& miss_shader, 
+    RaRayTypeCollection const& supported_ray_types/* = RaRayTypeCollection{ RaRayType::unknown }*/) const
 {
-    return OxMissShader{ miss_shader, supported_ray_types };
+    return RaMissShader{ miss_shader, supported_ray_types };
 }
 
-OxMissShaderAssembly OxBasicFactory::createMissShaderAssembly(std::vector<OxMissShader> const& miss_shaders) const
+RaMissShaderAssembly RaBasicFactory::createMissShaderAssembly(std::vector<RaMissShader> const& miss_shaders) const
 {
-    return OxMissShaderAssembly{ miss_shaders };
+    return RaMissShaderAssembly{ miss_shaders };
 }
 
-OxRayGeneratorWithOutputBuffer OxBasicFactory::createRayGenerator(OxProgram const& ray_generation_shader, 
-    OxAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name, 
+RaRayGeneratorWithOutputBuffer RaBasicFactory::createRayGenerator(RaProgram const& ray_generation_shader, 
+    RaAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name, 
     uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z, uint32_t entry_point_index) const
 {
-    return OxRayGeneratorWithOutputBuffer{ ray_generation_shader, output_buffer, output_buffer_binding_name,
+    return RaRayGeneratorWithOutputBuffer{ ray_generation_shader, output_buffer, output_buffer_binding_name,
     num_rays_x, num_rays_y, num_rays_z, entry_point_index };
 }
 
-OxRayGeneratorWithOutputBuffer OxBasicFactory::createRayGenerator(OxProgram const& ray_generation_shader, 
-    OxMissShaderAssembly const& miss_shader_assembly, OxAbstractBuffer const& output_buffer, 
+RaRayGeneratorWithOutputBuffer RaBasicFactory::createRayGenerator(RaProgram const& ray_generation_shader, 
+    RaMissShaderAssembly const& miss_shader_assembly, RaAbstractBuffer const& output_buffer, 
     std::string const& output_buffer_binding_name, 
     uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z,
     uint32_t entry_point_index) const
 {
-    return OxRayGeneratorWithOutputBuffer{ ray_generation_shader, miss_shader_assembly, output_buffer,
+    return RaRayGeneratorWithOutputBuffer{ ray_generation_shader, miss_shader_assembly, output_buffer,
     output_buffer_binding_name, num_rays_x, num_rays_y, num_rays_z, entry_point_index };
 }
 
-OxSceneSection OxBasicFactory::createSceneSection(OxBVHAlgorithm acceleration_structure_construction_algorithm) const
+RaSceneSection RaBasicFactory::createSceneSection(RaBVHAlgorithm acceleration_structure_construction_algorithm) const
 {
-    return OxSceneSection{ m_context, acceleration_structure_construction_algorithm };
+    return RaSceneSection{ m_context, acceleration_structure_construction_algorithm };
 }
 
-OxScene OxBasicFactory::createScene() const
+RaScene RaBasicFactory::createScene() const
 {
-    return OxScene{};
+    return RaScene{};
 }
 
-OxBasicFactory::OxBasicFactory(OxContext const& context):
+RaBasicFactory::RaBasicFactory(RaContext const& context):
     m_context{ context }
 {
-    setStringName("OxBasicFactory");
+    setStringName("RaBasicFactory");
 
     // Register factory functions in Lua
     {

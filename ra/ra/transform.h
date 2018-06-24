@@ -13,15 +13,15 @@
 
 namespace ra {
 
-template<typename T> class OxTransformAttorney;
+template<typename T> class RaTransformAttorney;
 
-class OxTransform : public OxContractWithOxContext, public OxEntity
+class RaTransform : public RaContractWithRaContext, public RaEntity
 {
-    friend class OxTransformAttorney<OxTransformable>;
+    friend class RaTransformAttorney<RaTransformable>;
 
 public:
-    OxTransform(OxContext const& optix_context);
-    OxTransform(OxContext const& optix_context, util::mat4x4 const& transform);
+    RaTransform(RaContext const& optix_context);
+    RaTransform(RaContext const& optix_context, util::mat4x4 const& transform);
 
     void setMatrix(util::mat4x4 const& transformation_matrix);
     util::mat4x4 getMatrix() const;
@@ -30,9 +30,9 @@ public:
      More precisely, if this transform is A and transform described by the transformation matrix is B, then
      after this operation this transform is given by A*B
     */
-    OxTransform& operator*(util::mat4x4 const& transformation_matrix);
+    RaTransform& operator*(util::mat4x4 const& transformation_matrix);
 
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
 private:
@@ -40,16 +40,16 @@ private:
 };
 
 template<>
-class OxTransformAttorney<OxTransformable>
+class RaTransformAttorney<RaTransformable>
 {
-    friend class OxTransformable;
+    friend class RaTransformable;
 
-    static RTtransform getNativeOptiXTransformHandle(OxTransform const& parent_transform)
+    static RTtransform getNativeOptiXTransformHandle(RaTransform const& parent_transform)
     {
         return parent_transform.m_native_transform.get();
     }
 
-    static void setTransformedObject(OxTransform const& parent_transform, RTobject transformed_object)
+    static void setTransformedObject(RaTransform const& parent_transform, RTobject transformed_object)
     {
         THROW_OPTIX_ERROR(parent_transform.nativeOptiXContextHandle(),
             rtTransformSetChild(parent_transform.m_native_transform.get(), transformed_object));

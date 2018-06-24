@@ -3,7 +3,7 @@
 
 using namespace ra;
 
-OxException::OxException():
+RaException::RaException():
     std::exception{ "Unknown OptiX wrapper exception" }
 {
     /*util::Log const* p_log;
@@ -11,7 +11,7 @@ OxException::OxException():
         p_log->out(what(), util::LogMessageType::error);*/
 }
 
-OxException::OxException(char const* description):
+RaException::RaException(char const* description):
     std::exception{ description },
     m_line{ -1 },
     m_function_name{ "unknown" },
@@ -24,7 +24,7 @@ OxException::OxException(char const* description):
     }*/
 }
 
-OxException::OxException(char const* description, std::string const& file_name, std::string const& function_name, long line):
+RaException::RaException(char const* description, std::string const& file_name, std::string const& function_name, long line):
     std::exception{ description },
     m_line{ line },
     m_function_name{ function_name },
@@ -38,27 +38,27 @@ OxException::OxException(char const* description, std::string const& file_name, 
     }*/
 }
 
-OxException::OxException(std::string const& description):
-    OxException{ description.c_str() }
+RaException::RaException(std::string const& description):
+    RaException{ description.c_str() }
 {
 }
 
-OxException::OxException(std::string const& description, std::string const& file_name, std::string const& function_name, long line):
-    OxException{ description.c_str(), file_name, function_name, line }
+RaException::RaException(std::string const& description, std::string const& file_name, std::string const& function_name, long line):
+    RaException{ description.c_str(), file_name, function_name, line }
 {
 }
 
-long OxException::line() const
+long RaException::line() const
 {
     return m_line;
 }
 
-std::string OxException::function() const
+std::string RaException::function() const
 {
     return m_function_name;
 }
 
-std::string OxException::file() const
+std::string RaException::file() const
 {
     return m_file_name;
 }

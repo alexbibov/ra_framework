@@ -10,19 +10,19 @@ using namespace ra;
 
 namespace {
 
-static OxRenderingPassesFactory* p_factory_instance{ nullptr };
+static RaRenderingPassesFactory* p_factory_instance{ nullptr };
 
 }
 
-OxRenderingPassesFactory* OxRenderingPassesFactory::initialize(OxContext const& context)
+RaRenderingPassesFactory* RaRenderingPassesFactory::initialize(RaContext const& context)
 {
     if (!p_factory_instance)
-        p_factory_instance = new OxRenderingPassesFactory{ context };
+        p_factory_instance = new RaRenderingPassesFactory{ context };
 
     return p_factory_instance;
 }
 
-void OxRenderingPassesFactory::shutdown()
+void RaRenderingPassesFactory::shutdown()
 {
     if (p_factory_instance)
     {
@@ -31,75 +31,75 @@ void OxRenderingPassesFactory::shutdown()
     }
 }
 
-OxRenderingPassesFactory* OxRenderingPassesFactory::retrieve()
+RaRenderingPassesFactory* RaRenderingPassesFactory::retrieve()
 {
     return p_factory_instance;
 }
 
-bool OxRenderingPassesFactory::isValid() const
+bool RaRenderingPassesFactory::isValid() const
 {
     return static_cast<bool>(p_factory_instance);
 }
 
-OxScatteringRenderingPass OxRenderingPassesFactory::createScatteringRenderingPass(
-    OxSceneSection const& target_scene_section, 
-    OxRayGenerator const& ray_caster,
+RaScatteringRenderingPass RaRenderingPassesFactory::createScatteringRenderingPass(
+    RaSceneSection const& target_scene_section, 
+    RaRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported,
     uint32_t max_recursion_depth, 
     float ray_marching_step_size, 
     uint32_t num_scattering_integral_importance_directions, 
-    OxProgram const& absorption_probability_shader, 
-    OxProgram const& scattering_probability_shader, 
-    OxProgram const& scattering_phase_function_shader)
+    RaProgram const& absorption_probability_shader, 
+    RaProgram const& scattering_probability_shader, 
+    RaProgram const& scattering_phase_function_shader)
 {
-    return OxScatteringRenderingPass{ target_scene_section, ray_caster, num_spectra_pairs_supported,
+    return RaScatteringRenderingPass{ target_scene_section, ray_caster, num_spectra_pairs_supported,
     max_recursion_depth, ray_marching_step_size, num_scattering_integral_importance_directions,
     absorption_probability_shader, scattering_probability_shader, scattering_phase_function_shader };
 }
 
-OxScatteringRenderingPass OxRenderingPassesFactory::createScatteringRenderingPass(
-    OxSceneSection const& target_scene_section, 
-    OxRayGenerator const& ray_caster,
+RaScatteringRenderingPass RaRenderingPassesFactory::createScatteringRenderingPass(
+    RaSceneSection const& target_scene_section, 
+    RaRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported, 
     uint32_t max_recursion_depth, 
     float ray_marching_step_size, 
     uint32_t num_scattering_integral_importance_directions)
 {
-    return OxScatteringRenderingPass{ target_scene_section, ray_caster, num_spectra_pairs_supported,
+    return RaScatteringRenderingPass{ target_scene_section, ray_caster, num_spectra_pairs_supported,
         max_recursion_depth, ray_marching_step_size, num_scattering_integral_importance_directions };
 }
 
-OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
+RaRenderingPassesFactory::RaRenderingPassesFactory(RaContext const& context):
     m_context{ context }
 {
-    lua_support::LuaState::registerType<OxRenderingPass>(
-        "OxRenderingPass",
+    lua_support::LuaState::registerType<RaRenderingPass>(
+        "RaRenderingPass",
 
         lua_support::NoConstructor::make_initializer(),
 
-        "targetSceneSection", &OxRenderingPass::targetSceneSection,
-        "render", &OxRenderingPass::render
+        "targetSceneSection", &RaRenderingPass::targetSceneSection,
+        "render", &RaRenderingPass::render
     );
         
 
-    lua_support::LuaState::registerSubType<OxScatteringRenderingPass>(
-        "OxScatteringRenderingPass",
+    lua_support::LuaState::registerSubType<RaScatteringRenderingPass>(
+        "RaScatteringRenderingPass",
 
         lua_support::ListOfBaseClasses::make_initializer(
-            lua_support::BaseClass<OxRenderingPass>{}
+            lua_support::BaseClass<RaRenderingPass>{}
         ),
 
         lua_support::ListOfFactories::make_initializer(
             [this](
-                OxSceneSection const& target_scene_section,
-                OxRayGeneratorWithOutputBuffer const& ray_caster,
+                RaSceneSection const& target_scene_section,
+                RaRayGeneratorWithOutputBuffer const& ray_caster,
                 uint8_t num_spectra_pairs_supported,
                 uint32_t max_recursion_depth,
                 float ray_marching_step_size,
                 uint32_t num_scattering_integral_importance_directions,
-                OxProgram const& absorption_probability_shader,
-                OxProgram const& scattering_probability_shader,
-                OxProgram const& scattering_phase_function_shader)
+                RaProgram const& absorption_probability_shader,
+                RaProgram const& scattering_probability_shader,
+                RaProgram const& scattering_phase_function_shader)
             {
                 return createScatteringRenderingPass(
                     target_scene_section,
@@ -114,8 +114,8 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
             },
 
             [this](
-                OxSceneSection const& target_scene_section,
-                OxRayGeneratorWithOutputBuffer const& ray_caster,
+                RaSceneSection const& target_scene_section,
+                RaRayGeneratorWithOutputBuffer const& ray_caster,
                 uint8_t num_spectra_pairs_supported,
                 uint32_t max_recursion_depth,
                 float ray_marching_step_size,
@@ -132,7 +132,7 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
         ),
 
         "updateImportanceDirections",
-        [](OxScatteringRenderingPass* p, 
+        [](RaScatteringRenderingPass* p, 
             lua_support::LuaTable::table_type const& data)
         {
             uint32_t num_importance_directions = p->getNumberOfScatteringIntegralImportanceDirections();
@@ -149,22 +149,22 @@ OxRenderingPassesFactory::OxRenderingPassesFactory(OxContext const& context):
             p->unmapImportanceDirectionsBuffer();
         },
 
-        "getMaxRecursionDepth", &OxScatteringRenderingPass::getMaxRecursionDepth,
-        "setMaxRecursionDepth", &OxScatteringRenderingPass::setMaxRecursionDepth,
+        "getMaxRecursionDepth", &RaScatteringRenderingPass::getMaxRecursionDepth,
+        "setMaxRecursionDepth", &RaScatteringRenderingPass::setMaxRecursionDepth,
 
-        "getNumberOfScatteringIntegralImportanceDirections", &OxScatteringRenderingPass::getNumberOfScatteringIntegralImportanceDirections,
-        "getNumberOfSpectraPairsSupported", &OxScatteringRenderingPass::getNumberOfSpectraPairsSupported,
+        "getNumberOfScatteringIntegralImportanceDirections", &RaScatteringRenderingPass::getNumberOfScatteringIntegralImportanceDirections,
+        "getNumberOfSpectraPairsSupported", &RaScatteringRenderingPass::getNumberOfSpectraPairsSupported,
 
-        "getRayMarchingStepSize", &OxScatteringRenderingPass::getRayMarchingStepSize,
-        "setRayMarchingStepSize", &OxScatteringRenderingPass::setRayMarchingStepSize,
+        "getRayMarchingStepSize", &RaScatteringRenderingPass::getRayMarchingStepSize,
+        "setRayMarchingStepSize", &RaScatteringRenderingPass::setRayMarchingStepSize,
 
-        "getAbsorptionProbabilityShader", &OxScatteringRenderingPass::getAbsorptionProbabilityShader,
-        "setAbsorptionProbabilityShader", &OxScatteringRenderingPass::setAbsorptionProbabilityShader,
+        "getAbsorptionProbabilityShader", &RaScatteringRenderingPass::getAbsorptionProbabilityShader,
+        "setAbsorptionProbabilityShader", &RaScatteringRenderingPass::setAbsorptionProbabilityShader,
         
-        "getScatteringProbabilityShader", &OxScatteringRenderingPass::getScatteringProbabilityShader,
-        "setScatteringProbabilityShader", &OxScatteringRenderingPass::setScatteringProbabilityShader,
+        "getScatteringProbabilityShader", &RaScatteringRenderingPass::getScatteringProbabilityShader,
+        "setScatteringProbabilityShader", &RaScatteringRenderingPass::setScatteringProbabilityShader,
 
-        "getScatteringPhaseFunctionShader", &OxScatteringRenderingPass::getScatteringPhaseFunctionShader,
-        "setScatteringPhaseFunctionShader", &OxScatteringRenderingPass::setScatteringPhaseFunctionShader
+        "getScatteringPhaseFunctionShader", &RaScatteringRenderingPass::getScatteringPhaseFunctionShader,
+        "setScatteringPhaseFunctionShader", &RaScatteringRenderingPass::setScatteringPhaseFunctionShader
     );
 }

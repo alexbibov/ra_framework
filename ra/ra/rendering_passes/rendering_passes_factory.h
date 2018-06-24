@@ -7,43 +7,43 @@
 
 namespace ra { namespace rendering_passes {
 
-class OxRenderingPassesFactory : public OxEntity
+class RaRenderingPassesFactory : public RaEntity
 {
 public:
-    static OxRenderingPassesFactory* initialize(OxContext const& context);
+    static RaRenderingPassesFactory* initialize(RaContext const& context);
     static void shutdown();
-    static OxRenderingPassesFactory* retrieve();
+    static RaRenderingPassesFactory* retrieve();
 
 public:
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
-    // OxScatteringRenderingPass
+    // RaScatteringRenderingPass
 public:
-    OxScatteringRenderingPass createScatteringRenderingPass(
-        OxSceneSection const& target_scene_section, 
-        OxRayGenerator const& ray_caster,
+    RaScatteringRenderingPass createScatteringRenderingPass(
+        RaSceneSection const& target_scene_section, 
+        RaRayGenerator const& ray_caster,
         uint8_t num_spectra_pairs_supported, 
         uint32_t max_recursion_depth,
         float ray_marching_step_size, 
         uint32_t num_scattering_integral_importance_directions,
-        OxProgram const& absorption_probability_shader, 
-        OxProgram const& scattering_probability_shader,
-        OxProgram const& scattering_phase_function_shader);
+        RaProgram const& absorption_probability_shader, 
+        RaProgram const& scattering_probability_shader,
+        RaProgram const& scattering_phase_function_shader);
 
-    OxScatteringRenderingPass createScatteringRenderingPass(
-        OxSceneSection const& target_scene_section, 
-        OxRayGenerator const& ray_caster,
+    RaScatteringRenderingPass createScatteringRenderingPass(
+        RaSceneSection const& target_scene_section, 
+        RaRayGenerator const& ray_caster,
         uint8_t num_spectra_pairs_supported, 
         uint32_t max_recursion_depth,
         float ray_marching_step_size, 
         uint32_t num_scattering_integral_importance_directions);
 
 private:
-    OxRenderingPassesFactory(OxContext const& context);
+    RaRenderingPassesFactory(RaContext const& context);
 
 private:
-    OxContext const& m_context;
+    RaContext const& m_context;
 };
 
 }}

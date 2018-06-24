@@ -10,23 +10,23 @@
 
 namespace ra { namespace rendering_passes {
 
-class OxScatteringRenderingPass : public OxRenderingPass,  public OxContractWithOxPrograms
+class RaScatteringRenderingPass : public RaRenderingPass,  public RaContractWithRaPrograms
 {
 public:
-    OxScatteringRenderingPass(
-        OxSceneSection const& target_scene_section, 
-        OxRayGenerator const& ray_caster,
+    RaScatteringRenderingPass(
+        RaSceneSection const& target_scene_section, 
+        RaRayGenerator const& ray_caster,
         uint8_t num_spectra_pairs_supported, 
         uint32_t max_recursion_depth,
         float ray_marching_step_size, 
         uint32_t num_scattering_integral_importance_directions,
-        OxProgram const& absorption_probability_shader, 
-        OxProgram const& scattering_probability_shader,
-        OxProgram const& scattering_phase_function_shader);
+        RaProgram const& absorption_probability_shader, 
+        RaProgram const& scattering_probability_shader,
+        RaProgram const& scattering_phase_function_shader);
 
-    OxScatteringRenderingPass(
-        OxSceneSection const& target_scene_section, 
-        OxRayGenerator const& ray_caster,
+    RaScatteringRenderingPass(
+        RaSceneSection const& target_scene_section, 
+        RaRayGenerator const& ray_caster,
         uint8_t num_spectra_pairs_supported, 
         uint32_t max_recursion_depth,
         float ray_marching_step_size, 
@@ -44,28 +44,28 @@ public:
     float getRayMarchingStepSize() const;
     void setRayMarchingStepSize(float step_size);
 
-    OxProgram getAbsorptionProbabilityShader() const;
-    void setAbsorptionProbabilityShader(OxProgram const& absorption_probability_shader);
+    RaProgram getAbsorptionProbabilityShader() const;
+    void setAbsorptionProbabilityShader(RaProgram const& absorption_probability_shader);
 
-    OxProgram getScatteringProbabilityShader() const;
-    void setScatteringProbabilityShader(OxProgram const& scattering_probability_shader);
+    RaProgram getScatteringProbabilityShader() const;
+    void setScatteringProbabilityShader(RaProgram const& scattering_probability_shader);
 
-    OxProgram getScatteringPhaseFunctionShader() const;
-    void setScatteringPhaseFunctionShader(OxProgram const& scattering_phase_function_shader);
+    RaProgram getScatteringPhaseFunctionShader() const;
+    void setScatteringPhaseFunctionShader(RaProgram const& scattering_phase_function_shader);
 
     void render() const override;
 
 private:
-    OxRayGenerator const& m_ray_caster;
+    RaRayGenerator const& m_ray_caster;
     uint32_t m_num_spectra_pairs_supported;
     uint32_t m_max_recursion_depth;
     float m_ray_marching_step_size;
     uint32_t m_num_scattering_integral_importance_directions;
-    OxMaterialAssembly m_surface_material_assembly;
-    OxMissShaderAssembly m_miss_shader_assembly;
-    OxTraverseBackupBuffer m_traverse_backup_buffer;
-    ray_casters::OxRecasterGenerator m_recaster;
-    OxBuffer<float2> m_importance_directions_buffer;
+    RaMaterialAssembly m_surface_material_assembly;
+    RaMissShaderAssembly m_miss_shader_assembly;
+    RaTraverseBackupBuffer m_traverse_backup_buffer;
+    ray_casters::RaRecasterGenerator m_recaster;
+    RaBuffer<float2> m_importance_directions_buffer;
 };
 
 }}

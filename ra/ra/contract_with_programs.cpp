@@ -5,7 +5,7 @@
 using namespace ra;
 
 
-OxProgram const* OxContractWithOxPrograms::getProgramByName(std::string const& name) const
+RaProgram const* RaContractWithRaPrograms::getProgramByName(std::string const& name) const
 {
     for (auto& e : m_programs)
     {
@@ -16,7 +16,7 @@ OxProgram const* OxContractWithOxPrograms::getProgramByName(std::string const& n
     return nullptr;
 }
 
-OxProgram const* ra::OxContractWithOxPrograms::getProgramById(OxEntityId const& id) const
+RaProgram const* ra::RaContractWithRaPrograms::getProgramById(RaEntityId const& id) const
 {
     for (auto& e : m_programs)
     {
@@ -27,12 +27,12 @@ OxProgram const* ra::OxContractWithOxPrograms::getProgramById(OxEntityId const& 
     return nullptr;
 }
 
-OxContractWithOxPrograms::OxContractWithOxPrograms(std::initializer_list<OxProgram> init_list):
+RaContractWithRaPrograms::RaContractWithRaPrograms(std::initializer_list<RaProgram> init_list):
     m_programs{ init_list }
 {
 }
 
-uint32_t OxContractWithOxPrograms::getDeclarationOffsetFromId(OxEntityId const& id) const
+uint32_t RaContractWithRaPrograms::getDeclarationOffsetFromId(RaEntityId const& id) const
 {
     for (uint32_t i = 0; i < m_programs.size(); ++i)
     {
@@ -42,7 +42,7 @@ uint32_t OxContractWithOxPrograms::getDeclarationOffsetFromId(OxEntityId const& 
     return static_cast<uint32_t>(-1);
 }
 
-uint32_t OxContractWithOxPrograms::getDeclarationOffsetFromName(std::string const& name) const
+uint32_t RaContractWithRaPrograms::getDeclarationOffsetFromName(std::string const& name) const
 {
     for (uint32_t i = 0; i < m_programs.size(); ++i)
     {
@@ -52,24 +52,24 @@ uint32_t OxContractWithOxPrograms::getDeclarationOffsetFromName(std::string cons
     return static_cast<uint32_t>(-1);
 }
 
-RTprogram OxContractWithOxPrograms::nativeOptiXProgramHandle(uint32_t declaration_offset) const
+RTprogram RaContractWithRaPrograms::nativeOptiXProgramHandle(uint32_t declaration_offset) const
 {
     return m_programs[declaration_offset].m_native_optix_program.get();
 }
 
-OxProgram OxContractWithOxPrograms::getOxProgramFromDeclarationOffset(uint32_t declaration_offset) const
+RaProgram RaContractWithRaPrograms::getRaProgramFromDeclarationOffset(uint32_t declaration_offset) const
 {
     return m_programs[declaration_offset];
 }
 
-size_t OxContractWithOxPrograms::getAttachedProgramsCount() const
+size_t RaContractWithRaPrograms::getAttachedProgramsCount() const
 {
     return m_programs.size();
 }
 
-void OxContractWithOxPrograms::replaceProgramAtOffset(OxProgram const& program, uint32_t declaration_offset)
+void RaContractWithRaPrograms::replaceProgramAtOffset(RaProgram const& program, uint32_t declaration_offset)
 {
-    OxProgram& p = m_programs[declaration_offset];
+    RaProgram& p = m_programs[declaration_offset];
     if (p.getUniqueIdentifier() != program.getUniqueIdentifier())
         p = program;
 }

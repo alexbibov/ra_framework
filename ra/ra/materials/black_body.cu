@@ -10,38 +10,38 @@ using namespace optix;
 using namespace ra;
 
 rtDeclareVariable(unsigned int, payload_type, , "Type of ray payload");
-rtDeclareVariable(OxRayRadiancePayload, radiance_payload, rtPayload, );
-rtDeclareVariable(OxRayRadiancePayloadSimple, radiance_payload_simple, rtPayload, );
-rtDeclareVariable(OxRayRadiancePayloadMonochromatic, radiance_payload_monochromatic, rtPayload, );
-rtDeclareVariable(OxRayOcclusionPayload, occlusion_payload, rtPayload, );
+rtDeclareVariable(RaRayRadiancePayload, radiance_payload, rtPayload, );
+rtDeclareVariable(RaRayRadiancePayloadSimple, radiance_payload_simple, rtPayload, );
+rtDeclareVariable(RaRayRadiancePayloadMonochromatic, radiance_payload_monochromatic, rtPayload, );
+rtDeclareVariable(RaRayOcclusionPayload, occlusion_payload, rtPayload, );
 rtDeclareVariable(float, intersection_distance, rtIntersectionDistance, "Parametric distance from ray origin to the intersection");
 
-RT_PROGRAM void __ox_any_hit__()
+RT_PROGRAM void __ra_any_hit__()
 {
-    switch (static_cast<OxRayPayloadType>(payload_type))
+    switch (static_cast<RaRayPayloadType>(payload_type))
     {
-    case OxRayPayloadType::radiance:
+    case RaRayPayloadType::radiance:
         memset(radiance_payload.spectral_radiance, 0, constants::max_spectra_pairs_supported * sizeof(float2));
 
         if (!radiance_payload.depth.x) radiance_payload.depth.x = intersection_distance;
         radiance_payload.depth.y += intersection_distance;
         break;
 
-    case OxRayPayloadType::radiance_simple:
+    case RaRayPayloadType::radiance_simple:
         radiance_payload_simple.spectral_radiance = make_float2(0.f, 0.f);
 
         if (!radiance_payload.depth.x) radiance_payload.depth.x = intersection_distance;
         radiance_payload.depth.y += intersection_distance;
         break;
 
-    case OxRayPayloadType::monochromatic:
+    case RaRayPayloadType::monochromatic:
         radiance_payload_monochromatic.spectral_radiance = 0.f;
 
         if (!radiance_payload.depth.x) radiance_payload.depth.x = intersection_distance;
         radiance_payload.depth.y += intersection_distance;
         break;
 
-    case OxRayPayloadType::occlusion:
+    case RaRayPayloadType::occlusion:
         occlusion_payload.is_occluded = true;
 
         if (!radiance_payload.depth.x) radiance_payload.depth.x = intersection_distance;

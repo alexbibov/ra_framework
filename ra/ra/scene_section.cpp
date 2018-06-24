@@ -5,9 +5,9 @@
 
 using namespace ra;
 
-OxSceneSection::OxSceneSection(OxContext const& context, OxBVHAlgorithm acceleration_structure_construction_algorithm) :
-    OxContractWithOxContext{ context },
-    OxTransformable{ context },
+RaSceneSection::RaSceneSection(RaContext const& context, RaBVHAlgorithm acceleration_structure_construction_algorithm) :
+    RaContractWithRaContext{ context },
+    RaTransformable{ context },
     m_construction_begun{ false },
     m_construction_finished{ false }
 {
@@ -30,16 +30,16 @@ OxSceneSection::OxSceneSection(OxContext const& context, OxBVHAlgorithm accelera
     char const* acceleration_structure_construction_algorithm_name{ nullptr };
     switch (acceleration_structure_construction_algorithm)
     {
-    case OxBVHAlgorithm::trbvh:
+    case RaBVHAlgorithm::trbvh:
         acceleration_structure_construction_algorithm_name = "Trbvh";
         break;
-    case OxBVHAlgorithm::sbvh:
+    case RaBVHAlgorithm::sbvh:
         acceleration_structure_construction_algorithm_name = "Sbvh";
         break;
-    case OxBVHAlgorithm::bvh:
+    case RaBVHAlgorithm::bvh:
         acceleration_structure_construction_algorithm_name = "Bvh";
         break;
-    case OxBVHAlgorithm::none:
+    case RaBVHAlgorithm::none:
         acceleration_structure_construction_algorithm_name = "NoAccel";
         break;
     }
@@ -48,7 +48,7 @@ OxSceneSection::OxSceneSection(OxContext const& context, OxBVHAlgorithm accelera
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGroupSetAcceleration(group_native_handle, acceleration_native_handle));
 }
 
-void OxSceneSection::beginConstruction()
+void RaSceneSection::beginConstruction()
 {
     if (m_construction_begun)
     {
@@ -64,7 +64,7 @@ void OxSceneSection::beginConstruction()
     m_construction_begun = true;
 }
 
-void OxSceneSection::addGeometryGroup(OxGeometryGroup const& geometry_group)
+void RaSceneSection::addGeometryGroup(RaGeometryGroup const& geometry_group)
 {
     if (!m_construction_begun)
     {
@@ -87,7 +87,7 @@ void OxSceneSection::addGeometryGroup(OxGeometryGroup const& geometry_group)
     m_geometry_groups.push_back(geometry_group);
 }
 
-void OxSceneSection::addSceneSection(OxSceneSection const& scene_section)
+void RaSceneSection::addSceneSection(RaSceneSection const& scene_section)
 {
     if (!m_construction_begun)
     {
@@ -111,7 +111,7 @@ void OxSceneSection::addSceneSection(OxSceneSection const& scene_section)
     m_attached_scene_sections.push_back(scene_section);
 }
 
-void OxSceneSection::endConstruction()
+void RaSceneSection::endConstruction()
 {
     if (!m_construction_begun)
     {
@@ -128,7 +128,7 @@ void OxSceneSection::endConstruction()
     for (auto const& gg : m_geometry_groups)
     {
         THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGroupSetChild(m_native_group_handle.get(), idx,
-            OxGeometryGroupAttorney<OxSceneSection>::getGeometryGroupNativeHandle(gg)));
+            RaGeometryGroupAttorney<RaSceneSection>::getGeometryGroupNativeHandle(gg)));
         ++idx;
     }
 
@@ -144,17 +144,17 @@ void OxSceneSection::endConstruction()
     m_construction_finished = true;
 }
 
-std::list<OxSceneSection> const& OxSceneSection::sceneSections() const
+std::list<RaSceneSection> const& RaSceneSection::sceneSections() const
 {
     return m_attached_scene_sections;
 }
 
-std::list<OxGeometryGroup> const& OxSceneSection::geometryGroups() const
+std::list<RaGeometryGroup> const& RaSceneSection::geometryGroups() const
 {
     return m_geometry_groups;
 }
 
-bool OxSceneSection::isValid() const
+bool RaSceneSection::isValid() const
 {
     RTresult group_validation_result;
     RTresult acceleration_validation_result;
@@ -166,25 +166,25 @@ bool OxSceneSection::isValid() const
         && (m_construction_begun && m_construction_finished);
 }
 
-void ra::OxSceneSection::trace(OxRayGenerator const& ray_caster) const
+void ra::RaSceneSection::trace(RaRayGenerator const& ray_caster) const
 {
-    _update(ray_caster, OxObjectHandle{ getEntryNode() });
+    _update(ray_caster, RaObjectHandle{ getEntryNode() });
     _trace(ray_caster);
 }
 
-RTobject OxSceneSection::getEntryNode() const
+RTobject RaSceneSection::getEntryNode() const
 {
     return isTransformApplied() ?
         static_cast<RTobject>(getNativeOptiXTransformHandle()) :
         static_cast<RTobject>(m_native_group_handle.get());
 }
 
-bool OxSceneSection::_update(OxRayGenerator const& ray_caster, OxObjectHandle top_scene_object) const
+bool RaSceneSection::_update(RaRayGenerator const& ray_caster, RaObjectHandle top_scene_object) const
 {
     bool rv{ false };
     for (auto& gg : m_geometry_groups)
     {
-        if (OxGeometryGroupAttorney<OxSceneSection>::updateGeometryGroup(gg, top_scene_object) && !rv)
+        if (RaGeometryGroupAttorney<RaSceneSection>::updateGeometryGroup(gg, top_scene_object) && !rv)
         {
             THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
             rv = true;
@@ -200,18 +200,18 @@ bool OxSceneSection::_update(OxRayGenerator const& ray_caster, OxObjectHandle to
         }
     }
 
-    OxRayGeneratorAttorney<OxSceneSection>::updateRayGenerator(ray_caster, top_scene_object);
+    RaRayGeneratorAttorney<RaSceneSection>::updateRayGenerator(ray_caster, top_scene_object);
 
     return rv;
 }
 
-void OxSceneSection::_trace(OxRayGenerator const& ray_caster) const
+void RaSceneSection::_trace(RaRayGenerator const& ray_caster) const
 {
-    ray_caster.getRayGenerationShader().setVariableValue("ox_entry_node", OxObjectHandle{ getEntryNode() });
-    OxRayGeneratorAttorney<OxSceneSection>::launchRayGenerator(ray_caster);
+    ray_caster.getRayGenerationShader().setVariableValue("ra_entry_node", RaObjectHandle{ getEntryNode() });
+    RaRayGeneratorAttorney<RaSceneSection>::launchRayGenerator(ray_caster);
 }
 
-RTobject OxSceneSection::getObjectToBeTransformed() const
+RTobject RaSceneSection::getObjectToBeTransformed() const
 {
     return m_native_group_handle.get();
 }

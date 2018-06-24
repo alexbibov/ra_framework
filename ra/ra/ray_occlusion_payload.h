@@ -5,7 +5,7 @@
 
 namespace ra {
 
-struct OxRayOcclusionPayload final
+struct RaRayOcclusionPayload final
 {
     unsigned int is_occluded;
     unsigned int tracing_depth;

@@ -17,32 +17,32 @@
 
 namespace ra {
 
-struct OxProgramId
+struct RaProgramId
 {
     int native;
 };
 
 template<typename T>
-class OxProgramAttorney;
+class RaProgramAttorney;
 
 //! Generic wrapper over OptiX program object
-class OxProgram final : public OxContractWithOxContext, public OxEntity
+class RaProgram final : public RaContractWithRaContext, public RaEntity
 {
-    friend class OxProgramAttorney<OxContext>;
-    friend class OxContractWithOxPrograms;
+    friend class RaProgramAttorney<RaContext>;
+    friend class RaContractWithRaPrograms;
 
 public:
     enum class Source { string, file };
 
 private:
-    OxProgram(OxContext const& optix_context,
+    RaProgram(RaContext const& optix_context,
         std::string const& source, Source source_type, std::string const& entry_point);
     
 public:
 
-    virtual ~OxProgram() = default;
+    virtual ~RaProgram() = default;
 
-    OxProgramId getId() const;
+    RaProgramId getId() const;
 
     void setVariableValue(std::string const& name, float value);
     void setVariableValue(std::string const& name, float2 const& value);
@@ -71,8 +71,8 @@ public:
     void setVariableValue(std::string const& name, util::mat4x3 const& value);
     void setVariableValue(std::string const& name, util::mat4x4 const& value);
 
-    void setVariableValue(std::string const& name, OxObjectHandle const& value);
-    void setVariableValue(std::string const& name, OxProgramId const& program_id);
+    void setVariableValue(std::string const& name, RaObjectHandle const& value);
+    void setVariableValue(std::string const& name, RaProgramId const& program_id);
 
     void getVariableValue(std::string const& name, float& value);
     void getVariableValue(std::string const& name, float2& value);
@@ -101,14 +101,14 @@ public:
     void getVariableValue(std::string const& name, util::mat4x3& value);
     void getVariableValue(std::string const& name, util::mat4x4& value);
 
-    void getVariableValue(std::string const& name, OxObjectHandle& value);
+    void getVariableValue(std::string const& name, RaObjectHandle& value);
 
 
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
-    void assignBuffer(std::string const& name, OxAbstractBuffer const& buffer);
-    void assignProgram(std::string const& name, OxProgram const& program);
+    void assignBuffer(std::string const& name, RaAbstractBuffer const& buffer);
+    void assignProgram(std::string const& name, RaProgram const& program);
 
     bool checkVariableExistance(std::string const& name) const;
 
@@ -120,14 +120,14 @@ private:
 };
 
 
-template<> class OxProgramAttorney<OxContext>
+template<> class RaProgramAttorney<RaContext>
 {
-    friend class OxContext;
+    friend class RaContext;
 
-    static OxProgram createOptiXProgram(OxContext const& optix_context, std::string const& source, 
-        OxProgram::Source source_type, std::string const& program_name)
+    static RaProgram createOptiXProgram(RaContext const& optix_context, std::string const& source, 
+        RaProgram::Source source_type, std::string const& program_name)
     {
-        return OxProgram{ optix_context, source, source_type, program_name };
+        return RaProgram{ optix_context, source, source_type, program_name };
     }
 };
 

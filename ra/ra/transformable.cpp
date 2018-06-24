@@ -2,30 +2,30 @@
 
 using namespace ra;
 
-OxTransformable::OxTransformable(OxContext const& optix_context):
+RaTransformable::RaTransformable(RaContext const& optix_context):
     m_transform{ optix_context },
     m_is_transform_applied{ false }
 {
 
 }
 
-void OxTransformable::applyTransform(OxTransform const& transform)
+void RaTransformable::applyTransform(RaTransform const& transform)
 {
-    OxTransformAttorney<OxTransformable>::setTransformedObject(transform, getObjectToBeTransformed());
+    RaTransformAttorney<RaTransformable>::setTransformedObject(transform, getObjectToBeTransformed());
     m_is_transform_applied = true;
 }
 
-OxTransform OxTransformable::getTransform() const
+RaTransform RaTransformable::getTransform() const
 {
     return m_transform;
 }
 
-bool OxTransformable::isTransformApplied() const
+bool RaTransformable::isTransformApplied() const
 {
     return m_is_transform_applied;
 }
 
-RTtransform OxTransformable::getNativeOptiXTransformHandle() const
+RTtransform RaTransformable::getNativeOptiXTransformHandle() const
 {
-    return OxTransformAttorney<OxTransformable>::getNativeOptiXTransformHandle(m_transform);
+    return RaTransformAttorney<RaTransformable>::getNativeOptiXTransformHandle(m_transform);
 }

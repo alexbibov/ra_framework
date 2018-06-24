@@ -6,14 +6,14 @@
 using namespace ra;
 
 
-OxMissShaderAssembly::OxMissShaderAssembly(std::initializer_list<OxMissShader> init_list):
-    OxMissShaderAssembly{ std::vector<OxMissShader>{init_list} }
+RaMissShaderAssembly::RaMissShaderAssembly(std::initializer_list<RaMissShader> init_list):
+    RaMissShaderAssembly{ std::vector<RaMissShader>{init_list} }
 {
     
 }
 
-OxMissShaderAssembly::OxMissShaderAssembly(std::vector<OxMissShader> const& miss_shaders) :
-    OxContractWithOxContext{ miss_shaders.begin()->context() }
+RaMissShaderAssembly::RaMissShaderAssembly(std::vector<RaMissShader> const& miss_shaders) :
+    RaContractWithRaContext{ miss_shaders.begin()->context() }
 {
     uint64_t used_ray_types_mask{ 0U };
     for (auto& ms : miss_shaders)
@@ -41,7 +41,7 @@ OxMissShaderAssembly::OxMissShaderAssembly(std::vector<OxMissShader> const& miss
     }
 }
 
-util::Optional<OxMissShader> OxMissShaderAssembly::getMissShaderById(OxEntityId const& id) const
+util::Optional<RaMissShader> RaMissShaderAssembly::getMissShaderById(RaEntityId const& id) const
 {
     for (auto& ms : m_miss_shader_list)
     {
@@ -49,10 +49,10 @@ util::Optional<OxMissShader> OxMissShaderAssembly::getMissShaderById(OxEntityId 
             return ms;
     }
     
-    return util::Optional<OxMissShader>{};
+    return util::Optional<RaMissShader>{};
 }
 
-util::Optional<OxMissShader> OxMissShaderAssembly::getMissShaderByName(std::string const& name) const
+util::Optional<RaMissShader> RaMissShaderAssembly::getMissShaderByName(std::string const& name) const
 {
     for (auto& ms : m_miss_shader_list)
     {
@@ -60,10 +60,10 @@ util::Optional<OxMissShader> OxMissShaderAssembly::getMissShaderByName(std::stri
             return ms;
     }
 
-    return util::Optional<OxMissShader>{};
+    return util::Optional<RaMissShader>{};
 }
 
-util::Optional<OxMissShader> OxMissShaderAssembly::getMissShaderByRayType(OxRayType ray_type) const
+util::Optional<RaMissShader> RaMissShaderAssembly::getMissShaderByRayType(RaRayType ray_type) const
 {
     for (auto& ms : m_miss_shader_list)
     {
@@ -71,10 +71,10 @@ util::Optional<OxMissShader> OxMissShaderAssembly::getMissShaderByRayType(OxRayT
             return ms;
     }
 
-    return util::Optional<OxMissShader>{};
+    return util::Optional<RaMissShader>{};
 }
 
-bool OxMissShaderAssembly::isValid() const
+bool RaMissShaderAssembly::isValid() const
 {
     if (!m_miss_shader_list.size())
     {
@@ -88,48 +88,48 @@ bool OxMissShaderAssembly::isValid() const
     return true;
 }
 
-void OxMissShaderAssembly::apply(OxObjectHandle top_scene_object) const
+void RaMissShaderAssembly::apply(RaObjectHandle top_scene_object) const
 {
     for (auto& ms : m_miss_shader_list)
-        OxMissShaderAttorney<OxMissShaderAssembly>::applyMissShader(ms, top_scene_object);
+        RaMissShaderAttorney<RaMissShaderAssembly>::applyMissShader(ms, top_scene_object);
 }
 
-OxMissShaderAssembly::miss_shader_collection::iterator OxMissShaderAssembly::begin()
+RaMissShaderAssembly::miss_shader_collection::iterator RaMissShaderAssembly::begin()
 {
     return m_miss_shader_list.begin();
 }
 
-OxMissShaderAssembly::miss_shader_collection::iterator OxMissShaderAssembly::end()
+RaMissShaderAssembly::miss_shader_collection::iterator RaMissShaderAssembly::end()
 {
     return m_miss_shader_list.end();
 }
 
-OxMissShaderAssembly::miss_shader_collection::const_iterator OxMissShaderAssembly::cbegin()
+RaMissShaderAssembly::miss_shader_collection::const_iterator RaMissShaderAssembly::cbegin()
 {
     return m_miss_shader_list.cbegin();
 }
 
-OxMissShaderAssembly::miss_shader_collection::const_iterator OxMissShaderAssembly::cend()
+RaMissShaderAssembly::miss_shader_collection::const_iterator RaMissShaderAssembly::cend()
 {
     return m_miss_shader_list.cend();
 }
 
-OxMissShaderAssembly::miss_shader_collection::const_iterator OxMissShaderAssembly::begin() const
+RaMissShaderAssembly::miss_shader_collection::const_iterator RaMissShaderAssembly::begin() const
 {
     return m_miss_shader_list.begin();
 }
 
-OxMissShaderAssembly::miss_shader_collection::const_iterator OxMissShaderAssembly::end() const
+RaMissShaderAssembly::miss_shader_collection::const_iterator RaMissShaderAssembly::end() const
 {
     return m_miss_shader_list.end();
 }
 
-uint64_t OxMissShaderAssembly::miss_shader_hasher::operator()(OxMissShader const& ms) const
+uint64_t RaMissShaderAssembly::miss_shader_hasher::operator()(RaMissShader const& ms) const
 {
     return rayTypeCollectionTo64BitMask(ms.supportedRayTypes());
 }
 
-bool OxMissShaderAssembly::miss_shader_hasher::operator()(OxMissShader const& ms1, OxMissShader const& ms2) const
+bool RaMissShaderAssembly::miss_shader_hasher::operator()(RaMissShader const& ms1, RaMissShader const& ms2) const
 {
     return ms1.getProgram().getId().native == ms2.getProgram().getId().native;
 }

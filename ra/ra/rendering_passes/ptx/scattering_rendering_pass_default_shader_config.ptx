@@ -124,10 +124,10 @@
 	ret;
 }
 
-	// .globl	_Z43__ox_scattering_default_absorption_factor__6float3j
-.visible .func  (.param .align 8 .b8 func_retval0[8]) _Z43__ox_scattering_default_absorption_factor__6float3j(
-	.param .align 4 .b8 _Z43__ox_scattering_default_absorption_factor__6float3j_param_0[12],
-	.param .b32 _Z43__ox_scattering_default_absorption_factor__6float3j_param_1
+	// .globl	_Z43__ra_scattering_default_absorption_factor__6float3j
+.visible .func  (.param .align 8 .b8 func_retval0[8]) _Z43__ra_scattering_default_absorption_factor__6float3j(
+	.param .align 4 .b8 _Z43__ra_scattering_default_absorption_factor__6float3j_param_0[12],
+	.param .b32 _Z43__ra_scattering_default_absorption_factor__6float3j_param_1
 )
 {
 	.reg .f32 	%f<2>;
@@ -139,10 +139,10 @@
 	ret;
 }
 
-	// .globl	_Z43__ox_scattering_default_scattering_factor__6float3j
-.visible .func  (.param .align 8 .b8 func_retval0[8]) _Z43__ox_scattering_default_scattering_factor__6float3j(
-	.param .align 4 .b8 _Z43__ox_scattering_default_scattering_factor__6float3j_param_0[12],
-	.param .b32 _Z43__ox_scattering_default_scattering_factor__6float3j_param_1
+	// .globl	_Z43__ra_scattering_default_scattering_factor__6float3j
+.visible .func  (.param .align 8 .b8 func_retval0[8]) _Z43__ra_scattering_default_scattering_factor__6float3j(
+	.param .align 4 .b8 _Z43__ra_scattering_default_scattering_factor__6float3j_param_0[12],
+	.param .b32 _Z43__ra_scattering_default_scattering_factor__6float3j_param_1
 )
 {
 	.reg .f32 	%f<2>;
@@ -154,12 +154,12 @@
 	ret;
 }
 
-	// .globl	_Z40__ox_scattering_default_phase_function__6float36float2S0_j
-.visible .func  (.param .align 8 .b8 func_retval0[8]) _Z40__ox_scattering_default_phase_function__6float36float2S0_j(
-	.param .align 4 .b8 _Z40__ox_scattering_default_phase_function__6float36float2S0_j_param_0[12],
-	.param .align 8 .b8 _Z40__ox_scattering_default_phase_function__6float36float2S0_j_param_1[8],
-	.param .align 8 .b8 _Z40__ox_scattering_default_phase_function__6float36float2S0_j_param_2[8],
-	.param .b32 _Z40__ox_scattering_default_phase_function__6float36float2S0_j_param_3
+	// .globl	_Z40__ra_scattering_default_phase_function__6float36float2S0_j
+.visible .func  (.param .align 8 .b8 func_retval0[8]) _Z40__ra_scattering_default_phase_function__6float36float2S0_j(
+	.param .align 4 .b8 _Z40__ra_scattering_default_phase_function__6float36float2S0_j_param_0[12],
+	.param .align 8 .b8 _Z40__ra_scattering_default_phase_function__6float36float2S0_j_param_1[8],
+	.param .align 8 .b8 _Z40__ra_scattering_default_phase_function__6float36float2S0_j_param_2[8],
+	.param .b32 _Z40__ra_scattering_default_phase_function__6float36float2S0_j_param_3
 )
 {
 	.reg .f32 	%f<2>;

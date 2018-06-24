@@ -3,13 +3,13 @@
 
 using namespace ra;
 
-OxGeometry::OxGeometry(OxProgram const& intersection_shader, OxProgram const& aabb_shader):
-    OxContractWithOxContext{ intersection_shader.context() },
-    OxContractWithOxPrograms{ intersection_shader, aabb_shader }
+RaGeometry::RaGeometry(RaProgram const& intersection_shader, RaProgram const& aabb_shader):
+    RaContractWithRaContext{ intersection_shader.context() },
+    RaContractWithRaPrograms{ intersection_shader, aabb_shader }
 {
     RTgeometry native_geometry_handle{ nullptr };
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryCreate(nativeOptiXContextHandle(), &native_geometry_handle));
-    m_geometry_blueprint.reset(new geometry_blueprint{ native_geometry_handle, true, util::Optional<OxMaterialAssembly>{} },
+    m_geometry_blueprint.reset(new geometry_blueprint{ native_geometry_handle, true, util::Optional<RaMaterialAssembly>{} },
         [this](geometry_blueprint* e)->void
     {
         LOG_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryDestroy(e->native_handle));
@@ -20,35 +20,35 @@ OxGeometry::OxGeometry(OxProgram const& intersection_shader, OxProgram const& aa
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometrySetBoundingBoxProgram(native_geometry_handle, nativeOptiXProgramHandle(1U)));
 }
 
-OxGeometry::OxGeometry(OxProgram const& intersection_shader, OxProgram const& aabb_shader, OxMaterialAssembly const& material_assembly):
-    OxGeometry{ intersection_shader, aabb_shader }
+RaGeometry::RaGeometry(RaProgram const& intersection_shader, RaProgram const& aabb_shader, RaMaterialAssembly const& material_assembly):
+    RaGeometry{ intersection_shader, aabb_shader }
 {
     setMaterialAssembly(material_assembly);
 }
 
-util::Optional<OxMaterialAssembly> OxGeometry::getMaterialAssembly() const
+util::Optional<RaMaterialAssembly> RaGeometry::getMaterialAssembly() const
 {
     return m_geometry_blueprint->material_assembly;
 }
 
-void OxGeometry::setMaterialAssembly(OxMaterialAssembly const& material_assembly) const
+void RaGeometry::setMaterialAssembly(RaMaterialAssembly const& material_assembly) const
 {
     m_geometry_blueprint->material_assembly = material_assembly;
-    OxMaterialAssemblyAttorney<OxGeometry>::attachMaterialAssemblyToNativeGeometryHandle(material_assembly, m_geometry_blueprint->native_handle);
+    RaMaterialAssemblyAttorney<RaGeometry>::attachMaterialAssemblyToNativeGeometryHandle(material_assembly, m_geometry_blueprint->native_handle);
     m_geometry_blueprint->is_dirty = true;
 }
 
-OxProgram OxGeometry::getAABBShader() const
+RaProgram RaGeometry::getAABBShader() const
 {
-    return getOxProgramFromDeclarationOffset(0U);
+    return getRaProgramFromDeclarationOffset(0U);
 }
 
-OxProgram OxGeometry::getIntersectionShader() const
+RaProgram RaGeometry::getIntersectionShader() const
 {
-    return getOxProgramFromDeclarationOffset(1U);
+    return getRaProgramFromDeclarationOffset(1U);
 }
 
-bool OxGeometry::isValid() const
+bool RaGeometry::isValid() const
 {
     bool has_material_assembly_attached;
     if (!(has_material_assembly_attached = m_geometry_blueprint->material_assembly.isValid()))
@@ -61,32 +61,32 @@ bool OxGeometry::isValid() const
     RTresult res;
     LOG_OPTIX_ERROR(nativeOptiXContextHandle(), res = rtGeometryValidate(m_geometry_blueprint->native_handle));
     return res == RT_SUCCESS && has_material_assembly_attached 
-        && static_cast<OxMaterialAssembly&>(m_geometry_blueprint->material_assembly).isValid();
+        && static_cast<RaMaterialAssembly&>(m_geometry_blueprint->material_assembly).isValid();
 }
 
-void OxGeometry::setPrimitiveCount(unsigned int num_primitives)
+void RaGeometry::setPrimitiveCount(unsigned int num_primitives)
 {
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometrySetPrimitiveCount(m_geometry_blueprint->native_handle, num_primitives));
     markDirty();
 }
 
-void OxGeometry::markDirty()
+void RaGeometry::markDirty()
 {
     m_geometry_blueprint->is_dirty = true;
 }
 
-void OxGeometry::update(OxObjectHandle top_scene_object) const
+void RaGeometry::update(RaObjectHandle top_scene_object) const
 {
     if (m_geometry_blueprint->material_assembly.isValid()
-        && static_cast<OxMaterialAssembly&>(m_geometry_blueprint->material_assembly).isValid())
+        && static_cast<RaMaterialAssembly&>(m_geometry_blueprint->material_assembly).isValid())
     {
-        OxMaterialAssemblyAttorney<OxGeometry>::updateMaterialAssembly(m_geometry_blueprint->material_assembly, top_scene_object);
-        getOxProgramFromDeclarationOffset().setVariableValue("num_materials",
-            static_cast<unsigned int>(static_cast<OxMaterialAssembly&>(m_geometry_blueprint->material_assembly).getMaterialCount()));
+        RaMaterialAssemblyAttorney<RaGeometry>::updateMaterialAssembly(m_geometry_blueprint->material_assembly, top_scene_object);
+        getRaProgramFromDeclarationOffset().setVariableValue("num_materials",
+            static_cast<unsigned int>(static_cast<RaMaterialAssembly&>(m_geometry_blueprint->material_assembly).getMaterialCount()));
     }
 }
 
-unsigned int OxGeometry::getPrimitiveCount() const
+unsigned int RaGeometry::getPrimitiveCount() const
 {
     unsigned int num_primitives{};
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGetPrimitiveCount(m_geometry_blueprint->native_handle, &num_primitives));

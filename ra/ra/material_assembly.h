@@ -13,39 +13,39 @@
 namespace ra {
 
 template<typename T>
-class OxMaterialAssemblyAttorney;
+class RaMaterialAssemblyAttorney;
 
-class OxMaterialAssembly : public OxContractWithOxContext, public OxEntity
+class RaMaterialAssembly : public RaContractWithRaContext, public RaEntity
 {
-    friend class OxMaterialAssemblyAttorney<OxGeometry>;
-    friend class OxMaterialAssemblyAttorney<OxGeometryGroup>;
+    friend class RaMaterialAssemblyAttorney<RaGeometry>;
+    friend class RaMaterialAssemblyAttorney<RaGeometryGroup>;
 
 public:
-    OxMaterialAssembly(OxContext const& context);
-    OxMaterialAssembly(std::initializer_list<OxMaterial> init_list);
-    OxMaterialAssembly(std::vector<OxMaterial> const& materials);
-    virtual ~OxMaterialAssembly() = default;
+    RaMaterialAssembly(RaContext const& context);
+    RaMaterialAssembly(std::initializer_list<RaMaterial> init_list);
+    RaMaterialAssembly(std::vector<RaMaterial> const& materials);
+    virtual ~RaMaterialAssembly() = default;
 
-    util::Optional<OxMaterial> getMaterialById(OxEntityId const& id) const;
-    util::Optional<OxMaterial> getMaterialByName(std::string const& name) const;
-    util::Optional<OxMaterial> getMaterialByRayType(OxRayType ray_type) const;
+    util::Optional<RaMaterial> getMaterialById(RaEntityId const& id) const;
+    util::Optional<RaMaterial> getMaterialByName(std::string const& name) const;
+    util::Optional<RaMaterial> getMaterialByRayType(RaRayType ray_type) const;
     size_t getMaterialCount() const;
 
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
 private:
     struct material_hasher
     {
-        uint64_t operator()(OxMaterial const& m) const;
-        bool operator()(OxMaterial const& m1, OxMaterial const& m2) const;
+        uint64_t operator()(RaMaterial const& m) const;
+        bool operator()(RaMaterial const& m1, RaMaterial const& m2) const;
     };
 
-    using material_collection = std::unordered_set<OxMaterial, 
+    using material_collection = std::unordered_set<RaMaterial, 
         material_hasher, material_hasher>;
 
 private:
-    void update(OxObjectHandle top_scene_object) const;
+    void update(RaObjectHandle top_scene_object) const;
     
 private:
     bool m_is_dummy;
@@ -64,11 +64,11 @@ public:
 };
 
 template<>
-class OxMaterialAssemblyAttorney<OxGeometry>
+class RaMaterialAssemblyAttorney<RaGeometry>
 {
-    friend class OxGeometry;
+    friend class RaGeometry;
 
-    static void attachMaterialAssemblyToNativeGeometryHandle(OxMaterialAssembly const& parent_material_assembly, RTgeometry native_geometry_handle)
+    static void attachMaterialAssemblyToNativeGeometryHandle(RaMaterialAssembly const& parent_material_assembly, RTgeometry native_geometry_handle)
     {
         if(parent_material_assembly.getMaterialCount())
         {
@@ -78,7 +78,7 @@ class OxMaterialAssemblyAttorney<OxGeometry>
         }
     }
 
-    static void updateMaterialAssembly(OxMaterialAssembly const& parent_material_assembly, OxObjectHandle top_scene_object)
+    static void updateMaterialAssembly(RaMaterialAssembly const& parent_material_assembly, RaObjectHandle top_scene_object)
     {
         if (parent_material_assembly.getMaterialCount())
             parent_material_assembly.update(top_scene_object);
@@ -86,16 +86,16 @@ class OxMaterialAssemblyAttorney<OxGeometry>
 };
 
 template<>
-class OxMaterialAssemblyAttorney<OxGeometryGroup>
+class RaMaterialAssemblyAttorney<RaGeometryGroup>
 {
-    friend class OxGeometryGroup;
+    friend class RaGeometryGroup;
 
-    static RTgeometryinstance getNativeGeometryInstanceHandle(OxMaterialAssembly const& parent_material_assembly)
+    static RTgeometryinstance getNativeGeometryInstanceHandle(RaMaterialAssembly const& parent_material_assembly)
     {
         return parent_material_assembly.m_native_geometry_instance.get();
     }
 
-    static bool isDummyMaterialAssembly(OxMaterialAssembly const& parent_material_assembly)
+    static bool isDummyMaterialAssembly(RaMaterialAssembly const& parent_material_assembly)
     {
         return parent_material_assembly.m_is_dummy;
     }

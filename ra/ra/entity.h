@@ -6,17 +6,17 @@
 
 namespace ra{
 
-class OxEntityId
+class RaEntityId
 {
 public:
-    OxEntityId();    //! initializes new identifier based on the calling thread and on the number of entities previously created by this thread
+    RaEntityId();    //! initializes new identifier based on the calling thread and on the number of entities previously created by this thread
 
-    bool operator==(OxEntityId const& other) const;
-    bool operator<(OxEntityId const& other) const;
-    bool operator<=(OxEntityId const& other) const;
-    bool operator>(OxEntityId const& other) const;
-    bool operator>=(OxEntityId const& other) const;
-    bool operator!=(OxEntityId const& other) const;
+    bool operator==(RaEntityId const& other) const;
+    bool operator<(RaEntityId const& other) const;
+    bool operator<=(RaEntityId const& other) const;
+    bool operator>(RaEntityId const& other) const;
+    bool operator>=(RaEntityId const& other) const;
+    bool operator!=(RaEntityId const& other) const;
 
     //! Returns numeric hash identifier of the thread that has created the object referred by the id
     size_t owningThread() const;
@@ -32,10 +32,10 @@ private:
 };
 
 
-class OxEntity
+class RaEntity
 {
 public:
-    OxEntityId getUniqueIdentifier() const;    //! returns unique identifier of the entity
+    RaEntityId getUniqueIdentifier() const;    //! returns unique identifier of the entity
 
     std::string getStringName() const;	//! returns user-friendly string name of the entity
     void setStringName(std::string const& entity_string_name);	//! sets new user-friendly string name for the entity
@@ -44,20 +44,20 @@ public:
 
     virtual bool isValid() const = 0;    //! returns 'true' if the object exists in valid state (the state that is ready for ray tracing). Returns 'false' otherwise
 
-    OxEntity();
-    OxEntity(OxEntity const& other);
-    OxEntity(OxEntity&& other);
-    OxEntity& operator=(OxEntity const& other);
-    OxEntity& operator=(OxEntity&& other);
-    virtual ~OxEntity();
+    RaEntity();
+    RaEntity(RaEntity const& other);
+    RaEntity(RaEntity&& other);
+    RaEntity& operator=(RaEntity const& other);
+    RaEntity& operator=(RaEntity&& other);
+    virtual ~RaEntity();
 
 private:
-    OxEntityId m_id;    //!< unique identifier of the entity
+    RaEntityId m_id;    //!< unique identifier of the entity
     std::string m_string_name;	//!< user-friendly string name of the entity
     static thread_local uint64_t m_alive_entities;    //!< number of alive entities owned by the calling thread
 };
 
-struct OxObjectHandle
+struct RaObjectHandle
 {
     void* p_native = nullptr;
 };

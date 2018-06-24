@@ -16,49 +16,49 @@
 namespace ra {
 
 template<typename T>
-class OxMaterialAttorney;
+class RaMaterialAttorney;
 
-class OxMaterial : public OxContractWithOxContext, public OxContractWithOxPrograms, public OxEntity
+class RaMaterial : public RaContractWithRaContext, public RaContractWithRaPrograms, public RaEntity
 {
-    friend class OxMaterialAttorney<OxMaterialAssembly>;
+    friend class RaMaterialAttorney<RaMaterialAssembly>;
 
 public:
-    OxMaterial(
-        util::Optional<OxProgram> const& closest_hit_shader,
-        util::Optional<OxProgram> const& any_hit_shader,
-        OxRayTypeCollection const& supported_ray_types = OxRayTypeCollection{ 1U, OxRayType::unknown });
-    virtual ~OxMaterial() = default;
+    RaMaterial(
+        util::Optional<RaProgram> const& closest_hit_shader,
+        util::Optional<RaProgram> const& any_hit_shader,
+        RaRayTypeCollection const& supported_ray_types = RaRayTypeCollection{ 1U, RaRayType::unknown });
+    virtual ~RaMaterial() = default;
 
-    util::Optional<OxProgram> getClosestHitShader() const;
-    util::Optional<OxProgram> getAnyHitShader() const;
-    OxRayTypeCollection supportedRayTypes() const;
-    bool supportsRayType(OxRayType ray_type) const;
+    util::Optional<RaProgram> getClosestHitShader() const;
+    util::Optional<RaProgram> getAnyHitShader() const;
+    RaRayTypeCollection supportedRayTypes() const;
+    bool supportsRayType(RaRayType ray_type) const;
 
-    // required by OxEntity interface
+    // required by RaEntity interface
     bool isValid() const override;
 
 private:
-    void update(OxObjectHandle top_scene_object) const;
+    void update(RaObjectHandle top_scene_object) const;
 
 private:
     std::shared_ptr<RTmaterial_api> m_native_material;
-    OxRayTypeCollection m_supported_ray_types;
+    RaRayTypeCollection m_supported_ray_types;
 
     int8_t m_closest_hit_program_offset;
     int8_t m_any_hit_program_offset;
 };
 
 template<>
-class OxMaterialAttorney<OxMaterialAssembly>
+class RaMaterialAttorney<RaMaterialAssembly>
 {
-    friend class OxMaterialAssembly;
+    friend class RaMaterialAssembly;
 
-    static RTmaterial getNativeMaterialHandle(OxMaterial const& parent_material)
+    static RTmaterial getNativeMaterialHandle(RaMaterial const& parent_material)
     {
         return parent_material.m_native_material.get();
     }
 
-    static void updateMaterial(OxMaterial const& parent_material, OxObjectHandle top_scene_object)
+    static void updateMaterial(RaMaterial const& parent_material, RaObjectHandle top_scene_object)
     {
         parent_material.update(top_scene_object);
     }

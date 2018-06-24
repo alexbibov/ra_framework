@@ -11,29 +11,29 @@
 namespace ra
 {
 
-class OxInit final
+class RaInit final
 {
 public:
-    OxInit(
+    RaInit(
         std::string const& global_path_prefix,
         std::string const& path_to_settings);
 
-    ~OxInit();
+    ~RaInit();
     
-    OxContext& context() const;
+    RaContext& context() const;
     util::Log const& logger() const;
     std::string loggerPath() const;
 
     void executeLuaScriptFromSource(std::string const& lua_source_file) const;
 
 private:
-    std::unique_ptr<OxContext> m_context;
+    std::unique_ptr<RaContext> m_context;
     std::string m_path_to_settings_json;
     std::string m_logging_path;
 
     std::ofstream m_logging_stream;
 
-    std::unique_ptr<OxFactoryInitializerSentinel> m_factories_sentinel;
+    std::unique_ptr<RaFactoryInitializerSentinel> m_factories_sentinel;
 };
 
 }

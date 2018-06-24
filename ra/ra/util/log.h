@@ -94,7 +94,7 @@ if (optix_error_log_rv != RT_SUCCESS) \
 { \
 char const* optix_error_string{ nullptr }; \
 rtContextGetErrorString(optix_context, optix_error_log_rv, &optix_error_string); \
-throw ra::OxException{ optix_error_string, __FILE__, __FUNCTION__, __LINE__ }; \
+throw ra::RaException{ optix_error_string, __FILE__, __FUNCTION__, __LINE__ }; \
 }\
 }
 

@@ -1,7 +1,7 @@
 
-template<typename T> struct OxBufferTuner
+template<typename T> struct RaBufferTuner
 {
-    inline static RTbuffer create_buffer(OxBuffer<T> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<T> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(), 
@@ -15,9 +15,9 @@ template<typename T> struct OxBufferTuner
     }
 };
 
-template<> struct OxBufferTuner<float>
+template<> struct RaBufferTuner<float>
 {
-    inline static RTbuffer create_buffer(OxBuffer<float> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<float> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(), 
@@ -29,9 +29,9 @@ template<> struct OxBufferTuner<float>
     }
 };
 
-template<> struct OxBufferTuner<float2>
+template<> struct RaBufferTuner<float2>
 {
-    inline static RTbuffer create_buffer(OxBuffer<float2> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<float2> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -43,9 +43,9 @@ template<> struct OxBufferTuner<float2>
     }
 };
 
-template<> struct OxBufferTuner<float3>
+template<> struct RaBufferTuner<float3>
 {
-    inline static RTbuffer create_buffer(OxBuffer<float3> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<float3> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -57,9 +57,9 @@ template<> struct OxBufferTuner<float3>
     }
 };
 
-template<> struct OxBufferTuner<float4>
+template<> struct RaBufferTuner<float4>
 {
-    inline static RTbuffer create_buffer(OxBuffer<float4> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<float4> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -73,9 +73,9 @@ template<> struct OxBufferTuner<float4>
 
 
 
-template<> struct OxBufferTuner<int>
+template<> struct RaBufferTuner<int>
 {
-    inline static RTbuffer create_buffer(OxBuffer<int> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<int> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -87,9 +87,9 @@ template<> struct OxBufferTuner<int>
     }
 };
 
-template<> struct OxBufferTuner<int2>
+template<> struct RaBufferTuner<int2>
 {
-    inline static RTbuffer create_buffer(OxBuffer<int2> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<int2> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -101,9 +101,9 @@ template<> struct OxBufferTuner<int2>
     }
 };
 
-template<> struct OxBufferTuner<int3>
+template<> struct RaBufferTuner<int3>
 {
-    inline static RTbuffer create_buffer(OxBuffer<int3> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<int3> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -115,9 +115,9 @@ template<> struct OxBufferTuner<int3>
     }
 };
 
-template<> struct OxBufferTuner<int4>
+template<> struct RaBufferTuner<int4>
 {
-    inline static RTbuffer create_buffer(OxBuffer<int4> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<int4> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -131,9 +131,9 @@ template<> struct OxBufferTuner<int4>
 
 
 
-template<> struct OxBufferTuner<unsigned int>
+template<> struct RaBufferTuner<unsigned int>
 {
-    inline static RTbuffer create_buffer(OxBuffer<unsigned int> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<unsigned int> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -145,9 +145,9 @@ template<> struct OxBufferTuner<unsigned int>
     }
 };
 
-template<> struct OxBufferTuner<uint2>
+template<> struct RaBufferTuner<uint2>
 {
-    inline static RTbuffer create_buffer(OxBuffer<uint2> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<uint2> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -159,9 +159,9 @@ template<> struct OxBufferTuner<uint2>
     }
 };
 
-template<> struct OxBufferTuner<uint3>
+template<> struct RaBufferTuner<uint3>
 {
-    inline static RTbuffer create_buffer(OxBuffer<uint3> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<uint3> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -173,9 +173,9 @@ template<> struct OxBufferTuner<uint3>
     }
 };
 
-template<> struct OxBufferTuner<uint4>
+template<> struct RaBufferTuner<uint4>
 {
-    inline static RTbuffer create_buffer(OxBuffer<uint4> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<uint4> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -189,9 +189,9 @@ template<> struct OxBufferTuner<uint4>
 
 
 
-template<> struct OxBufferTuner<short>
+template<> struct RaBufferTuner<short>
 {
-    inline static RTbuffer create_buffer(OxBuffer<short> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<short> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(), 
@@ -203,9 +203,9 @@ template<> struct OxBufferTuner<short>
     }
 };
 
-template<> struct OxBufferTuner<short2>
+template<> struct RaBufferTuner<short2>
 {
-    inline static RTbuffer create_buffer(OxBuffer<short2> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<short2> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -217,9 +217,9 @@ template<> struct OxBufferTuner<short2>
     }
 };
 
-template<> struct OxBufferTuner<short3>
+template<> struct RaBufferTuner<short3>
 {
-    inline static RTbuffer create_buffer(OxBuffer<short3> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<short3> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -231,9 +231,9 @@ template<> struct OxBufferTuner<short3>
     }
 };
 
-template<> struct OxBufferTuner<short4>
+template<> struct RaBufferTuner<short4>
 {
-    inline static RTbuffer create_buffer(OxBuffer<short4> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<short4> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -247,9 +247,9 @@ template<> struct OxBufferTuner<short4>
 
 
 
-template<> struct OxBufferTuner<unsigned short>
+template<> struct RaBufferTuner<unsigned short>
 {
-    inline static RTbuffer create_buffer(OxBuffer<unsigned short> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<unsigned short> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -261,9 +261,9 @@ template<> struct OxBufferTuner<unsigned short>
     }
 };
 
-template<> struct OxBufferTuner<ushort2>
+template<> struct RaBufferTuner<ushort2>
 {
-    inline static RTbuffer create_buffer(OxBuffer<ushort2> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<ushort2> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -275,9 +275,9 @@ template<> struct OxBufferTuner<ushort2>
     }
 };
 
-template<> struct OxBufferTuner<ushort3>
+template<> struct RaBufferTuner<ushort3>
 {
-    inline static RTbuffer create_buffer(OxBuffer<ushort3> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<ushort3> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -289,9 +289,9 @@ template<> struct OxBufferTuner<ushort3>
     }
 };
 
-template<> struct OxBufferTuner<ushort4>
+template<> struct RaBufferTuner<ushort4>
 {
-    inline static RTbuffer create_buffer(OxBuffer<ushort4> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<ushort4> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -305,9 +305,9 @@ template<> struct OxBufferTuner<ushort4>
 
 
 
-template<> struct OxBufferTuner<char>
+template<> struct RaBufferTuner<char>
 {
-    inline static RTbuffer create_buffer(OxBuffer<char> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<char> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -319,9 +319,9 @@ template<> struct OxBufferTuner<char>
     }
 };
 
-template<> struct OxBufferTuner<char2>
+template<> struct RaBufferTuner<char2>
 {
-    inline static RTbuffer create_buffer(OxBuffer<char2> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<char2> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -333,9 +333,9 @@ template<> struct OxBufferTuner<char2>
     }
 };
 
-template<> struct OxBufferTuner<char3>
+template<> struct RaBufferTuner<char3>
 {
-    inline static RTbuffer create_buffer(OxBuffer<char3> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<char3> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -347,9 +347,9 @@ template<> struct OxBufferTuner<char3>
     }
 };
 
-template<> struct OxBufferTuner<char4>
+template<> struct RaBufferTuner<char4>
 {
-    inline static RTbuffer create_buffer(OxBuffer<char4> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<char4> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -363,9 +363,9 @@ template<> struct OxBufferTuner<char4>
 
 
 
-template<> struct OxBufferTuner<unsigned char>
+template<> struct RaBufferTuner<unsigned char>
 {
-    inline static RTbuffer create_buffer(OxBuffer<unsigned char> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<unsigned char> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -377,9 +377,9 @@ template<> struct OxBufferTuner<unsigned char>
     }
 };
 
-template<> struct OxBufferTuner<uchar2>
+template<> struct RaBufferTuner<uchar2>
 {
-    inline static RTbuffer create_buffer(OxBuffer<uchar2> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<uchar2> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -391,9 +391,9 @@ template<> struct OxBufferTuner<uchar2>
     }
 };
 
-template<> struct OxBufferTuner<uchar3>
+template<> struct RaBufferTuner<uchar3>
 {
-    inline static RTbuffer create_buffer(OxBuffer<uchar3> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<uchar3> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -405,9 +405,9 @@ template<> struct OxBufferTuner<uchar3>
     }
 };
 
-template<> struct OxBufferTuner<uchar4>
+template<> struct RaBufferTuner<uchar4>
 {
-    inline static RTbuffer create_buffer(OxBuffer<uchar4> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<uchar4> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),
@@ -421,9 +421,9 @@ template<> struct OxBufferTuner<uchar4>
 
 
 
-template<> struct OxBufferTuner<OxBufferId>
+template<> struct RaBufferTuner<RaBufferId>
 {
-    inline static RTbuffer create_buffer(OxBuffer<OxBufferId> const& optix_buffer_wrapper, OxBufferKind buffer_kind)
+    inline static RTbuffer create_buffer(RaBuffer<RaBufferId> const& optix_buffer_wrapper, RaBufferKind buffer_kind)
     {
         RTbuffer rv;
         THROW_OPTIX_ERROR(optix_buffer_wrapper.nativeOptiXContextHandle(),

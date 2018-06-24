@@ -3,9 +3,9 @@
 
 namespace ra { namespace ray_casters {
 
-class OxParallelRayGenerator;
-class OxRecasterGenerator;
-class OxRaycastersFactory;
+class RaParallelRayGenerator;
+class RaRecasterGenerator;
+class RaRaycastersFactory;
 
 }}
 

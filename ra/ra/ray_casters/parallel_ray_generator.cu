@@ -7,7 +7,7 @@
 #include "ra/constants.h"
 
 
-rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
+rtDeclareVariable(rtObject, ra_entry_node, , "Scene entry node");
 
 rtDeclareVariable(unsigned int, num_rays, , "Number of casted rays");
 rtDeclareVariable(float, emitter_position, , "Position of the emitter");
@@ -17,7 +17,7 @@ rtDeclareVariable(optix::uint, num_spectra_pairs_supported, , "Number of wavelen
 
 rtDeclareVariable(unsigned int, index, rtLaunchIndex, "Thread index");
 
-rtBuffer<ra::OxRayRadiancePayload, 1> ox_output_buffer;
+rtBuffer<ra::RaRayRadiancePayload, 1> ra_output_buffer;
 
 /*! The buffer is organized as follows:
  for each element of the emitter the buffer must contain M = MIN(constants::max_spectra_pairs_supported, num_spectra_pairs_supported)
@@ -26,7 +26,7 @@ rtBuffer<ra::OxRayRadiancePayload, 1> ox_output_buffer;
  All these values together therefore determine radiant exitance of single emission element of the emitter, 
  and the whole buffer determines the corresponding radiant flux
 */
-rtBuffer<optix::float2, 1> ox_init_flux_buffer;
+rtBuffer<optix::float2, 1> ra_init_flux_buffer;
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 
@@ -44,7 +44,7 @@ __device__ optix::float2 rotate_point_2d(optix::float2 point_to_rotate, optix::f
     return rv;
 }
 
-RT_PROGRAM void __ox_generate__(void)
+RT_PROGRAM void __ra_generate__(void)
 {
     optix::float3 origin{ -emitter_size / 2.f + emitter_size / (num_rays - 1) * index + emitter_position, 0.f, 0.f };
 
@@ -54,14 +54,14 @@ RT_PROGRAM void __ox_generate__(void)
     
     origin.x = rotated_point.x; origin.y = rotated_point.y;
     optix::float3 direction = optix::normalize(optix::make_float3(rotated_tip - rotated_point, 0));
-    optix::Ray ray = optix::make_Ray(origin, direction, static_cast<unsigned int>(ra::OxRayType::unknown), 0.f, RT_DEFAULT_MAX);
+    optix::Ray ray = optix::make_Ray(origin, direction, static_cast<unsigned int>(ra::RaRayType::unknown), 0.f, RT_DEFAULT_MAX);
     
     unsigned int const ns{ MIN(ra::constants::max_spectra_pairs_supported, num_spectra_pairs_supported) };
 
-    ra::OxRayRadiancePayload payload{};
-    memcpy(payload.spectral_radiance, &ox_init_flux_buffer[ns*index], sizeof(optix::float2)*ns);
+    ra::RaRayRadiancePayload payload{};
+    memcpy(payload.spectral_radiance, &ra_init_flux_buffer[ns*index], sizeof(optix::float2)*ns);
     payload.tracing_depth_and_aux = make_uint4(0U, 0U, 0U, 0U);
-    rtTrace(ox_entry_node, ray, payload);
+    rtTrace(ra_entry_node, ray, payload);
 
-    ox_output_buffer[index] = payload;
+    ra_output_buffer[index] = payload;
 }

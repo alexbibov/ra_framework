@@ -3,9 +3,9 @@
 
 namespace ra { namespace rendering_passes {
 
-class OxRenderingPass;
-class OxScatteringRenderingPass;
-class OxRenderingPassesFactory;
+class RaRenderingPass;
+class RaScatteringRenderingPass;
+class RaRenderingPassesFactory;
 
 }}
 

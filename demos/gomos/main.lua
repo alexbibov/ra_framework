@@ -1,17 +1,17 @@
-working_directory = OxLibs.OxDirectoryLib.get_current_directory().."/../demos/gomos/"    -- a bit dirty as this is dependent on where the script is run from
+working_directory = RaLibs.RaDirectoryLib.get_current_directory().."/../demos/gomos/"    -- a bit dirty as this is dependent on where the script is run from
                                                                                          -- there should be possibility to get location of the script *itself* (to be implemented)
-ox_add_asset_look_up_directory(working_directory)    -- add new directory to look for shaders
+ra_add_asset_look_up_directory(working_directory)    -- add new directory to look for shaders
 
 num_rays = 100    -- total number of rays to cast
 frequency_pairs = 8    -- number of frequency pairs to support (means 4 frquencies in total in this case)
-ox_set_context_stack_size(4096)
+ra_set_context_stack_size(4096)
 
 planet_radius = 13.272916666    -- radius of the planet
 atmosphere_thickness = 1    -- thickness of atmosphere
 planet_location = float2.new(0.0, -(planet_radius + atmosphere_thickness / 2.0))   -- X and Y coordinates of the center of the planet
 
 -- create planet and atmosphere that encloses it
-planet_circle = OxCircle.new(
+planet_circle = RaCircle.new(
     planet_location.x,
     planet_location.y,
     planet_radius
@@ -19,7 +19,7 @@ planet_circle = OxCircle.new(
 
 planet_circle:setStringName("planet_circle_shape")
 
-atmospheric_circle = OxCircle.new(
+atmospheric_circle = RaCircle.new(
     planet_location.x,
     planet_location.y,
     planet_radius + atmosphere_thickness
@@ -53,7 +53,7 @@ atmospheric_circle:setStringName("atmosphere_circle_shape")
 
 
 
-parallel_ray_generator = OxParallelRayGenerator.new(
+parallel_ray_generator = RaParallelRayGenerator.new(
     num_rays, --[Total number of rays to cast]
     atmosphere_thickness*0.95, --[Opening of the emitter]
     -(planet_radius + atmosphere_thickness + 1), --[Position of the emitter]
@@ -63,7 +63,7 @@ parallel_ray_generator = OxParallelRayGenerator.new(
 
 
 -- load gas profile and cross section data stored separately in MATLAB v4 file
-gomos_data_load_agent = OxMatlabV4.new(working_directory.."gomosdata.mat")
+gomos_data_load_agent = RaMatlabV4.new(working_directory.."gomosdata.mat")
 vars = gomos_data_load_agent:getVariables()
 num_heights = nil
 num_wavelengths = nil
@@ -74,19 +74,19 @@ for v = 1, #vars do
 
         num_heights = math.tointeger(vars[v].number_of_rows)
         num_gas_profiles = math.tointeger(vars[v].number_of_columns)
-        gas_profiles = OxBuffer.new(OxBufferFormat["FLOAT"], OxBufferKind["input"], num_heights, num_gas_profiles)    
+        gas_profiles = RaBuffer.new(RaBufferFormat["FLOAT"], RaBufferKind["input"], num_heights, num_gas_profiles)    
 
     elseif vars[v].name == "cross_sections" then
 
         num_wavelengths = math.tointeger(vars[v].number_of_rows)
         num_gas_profiles = math.tointeger(vars[v].number_of_columns)
-        cross_sections = OxBuffer.new(OxBufferFormat["FLOAT"], OxBufferKind["input"], num_wavelengths, num_gas_profiles)
+        cross_sections = RaBuffer.new(RaBufferFormat["FLOAT"], RaBufferKind["input"], num_wavelengths, num_gas_profiles)
 
     end
 
 end
-gomos_data_load_agent:load(gas_profiles, 0, OxBufferFormat["FLOAT"], "gas_profiles")
-gomos_data_load_agent:load(cross_sections, 0, OxBufferFormat["FLOAT"], "cross_sections")
+gomos_data_load_agent:load(gas_profiles, 0, RaBufferFormat["FLOAT"], "gas_profiles")
+gomos_data_load_agent:load(cross_sections, 0, RaBufferFormat["FLOAT"], "cross_sections")
 
 
 -- -- write per-spectrum intensities for rays casted by the parallel ray generator
@@ -102,23 +102,23 @@ parallel_ray_generator:setStringName("parallel_ray_generator_raycaster")
 -- --[[]
 --     Black body is simple material that absorbs all the radiance from any incoming ray.
 --     Below this material is used to simulate absorption of the planet body.
---     The constructor of OxBlackBody (inherited from OxMaterial) accepts two arguments.
---     The first must be an entry from table named OxRayPayloadType, which determines
---     the type of ray payload to use. The second argument must be set of OxRayType enumeration
+--     The constructor of RaBlackBody (inherited from RaMaterial) accepts two arguments.
+--     The first must be an entry from table named RaRayPayloadType, which determines
+--     the type of ray payload to use. The second argument must be set of RaRayType enumeration
 --     values determining, which types of rays must be affected by the black body material.
 -- ]]
-black_body = OxBlackBody.new(OxRayPayloadType["radiance"], { OxRayType["unknown"], OxRayType["scattered"] })
+black_body = RaBlackBody.new(RaRayPayloadType["radiance"], { RaRayType["unknown"], RaRayType["scattered"] })
 black_body:setStringName("black_body_material")
 
 -- --[[
---     All materials have to be grouped into OxMaterialAssembly objects before they
+--     All materials have to be grouped into RaMaterialAssembly objects before they
 --     can be attached to the respective geometries. Below we create material assembly and pack there 
 --     the black body material, which was initialized above. 
 --     This material assembly is afterwards getting attached to
 --     the planet geometry. Atmospheric circle in turn gets an EMPTY material assembly object. This is a 
 --     special case introduced to correctly apply RENDERING PASSES (more details about them are found below)
 -- ]]
-planet_material_assembly = OxMaterialAssembly.new({ black_body })
+planet_material_assembly = RaMaterialAssembly.new({ black_body })
 planet_material_assembly:setStringName("planet_material_assembly")
 planet_circle:setMaterialAssembly(planet_material_assembly)
 
@@ -133,15 +133,15 @@ planet_circle:setMaterialAssembly(planet_material_assembly)
 --     the scattering rendering pass initialized below would not that this geometry (atmospheric_circle) must
 --     be patches and behave in accordance with scattering transfer model
 -- ]]
-atmospheric_circle:setMaterialAssembly(OxMaterialAssembly.new())
+atmospheric_circle:setMaterialAssembly(RaMaterialAssembly.new())
 
 -- --[[
 --     All geometries must be combined into geometry groups. This is the only way to attach them to scene section,
 --     which eventually can be ray-traced. Geometry groups are needed to identify how acceleration structures will
 --     be constructed for the given set of geometry objects. The algorithm used to construct acceleration structure
---     is provided to the input of OxGeometryGroup constructor.
+--     is provided to the input of RaGeometryGroup constructor.
 -- ]]
-earth_geometry_group = OxGeometryGroup.new(OxBVHAlgorithm["none"])
+earth_geometry_group = RaGeometryGroup.new(RaBVHAlgorithm["none"])
 earth_geometry_group:beginConstruction()
 earth_geometry_group:addGeometry(atmospheric_circle)
 earth_geometry_group:addGeometry(planet_circle)
@@ -150,28 +150,28 @@ earth_geometry_group:endConstruction()
 -- --[[
 --     Geometry groups to be ray-traced must be packed into scene sections, which in turn may include not only geometry
 --     groups, but also other scene sections. Scene sections are just higher level abstraction of geometry to be
---     ray-traced and it's main purpose is to define the higher-level bounding volume hierarchy (BVH). Similar to OxGeometryGroup
---     the only parameter accepted by constructor of OxSceneSection is algorithm to use for construction of the corresponding
+--     ray-traced and it's main purpose is to define the higher-level bounding volume hierarchy (BVH). Similar to RaGeometryGroup
+--     the only parameter accepted by constructor of RaSceneSection is algorithm to use for construction of the corresponding
 --     acceleration structure (acceleration structure = BVH in this case)
 -- ]]
-scene_section = OxSceneSection.new(OxBVHAlgorithm["none"])
+scene_section = RaSceneSection.new(RaBVHAlgorithm["none"])
 scene_section:beginConstruction()
 scene_section:addGeometryGroup(earth_geometry_group)
 scene_section:endConstruction()
 
 
-scattering_rendering_pass = OxScatteringRenderingPass.new(
+scattering_rendering_pass = RaScatteringRenderingPass.new(
     scene_section,    -- scene section, to which the scattering pass will be applied
     parallel_ray_generator,    -- ray generator employed by the scattering pass
     frequency_pairs,    -- number of spectral pairs supported by the scattering pass (must be equal to that of the ray generator)
     4,   -- maximal depth of recursion
     0.05,    -- ray marching step size
-    1    -- number of importance directions used to approximate the scattering integral
+    1    -- number of importance directions used to apprRaimate the scattering integral
 )
 
-absorption_factor_shader = OxProgram.new(
+absorption_factor_shader = RaProgram.new(
     "gomos_absorption_factor_shader.ptx",
-    OxProgramSource["file"],
+    RaProgramSource["file"],
     "gomos_absorption_lut"
 )
 
@@ -193,7 +193,7 @@ absorption_factor_shader:assignBuffer("cross_sections", cross_sections)
 -- end
 -- scattering_rendering_pass:updateImportanceDirections(importance_directions)
 
-gomos_data_store_agent = OxMatlabV4.new(working_directory.."results.mat")
+gomos_data_store_agent = RaMatlabV4.new(working_directory.."results.mat")
 
 for pass = 1, math.ceil(num_wavelengths/16) do
     io.write(string.format("pass#%i...", pass))
@@ -203,7 +203,7 @@ for pass = 1, math.ceil(num_wavelengths/16) do
     scattering_rendering_pass:setAbsorptionProbabilityShader(absorption_factor_shader)
     scattering_rendering_pass:render()    -- execute ray-tracing
     output = parallel_ray_generator:outputBuffer()
-    gomos_data_store_agent:save(output, 0, OxBufferFormat["RAY_RADIANCE_PAYLOAD"], "output_pass"..pass)
+    gomos_data_store_agent:save(output, 0, RaBufferFormat["RAY_RADIANCE_PAYLOAD"], "output_pass"..pass)
 
     io.write("done\n")
 end

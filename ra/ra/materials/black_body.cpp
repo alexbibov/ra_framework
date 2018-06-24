@@ -7,11 +7,11 @@
 using namespace ra;
 using namespace ra::materials;
 
-OxBlackBody::OxBlackBody(OxContext const& context, OxRayPayloadType payload_type, OxRayTypeCollection affected_ray_types)
-    : OxMaterial{ 
-        util::Optional<OxProgram>{}, 
-        context.createProgram(PTX_BLACK_BODY_MATERIAL, OxProgram::Source::file, OX_SHADER_ENTRY_ANY_HIT), 
+RaBlackBody::RaBlackBody(RaContext const& context, RaRayPayloadType payload_type, RaRayTypeCollection affected_ray_types)
+    : RaMaterial{ 
+        util::Optional<RaProgram>{}, 
+        context.createProgram(PTX_BLACK_BODY_MATERIAL, RaProgram::Source::file, OX_SHADER_ENTRY_ANY_HIT), 
         affected_ray_types }
 {
-    static_cast<OxProgram&>(getAnyHitShader()).setVariableValue("payload_type", static_cast<unsigned int>(payload_type));
+    static_cast<RaProgram&>(getAnyHitShader()).setVariableValue("payload_type", static_cast<unsigned int>(payload_type));
 }

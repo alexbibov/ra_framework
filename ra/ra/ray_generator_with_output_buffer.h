@@ -6,24 +6,24 @@
 
 namespace ra {
 
-class OxRayGeneratorWithOutputBuffer : public OxRayGenerator
+class RaRayGeneratorWithOutputBuffer : public RaRayGenerator
 {
 public:
-    OxRayGeneratorWithOutputBuffer(OxProgram const& ray_generation_shader, 
-        OxAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name,
+    RaRayGeneratorWithOutputBuffer(RaProgram const& ray_generation_shader, 
+        RaAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name,
         uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U,
         uint32_t entry_point_index = 0U);
 
-    OxRayGeneratorWithOutputBuffer(OxProgram const& ray_generation_shader,
-        OxMissShaderAssembly const& miss_shader_assembly,
-        OxAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name,
+    RaRayGeneratorWithOutputBuffer(RaProgram const& ray_generation_shader,
+        RaMissShaderAssembly const& miss_shader_assembly,
+        RaAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name,
         uint32_t num_rays_x, uint32_t num_rays_y = 1U, uint32_t num_rays_z = 1U,
         uint32_t entry_point_index = 0U);
 
-    OxAbstractBuffer const& outputBuffer() const override;
+    RaAbstractBuffer const& outputBuffer() const override;
 
 private:
-    OxAbstractBuffer m_output_buffer;
+    RaAbstractBuffer m_output_buffer;
 };
 
 }

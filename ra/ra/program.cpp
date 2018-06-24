@@ -4,9 +4,9 @@
 
 using namespace ra;
 
-OxProgram::OxProgram(OxContext const& optix_context,
+RaProgram::RaProgram(RaContext const& optix_context,
     std::string const& source, Source source_type, std::string const& entry_point):
-    OxContractWithOxContext{ optix_context }
+    RaContractWithRaContext{ optix_context }
 {
     setStringName(entry_point.c_str());
 
@@ -29,87 +29,87 @@ OxProgram::OxProgram(OxContext const& optix_context,
     });
 }
 
-OxProgramId OxProgram::getId() const
+RaProgramId RaProgram::getId() const
 {
     int id;
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtProgramGetId(m_native_optix_program.get(), &id));
 
-    return OxProgramId{ id };
+    return RaProgramId{ id };
 }
 
-void OxProgram::setVariableValue(std::string const& name, float value)
+void RaProgram::setVariableValue(std::string const& name, float value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet1f(native_variable_handle, value));
 }
 
-void OxProgram::setVariableValue(std::string const& name, float2 const& value)
+void RaProgram::setVariableValue(std::string const& name, float2 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet2f(native_variable_handle, value.x, value.y));
 }
 
-void OxProgram::setVariableValue(std::string const& name, float3 const& value)
+void RaProgram::setVariableValue(std::string const& name, float3 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet3f(native_variable_handle, value.x, value.y, value.z));
 }
 
-void OxProgram::setVariableValue(std::string const& name, float4 const& value)
+void RaProgram::setVariableValue(std::string const& name, float4 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet4f(native_variable_handle, value.x, value.y, value.z, value.w));
 }
 
-void OxProgram::setVariableValue(std::string const& name, int value)
+void RaProgram::setVariableValue(std::string const& name, int value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet1i(native_variable_handle, value));
 }
 
-void OxProgram::setVariableValue(std::string const& name, int2 const& value)
+void RaProgram::setVariableValue(std::string const& name, int2 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet2i(native_variable_handle, value.x, value.y));
 }
 
-void OxProgram::setVariableValue(std::string const& name, int3 const& value)
+void RaProgram::setVariableValue(std::string const& name, int3 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet3i(native_variable_handle, value.x, value.y, value.z));
 }
 
-void OxProgram::setVariableValue(std::string const& name, int4 const& value)
+void RaProgram::setVariableValue(std::string const& name, int4 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet4i(native_variable_handle, value.x, value.y, value.z, value.w));
 }
 
-void OxProgram::setVariableValue(std::string const& name, unsigned int value)
+void RaProgram::setVariableValue(std::string const& name, unsigned int value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet1ui(native_variable_handle, value));
 }
 
-void OxProgram::setVariableValue(std::string const& name, uint2 const& value)
+void RaProgram::setVariableValue(std::string const& name, uint2 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet2ui(native_variable_handle, value.x, value.y));
 }
 
-void OxProgram::setVariableValue(std::string const& name, uint3 const& value)
+void RaProgram::setVariableValue(std::string const& name, uint3 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet3ui(native_variable_handle, value.x, value.y, value.z));
 }
 
-void OxProgram::setVariableValue(std::string const& name, uint4 const& value)
+void RaProgram::setVariableValue(std::string const& name, uint4 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet4ui(native_variable_handle, value.x, value.y, value.z, value.w));
 }
 
-void OxProgram::setVariableValue(std::string const& name, util::mat2x2 const& value)
+void RaProgram::setVariableValue(std::string const& name, util::mat2x2 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     {
@@ -121,7 +121,7 @@ void OxProgram::setVariableValue(std::string const& name, util::mat2x2 const& va
     }
 }
 
-void OxProgram::setVariableValue(std::string const& name, util::mat2x3 const& value)
+void RaProgram::setVariableValue(std::string const& name, util::mat2x3 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     {
@@ -133,7 +133,7 @@ void OxProgram::setVariableValue(std::string const& name, util::mat2x3 const& va
     }
 }
 
-void OxProgram::setVariableValue(std::string const& name, util::mat2x4 const& value)
+void RaProgram::setVariableValue(std::string const& name, util::mat2x4 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     {
@@ -145,7 +145,7 @@ void OxProgram::setVariableValue(std::string const& name, util::mat2x4 const& va
     }
 }
 
-void OxProgram::setVariableValue(std::string const& name, util::mat3x2 const& value)
+void RaProgram::setVariableValue(std::string const& name, util::mat3x2 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     {
@@ -158,7 +158,7 @@ void OxProgram::setVariableValue(std::string const& name, util::mat3x2 const& va
     }
 }
 
-void OxProgram::setVariableValue(std::string const& name, util::mat3x3 const& value)
+void RaProgram::setVariableValue(std::string const& name, util::mat3x3 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     {
@@ -171,7 +171,7 @@ void OxProgram::setVariableValue(std::string const& name, util::mat3x3 const& va
     }
 }
 
-void OxProgram::setVariableValue(std::string const& name, util::mat3x4 const& value)
+void RaProgram::setVariableValue(std::string const& name, util::mat3x4 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     {
@@ -184,7 +184,7 @@ void OxProgram::setVariableValue(std::string const& name, util::mat3x4 const& va
     }
 }
 
-void OxProgram::setVariableValue(std::string const& name, util::mat4x2 const& value)
+void RaProgram::setVariableValue(std::string const& name, util::mat4x2 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     {
@@ -198,7 +198,7 @@ void OxProgram::setVariableValue(std::string const& name, util::mat4x2 const& va
     }
 }
 
-void OxProgram::setVariableValue(std::string const& name, util::mat4x3 const& value)
+void RaProgram::setVariableValue(std::string const& name, util::mat4x3 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     {
@@ -212,7 +212,7 @@ void OxProgram::setVariableValue(std::string const& name, util::mat4x3 const& va
     }
 }
 
-void OxProgram::setVariableValue(std::string const& name, util::mat4x4 const& value)
+void RaProgram::setVariableValue(std::string const& name, util::mat4x4 const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     {
@@ -226,19 +226,19 @@ void OxProgram::setVariableValue(std::string const& name, util::mat4x4 const& va
     }
 }
 
-void OxProgram::setVariableValue(std::string const& name, OxObjectHandle const& value)
+void RaProgram::setVariableValue(std::string const& name, RaObjectHandle const& value)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSetObject(native_variable_handle, static_cast<RTobject>(value.p_native)));
 }
 
-void OxProgram::setVariableValue(std::string const& name, OxProgramId const& program_id)
+void RaProgram::setVariableValue(std::string const& name, RaProgramId const& program_id)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtVariableSet1i(native_variable_handle, program_id.native));
 }
 
-void OxProgram::getVariableValue(std::string const& name, float& value)
+void RaProgram::getVariableValue(std::string const& name, float& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -251,7 +251,7 @@ void OxProgram::getVariableValue(std::string const& name, float& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, float2& value)
+void RaProgram::getVariableValue(std::string const& name, float2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -264,7 +264,7 @@ void OxProgram::getVariableValue(std::string const& name, float2& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, float3& value)
+void RaProgram::getVariableValue(std::string const& name, float3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -277,7 +277,7 @@ void OxProgram::getVariableValue(std::string const& name, float3& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, float4& value)
+void RaProgram::getVariableValue(std::string const& name, float4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -290,7 +290,7 @@ void OxProgram::getVariableValue(std::string const& name, float4& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, int& value)
+void RaProgram::getVariableValue(std::string const& name, int& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -303,7 +303,7 @@ void OxProgram::getVariableValue(std::string const& name, int& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, int2& value)
+void RaProgram::getVariableValue(std::string const& name, int2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -316,7 +316,7 @@ void OxProgram::getVariableValue(std::string const& name, int2& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, int3& value)
+void RaProgram::getVariableValue(std::string const& name, int3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -329,7 +329,7 @@ void OxProgram::getVariableValue(std::string const& name, int3& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, int4& value)
+void RaProgram::getVariableValue(std::string const& name, int4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -342,7 +342,7 @@ void OxProgram::getVariableValue(std::string const& name, int4& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, unsigned int& value)
+void RaProgram::getVariableValue(std::string const& name, unsigned int& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -355,7 +355,7 @@ void OxProgram::getVariableValue(std::string const& name, unsigned int& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, uint2& value)
+void RaProgram::getVariableValue(std::string const& name, uint2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -368,7 +368,7 @@ void OxProgram::getVariableValue(std::string const& name, uint2& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, uint3& value)
+void RaProgram::getVariableValue(std::string const& name, uint3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -381,7 +381,7 @@ void OxProgram::getVariableValue(std::string const& name, uint3& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, uint4& value)
+void RaProgram::getVariableValue(std::string const& name, uint4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -394,7 +394,7 @@ void OxProgram::getVariableValue(std::string const& name, uint4& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat2x2& value)
+void RaProgram::getVariableValue(std::string const& name, util::mat2x2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -410,7 +410,7 @@ void OxProgram::getVariableValue(std::string const& name, util::mat2x2& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat2x3& value)
+void RaProgram::getVariableValue(std::string const& name, util::mat2x3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -426,7 +426,7 @@ void OxProgram::getVariableValue(std::string const& name, util::mat2x3& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat2x4& value)
+void RaProgram::getVariableValue(std::string const& name, util::mat2x4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -442,7 +442,7 @@ void OxProgram::getVariableValue(std::string const& name, util::mat2x4& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat3x2& value)
+void RaProgram::getVariableValue(std::string const& name, util::mat3x2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -459,7 +459,7 @@ void OxProgram::getVariableValue(std::string const& name, util::mat3x2& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat3x3& value)
+void RaProgram::getVariableValue(std::string const& name, util::mat3x3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -476,7 +476,7 @@ void OxProgram::getVariableValue(std::string const& name, util::mat3x3& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat3x4& value)
+void RaProgram::getVariableValue(std::string const& name, util::mat3x4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -493,7 +493,7 @@ void OxProgram::getVariableValue(std::string const& name, util::mat3x4& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat4x2& value)
+void RaProgram::getVariableValue(std::string const& name, util::mat4x2& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -511,7 +511,7 @@ void OxProgram::getVariableValue(std::string const& name, util::mat4x2& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat4x3& value)
+void RaProgram::getVariableValue(std::string const& name, util::mat4x3& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -529,7 +529,7 @@ void OxProgram::getVariableValue(std::string const& name, util::mat4x3& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, util::mat4x4& value)
+void RaProgram::getVariableValue(std::string const& name, util::mat4x4& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -547,7 +547,7 @@ void OxProgram::getVariableValue(std::string const& name, util::mat4x4& value)
     }
 }
 
-void OxProgram::getVariableValue(std::string const& name, OxObjectHandle& value)
+void RaProgram::getVariableValue(std::string const& name, RaObjectHandle& value)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -563,21 +563,21 @@ void OxProgram::getVariableValue(std::string const& name, OxObjectHandle& value)
 }
 
 
-bool OxProgram::isValid() const
+bool RaProgram::isValid() const
 {
      RTresult res = rtProgramValidate(m_native_optix_program.get());
      LOG_OPTIX_ERROR(nativeOptiXContextHandle(), res);
      return res == RT_SUCCESS;
 }
 
-void OxProgram::assignBuffer(std::string const& name, OxAbstractBuffer const& buffer)
+void RaProgram::assignBuffer(std::string const& name, RaAbstractBuffer const& buffer)
 {
     RTvariable native_variable_handle = declare_variable_object(name);
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), 
-        rtVariableSetObject(native_variable_handle, OxAbstractBufferAttorney<OxProgram>::getNativeOptiXBufferHandle(buffer)));
+        rtVariableSetObject(native_variable_handle, RaAbstractBufferAttorney<RaProgram>::getNativeOptiXBufferHandle(buffer)));
 }
 
-void OxProgram::assignProgram(std::string const & name, OxProgram const & program)
+void RaProgram::assignProgram(std::string const & name, RaProgram const & program)
 {
     RTvariable native_variable_handle{};
     if (native_variable_handle = fetch_variable(name))
@@ -591,14 +591,14 @@ void OxProgram::assignProgram(std::string const & name, OxProgram const & progra
     }
 }
 
-bool OxProgram::checkVariableExistance(std::string const& name) const
+bool RaProgram::checkVariableExistance(std::string const& name) const
 {
     RTvariable v{ nullptr };
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtProgramQueryVariable(m_native_optix_program.get(), name.c_str(), &v));
     return v != nullptr;
 }
 
-RTvariable ra::OxProgram::fetch_variable(std::string const& name)
+RTvariable ra::RaProgram::fetch_variable(std::string const& name)
 {
     RTvariable rv{ nullptr };
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtProgramQueryVariable(m_native_optix_program.get(), name.c_str(), &rv));
@@ -606,7 +606,7 @@ RTvariable ra::OxProgram::fetch_variable(std::string const& name)
     return rv;
 }
 
-RTvariable OxProgram::declare_variable_object(std::string const& name)
+RTvariable RaProgram::declare_variable_object(std::string const& name)
 {
     RTvariable rv{ nullptr };
     if(!(rv = fetch_variable(name)))

@@ -3,8 +3,8 @@
 
 namespace ra { namespace materials {
 
-class OxBlackBody;
-class OxMaterialsFactory;
+class RaBlackBody;
+class RaMaterialsFactory;
 
 }}
 

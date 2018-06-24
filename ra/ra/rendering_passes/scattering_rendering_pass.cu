@@ -7,7 +7,7 @@
 #include "ra/ray_payloads.h"
 
 
-rtDeclareVariable(rtObject, ox_entry_node, , "Scene entry node");
+rtDeclareVariable(rtObject, ra_entry_node, , "Scene entry node");
 
 rtDeclareVariable(float, step_size, , "Ray marching step size");
 rtDeclareVariable(uint3, problem_size, , "Original size of the problem");
@@ -22,8 +22,8 @@ rtDeclareVariable(factor_program_id_type, absorption_factor, , );
 rtDeclareVariable(factor_program_id_type, scattering_factor, , );
 rtDeclareVariable(phase_function_program_id_type, phase_function, , );
 
-rtDeclareVariable(ra::OxRayRadiancePayload, ray_payload, rtPayload, "Current ray payload");
-rtDeclareVariable(ra::OxRayRadiancePayloadSimple, ray_payload_scattered, rtPayload, "Payload of the current scattering ray");
+rtDeclareVariable(ra::RaRayRadiancePayload, ray_payload, rtPayload, "Current ray payload");
+rtDeclareVariable(ra::RaRayRadiancePayloadSimple, ray_payload_scattered, rtPayload, "Payload of the current scattering ray");
 rtDeclareVariable(float, intersection_distance, rtIntersectionDistance, "Parametric distance from ray origin to the intersection");
 rtDeclareVariable(optix::Ray, current_ray, rtCurrentRay, "Currently traversed ray");
 rtDeclareVariable(optix::uint3, index, rtLaunchIndex, "Index of the current ray");
@@ -125,7 +125,7 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
         // scattering component is only calculated when scattering is enabled
         for (int j = 0; j < num_importance_directions; ++j)
         {
-            OxRayRadiancePayloadSimple scattered_payload;
+            RaRayRadiancePayloadSimple scattered_payload;
             scattered_payload.spectral_radiance = make_float2(0.f, 0.f);
             scattered_payload.tracing_depth_and_aux =
                 make_uint4(
@@ -138,9 +138,9 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
             Ray scattered_ray = make_Ray(
                 p,
                 extract_direction_from_angles(importance_direction),
-                static_cast<unsigned int>(OxRayType::scattered), 0.f, step_size);
+                static_cast<unsigned int>(RaRayType::scattered), 0.f, step_size);
 
-            rtTrace(ox_entry_node, scattered_ray, scattered_payload);
+            rtTrace(ra_entry_node, scattered_ray, scattered_payload);
 
             S += scattered_payload.spectral_radiance
                 * phase_function(p, importance_direction, direction_of_interest, i) * sin(importance_direction.x);
@@ -155,7 +155,7 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
     }
 }
 
-RT_PROGRAM void __ox_closest_hit__(void)
+RT_PROGRAM void __ra_closest_hit__(void)
 {
     int dS = static_cast<int>(sign(-dot(normal, current_ray.direction)));
     ray_payload.tracing_depth_and_aux.y = MAX(0, static_cast<int>(ray_payload.tracing_depth_and_aux.y) + dS);
@@ -175,9 +175,9 @@ RT_PROGRAM void __ox_closest_hit__(void)
             Ray subsurface_ray = make_Ray(
                 p + correction*current_ray.direction,
                 current_ray.direction,
-                static_cast<unsigned int>(OxRayType::unknown), 0.f, step_size + correction);
+                static_cast<unsigned int>(RaRayType::unknown), 0.f, step_size + correction);
 
-            rtTrace(ox_entry_node, subsurface_ray, ray_payload);
+            rtTrace(ra_entry_node, subsurface_ray, ray_payload);
         }
         else
         {
@@ -208,16 +208,16 @@ RT_PROGRAM void __ox_closest_hit__(void)
             Ray next_iteration_ray = make_Ray(
                 p + correction*current_ray.direction,
                 current_ray.direction,
-                static_cast<unsigned int>(OxRayType::unknown), 0.f, RT_DEFAULT_MAX);
+                static_cast<unsigned int>(RaRayType::unknown), 0.f, RT_DEFAULT_MAX);
 
-            rtTrace(ox_entry_node, next_iteration_ray, ray_payload);
+            rtTrace(ra_entry_node, next_iteration_ray, ray_payload);
         }
     }
 
     // ray has "touched" object: no operation is required
 }
 
-RT_PROGRAM void __ox_miss__(void)
+RT_PROGRAM void __ra_miss__(void)
 {
     if (ray_payload.tracing_depth_and_aux.y >= 1)    // "miss" has happened inside of medium
     {
@@ -234,9 +234,9 @@ RT_PROGRAM void __ox_miss__(void)
 
             Ray next_iteration_ray = make_Ray(
                 p, current_ray.direction,
-                static_cast<unsigned int>(OxRayType::unknown), 0.f, step_size);
+                static_cast<unsigned int>(RaRayType::unknown), 0.f, step_size);
 
-            rtTrace(ox_entry_node, next_iteration_ray, ray_payload);
+            rtTrace(ra_entry_node, next_iteration_ray, ray_payload);
         }
         else
         {
@@ -253,7 +253,7 @@ RT_PROGRAM void __ox_miss__(void)
 
 }
 
-RT_PROGRAM void __ox_closest_hit_scattered__(void)
+RT_PROGRAM void __ra_closest_hit_scattered__(void)
 {
     // this shader is only called when scattered ray exits the domain of the medium
     unsigned int idb_offset = ray_payload_scattered.tracing_depth_and_aux.z;
@@ -262,7 +262,7 @@ RT_PROGRAM void __ox_closest_hit_scattered__(void)
     ray_payload_scattered.spectral_radiance = incoming_spectral_radiance;
 }
 
-RT_PROGRAM void __ox_miss_scattered__(void)
+RT_PROGRAM void __ra_miss_scattered__(void)
 {
     // this shader is only invoked from within the medium
 
@@ -275,9 +275,9 @@ RT_PROGRAM void __ox_miss_scattered__(void)
 
         Ray next_scattered_ray_iteration = make_Ray(
             p, current_ray.direction,
-            static_cast<unsigned int>(OxRayType::scattered), 0.f, 
+            static_cast<unsigned int>(RaRayType::scattered), 0.f, 
             ray_payload_scattered.tracing_depth_and_aux.x < max_recursion_depth ? step_size : RT_DEFAULT_MAX);
-        rtTrace(ox_entry_node, next_scattered_ray_iteration, ray_payload_scattered);
+        rtTrace(ra_entry_node, next_scattered_ray_iteration, ray_payload_scattered);
 
         unsigned int spectrum = ray_payload_scattered.tracing_depth_and_aux.w;
         float2 phi = expf(-absorption_factor(p_2, spectrum) * step_size);

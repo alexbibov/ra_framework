@@ -9,18 +9,18 @@ using namespace ra::util;
 
 namespace {
 
-static OxDataStoreAgentsFactory* p_data_store_agents_factory_instance{ nullptr };
+static RaDataStoreAgentsFactory* p_data_store_agents_factory_instance{ nullptr };
 
 }
 
-OxDataStoreAgentsFactory* OxDataStoreAgentsFactory::initialize(OxContext const& context)
+RaDataStoreAgentsFactory* RaDataStoreAgentsFactory::initialize(RaContext const& context)
 {
     if (!p_data_store_agents_factory_instance)
-        p_data_store_agents_factory_instance = new OxDataStoreAgentsFactory(context);
+        p_data_store_agents_factory_instance = new RaDataStoreAgentsFactory(context);
     return p_data_store_agents_factory_instance;
 }
 
-void OxDataStoreAgentsFactory::shutdown()
+void RaDataStoreAgentsFactory::shutdown()
 {
     if (p_data_store_agents_factory_instance)
     {
@@ -29,33 +29,33 @@ void OxDataStoreAgentsFactory::shutdown()
     }
 }
 
-OxDataStoreAgentsFactory* OxDataStoreAgentsFactory::retrieve()
+RaDataStoreAgentsFactory* RaDataStoreAgentsFactory::retrieve()
 {
     return p_data_store_agents_factory_instance;
 }
 
-bool OxDataStoreAgentsFactory::isValid() const
+bool RaDataStoreAgentsFactory::isValid() const
 {
     return true;
 }
 
-OxMatlabV4 OxDataStoreAgentsFactory::createMatlabV4Agent(std::string const& target_path, bool append_data)
+RaMatlabV4 RaDataStoreAgentsFactory::createMatlabV4Agent(std::string const& target_path, bool append_data)
 {
-    return OxMatlabV4{ target_path, append_data };
+    return RaMatlabV4{ target_path, append_data };
 }
 
-OxDataStoreAgentsFactory::OxDataStoreAgentsFactory(OxContext const& context) :
+RaDataStoreAgentsFactory::RaDataStoreAgentsFactory(RaContext const& context) :
     m_context{ context }
 {
-    setStringName("OxDataStoreAgentsFactory");
+    setStringName("RaDataStoreAgentsFactory");
 
     // Register factory functions in Lua
     {
-        lua_support::LuaTable ox_matlab_v4_table = lua_support::LuaState::registerSubType<OxMatlabV4>(
-            "OxMatlabV4",
+        lua_support::LuaTable ra_matlab_v4_table = lua_support::LuaState::registerSubType<RaMatlabV4>(
+            "RaMatlabV4",
 
             lua_support::ListOfBaseClasses::make_initializer(
-                lua_support::BaseClass<OxEntity>{}
+                lua_support::BaseClass<RaEntity>{}
             ),
 
             lua_support::ListOfFactories::make_initializer(
@@ -70,33 +70,33 @@ OxDataStoreAgentsFactory::OxDataStoreAgentsFactory(OxContext const& context) :
                 }
             ),
 
-            "save", &OxMatlabV4::save,
-            "load", &OxMatlabV4::load,
-            "getVariables", &OxMatlabV4::getVariables
+            "save", &RaMatlabV4::save,
+            "load", &RaMatlabV4::load,
+            "getVariables", &RaMatlabV4::getVariables
         );
 
-        ox_matlab_v4_table.registerEnum("VariableDataFormat",
-            "DOUBLE", OxMatlabV4::MatlabV4NumericDataFormat::double_precision_fp,
-            "FLOAT", OxMatlabV4::MatlabV4NumericDataFormat::single_precision_fp,
-            "INT32", OxMatlabV4::MatlabV4NumericDataFormat::signed_32bit_integer,
-            "INT16", OxMatlabV4::MatlabV4NumericDataFormat::signed_16bit_integer,
-            "UINT16", OxMatlabV4::MatlabV4NumericDataFormat::unsigned_16bit_integer,
-            "UINT8", OxMatlabV4::MatlabV4NumericDataFormat::unsigned_8bit_integer);
+        ra_matlab_v4_table.registerEnum("VariableDataFormat",
+            "DOUBLE", RaMatlabV4::MatlabV4NumericDataFormat::double_precision_fp,
+            "FLOAT", RaMatlabV4::MatlabV4NumericDataFormat::single_precision_fp,
+            "INT32", RaMatlabV4::MatlabV4NumericDataFormat::signed_32bit_integer,
+            "INT16", RaMatlabV4::MatlabV4NumericDataFormat::signed_16bit_integer,
+            "UINT16", RaMatlabV4::MatlabV4NumericDataFormat::unsigned_16bit_integer,
+            "UINT8", RaMatlabV4::MatlabV4NumericDataFormat::unsigned_8bit_integer);
         
-        ox_matlab_v4_table.registerEnum("VariableDataType",
-            "NUMERIC", OxMatlabV4::MatlabV4MatrixType::numeric,
-            "TEXT", OxMatlabV4::MatlabV4MatrixType::text,
-            "SPARSE", OxMatlabV4::MatlabV4MatrixType::sparse);
+        ra_matlab_v4_table.registerEnum("VariableDataType",
+            "NUMERIC", RaMatlabV4::MatlabV4MatrixType::numeric,
+            "TEXT", RaMatlabV4::MatlabV4MatrixType::text,
+            "SPARSE", RaMatlabV4::MatlabV4MatrixType::sparse);
 
-        ox_matlab_v4_table.registerType<OxMatlabV4::VariableInfo>(
+        ra_matlab_v4_table.registerType<RaMatlabV4::VariableInfo>(
             "VariableInfo",
             lua_support::NoConstructor::make_initializer(),
-            "name", &OxMatlabV4::VariableInfo::name,
-            "number_of_rows", &OxMatlabV4::VariableInfo::num_rows,
-            "number_of_columns", &OxMatlabV4::VariableInfo::num_columns,
-            "is_complex", &OxMatlabV4::VariableInfo::is_complex,
-            "type", &OxMatlabV4::VariableInfo::type,
-            "format", &OxMatlabV4::VariableInfo::format
+            "name", &RaMatlabV4::VariableInfo::name,
+            "number_of_rows", &RaMatlabV4::VariableInfo::num_rows,
+            "number_of_columns", &RaMatlabV4::VariableInfo::num_columns,
+            "is_complex", &RaMatlabV4::VariableInfo::is_complex,
+            "type", &RaMatlabV4::VariableInfo::type,
+            "format", &RaMatlabV4::VariableInfo::format
             );
 
         

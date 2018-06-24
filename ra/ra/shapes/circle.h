@@ -5,18 +5,18 @@
 
 namespace ra { namespace shapes {
 
-class OxCircle : public OxGeometry
+class RaCircle : public RaGeometry
 {
 public:
-    OxCircle(
-        OxContext const& context,
+    RaCircle(
+        RaContext const& context,
         float position_x = 0.f,
         float position_y = 0.f,
         float radius = 1.f);
 
-    OxCircle(
-        OxContext const& context,
-        OxMaterialAssembly const& material_assembly,
+    RaCircle(
+        RaContext const& context,
+        RaMaterialAssembly const& material_assembly,
         float position_x = 0.f,
         float position_y = 0.f,
         float radius = 1.f);

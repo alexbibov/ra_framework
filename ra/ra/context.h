@@ -13,44 +13,44 @@
 namespace ra {
 
 //! Simple wrapper over the OptiX context
-class OxContext final : public OxEntity
+class RaContext final : public RaEntity
 {
-    friend class OxContractWithOxContext;
+    friend class RaContractWithRaContext;
 
 public:
 
-    OxContext(std::vector<std::string> const& asset_directories, uint32_t num_entry_points = 1U);
-    OxContext(OxContext const&) = delete;
-    OxContext(OxContext&&) = delete;
-    OxContext& operator=(OxContext const&) = delete;
-    OxContext& operator=(OxContext&&) = delete;
-    ~OxContext();
+    RaContext(std::vector<std::string> const& asset_directories, uint32_t num_entry_points = 1U);
+    RaContext(RaContext const&) = delete;
+    RaContext(RaContext&&) = delete;
+    RaContext& operator=(RaContext const&) = delete;
+    RaContext& operator=(RaContext&&) = delete;
+    ~RaContext();
 
     //! Sets stack size to be used by the context, returns 'true' on success and false on failure
     void setStackSize(size_t size_in_bytes) const;
 
     //! Creates new OptiX program
-    OxProgram createProgram(std::string const& source, OxProgram::Source source_type, std::string const& program_name) const;
+    RaProgram createProgram(std::string const& source, RaProgram::Source source_type, std::string const& program_name) const;
 
     //! Creates new 1D OptiX buffer
     template<typename T>
-    OxBuffer<T> createBuffer(OxBufferKind buffer_kind, size_t width) const
+    RaBuffer<T> createBuffer(RaBufferKind buffer_kind, size_t width) const
     {
-        return OxBufferAttorney<OxContext>::createOptiXBuffer<T>(*this, buffer_kind, width);
+        return RaBufferAttorney<RaContext>::createOptiXBuffer<T>(*this, buffer_kind, width);
     }
 
     //! Creates new 2D OptiX buffer
     template<typename T>
-    OxBuffer<T> createBuffer(OxBufferKind buffer_kind, size_t width, size_t height) const
+    RaBuffer<T> createBuffer(RaBufferKind buffer_kind, size_t width, size_t height) const
     {
-        return OxBufferAttorney<OxContext>::createOptiXBuffer<T>(*this, buffer_kind, width, height);
+        return RaBufferAttorney<RaContext>::createOptiXBuffer<T>(*this, buffer_kind, width, height);
     }
 
     //! Creates new 3D OptiX buffer
     template<typename T>
-    OxBuffer<T> createBuffer(OxBufferKind buffer_kind, size_t width, size_t height, size_t depth) const
+    RaBuffer<T> createBuffer(RaBufferKind buffer_kind, size_t width, size_t height, size_t depth) const
     {
-        return OxBufferAttorney<OxContext>::createOptiXBuffer<T>(*this, buffer_kind, width, height, depth);
+        return RaBufferAttorney<RaContext>::createOptiXBuffer<T>(*this, buffer_kind, width, height, depth);
     }
 
     //! Returns 'true' in case if OptiX context is NOT in error state; returns 'false' otherwise
@@ -59,7 +59,7 @@ public:
     //! Returns 'true' in case if OptiX context IS in erroneous state; returns 'false' otherwise
     bool hasErrors() const;
 
-    //! required by OxEntity interface
+    //! required by RaEntity interface
     bool isValid() const override;
 
     //! reads requested string asset

@@ -6,18 +6,18 @@ using namespace ra::shapes;
 using namespace ra::util;
 
 namespace {
-static OxShapesFactory* p_shapes_factory_instance{ nullptr };
+static RaShapesFactory* p_shapes_factory_instance{ nullptr };
 }
 
-OxShapesFactory* OxShapesFactory::initialize(OxContext const& context)
+RaShapesFactory* RaShapesFactory::initialize(RaContext const& context)
 {
     if (!p_shapes_factory_instance)
-        p_shapes_factory_instance = new OxShapesFactory{ context };
+        p_shapes_factory_instance = new RaShapesFactory{ context };
 
     return p_shapes_factory_instance;
 }
 
-void OxShapesFactory::shutdown()
+void RaShapesFactory::shutdown()
 {
     if (p_shapes_factory_instance)
     {
@@ -26,41 +26,41 @@ void OxShapesFactory::shutdown()
     }
 }
 
-OxShapesFactory* OxShapesFactory::retrieve()
+RaShapesFactory* RaShapesFactory::retrieve()
 {
     return p_shapes_factory_instance;
 }
 
-bool OxShapesFactory::isValid() const
+bool RaShapesFactory::isValid() const
 {
     return p_shapes_factory_instance;
 }
 
-OxCircle OxShapesFactory::createCircle(float position_x, float position_y, float radius) const
+RaCircle RaShapesFactory::createCircle(float position_x, float position_y, float radius) const
 {
-    return OxCircle{ m_context, position_x, position_y, radius };
+    return RaCircle{ m_context, position_x, position_y, radius };
 }
 
-OxCircle OxShapesFactory::createCircle(OxMaterialAssembly const& material_assembly, float position_x, float position_y, float radius) const
+RaCircle RaShapesFactory::createCircle(RaMaterialAssembly const& material_assembly, float position_x, float position_y, float radius) const
 {
-    return OxCircle{ m_context, material_assembly, position_x, position_y, radius };
+    return RaCircle{ m_context, material_assembly, position_x, position_y, radius };
 }
 
-OxShapesFactory::OxShapesFactory(OxContext const& context):
+RaShapesFactory::RaShapesFactory(RaContext const& context):
     m_context{ context }
 {
-    setStringName("OxShapesFactory");
+    setStringName("RaShapesFactory");
 
     // Register factory functions in Lua
     {
 
-        lua_support::LuaState::registerSubType<OxCircle>(
+        lua_support::LuaState::registerSubType<RaCircle>(
             
-            "OxCircle", 
+            "RaCircle", 
 
             lua_support::ListOfBaseClasses::make_initializer(
-                lua_support::BaseClass<OxEntity>{},
-                lua_support::BaseClass<OxGeometry>{}
+                lua_support::BaseClass<RaEntity>{},
+                lua_support::BaseClass<RaGeometry>{}
             ),
 
             lua_support::ListOfFactories::make_initializer(
@@ -68,7 +68,7 @@ OxShapesFactory::OxShapesFactory(OxContext const& context):
                 {
                     return createCircle(position_x, position_y, radius);
                 },
-                [this](OxMaterialAssembly const& material_assembly, float position_x, float position_y, float radius)
+                [this](RaMaterialAssembly const& material_assembly, float position_x, float position_y, float radius)
                 {
                     return createCircle(material_assembly, position_x, position_y, radius);
                 }
@@ -76,11 +76,11 @@ OxShapesFactory::OxShapesFactory(OxContext const& context):
 
             "updatePosition", 
             lua_support::ListOfOverloads::make_initializer(
-                static_cast<void(OxCircle::*)(float2 const&)>(&OxCircle::updatePosition),
-                static_cast<void(OxCircle::*)(float, float)>(&OxCircle::updatePosition)
+                static_cast<void(RaCircle::*)(float2 const&)>(&RaCircle::updatePosition),
+                static_cast<void(RaCircle::*)(float, float)>(&RaCircle::updatePosition)
             ),
-            "updateRadius", &OxCircle::updateRadius,
-            "getPosition", &OxCircle::getPosition,
-            "getRadius", &OxCircle::getRadius);
+            "updateRadius", &RaCircle::updateRadius,
+            "getPosition", &RaCircle::getPosition,
+            "getRadius", &RaCircle::getRadius);
     }
 }
