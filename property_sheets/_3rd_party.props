@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(SolutionDir)_3rd_party/SpookyHash;$(SolutionDir)_3rd_party/CUDA/v9.1/include/;$(SolutionDir)_3rd_party/lua;$(SolutionDir)_3rd_party/tclap/include/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)_3rd_party/SpookyHash;$(SolutionDir)_3rd_party/CUDA/v9.2/include/;$(SolutionDir)_3rd_party/lua;$(SolutionDir)_3rd_party/tclap/include/;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(SolutionDir)_3rd_party/OptiX SDK 4.0.1/lib64;$(SolutionDir)$(Platform)\$(Configuration)\</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>

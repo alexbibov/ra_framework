@@ -81,7 +81,7 @@ for module_entry in modules_list:
     # this is workaround addressing the issue in Windows version of NVCC, which does not
     # like presence of terminating slash in CCBIN path
     ccbin_text = ccbin.text.rstrip('\\/')
-    cmd = 'nvcc.exe --ptx' + ' -ccbin "' + ccbin_text + '" -I "' + optix_sdk.text + '"'
+    cmd = '\"../_3rd_party/CUDA/v9.2/bin/nvcc.exe\" --ptx' + ' -ccbin "' + ccbin_text + '" -I "' + optix_sdk.text + '"'
 
     nvcc_options = module_entry["nvcc_options"]
     xcompiler = module_entry["xcompiler"]
