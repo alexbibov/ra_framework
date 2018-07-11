@@ -15,6 +15,7 @@
 *.so
 *.dylib
 *.dll
+!_3rd_party/**/*.dll
 
 # Fortran module files
 *.mod
@@ -26,13 +27,12 @@
 *.a
 #*.lib
 !_3rd_party/**/*.lib
-!_3rd_party/**/*.dll
-!_3rd_party/**/*.exe
 
 # Executables
 *.exe
 *.out
 *.app
+!_3rd_party/**/*.exe
 
 # Visual studio auxiliary files and folders
 **/.vs
