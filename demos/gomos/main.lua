@@ -1,6 +1,7 @@
-working_directory = RaLibs.RaDirectoryLib.get_current_directory().."/../demos/gomos/"    -- a bit dirty as this is dependent on where the script is run from
+working_directory = RaLibs.RaDirectoryLib.get_current_directory().."../../demos/gomos/"    -- a bit dirty as this is dependent on where the script is run from
                                                                                          -- there should be possibility to get location of the script *itself* (to be implemented)
 ra_add_asset_look_up_directory(working_directory)    -- add new directory to look for shaders
+print(working_directory)
 
 num_rays = 100    -- total number of rays to cast
 frequency_pairs = 8    -- number of frequency pairs to support (means 4 frquencies in total in this case)
@@ -25,7 +26,6 @@ atmospheric_circle = RaCircle.new(
     planet_radius + atmosphere_thickness
 )
 atmospheric_circle:setStringName("atmosphere_circle_shape")
-
 
 -- define parallel ray generator
 --[[
@@ -88,7 +88,6 @@ end
 gomos_data_load_agent:load(gas_profiles, 0, RaBufferFormat["FLOAT"], "gas_profiles")
 gomos_data_load_agent:load(cross_sections, 0, RaBufferFormat["FLOAT"], "cross_sections")
 
-
 -- -- write per-spectrum intensities for rays casted by the parallel ray generator
 spectral_flux = {}
 for i = 1, num_rays*frequency_pairs do
@@ -134,7 +133,6 @@ planet_circle:setMaterialAssembly(planet_material_assembly)
 --     be patches and behave in accordance with scattering transfer model
 -- ]]
 atmospheric_circle:setMaterialAssembly(RaMaterialAssembly.new())
-
 -- --[[
 --     All geometries must be combined into geometry groups. This is the only way to attach them to scene section,
 --     which eventually can be ray-traced. Geometry groups are needed to identify how acceleration structures will

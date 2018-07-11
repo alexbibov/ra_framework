@@ -26,6 +26,12 @@ bool RaScene::isValid() const
 
 void RaScene::trace() const
 {
+    if (!isValid())
+        THROW_RA_ERROR("Scene \"" + getStringName() + "\" is invalid");
+
+    if (!m_scene_sections.begin()->second->context().isValid())
+        THROW_RA_ERROR("Validation of the OptiX context has failed");
+
     for (auto& ss : m_scene_sections)
         ss.first.trace(*ss.second);
 }

@@ -81,7 +81,6 @@ RaContext::RaContext(std::vector<std::string> const& asset_directories, uint32_t
 
     LOG_OPTIX_ERROR(m_optix_context, rtContextSetEntryPointCount(m_optix_context, num_entry_points));
     LOG_OPTIX_ERROR(m_optix_context, rtContextSetRayTypeCount(m_optix_context, static_cast<unsigned int>(RaRayType::count)));
-    isValid();
 }
 
 RaContext::~RaContext()

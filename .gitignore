@@ -57,4 +57,7 @@
 # Compiled CUDA files
 *.ptx
 
+# Ignore log files
+*log.html
+
 

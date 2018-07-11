@@ -5,6 +5,8 @@
   <PropertyGroup>
     <IncludePath>$(SolutionDir)/ra;$(IncludePath)</IncludePath>
     <_PropertySheetDisplayName>ra_debug_x64</_PropertySheetDisplayName>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -14,6 +16,12 @@
     <Link>
       <AdditionalDependencies>lua.lib;ra.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)_3rd_party\OptiX SDK 5.1.0\bin64\optix.51.dll" "$(OutDir)" /y /f</Command>
+    </PostBuildEvent>
+    <PostBuildEvent>
+      <Message>copy OptiX 5.1 dynamic-link library</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>
