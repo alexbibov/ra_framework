@@ -25,7 +25,7 @@
 *.lai
 *.la
 *.a
-#*.lib
+*.lib
 !_3rd_party/**/*.lib
 
 # Executables
@@ -53,5 +53,8 @@
 # MATLAB data files
 *.mat
 !demos/**/*.mat
+
+# Compiled CUDA files
+*.ptx
 
 
