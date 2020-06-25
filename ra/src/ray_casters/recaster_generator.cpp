@@ -1,7 +1,7 @@
 #include "recaster_generator.h"
 
-#include "../context.h"
-#include "../../ptx.h"
+#include "context.h"
+#include "ptx.h"
 
 using namespace ra;
 using namespace ra::ray_casters;

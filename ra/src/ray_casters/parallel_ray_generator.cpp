@@ -1,6 +1,6 @@
 #include "parallel_ray_generator.h"
-#include "../context.h"
-#include "../../ptx.h"
+#include "context.h"
+#include "ptx.h"
 
 #include <algorithm>
 

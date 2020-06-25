@@ -1,8 +1,8 @@
 #include "scattering_rendering_pass.h"
-#include "../context.h"
-#include "../../ptx.h"
-#include "../scene_section.h"
-#include "../ray_generator.h"
+#include "context.h"
+#include "ptx.h"
+#include "scene_section.h"
+#include "ray_generator.h"
 
 #include "data_store_agents/matlab_v4.h"
 
