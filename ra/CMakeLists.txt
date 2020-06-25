@@ -42,6 +42,9 @@ target_include_directories(${_target} PRIVATE "${_src_root_path}/src")
 target_include_directories(${_target} PRIVATE "${CMAKE_SOURCE_DIR}/_3rd_party/sol2")
 target_include_directories(${_target} PRIVATE "${CMAKE_SOURCE_DIR}/_3rd_party/lua")
 
+target_link_directories(${_target} INTERFACE "${CMAKE_BINARY_DIR}/_3rd_party/lua/$<CONFIG>")
+target_link_libraries(${_target} INTERFACE lua)
+
 find_package(CUDA 10.1 REQUIRED)
 target_include_directories(${_target} PRIVATE "${CUDA_TOOLKIT_ROOT_DIR}/include")
 
