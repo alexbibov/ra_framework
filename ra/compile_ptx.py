@@ -1,129 +1,99 @@
-import sys
-import os
-import traceback
 import subprocess
-import xml.etree.ElementTree as xml
 from pathlib import Path
+import argparse
+import json
+import os
 
-if len(sys.argv) < 2:
-    print("{0:*^80}".format("USAGE"))
-    print("python " + os.path.basename(__file__) + " <source_of_configuration_script.xml>")
-    sys.exit()
-elif len(sys.argv) >= 3:
-    print("Don't know what to do with {}".format(sys.argv[2]))
-    sys.exit()
+# parse input arguments
+parser = argparse.ArgumentParser(description="PTX compilation script")
+parser.add_argument("--sources", required=True, dest="sources", help="List of CUDA sources to compile")
+parser.add_argument("--ccbin", dest="ccbin", help="C++ host compiler to be used by NVCC")
+parser.add_argument("--xcompiler", default="", dest="xcompiler", help="Options that will be forwared to the host C++ compiler")
+parser.add_argument("--nvcc", required=True, dest="nvcc", help="Path to NVCC compiler")
+parser.add_argument("--nvcc_opts", default="", dest="nvcc_opts", help="Options that will be forwarded to NVCC compiler")
+parser.add_argument("--include-directories", dest="include_directories", help="Include directories to be forwarded to NVCC")
+parser.add_argument("--header", required=True, dest="header", help="Path where to put C++ header accompanying compiled CUDA sources")
+parser.add_argument("--settings", required=True, dest="settings", help="Path to the JSON settings file")
+args = parser.parse_args()
 
-configuration_script_path = Path(sys.argv[1])    # configuration script in XML format
-if configuration_script_path.suffix.lower() != ".xml" or \
-        not configuration_script_path.is_file():
-    print("Unable to verify format extension of the configuration script: must be 'xml'")
-    sys.exit()
+# generate compilation destinations
+sources = [Path(p) for p in args.sources.split(sep=";")]
+destinations = []
+for s in sources:
+    d = s.parent.joinpath("ptx")
+    
+    if d.exists() is False:
+        d.mkdir()
+    
+    d = Path(d.as_posix() + "/" + s.stem + ".ptx")
+    destinations.append(d)
 
-# parse XML-tree of provided configuration file
-try:
-    tree = xml.parse(str(configuration_script_path.absolute()))
-    root = tree.getroot()
+# configure library settings JSON
+settings = Path(args.settings)
+if settings.exists() is False:
+    settings_content = {}
+    settings_content["logging_path"] = "ra_log.html"
+    settings_content["num_entry_points"] = 1
+    settings_content["context_stack_size"] = 8192
+    settings_content["asset_directories"] = [d.parent.as_posix() for d in destinations]
+else:
+    with open(settings, 'r') as f:
+        settings_content = json.loads(f.read())
+    settings_content["asset_directories"] = [d.as_posix() for d in destinations]
+with open(settings, 'w') as f:
+        f.write(json.dumps(settings_content))
 
-    if root.tag != "config":
-        print("Invalid configuration file: the outermost element must have source 'config'")
-        sys.exit()
+# generate accompanying C++ header
+ptx_header_source_code = \
+"""
+#ifndef PTX_H 
+#define PTX_H
 
-    environment = root.find("environment")
+// Standardized shader string names
+#define OX_SHADER_ENTRY_INTERSECTION   "__ra_intersect__"
+#define OX_SHADER_ENTRY_BOUNDING_BOX   "__ra_aabb__"
+#define OX_SHADER_ENTRY_RAY_GENERATION "__ra_generate__"
+#define OX_SHADER_ENTRY_CLOSEST_HIT    "__ra_closest_hit__"
+#define OX_SHADER_ENTRY_ANY_HIT        "__ra_any_hit__"
+#define OX_SHADER_ENTRY_MISS           "__ra_miss__"
+#define OX_SHADER_ENTRY_SELECTOR       "__ra_selector__"
+#define OX_SHADER_ENTRY_CALLABLE       "__ra_callable__"
+"""
 
-    # retrieve path to requested C++ compiler and path to OptiX SDK
-    ccbin = environment.find("ccbin")
-    optix_sdk = environment.find("OptiX_SDK")
+for d in destinations:
+    source_subclass = d.parents[1].name
+    ptx_header_source_code += "// " + source_subclass + "\n"
+    ptx_header_source_code += "#define PTX_" + d.stem.upper() + ' "' + d.as_posix() + '"\n'
 
-    # the "ppheader" element defined is not required to exist
-    ppheader = environment.find("ppheader")
+ptx_header_source_code += "#endif"
 
-    # retrieve information regarding the CUDA modules to compile
-    modules = environment.find("modules")
+with open(Path(args.header).as_posix(), 'w') as f:
+    f.write(ptx_header_source_code)
 
-    if ppheader is not None:
-        try:
-            f = open(ppheader.text, "rt")
-            lines = f.readlines()
-        except Exception as e:
-            print("Unable to read requested C++ header {0} ({1})".format(ppheader.text, str(e)))
-            sys.exit()
-        else:
-            f.close()
-
-        defines = dict()
-        for l in lines:
-            l = l.strip(' \t\n')
-            if l[0:7] == "#define":
-                definition_pair = l[7:]
-                definition_pair = definition_pair.strip(' \t')
-                tokens = definition_pair.rpartition(' ')
-                defines[tokens[0].rstrip(' ')] = tokens[2]
-
-        modules_list = [{"source": m.get("source"),
-                         "output": defines[str(m.get("output"))],
-                         "nvcc_options": str(m.get("nvcc_options")),
-                         "xcompiler": str(m.get("xcompiler"))} for m in modules]
-    else:
-        modules_list = [{"source": str(m.get("source")),
-                         "output": str(m.get("output")),
-                         "nvcc_options": str(m.get("nvcc_options")),
-                         "xcompiler": str(m.get("xcompiler"))} for m in modules]
-
-except Exception as e:
-    print("Unable to parse configuration file: {0}\n\n{1}".format(e, traceback.format_exc()))
-    sys.exit()
-
-
-# aggregate a command from the parsed data
+# create command line tokens
 commands_list = list()
-temporary_files = list()
-for module_entry in modules_list:
-    # this is workaround addressing the issue in Windows version of NVCC, which does not
-    # like presence of terminating slash in CCBIN path
-    ccbin_text = ccbin.text.rstrip('\\/')
-    cmd = '\"../_3rd_party/CUDA/v9.2/bin/nvcc.exe\" --ptx' + ' -ccbin "' + ccbin_text + '" -I "' + optix_sdk.text + '"'
+for idx, d in enumerate(destinations):
+    cmd = '"' + Path(args.nvcc).as_posix() + '" --ptx'
 
-    nvcc_options = module_entry["nvcc_options"]
-    xcompiler = module_entry["xcompiler"]
-    output = module_entry["output"]
-    source = module_entry["source"]
+    if hasattr(args, "include_directories"):
+        for include_dir in args.include_directories.split(sep=";"):
+            cmd += ' -I "' + include_dir.strip() + '"'
 
-    if nvcc_options is not None:
-        cmd += ' ' + module_entry["nvcc_options"]
-    if xcompiler is not None:
-        cmd += ' -Xcompiler "' + module_entry["xcompiler"] + '"'
-    if source is None:
-        print("A CUDA module is specified but the source code file is not provided")
-        sys.exit()
-    if output is None:
-        print("PTX outlet is not specified for CUDA module {0}".format(source))
-        sys.exit()
+    if hasattr(args, "ccbin"):
+        cmd += ' -ccbin "' + Path(args.ccbin).as_posix() + '"'
 
-    # account for the case where source lists several files and assemble them into one temporary file
-    list_of_source_file_names = module_entry["source"].split(',')
-    full_source = ''
-    temporary_file_name = ''
-    for source_file_name in list_of_source_file_names:
-        source_file_name = source_file_name.strip("' ")
-        temporary_file_name += os.path.basename(source_file_name) + '_'
-        with open(source_file_name, 'rt') as f:
-            source = f.read()
-            full_source += source + '\n\n\n'
-    temporary_file_name += 'tmp.cu'
+    if hasattr(args, "nvcc_options"):
+        cmd += ' ' + args.nvcc_options
 
-    temporary_files.append(temporary_file_name)
-    with open(temporary_file_name, 'w') as f:
-        f.write(full_source)
+    if hasattr(args, "xcompiler"):
+        cmd += ' -Xcompiler "' + args.xcompiler.lstrip() + '"'
 
-    cmd += ' "' + temporary_file_name + '" -o "' + module_entry["output"] + '"'
+    output = d.as_posix()
+    source = sources[idx].as_posix()
 
+    cmd += ' "' + source + '" -o "' + output + '"'
     commands_list.append(cmd)
-
 
 # execute commands
 for command in commands_list:
     subprocess.call(command, shell=True)
-
-# clean up the temporary files
-for temp_file in temporary_files:
-    os.remove(temp_file)

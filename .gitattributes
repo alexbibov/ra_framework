@@ -1,4 +1,2 @@
-_3rd_party/**/*.dll filter=lfs diff=lfs merge=lfs -text
-_3rd_party/**/*.exe filter=lfs diff=lfs merge=lfs -text
 demos/**/*.mat filter=lfs diff=lfs merge=lfs -text
 demos/**/*.png filter=lfs diff=lfs merge=lfs -text

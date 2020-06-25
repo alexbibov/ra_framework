@@ -1,0 +1,24 @@
+#ifndef RA_RENDERING_PASSES_RENDERING_PASS_H
+#define RA_RENDERING_PASSES_RENDERING_PASS_H
+
+#include "ra_fwd.h"
+#include "contract_with_context.h"
+
+namespace ra { namespace rendering_passes {
+
+class RaRenderingPass
+{
+public:
+    RaRenderingPass(RaSceneSection const& scene_section);
+
+    RaSceneSection const& targetSceneSection() const;
+
+    virtual void render() const = 0;
+
+private:
+    RaSceneSection const& m_scene_section;
+};
+
+}}
+
+#endif

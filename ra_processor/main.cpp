@@ -1,15 +1,15 @@
 ﻿#include <iostream>
 #include <tclap/CmdLine.h>
 
-#include "../ra/ra/init.h"
-#include "../ra/ra/shapes/circle.h"
-#include "../ra/ra/material_assembly.h"
-#include "../ra/ra/ray_casters/parallel_ray_generator.h"
-#include "../ra/ra/scene_section.h"
-#include "../ra/ra/rendering_passes/scattering_rendering_pass.h"
-#include "../ra/ra/materials/black_body.h"
-#include "../ra/ra/util/lua_support.h"
-#include "../ra/ra/version.h"
+#include "init.h"
+#include "shapes/circle.h"
+#include "material_assembly.h"
+#include "ray_casters/parallel_ray_generator.h"
+#include "scene_section.h"
+#include "rendering_passes/scattering_rendering_pass.h"
+#include "materials/black_body.h"
+#include "util/lua_support.h"
+#include "version.h"
 
 #include <windows.h>
 

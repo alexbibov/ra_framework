@@ -15,8 +15,8 @@
       <AdditionalDependencies>lua.lib;ra.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)_3rd_party\OptiX SDK 5.1.0\bin64\optix.51.dll" "$(OutDir)" /y /f</Command>
-      <Message>copy OptiX 5.1 dynamic-link library</Message>
+      <Command>xcopy "$(SolutionDir)_3rd_party\OptiX SDK 6.5.0\bin64\optix.6.5.0.dll" "$(OutDir)" /y /f</Command>
+      <Message>copy OptiX 6.5.0 dynamic-link library</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup />

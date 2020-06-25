@@ -10,10 +10,10 @@
     <ppheader>ptx.h</ppheader>
 
     <!-- Path to a C++ compiler supported by CUDA toolchain -->
-    <ccbin>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Tools\MSVC\14.13.26128\bin\HostX64\x64</ccbin>
+    <ccbin>C:/Program Files (x86)/Microsoft Visual Studio/2019/Professional/VC/Tools/MSVC/14.26.28801/bin/Hostx64/x64</ccbin>
 
     <!-- Path to OptiX SDK -->
-    <OptiX_SDK>../_3rd_party/Optix SDK 5.1.0/include/</OptiX_SDK>
+    <OptiX_SDK>../_3rd_party/OptiX SDK 6.5.0/include/</OptiX_SDK>
 
     <!-- List of CUDA modules to compile to PTX -->
     <modules>
