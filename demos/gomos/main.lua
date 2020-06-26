@@ -1,4 +1,4 @@
-working_directory = RaLibs.RaDirectoryLib.get_current_directory().."../../demos/gomos/"    -- a bit dirty as this is dependent on where the script is run from
+working_directory = RaLibs.RaDirectoryLib.get_current_directory().."\\..\\..\\ra_framework\\demos\\gomos\\"    -- a bit dirty as this is dependent on where the script is run from
                                                                                          -- there should be possibility to get location of the script *itself* (to be implemented)
 ra_add_asset_look_up_directory(working_directory)    -- add new directory to look for shaders
 print(working_directory)

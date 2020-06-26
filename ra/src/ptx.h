@@ -12,17 +12,17 @@
 #define OX_SHADER_ENTRY_SELECTOR       "__ra_selector__"
 #define OX_SHADER_ENTRY_CALLABLE       "__ra_callable__"
 // materials
-#define PTX_BLACK_BODY "D:/Repos/ra_framework/ra/src/materials/ptx/black_body.ptx"
+#define PTX_BLACK_BODY "D:/Repositories/Personal/ra_framework/ra/src/materials/ptx/black_body.ptx"
 // ray_casters
-#define PTX_PARALLEL_RAY_GENERATOR "D:/Repos/ra_framework/ra/src/ray_casters/ptx/parallel_ray_generator.ptx"
+#define PTX_PARALLEL_RAY_GENERATOR "D:/Repositories/Personal/ra_framework/ra/src/ray_casters/ptx/parallel_ray_generator.ptx"
 // ray_casters
-#define PTX_RECASTER_GENERATOR "D:/Repos/ra_framework/ra/src/ray_casters/ptx/recaster_generator.ptx"
+#define PTX_RECASTER_GENERATOR "D:/Repositories/Personal/ra_framework/ra/src/ray_casters/ptx/recaster_generator.ptx"
 // rendering_passes
-#define PTX_SCATTERING_RENDERING_PASS "D:/Repos/ra_framework/ra/src/rendering_passes/ptx/scattering_rendering_pass.ptx"
+#define PTX_SCATTERING_RENDERING_PASS "D:/Repositories/Personal/ra_framework/ra/src/rendering_passes/ptx/scattering_rendering_pass.ptx"
 // rendering_passes
-#define PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG "D:/Repos/ra_framework/ra/src/rendering_passes/ptx/scattering_rendering_pass_default_shader_config.ptx"
+#define PTX_SCATTERING_RENDERING_PASS_DEFAULT_SHADER_CONFIG "D:/Repositories/Personal/ra_framework/ra/src/rendering_passes/ptx/scattering_rendering_pass_default_shader_config.ptx"
 // shapes
-#define PTX_CIRCLE "D:/Repos/ra_framework/ra/src/shapes/ptx/circle.ptx"
+#define PTX_CIRCLE "D:/Repositories/Personal/ra_framework/ra/src/shapes/ptx/circle.ptx"
 // shapes
-#define PTX_SPHERE "D:/Repos/ra_framework/ra/src/shapes/ptx/sphere.ptx"
+#define PTX_SPHERE "D:/Repositories/Personal/ra_framework/ra/src/shapes/ptx/sphere.ptx"
 #endif

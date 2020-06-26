@@ -37,3 +37,6 @@ target_include_directories(${_target} PRIVATE "${OptiX_INCLUDE}")
 target_include_directories(${_target} PRIVATE "${CUDA_TOOLKIT_ROOT_DIR}/include")
 
 file(COPY "${optix_DLL}" DESTINATION "${EXECUTABLE_OUTPUT_PATH}/")
+file(COPY "${_project_name}.args.json" DESTINATION "${EXECUTABLE_OUTPUT_PATH}/")
+
+set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ra_processor)
