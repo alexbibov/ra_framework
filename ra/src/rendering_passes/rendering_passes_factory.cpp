@@ -1,8 +1,8 @@
 #define _SCL_SECURE_NO_WARNINGS
 
 #include "rendering_passes_factory.h"
-#include "../util/lua_support.h"
-#include "../scene_section.h"
+#include "util/lua_support.h"
+#include "scene_section.h"
 
 using namespace ra::rendering_passes;
 using namespace ra::util;
@@ -42,7 +42,7 @@ bool RaRenderingPassesFactory::isValid() const
 }
 
 RaScatteringRenderingPass RaRenderingPassesFactory::createScatteringRenderingPass(
-    RaSceneSection const& target_scene_section, 
+    RaSceneSection& target_scene_section, 
     RaRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported,
     uint32_t max_recursion_depth, 
@@ -58,7 +58,7 @@ RaScatteringRenderingPass RaRenderingPassesFactory::createScatteringRenderingPas
 }
 
 RaScatteringRenderingPass RaRenderingPassesFactory::createScatteringRenderingPass(
-    RaSceneSection const& target_scene_section, 
+    RaSceneSection& target_scene_section, 
     RaRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported, 
     uint32_t max_recursion_depth, 
@@ -77,7 +77,8 @@ RaRenderingPassesFactory::RaRenderingPassesFactory(RaContext const& context):
 
         lua_support::NoConstructor::make_initializer(),
 
-        "targetSceneSection", &RaRenderingPass::targetSceneSection,
+        "targetSceneSection", static_cast<RaSceneSection& (RaRenderingPass::*)()>(&RaRenderingPass::targetSceneSection),
+        "prepare", &RaRenderingPass::prepare,
         "render", &RaRenderingPass::render
     );
         
@@ -91,7 +92,7 @@ RaRenderingPassesFactory::RaRenderingPassesFactory(RaContext const& context):
 
         lua_support::ListOfFactories::make_initializer(
             [this](
-                RaSceneSection const& target_scene_section,
+                RaSceneSection& target_scene_section,
                 RaRayGeneratorWithOutputBuffer const& ray_caster,
                 uint8_t num_spectra_pairs_supported,
                 uint32_t max_recursion_depth,
@@ -114,7 +115,7 @@ RaRenderingPassesFactory::RaRenderingPassesFactory(RaContext const& context):
             },
 
             [this](
-                RaSceneSection const& target_scene_section,
+                RaSceneSection& target_scene_section,
                 RaRayGeneratorWithOutputBuffer const& ray_caster,
                 uint8_t num_spectra_pairs_supported,
                 uint32_t max_recursion_depth,

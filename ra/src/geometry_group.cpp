@@ -50,11 +50,18 @@ void RaGeometryGroup::addGeometry(RaGeometry const& geometry)
             + getStringName() + "\" is not valid"); 
     }
 
+    
     m_list_of_geometries.push_back(geometry);
 }
 
 void RaGeometryGroup::endConstruction()
 {
+    if (isMaterialAssignmentDelayed())
+    {
+        m_construction_delayed = true;
+        return;
+    }
+
     if (!m_construction_begun)
     {
         util::Log::retrieve()->out("WARNING: attempt to finalize construction of geometry group \"" + getStringName()
@@ -66,18 +73,17 @@ void RaGeometryGroup::endConstruction()
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(),
         rtGeometryGroupSetChildCount(m_native_geometry_group.get(), static_cast<unsigned int>(m_list_of_geometries.size())));
     unsigned int idx{ 0U };
+    
     for (auto const& g : m_list_of_geometries)
     {
-        if(!RaMaterialAssemblyAttorney<RaGeometryGroup>::isDummyMaterialAssembly(g.getMaterialAssembly()))
-        {
-            THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupSetChild(m_native_geometry_group.get(), idx,
-                RaMaterialAssemblyAttorney<RaGeometryGroup>::getNativeGeometryInstanceHandle(g.getMaterialAssembly())));
-        }
+        THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupSetChild(m_native_geometry_group.get(), idx,
+            RaMaterialAssemblyAttorney<RaGeometryGroup>::getNativeGeometryInstanceHandle(g.getMaterialAssembly())));
         ++idx;
     }
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationMarkDirty(m_native_acceleration.get()));
 
     m_construction_finished = true;
+    m_construction_delayed = false;
 }
 
 std::list<RaGeometry> const& ra::RaGeometryGroup::geometries() const
@@ -101,9 +107,18 @@ bool RaGeometryGroup::isValid() const
             "can be added to scene sections", util::LogMessageType::exclamation);
     }
 
-    return geometry_group_validation_result == RT_SUCCESS
-        && acceleration_structure_validation_result == RT_SUCCESS
-        && (m_construction_begun && m_construction_finished);
+    return geometry_group_validation_result == RT_SUCCESS;
+}
+
+bool RaGeometryGroup::isMaterialAssignmentDelayed() const
+{
+    // Check if material assignment was not delayed
+    for (auto const& g : m_list_of_geometries)
+    {
+        if (static_cast<RaMaterialAssembly const&>(g.getMaterialAssembly()).isEmpty())
+            return true;
+    }
+    return false;
 }
 
 RTobject RaGeometryGroup::getObjectToBeTransformed() const
@@ -143,10 +158,11 @@ bool RaGeometryGroup::update(RaObjectHandle top_scene_object) const
 }
 
 RaGeometryGroup::RaGeometryGroup(RaContext const& optix_context, RaBVHAlgorithm acceleration_structure_construction_algorithm):
-    RaContractWithRaContext{ optix_context },
-    RaTransformable{ optix_context },
-    m_construction_begun{ false },
-    m_construction_finished{ false }
+    RaContractWithRaContext{ optix_context }
+    , RaTransformable{ optix_context }
+    , m_construction_begun{ false }
+    , m_construction_finished{ false }
+    , m_construction_delayed{ false }
 {
     RTgeometrygroup geometry_group_native_handle;
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupCreate(nativeOptiXContextHandle(), &geometry_group_native_handle));

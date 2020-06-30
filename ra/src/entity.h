@@ -43,7 +43,7 @@ public:
     static uint64_t aliveEntities();    //! returns number of alive entities owned by the calling thread
 
     virtual bool isValid() const = 0;    //! returns 'true' if the object exists in valid state (the state that is ready for ray tracing). Returns 'false' otherwise
-
+    
     RaEntity();
     RaEntity(RaEntity const& other);
     RaEntity(RaEntity&& other);

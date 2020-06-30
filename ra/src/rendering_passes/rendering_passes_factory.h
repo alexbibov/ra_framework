@@ -21,7 +21,7 @@ public:
     // RaScatteringRenderingPass
 public:
     RaScatteringRenderingPass createScatteringRenderingPass(
-        RaSceneSection const& target_scene_section, 
+        RaSceneSection& target_scene_section, 
         RaRayGenerator const& ray_caster,
         uint8_t num_spectra_pairs_supported, 
         uint32_t max_recursion_depth,
@@ -32,7 +32,7 @@ public:
         RaProgram const& scattering_phase_function_shader);
 
     RaScatteringRenderingPass createScatteringRenderingPass(
-        RaSceneSection const& target_scene_section, 
+        RaSceneSection& target_scene_section, 
         RaRayGenerator const& ray_caster,
         uint8_t num_spectra_pairs_supported, 
         uint32_t max_recursion_depth,

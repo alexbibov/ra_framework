@@ -10,37 +10,42 @@ parser.add_argument("--sources", required=True, dest="sources", help="List of CU
 parser.add_argument("--ccbin", dest="ccbin", help="C++ host compiler to be used by NVCC")
 parser.add_argument("--xcompiler", default="", dest="xcompiler", help="Options that will be forwared to the host C++ compiler")
 parser.add_argument("--nvcc", required=True, dest="nvcc", help="Path to NVCC compiler")
-parser.add_argument("--nvcc_opts", default="", dest="nvcc_opts", help="Options that will be forwarded to NVCC compiler")
+parser.add_argument("--nvcc-opts", default="", dest="nvcc_opts", help="Options that will be forwarded to NVCC compiler")
 parser.add_argument("--include-directories", dest="include_directories", help="Include directories to be forwarded to NVCC")
 parser.add_argument("--header", required=True, dest="header", help="Path where to put C++ header accompanying compiled CUDA sources")
 parser.add_argument("--settings", required=True, dest="settings", help="Path to the JSON settings file")
+parser.add_argument("--build-path", required=True, dest="build_path", help="Destination path where to put the compiled PTX files")
 args = parser.parse_args()
 
 # generate compilation destinations
 sources = [Path(p) for p in args.sources.split(sep=";")]
+build_path = Path(args.build_path)
 destinations = []
 for s in sources:
-    d = s.parent.joinpath("ptx")
+    d = Path("ptx").joinpath(s.parents[0].relative_to(s.parents[1]))
+    d = build_path.joinpath(d)
     
     if d.exists() is False:
-        d.mkdir()
+        d.mkdir(parents=True)
     
-    d = Path(d.as_posix() + "/" + s.stem + ".ptx")
+    d = d.joinpath(Path(s.stem + ".ptx"))
     destinations.append(d)
 
 # configure library settings JSON
-settings = Path(args.settings)
-if settings.exists() is False:
+settings_source = Path(args.settings)
+if settings_source.exists() is False:
     settings_content = {}
     settings_content["logging_path"] = "ra_log.html"
     settings_content["num_entry_points"] = 1
     settings_content["context_stack_size"] = 8192
     settings_content["asset_directories"] = [d.parent.as_posix() for d in destinations]
 else:
-    with open(settings, 'r') as f:
+    with open(settings_source.as_posix(), 'r') as f:
         settings_content = json.loads(f.read())
     settings_content["asset_directories"] = [d.as_posix() for d in destinations]
-with open(settings, 'w') as f:
+
+settings_destination = build_path.joinpath(Path(settings_source.name))
+with open(settings_destination.as_posix(), 'w') as f:
         f.write(json.dumps(settings_content))
 
 # generate accompanying C++ header
@@ -61,7 +66,7 @@ ptx_header_source_code = \
 """
 
 for d in destinations:
-    source_subclass = d.parents[1].name
+    source_subclass = d.parents[0].name
     ptx_header_source_code += "// " + source_subclass + "\n"
     ptx_header_source_code += "#define PTX_" + d.stem.upper() + ' "' + d.as_posix() + '"\n'
 
@@ -82,8 +87,8 @@ for idx, d in enumerate(destinations):
     if hasattr(args, "ccbin"):
         cmd += ' -ccbin "' + Path(args.ccbin).as_posix() + '"'
 
-    if hasattr(args, "nvcc_options"):
-        cmd += ' ' + args.nvcc_options
+    if hasattr(args, "nvcc_opts"):
+        cmd += ' ' + args.nvcc_opts.strip()
 
     if hasattr(args, "xcompiler"):
         cmd += ' -Xcompiler "' + args.xcompiler.lstrip() + '"'

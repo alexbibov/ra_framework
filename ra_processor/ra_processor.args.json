@@ -4,7 +4,7 @@
   "Items": [
     {
       "Id": "eaf53321-06b3-4c08-b22f-7502338e7e00",
-      "Command": "--ra_lib $(SolutionDir)ra/"
+      "Command": "--ra_lib $(SolutionDir)"
     },
     {
       "Id": "d8a17c62-31f9-4a5d-a68a-68c3aaf6e11d",

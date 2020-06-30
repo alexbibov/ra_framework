@@ -78,7 +78,7 @@ void RaSceneSection::addGeometryGroup(RaGeometryGroup const& geometry_group)
             "become effectively immutable and no new geometry groups can be added into them");
     }
 
-    if (!geometry_group.isValid())
+    if (!geometry_group.isMaterialAssignmentDelayed() && !geometry_group.isValid())
     {
         THROW_RA_ERROR("Geometry group \"" + geometry_group.getStringName() + "\" attempted to be added into scene section \""
             + getStringName() + "\" is not valid");
@@ -144,12 +144,12 @@ void RaSceneSection::endConstruction()
     m_construction_finished = true;
 }
 
-std::list<RaSceneSection> const& RaSceneSection::sceneSections() const
+std::list<RaSceneSection>& RaSceneSection::sceneSections()
 {
     return m_attached_scene_sections;
 }
 
-std::list<RaGeometryGroup> const& RaSceneSection::geometryGroups() const
+std::list<RaGeometryGroup>& RaSceneSection::geometryGroups()
 {
     return m_geometry_groups;
 }

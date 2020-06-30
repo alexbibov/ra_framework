@@ -20,8 +20,8 @@ namespace ra {
         void addSceneSection(RaSceneSection const& scene_section);
         void endConstruction();
 
-        std::list<RaSceneSection> const& sceneSections() const;
-        std::list<RaGeometryGroup> const& geometryGroups() const;
+        std::list<RaSceneSection>& sceneSections();
+        std::list<RaGeometryGroup>& geometryGroups();
 
         // required by RaEntity interface
         bool isValid() const override;

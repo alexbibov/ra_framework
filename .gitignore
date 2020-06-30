@@ -44,6 +44,9 @@
 *.sdf
 *.suo
 
+# Generated code 
+ra/src/ptx.h
+
 # Auxiliary files
 *.pdf
 

@@ -14,7 +14,7 @@ class RaScatteringRenderingPass : public RaRenderingPass,  public RaContractWith
 {
 public:
     RaScatteringRenderingPass(
-        RaSceneSection const& target_scene_section, 
+        RaSceneSection& target_scene_section, 
         RaRayGenerator const& ray_caster,
         uint8_t num_spectra_pairs_supported, 
         uint32_t max_recursion_depth,
@@ -25,7 +25,7 @@ public:
         RaProgram const& scattering_phase_function_shader);
 
     RaScatteringRenderingPass(
-        RaSceneSection const& target_scene_section, 
+        RaSceneSection& target_scene_section, 
         RaRayGenerator const& ray_caster,
         uint8_t num_spectra_pairs_supported, 
         uint32_t max_recursion_depth,
@@ -53,7 +53,10 @@ public:
     RaProgram getScatteringPhaseFunctionShader() const;
     void setScatteringPhaseFunctionShader(RaProgram const& scattering_phase_function_shader);
 
-    void render() const override;
+protected:
+    // Required by RaRenderingPass interface
+    void prepare_impl() override;
+    void render_impl() const override;
 
 private:
     RaRayGenerator const& m_ray_caster;
@@ -64,8 +67,8 @@ private:
     RaMaterialAssembly m_surface_material_assembly;
     RaMissShaderAssembly m_miss_shader_assembly;
     RaTraverseBackupBuffer m_traverse_backup_buffer;
-    ray_casters::RaRecasterGenerator m_recaster;
     RaBuffer<float2> m_importance_directions_buffer;
+    ray_casters::RaRecasterGenerator m_recaster;
 };
 
 }}

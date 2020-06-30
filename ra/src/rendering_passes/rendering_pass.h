@@ -6,17 +6,24 @@
 
 namespace ra { namespace rendering_passes {
 
-class RaRenderingPass
+class RaRenderingPass: public RaContractWithRaContext
 {
 public:
-    RaRenderingPass(RaSceneSection const& scene_section);
+    RaRenderingPass(RaSceneSection& scene_section);
 
-    RaSceneSection const& targetSceneSection() const;
+    RaSceneSection& targetSceneSection() { return m_scene_section; }
+    RaSceneSection const& targetSceneSection() const { return m_scene_section; }
 
-    virtual void render() const = 0;
+    void prepare();
+    void render() const;
+
+protected:
+    virtual void prepare_impl() = 0;
+    virtual void render_impl() const = 0;
 
 private:
-    RaSceneSection const& m_scene_section;
+    RaSceneSection& m_scene_section;
+    bool m_rendering_pass_ready;
 };
 
 }}

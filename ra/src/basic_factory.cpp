@@ -1115,7 +1115,7 @@ void luaRegisterSceneTypes()
         "geometryGroups", &RaSceneSection::geometryGroups,
 
         "isValid", &RaSceneSection::isValid,
-        "trace", &RaSceneSection::trace
+        "trace", [](RaSceneSection* p_this, RaRayGeneratorWithOutputBuffer const& ray_generator) {p_this->trace(ray_generator); }
     );
 
     lua_support::LuaState::registerSubType<RaScene>(

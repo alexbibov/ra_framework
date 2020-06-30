@@ -30,6 +30,7 @@ public:
     util::Optional<RaMaterial> getMaterialByName(std::string const& name) const;
     util::Optional<RaMaterial> getMaterialByRayType(RaRayType ray_type) const;
     size_t getMaterialCount() const;
+    bool isEmpty() const { return getMaterialCount() == 0; }
 
     // required by RaEntity interface
     bool isValid() const override;

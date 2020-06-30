@@ -51,12 +51,11 @@ find_package(OptiX 6.5.0 REQUIRED)
 target_include_directories(${_target} PUBLIC "${OptiX_INCLUDE}")
 
 find_package(Python COMPONENTS Interpreter REQUIRED)
-string(REGEX REPLACE "\\.cu(;|$)" ".ptx\\1" _cuda_compiled_ptx_files ${_cuda_sources_list})
 
 add_custom_command(
     TARGET ${_target}
     PRE_BUILD
-    COMMAND ${Python_EXECUTABLE} "${_src_root_path}/compile_ptx.py" --sources "\"${_cuda_sources_list}\"" --ccbin \"${CUDA_HOST_COMPILER}\" --nvcc "\"${CUDA_TOOLKIT_ROOT_DIR}/bin/nvcc.exe\"" --nvcc_opts \"-arch=compute_60 -code=sm_60 -m64 -rdc=true\" --include-directories "\"${OptiX_INSTALL_DIR}/include;${_src_root_path}/src/\"" --header "\"${_src_root_path}/src/ptx.h\"" --settings "\"${_src_root_path}/settings.json\"" --xcompiler \" -D_ALLOW_COMPILER_AND_STL_VERSION_MISMATCH\" 
+    COMMAND ${Python_EXECUTABLE} "${_src_root_path}/compile_ptx.py" --sources "\"${_cuda_sources_list}\"" --ccbin \"${CUDA_HOST_COMPILER}\" --nvcc "\"${CUDA_TOOLKIT_ROOT_DIR}/bin/nvcc.exe\"" --nvcc-opts \"-arch=compute_30 -code=sm_30 -m64 -dc\" --include-directories "\"${OptiX_INSTALL_DIR}/include;${_src_root_path}/src/\"" --header "\"${_src_root_path}/src/ptx.h\"" --settings "\"${_src_root_path}/settings.json\"" --build-path \"${CMAKE_BINARY_DIR}\"
     COMMENT "Compiling OptiX Shaders"
 )
 

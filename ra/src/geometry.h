@@ -35,6 +35,9 @@ public:
     // required by RaEntity interface
     bool isValid() const override;
 
+    //! Checks if geometry has valid material
+    bool hasMaterial() const { return m_geometry_blueprint->material_assembly.isValid(); }
+
 protected:
     void setPrimitiveCount(unsigned int num_primitives);
     void markDirty();

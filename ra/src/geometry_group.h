@@ -39,6 +39,8 @@ public:
     // required by RaEntity interface
     bool isValid() const override;
 
+    bool isMaterialAssignmentDelayed() const;
+
 private:
     // required by RaTransformable interface
     RTobject getObjectToBeTransformed() const override;
@@ -57,6 +59,7 @@ private:
     std::list<RaGeometry> m_list_of_geometries;
     bool m_construction_begun;
     bool m_construction_finished;
+    bool m_construction_delayed;
 };
 
 template<> class RaGeometryGroupAttorney<RaSceneSection>

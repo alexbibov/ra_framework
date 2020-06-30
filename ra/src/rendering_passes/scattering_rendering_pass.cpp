@@ -11,23 +11,40 @@ using namespace ra::rendering_passes;
 
 namespace {
 
-void applyMaterialAssemblyToSceneSection(RaSceneSection const& scene_section, RaMaterialAssembly const& material_assembly)
+void applyMaterialAssemblyToSceneSection(RaSceneSection& scene_section, RaMaterialAssembly const& material_assembly)
 {
     for (auto& ss : scene_section.sceneSections())
         applyMaterialAssemblyToSceneSection(ss, material_assembly);
 
     for (auto& gg : scene_section.geometryGroups())
     {
+        bool material_assignment_was_delayed{ false };
         for (auto& g : gg.geometries())
-            if (static_cast<RaMaterialAssembly const&>(g.getMaterialAssembly()).getMaterialCount() == 0)
+        {
+            if (static_cast<RaMaterialAssembly const&>(g.getMaterialAssembly()).isEmpty())
+            {
                 g.setMaterialAssembly(material_assembly);
+                material_assignment_was_delayed |= true;
+            }
+        }
+
+
+        if (material_assignment_was_delayed)
+        {
+            gg.endConstruction();
+
+            if (!gg.isValid())
+            {
+                THROW_RA_ERROR("Geometry group \"" + gg.getStringName() + "\" is not valid after delayed material assignment");
+            }
+        }
     }
 }
 
 }
 
 RaScatteringRenderingPass::RaScatteringRenderingPass(
-    RaSceneSection const& scene_section,
+    RaSceneSection& scene_section,
     RaRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported,
     uint32_t max_recursion_depth,
@@ -86,7 +103,7 @@ RaScatteringRenderingPass::RaScatteringRenderingPass(
 }
 
 RaScatteringRenderingPass::RaScatteringRenderingPass(
-    RaSceneSection const& scene_section,
+    RaSceneSection& scene_section,
     RaRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported, 
     uint32_t max_recursion_depth, 
@@ -217,15 +234,19 @@ void RaScatteringRenderingPass::setScatteringPhaseFunctionShader(RaProgram const
         getProgram().setVariableValue("phase_function", getRaProgramFromDeclarationOffset(2U).getId());
 }
 
-void RaScatteringRenderingPass::render() const
+void RaScatteringRenderingPass::prepare_impl()
+{
+    applyMaterialAssemblyToSceneSection(targetSceneSection(), m_surface_material_assembly);
+}
+
+void RaScatteringRenderingPass::render_impl() const
 {
     static_cast<RaProgram&>(static_cast<RaMaterial&>(m_surface_material_assembly.getMaterialByRayType(RaRayType::unknown)).getClosestHitShader())
         .assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.writeBuffer());
 
     static_cast<RaMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(RaRayType::unknown)).getProgram()
         .assignBuffer("traverse_backup_buffer", m_traverse_backup_buffer.writeBuffer());
-
-    applyMaterialAssemblyToSceneSection(targetSceneSection(), m_surface_material_assembly);
+    
     m_ray_caster.setMissShaderAssembly(m_miss_shader_assembly);
 
     targetSceneSection().trace(m_ray_caster);
