@@ -74,7 +74,7 @@ uint3 RaRayGenerator::getGeneratorDimensions() const
 
 unsigned int RaRayGenerator::numberOfRays() const
 {
-    return m_num_rays_x * m_num_rays_y*m_num_rays_z;
+    return m_num_rays_x * m_num_rays_y * m_num_rays_z;
 }
 
 void RaRayGenerator::update(RaObjectHandle top_scene_object) const
@@ -89,6 +89,11 @@ void RaRayGenerator::update(RaObjectHandle top_scene_object) const
 
 void RaRayGenerator::launch() const
 {
+    THROW_OPTIX_ERROR(
+        nativeOptiXContextHandle(),
+        rtContextCompile(nativeOptiXContextHandle())
+    );
+
     if (m_num_rays_z > 1U)
     {
         THROW_OPTIX_ERROR(

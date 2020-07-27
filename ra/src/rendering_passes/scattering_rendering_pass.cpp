@@ -16,6 +16,7 @@ void applyMaterialAssemblyToSceneSection(RaSceneSection& scene_section, RaMateri
     for (auto& ss : scene_section.sceneSections())
         applyMaterialAssemblyToSceneSection(ss, material_assembly);
 
+    bool scene_section_construction_was_delayed{ false };
     for (auto& gg : scene_section.geometryGroups())
     {
         bool material_assignment_was_delayed{ false };
@@ -23,7 +24,9 @@ void applyMaterialAssemblyToSceneSection(RaSceneSection& scene_section, RaMateri
         {
             if (static_cast<RaMaterialAssembly const&>(g.getMaterialAssembly()).isEmpty())
             {
+                RaMaterialAssembly const& current_material_assembly = g.getMaterialAssembly();
                 g.setMaterialAssembly(material_assembly);
+                RaMaterialAssembly const& updated_material_assembly = g.getMaterialAssembly();
                 material_assignment_was_delayed |= true;
             }
         }
@@ -31,6 +34,7 @@ void applyMaterialAssemblyToSceneSection(RaSceneSection& scene_section, RaMateri
 
         if (material_assignment_was_delayed)
         {
+            scene_section_construction_was_delayed |= true;
             gg.endConstruction();
 
             if (!gg.isValid())
@@ -39,6 +43,9 @@ void applyMaterialAssemblyToSceneSection(RaSceneSection& scene_section, RaMateri
             }
         }
     }
+
+    if (scene_section_construction_was_delayed)
+        scene_section.endConstruction();
 }
 
 }
@@ -80,7 +87,6 @@ RaScatteringRenderingPass::RaScatteringRenderingPass(
         .setVariableValue("problem_size", m_ray_caster.getGeneratorDimensions());
     static_cast<RaProgram&>(static_cast<RaMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(RaRayType::unknown)).getProgram())
         .setVariableValue("problem_size", m_ray_caster.getGeneratorDimensions());
-
 
     setMaxRecursionDepth(max_recursion_depth);
     setRayMarchingStepSize(ray_marching_step_size);
@@ -253,7 +259,7 @@ void RaScatteringRenderingPass::render_impl() const
 
     m_traverse_backup_buffer.ping_pong();
 
-    unsigned int num_not_converged_rays = 
+    unsigned int num_not_converged_rays =  
         *makeBufferMapSentry(m_traverse_backup_buffer.readBuffer(), RaBufferMapKind::read).address();
 
     uint32_t count{ 1U };

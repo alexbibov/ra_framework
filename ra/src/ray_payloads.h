@@ -16,8 +16,8 @@ enum class RaRayPayloadType : unsigned int
 enum class RaRayType : unsigned int
 {
     unknown = 0U,
-    shadow = 1U,
-    scattered = 2U,
+    shadow = 2U,
+    scattered = 1U,
     reflected = 3U,
     count
 };

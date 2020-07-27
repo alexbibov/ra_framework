@@ -18,6 +18,7 @@ rtDeclareVariable(float, intersection_distance, rtIntersectionDistance, "Paramet
 
 RT_PROGRAM void __ra_any_hit__()
 {
+    printf("black body any hit!\n");
     switch (static_cast<RaRayPayloadType>(payload_type))
     {
     case RaRayPayloadType::radiance:

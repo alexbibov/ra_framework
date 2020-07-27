@@ -57,10 +57,7 @@ void RaGeometryGroup::addGeometry(RaGeometry const& geometry)
 void RaGeometryGroup::endConstruction()
 {
     if (isMaterialAssignmentDelayed())
-    {
-        m_construction_delayed = true;
         return;
-    }
 
     if (!m_construction_begun)
     {
@@ -82,8 +79,8 @@ void RaGeometryGroup::endConstruction()
     }
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationMarkDirty(m_native_acceleration.get()));
 
+    m_construction_begun = false;
     m_construction_finished = true;
-    m_construction_delayed = false;
 }
 
 std::list<RaGeometry> const& ra::RaGeometryGroup::geometries() const
@@ -162,7 +159,6 @@ RaGeometryGroup::RaGeometryGroup(RaContext const& optix_context, RaBVHAlgorithm 
     , RaTransformable{ optix_context }
     , m_construction_begun{ false }
     , m_construction_finished{ false }
-    , m_construction_delayed{ false }
 {
     RTgeometrygroup geometry_group_native_handle;
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGeometryGroupCreate(nativeOptiXContextHandle(), &geometry_group_native_handle));

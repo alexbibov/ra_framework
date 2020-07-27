@@ -77,10 +77,13 @@ RaContext::RaContext(std::vector<std::string> const& asset_directories, uint32_t
     if (optix_rc == RT_ERROR_INVALID_VALUE)
     {
         THROW_RA_ERROR("OptiX context cannot be initialized: invalid value");
-    }
+    } 
 
     LOG_OPTIX_ERROR(m_optix_context, rtContextSetEntryPointCount(m_optix_context, num_entry_points));
     LOG_OPTIX_ERROR(m_optix_context, rtContextSetRayTypeCount(m_optix_context, static_cast<unsigned int>(RaRayType::count)));
+    LOG_OPTIX_ERROR(m_optix_context, rtContextSetMaxTraceDepth(m_optix_context, 15));
+    LOG_OPTIX_ERROR(m_optix_context, rtContextSetPrintEnabled(m_optix_context, true));
+    LOG_OPTIX_ERROR(m_optix_context, rtContextSetPrintBufferSize(m_optix_context, 1024));
 }
 
 RaContext::~RaContext()

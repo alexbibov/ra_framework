@@ -123,7 +123,7 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
         float2 S = make_float2(0.f, 0.f);
 
         // scattering component is only calculated when scattering is enabled
-        for (int j = 0; j < num_importance_directions; ++j)
+        /*for (int j = 0; j < num_importance_directions; ++j)
         {
             RaRayRadiancePayloadSimple scattered_payload;
             scattered_payload.spectral_radiance = make_float2(0.f, 0.f);
@@ -144,7 +144,7 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
 
             S += scattered_payload.spectral_radiance
                 * phase_function(p, importance_direction, direction_of_interest, i) * sin(importance_direction.x);
-        }
+        }*/
 
         float2 sigma_S_p_2 = num_importance_directions ? scattering_factor(p_2, i) : make_float2(0.f, 0.f);
         float2 phi = expf(-(absorption_factor(p_2, i) /*+ sigma_S_p_2*/)*step);
@@ -243,7 +243,7 @@ RT_PROGRAM void __ra_miss__(void)
             ray_payload.tracing_depth_and_aux.x = 0U;
 
             uint3 idx = ray_payload.tracing_depth_and_aux.z >= 1 ?
-                /*optix::make_uint3(ray_payload.tracing_depth_and_aux.z - 1, 0, 0)*/
+                // optix::make_uint3(ray_payload.tracing_depth_and_aux.z - 1, 0, 0)
                 linear_index_to_3d_index(ray_payload.tracing_depth_and_aux.z - 1) : index;
             // ray_payload.tracing_depth_and_aux.z = 0U;
 

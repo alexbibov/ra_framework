@@ -20,6 +20,8 @@ namespace ra {
         void addSceneSection(RaSceneSection const& scene_section);
         void endConstruction();
 
+        bool isConstructionDelayed() const;
+
         std::list<RaSceneSection>& sceneSections();
         std::list<RaGeometryGroup>& geometryGroups();
 
@@ -43,6 +45,7 @@ namespace ra {
         std::list<RaSceneSection> m_attached_scene_sections;
         bool m_construction_begun;
         bool m_construction_finished;
+        bool m_construction_delayed;
     };
 
 };

@@ -11,10 +11,10 @@ RaRenderingPass::RaRenderingPass(RaSceneSection& scene_section):
 {
 }
 
-void RaRenderingPass::prepare()
-{
-    prepare_impl();
-
+void RaRenderingPass::prepare() 
+{ 
+    prepare_impl(); 
+      
     m_rendering_pass_ready = true;
 }
 

@@ -59,7 +59,6 @@ private:
     std::list<RaGeometry> m_list_of_geometries;
     bool m_construction_begun;
     bool m_construction_finished;
-    bool m_construction_delayed;
 };
 
 template<> class RaGeometryGroupAttorney<RaSceneSection>

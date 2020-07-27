@@ -39,7 +39,7 @@ RaMaterialAssembly::RaMaterialAssembly(std::vector<RaMaterial> const& materials)
     uint64_t used_material_slots_mask = 0U;
     for(unsigned int idx = 0U; idx < materials.size(); ++idx)
     {
-        RaMaterial const& current = materials[idx];
+        RaMaterial const& current = materials[idx]; 
         
         uint64_t current_mask = rayTypeCollectionTo64BitMask(current.supportedRayTypes());
         uint64_t repeated_uses_mask = current_mask & used_material_slots_mask;

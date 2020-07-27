@@ -102,7 +102,7 @@ void RaSceneSection::addSceneSection(RaSceneSection const& scene_section)
             "has already been finalized");
     }
 
-    if (!scene_section.isValid())
+    if (!scene_section.isConstructionDelayed() && !scene_section.isValid())
     {
         THROW_RA_ERROR("Scene section \"" + scene_section.getStringName() + "\" attempted to be joined with "
         "scene section \"" + getStringName() + "\" is not valid");
@@ -113,6 +113,9 @@ void RaSceneSection::addSceneSection(RaSceneSection const& scene_section)
 
 void RaSceneSection::endConstruction()
 {
+    if (isConstructionDelayed())
+        return;
+
     if (!m_construction_begun)
     {
         util::Log::retrieve()->out("WARNING: attempt to finalize construction of scene section \"" + getStringName()
@@ -141,7 +144,27 @@ void RaSceneSection::endConstruction()
 
     THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtAccelerationMarkDirty(m_native_acceleration_handle.get()));
 
+    THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtGroupValidate(m_native_group_handle.get()));
+
+    m_construction_begun = false;
     m_construction_finished = true;
+}
+
+bool RaSceneSection::isConstructionDelayed() const
+{
+    for (auto const& ss : m_attached_scene_sections)
+    {
+        if (ss.isConstructionDelayed())
+            return true;
+    }
+
+    for (auto const& gg : m_geometry_groups)
+    {
+        if (gg.isMaterialAssignmentDelayed())
+            return true;
+    }
+
+    return false;
 }
 
 std::list<RaSceneSection>& RaSceneSection::sceneSections()
@@ -166,7 +189,7 @@ bool RaSceneSection::isValid() const
         && (m_construction_begun && m_construction_finished);
 }
 
-void ra::RaSceneSection::trace(RaRayGenerator const& ray_caster) const
+void RaSceneSection::trace(RaRayGenerator const& ray_caster) const
 {
     _update(ray_caster, RaObjectHandle{ getEntryNode() });
     _trace(ray_caster);
