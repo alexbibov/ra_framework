@@ -45,7 +45,6 @@ RaScatteringRenderingPass RaRenderingPassesFactory::createScatteringRenderingPas
     RaSceneSection& target_scene_section, 
     RaRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported,
-    uint32_t max_recursion_depth, 
     float ray_marching_step_size, 
     uint32_t num_scattering_integral_importance_directions, 
     RaProgram const& absorption_probability_shader, 
@@ -53,20 +52,19 @@ RaScatteringRenderingPass RaRenderingPassesFactory::createScatteringRenderingPas
     RaProgram const& scattering_phase_function_shader)
 {
     return RaScatteringRenderingPass{ target_scene_section, ray_caster, num_spectra_pairs_supported,
-    max_recursion_depth, ray_marching_step_size, num_scattering_integral_importance_directions,
+    ray_marching_step_size, num_scattering_integral_importance_directions,
     absorption_probability_shader, scattering_probability_shader, scattering_phase_function_shader };
 }
 
 RaScatteringRenderingPass RaRenderingPassesFactory::createScatteringRenderingPass(
     RaSceneSection& target_scene_section, 
     RaRayGenerator const& ray_caster,
-    uint8_t num_spectra_pairs_supported, 
-    uint32_t max_recursion_depth, 
+    uint8_t num_spectra_pairs_supported,
     float ray_marching_step_size, 
     uint32_t num_scattering_integral_importance_directions)
 {
     return RaScatteringRenderingPass{ target_scene_section, ray_caster, num_spectra_pairs_supported,
-        max_recursion_depth, ray_marching_step_size, num_scattering_integral_importance_directions };
+        ray_marching_step_size, num_scattering_integral_importance_directions };
 }
 
 RaRenderingPassesFactory::RaRenderingPassesFactory(RaContext const& context):
@@ -95,7 +93,6 @@ RaRenderingPassesFactory::RaRenderingPassesFactory(RaContext const& context):
                 RaSceneSection& target_scene_section,
                 RaRayGeneratorWithOutputBuffer const& ray_caster,
                 uint8_t num_spectra_pairs_supported,
-                uint32_t max_recursion_depth,
                 float ray_marching_step_size,
                 uint32_t num_scattering_integral_importance_directions,
                 RaProgram const& absorption_probability_shader,
@@ -106,7 +103,6 @@ RaRenderingPassesFactory::RaRenderingPassesFactory(RaContext const& context):
                     target_scene_section,
                     ray_caster,
                     num_spectra_pairs_supported,
-                    max_recursion_depth,
                     ray_marching_step_size,
                     num_scattering_integral_importance_directions,
                     absorption_probability_shader,
@@ -118,7 +114,6 @@ RaRenderingPassesFactory::RaRenderingPassesFactory(RaContext const& context):
                 RaSceneSection& target_scene_section,
                 RaRayGeneratorWithOutputBuffer const& ray_caster,
                 uint8_t num_spectra_pairs_supported,
-                uint32_t max_recursion_depth,
                 float ray_marching_step_size,
                 uint32_t num_scattering_integral_importance_directions)
             {
@@ -126,7 +121,6 @@ RaRenderingPassesFactory::RaRenderingPassesFactory(RaContext const& context):
                     target_scene_section,
                     ray_caster,
                     num_spectra_pairs_supported,
-                    max_recursion_depth,
                     ray_marching_step_size,
                     num_scattering_integral_importance_directions);
             }

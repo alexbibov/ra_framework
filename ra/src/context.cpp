@@ -81,7 +81,6 @@ RaContext::RaContext(std::vector<std::string> const& asset_directories, uint32_t
 
     LOG_OPTIX_ERROR(m_optix_context, rtContextSetEntryPointCount(m_optix_context, num_entry_points));
     LOG_OPTIX_ERROR(m_optix_context, rtContextSetRayTypeCount(m_optix_context, static_cast<unsigned int>(RaRayType::count)));
-    LOG_OPTIX_ERROR(m_optix_context, rtContextSetMaxTraceDepth(m_optix_context, 15));
     LOG_OPTIX_ERROR(m_optix_context, rtContextSetPrintEnabled(m_optix_context, true));
     LOG_OPTIX_ERROR(m_optix_context, rtContextSetPrintBufferSize(m_optix_context, 1024));
 }
@@ -89,12 +88,6 @@ RaContext::RaContext(std::vector<std::string> const& asset_directories, uint32_t
 RaContext::~RaContext()
 {
     LOG_OPTIX_ERROR(m_optix_context, rtContextDestroy(m_optix_context));
-}
-
-void RaContext::setStackSize(size_t size_in_bytes) const
-{
-    LOG_OPTIX_ERROR(m_optix_context,
-        rtContextSetStackSize(m_optix_context, static_cast<RTsize>(size_in_bytes)));
 }
 
 RaProgram RaContext::createProgram(std::string const& source, RaProgram::Source source_type, std::string const& program_name) const

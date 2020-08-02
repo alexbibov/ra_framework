@@ -16,8 +16,7 @@ public:
     RaScatteringRenderingPass(
         RaSceneSection& target_scene_section, 
         RaRayGenerator const& ray_caster,
-        uint8_t num_spectra_pairs_supported, 
-        uint32_t max_recursion_depth,
+        uint8_t num_spectra_pairs_supported,
         float ray_marching_step_size, 
         uint32_t num_scattering_integral_importance_directions,
         RaProgram const& absorption_probability_shader, 
@@ -28,7 +27,6 @@ public:
         RaSceneSection& target_scene_section, 
         RaRayGenerator const& ray_caster,
         uint8_t num_spectra_pairs_supported, 
-        uint32_t max_recursion_depth,
         float ray_marching_step_size, 
         uint32_t num_scattering_integral_importance_directions);
 
@@ -61,7 +59,6 @@ protected:
 private:
     RaRayGenerator const& m_ray_caster;
     uint32_t m_num_spectra_pairs_supported;
-    uint32_t m_max_recursion_depth;
     float m_ray_marching_step_size;
     uint32_t m_num_scattering_integral_importance_directions;
     RaMaterialAssembly m_surface_material_assembly;

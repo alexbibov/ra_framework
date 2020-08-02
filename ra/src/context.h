@@ -26,9 +26,6 @@ public:
     RaContext& operator=(RaContext&&) = delete;
     ~RaContext();
 
-    //! Sets stack size to be used by the context, returns 'true' on success and false on failure
-    void setStackSize(size_t size_in_bytes) const;
-
     //! Creates new OptiX program
     RaProgram createProgram(std::string const& source, RaProgram::Source source_type, std::string const& program_name) const;
 

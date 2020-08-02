@@ -123,7 +123,7 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
         float2 S = make_float2(0.f, 0.f);
 
         // scattering component is only calculated when scattering is enabled
-        /*for (int j = 0; j < num_importance_directions; ++j)
+        for (int j = 0; j < num_importance_directions; ++j)
         {
             RaRayRadiancePayloadSimple scattered_payload;
             scattered_payload.spectral_radiance = make_float2(0.f, 0.f);
@@ -144,7 +144,7 @@ __device__ void update_ray_payload(float3 p, float3 p_2, float2 direction_of_int
 
             S += scattered_payload.spectral_radiance
                 * phase_function(p, importance_direction, direction_of_interest, i) * sin(importance_direction.x);
-        }*/
+        }
 
         float2 sigma_S_p_2 = num_importance_directions ? scattering_factor(p_2, i) : make_float2(0.f, 0.f);
         float2 phi = expf(-(absorption_factor(p_2, i) /*+ sigma_S_p_2*/)*step);
@@ -168,7 +168,7 @@ RT_PROGRAM void __ra_closest_hit__(void)
         ray_payload.depth.y = intersection_distance;
 
         ++ray_payload.tracing_depth_and_aux.x;
-        if (ray_payload.tracing_depth_and_aux.x <= max_recursion_depth)
+        if (ray_payload.tracing_depth_and_aux.x < max_recursion_depth)
         {
             float const correction = step_size*1e-2f;
 
@@ -201,7 +201,7 @@ RT_PROGRAM void __ra_closest_hit__(void)
 
         // we still need to try to keep traversing the ray as there might be more media to discover
         ++ray_payload.tracing_depth_and_aux.x;
-        if (ray_payload.tracing_depth_and_aux.x <= max_recursion_depth)
+        if (ray_payload.tracing_depth_and_aux.x < max_recursion_depth)
         {
             float const correction = step_size * 1e-2f;
 
@@ -228,7 +228,7 @@ RT_PROGRAM void __ra_miss__(void)
         ray_payload.depth.y += step_size;
         update_ray_payload(p, p_2, direction_of_interest, step_size);
 
-        if (ray_payload.tracing_depth_and_aux.x <= max_recursion_depth)
+        if (ray_payload.tracing_depth_and_aux.x < max_recursion_depth)
         {
             ++ray_payload.tracing_depth_and_aux.x;
 
@@ -253,13 +253,21 @@ RT_PROGRAM void __ra_miss__(void)
 
 }
 
+__device__ void update_ray_payload_scattered(float3 p_2)
+{
+    unsigned int spectrum = ray_payload_scattered.tracing_depth_and_aux.w;
+    float2 phi = expf(-absorption_factor(p_2, spectrum) * step_size);
+    ray_payload_scattered.spectral_radiance *= phi;
+}
+
 RT_PROGRAM void __ra_closest_hit_scattered__(void)
 {
+    printf("Any hit scattered\n");
     // this shader is only called when scattered ray exits the domain of the medium
-    unsigned int idb_offset = ray_payload_scattered.tracing_depth_and_aux.z;
+    /*unsigned int idb_offset = ray_payload_scattered.tracing_depth_and_aux.z;
 
     float2 incoming_spectral_radiance = importance_directions_buffer[idb_offset];
-    ray_payload_scattered.spectral_radiance = incoming_spectral_radiance;
+    ray_payload_scattered.spectral_radiance = incoming_spectral_radiance;*/
 }
 
 RT_PROGRAM void __ra_miss_scattered__(void)
@@ -268,7 +276,7 @@ RT_PROGRAM void __ra_miss_scattered__(void)
 
     ++ray_payload_scattered.tracing_depth_and_aux.x;
 
-    if (ray_payload_scattered.tracing_depth_and_aux.x <= max_recursion_depth)
+    if (ray_payload_scattered.tracing_depth_and_aux.x < max_recursion_depth)
     {
         float3 p{ current_ray.origin + step_size * current_ray.direction };
         float3 p_2{ current_ray.origin + step_size * .5f * current_ray.direction };
@@ -279,8 +287,6 @@ RT_PROGRAM void __ra_miss_scattered__(void)
             ray_payload_scattered.tracing_depth_and_aux.x < max_recursion_depth ? step_size : RT_DEFAULT_MAX);
         rtTrace(ra_entry_node, next_scattered_ray_iteration, ray_payload_scattered);
 
-        unsigned int spectrum = ray_payload_scattered.tracing_depth_and_aux.w;
-        float2 phi = expf(-absorption_factor(p_2, spectrum) * step_size);
-        ray_payload_scattered.spectral_radiance *= phi;
+        update_ray_payload_scattered(p_2);
     }
 }

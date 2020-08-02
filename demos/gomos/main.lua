@@ -5,7 +5,6 @@ print(working_directory)
 
 num_rays = 100    -- total number of rays to cast
 frequency_pairs = 8    -- number of frequency pairs to support (means 4 frquencies in total in this case)
-ra_set_context_stack_size(4096)
 
 planet_radius = 13.272916666    -- radius of the planet
 atmosphere_thickness = 1    -- thickness of atmosphere
@@ -139,7 +138,7 @@ atmospheric_circle:setMaterialAssembly(RaMaterialAssembly.new())
 --     be constructed for the given set of geometry objects. The algorithm used to construct acceleration structure
 --     is provided to the input of RaGeometryGroup constructor.
 -- ]]
-earth_geometry_group = RaGeometryGroup.new(RaBVHAlgorithm["none"])
+earth_geometry_group = RaGeometryGroup.new(RaBVHAlgorithm["bvh"])
 earth_geometry_group:beginConstruction()
 earth_geometry_group:addGeometry(atmospheric_circle)
 earth_geometry_group:addGeometry(planet_circle)
@@ -152,7 +151,7 @@ earth_geometry_group:endConstruction()
 --     the only parameter accepted by constructor of RaSceneSection is algorithm to use for construction of the corresponding
 --     acceleration structure (acceleration structure = BVH in this case)
 -- ]]
-scene_section = RaSceneSection.new(RaBVHAlgorithm["none"])
+scene_section = RaSceneSection.new(RaBVHAlgorithm["bvh"])
 scene_section:beginConstruction()
 scene_section:addGeometryGroup(earth_geometry_group)
 scene_section:endConstruction()
@@ -162,10 +161,11 @@ scattering_rendering_pass = RaScatteringRenderingPass.new(
     scene_section,    -- scene section, to which the scattering pass will be applied
     parallel_ray_generator,    -- ray generator employed by the scattering pass
     frequency_pairs,    -- number of spectral pairs supported by the scattering pass (must be equal to that of the ray generator)
-    4,   -- maximal depth of recursion
     0.05,    -- ray marching step size
     1    -- number of importance directions used to apprRaimate the scattering integral
 )
+
+scattering_rendering_pass:setMaxRecursionDepth(10)
 
 absorption_factor_shader = RaProgram.new(
     "gomos_absorption_factor_shader.ptx",
@@ -185,14 +185,15 @@ absorption_factor_shader:assignBuffer("gas_profiles", gas_profiles)
 absorption_factor_shader:assignBuffer("cross_sections", cross_sections)
 
 
--- importance_directions = { float2.new(0.0, 3.14) }
--- for i = 2, frequency_pairs + 1 do
---     importance_directions[i] = float2.new(1.0, 1.0)
--- end
--- scattering_rendering_pass:updateImportanceDirections(importance_directions)
+importance_directions = { float2.new(math.pi/2, math.pi/4) }
+for i = 2, frequency_pairs + 1 do
+    importance_directions[i] = float2.new(math.pi/2, math.pi/4)
+end
+scattering_rendering_pass:updateImportanceDirections(importance_directions)
 
 gomos_data_store_agent = RaMatlabV4.new(working_directory.."results.mat")
 
+scattering_rendering_pass:prepare()
 for pass = 1, math.ceil(num_wavelengths/16) do
     io.write(string.format("pass#%i...", pass))
 
