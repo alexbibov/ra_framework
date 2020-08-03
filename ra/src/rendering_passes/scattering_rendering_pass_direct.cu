@@ -16,14 +16,12 @@ rtDeclareVariable(optix::uint, num_spectra_pairs_supported, , "Number of wavelen
 rtDeclareVariable(optix::uint, num_importance_directions, , );
 
 typedef rtCallableProgramId<optix::float2(optix::float3, unsigned int)> factor_program_id_type;
-typedef rtCallableProgramId<optix::float2(optix::float3, unsigned int)> factor_program_id_type;
 typedef rtCallableProgramId<optix::float2(optix::float3, optix::float2, optix::float2, unsigned int)> phase_function_program_id_type; 
 rtDeclareVariable(factor_program_id_type, absorption_factor, , );
 rtDeclareVariable(factor_program_id_type, scattering_factor, , );
 rtDeclareVariable(phase_function_program_id_type, phase_function, , );
 
 rtDeclareVariable(ra::RaRayRadiancePayload, ray_payload, rtPayload, "Current ray payload");
-rtDeclareVariable(ra::RaRayRadiancePayloadSimple, ray_payload_scattered, rtPayload, "Payload of the current scattering ray");
 rtDeclareVariable(float, intersection_distance, rtIntersectionDistance, "Parametric distance from ray origin to the intersection");
 rtDeclareVariable(optix::Ray, current_ray, rtCurrentRay, "Currently traversed ray");
 rtDeclareVariable(optix::uint3, index, rtLaunchIndex, "Index of the current ray");
@@ -190,7 +188,8 @@ RT_PROGRAM void __ra_closest_hit__(void)
             pack_ray_info(current_ray.origin, current_ray.direction, idx);
         }
     }
-    else if (dS < 0)    // the ray has left object
+    
+    if (dS < 0)    // the ray has left object
     {
         ray_payload.depth.y += intersection_distance;
 
@@ -213,12 +212,12 @@ RT_PROGRAM void __ra_closest_hit__(void)
             rtTrace(ra_entry_node, next_iteration_ray, ray_payload);
         }
     }
-
     // ray has "touched" object: no operation is required
 }
 
 RT_PROGRAM void __ra_miss__(void)
 {
+    // printf("Miss\n");
     if (ray_payload.tracing_depth_and_aux.y >= 1)    // "miss" has happened inside of medium
     {
         float3 p{ current_ray.origin + step_size * current_ray.direction };
@@ -249,44 +248,5 @@ RT_PROGRAM void __ra_miss__(void)
 
             pack_ray_info(p, current_ray.direction, idx);
         }
-    }
-
-}
-
-__device__ void update_ray_payload_scattered(float3 p_2)
-{
-    unsigned int spectrum = ray_payload_scattered.tracing_depth_and_aux.w;
-    float2 phi = expf(-absorption_factor(p_2, spectrum) * step_size);
-    ray_payload_scattered.spectral_radiance *= phi;
-}
-
-RT_PROGRAM void __ra_closest_hit_scattered__(void)
-{
-    printf("Any hit scattered\n");
-    // this shader is only called when scattered ray exits the domain of the medium
-    /*unsigned int idb_offset = ray_payload_scattered.tracing_depth_and_aux.z;
-
-    float2 incoming_spectral_radiance = importance_directions_buffer[idb_offset];
-    ray_payload_scattered.spectral_radiance = incoming_spectral_radiance;*/
-}
-
-RT_PROGRAM void __ra_miss_scattered__(void)
-{
-    // this shader is only invoked from within the medium
-
-    ++ray_payload_scattered.tracing_depth_and_aux.x;
-
-    if (ray_payload_scattered.tracing_depth_and_aux.x < max_recursion_depth)
-    {
-        float3 p{ current_ray.origin + step_size * current_ray.direction };
-        float3 p_2{ current_ray.origin + step_size * .5f * current_ray.direction };
-
-        Ray next_scattered_ray_iteration = make_Ray(
-            p, current_ray.direction,
-            static_cast<unsigned int>(RaRayType::scattered), 0.f, 
-            ray_payload_scattered.tracing_depth_and_aux.x < max_recursion_depth ? step_size : RT_DEFAULT_MAX);
-        rtTrace(ra_entry_node, next_scattered_ray_iteration, ray_payload_scattered);
-
-        update_ray_payload_scattered(p_2);
     }
 }

@@ -10,7 +10,7 @@ using namespace ra;
 
 
 RaMaterialAssembly::RaMaterialAssembly(RaContext const& context):
-    RaContractWithRaContext{ context },
+    RaContractWithRaContext{ context }, 
     m_is_dummy{ true }
 {
 }

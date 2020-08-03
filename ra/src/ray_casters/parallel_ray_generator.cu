@@ -55,13 +55,16 @@ RT_PROGRAM void __ra_generate__(void)
     origin.x = rotated_point.x; origin.y = rotated_point.y;
     optix::float3 direction = optix::normalize(optix::make_float3(rotated_tip - rotated_point, 0));
     optix::Ray ray = optix::make_Ray(origin, direction, static_cast<unsigned int>(ra::RaRayType::unknown), 0.f, RT_DEFAULT_MAX);
+    optix::Ray ray0 = optix::make_Ray(origin, direction, static_cast<unsigned int>(ra::RaRayType::scattered), 0.f, RT_DEFAULT_MAX);
     
     unsigned int const ns{ MIN(ra::constants::max_spectra_pairs_supported, num_spectra_pairs_supported) };
 
     ra::RaRayRadiancePayload payload{};
     memcpy(payload.spectral_radiance, &ra_init_flux_buffer[ns*index], sizeof(optix::float2)*ns);
     payload.tracing_depth_and_aux = make_uint4(0U, 0U, 0U, 0U);
+    
     rtTrace(ra_entry_node, ray, payload);
+    
 
     ra_output_buffer[index] = payload;
 }

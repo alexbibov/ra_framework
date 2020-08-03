@@ -47,36 +47,37 @@ void applyMaterialAssemblyToSceneSection(RaSceneSection& scene_section, RaMateri
     if (scene_section_construction_was_delayed)
         scene_section.endConstruction();
 }
-
+ 
 }
-
-RaScatteringRenderingPass::RaScatteringRenderingPass(
+ 
+RaScatteringRenderingPass::RaScatteringRenderingPass( 
     RaSceneSection& scene_section,
     RaRayGenerator const& ray_caster,
     uint8_t num_spectra_pairs_supported,
     float ray_marching_step_size,
     uint32_t num_scattering_integral_importance_directions, 
     RaProgram const& absorption_probability_shader,
-    RaProgram const& scattering_probability_shader,
+    RaProgram const& scattering_probability_shader, 
     RaProgram const& scattering_phase_function_shader)
-
+     
     : RaRenderingPass{ scene_section }
     , RaContractWithRaPrograms{ absorption_probability_shader, scattering_probability_shader, scattering_phase_function_shader }
     , m_ray_caster{ ray_caster }
     , m_num_spectra_pairs_supported{ num_spectra_pairs_supported }
     //m_ray_marching_step_size{ ray_marching_step_size },
-    , m_num_scattering_integral_importance_directions{ num_scattering_integral_importance_directions }
-    , m_surface_material_assembly{
-        RaMaterial{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, RaProgram::Source::file, OX_SHADER_ENTRY_CLOSEST_HIT), util::Optional<RaProgram>{}, RaRayTypeCollection{ RaRayType::unknown } },
-        /* RaMaterial{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, RaProgram::Source::file, "__ra_closest_hit_scattered__"), util::Optional<RaProgram>{}, RaRayTypeCollection{ RaRayType::scattered }}*/ }    , m_miss_shader_assembly{
-        RaMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, RaProgram::Source::file, OX_SHADER_ENTRY_MISS), RaRayTypeCollection{ RaRayType::unknown } },
-        RaMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS, RaProgram::Source::file, "__ra_miss_scattered__"), RaRayTypeCollection{ RaRayType::scattered } } }
+    , m_num_scattering_integral_importance_directions{ num_scattering_integral_importance_directions } 
+    , m_surface_material_assembly{ 
+    RaMaterial{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS_INDIRECT, RaProgram::Source::file, OX_SHADER_ENTRY_ANY_HIT), util::Optional<RaProgram>{}, RaRayTypeCollection{ RaRayType::scattered }},
+    RaMaterial{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS_DIRECT, RaProgram::Source::file, OX_SHADER_ENTRY_CLOSEST_HIT), util::Optional<RaProgram>{}, RaRayTypeCollection{ RaRayType::unknown } }}    
+    , m_miss_shader_assembly{
+        RaMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS_DIRECT, RaProgram::Source::file, OX_SHADER_ENTRY_MISS), RaRayTypeCollection{ RaRayType::unknown } },
+        RaMissShader{ targetSceneSection().context().createProgram(PTX_SCATTERING_RENDERING_PASS_INDIRECT, RaProgram::Source::file, OX_SHADER_ENTRY_MISS), RaRayTypeCollection{ RaRayType::scattered } } }
     , m_traverse_backup_buffer{ targetSceneSection().context(), ray_caster.numberOfRays() }
     , m_importance_directions_buffer{ targetSceneSection().context().createBuffer<float2>(RaBufferKind::input, num_scattering_integral_importance_directions*(1 + num_spectra_pairs_supported)) }
     , m_recaster{ m_ray_caster.getGeneratorDimensions(), m_traverse_backup_buffer, castBufferToType<RaRayRadiancePayload>(m_ray_caster.outputBuffer()), RaRayType::unknown, ray_marching_step_size }
 {
     static_cast<RaProgram&>(static_cast<RaMaterial&>(m_surface_material_assembly.getMaterialByRayType(RaRayType::unknown)).getClosestHitShader())
-        .setVariableValue("num_spectra_pairs_supported", m_num_spectra_pairs_supported);
+        .setVariableValue("num_spectra_pairs_supported", m_num_spectra_pairs_supported); 
     static_cast<RaProgram&>(static_cast<RaMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(RaRayType::unknown)).getProgram())
         .setVariableValue("num_spectra_pairs_supported", m_num_spectra_pairs_supported);
 
@@ -98,15 +99,13 @@ RaScatteringRenderingPass::RaScatteringRenderingPass(
     
     static_cast<RaProgram&>(static_cast<RaMaterial&>(m_surface_material_assembly.getMaterialByRayType(RaRayType::unknown)).getClosestHitShader())
         .assignBuffer("importance_directions_buffer", m_importance_directions_buffer);
-    /*static_cast<RaProgram&>(static_cast<RaMaterial&>(m_surface_material_assembly.getMaterialByRayType(RaRayType::scattered)).getClosestHitShader())
-        .assignBuffer("importance_directions_buffer", m_importance_directions_buffer);*/
     static_cast<RaMissShader&>(m_miss_shader_assembly.getMissShaderByRayType(RaRayType::unknown))
         .getProgram().assignBuffer("importance_directions_buffer", m_importance_directions_buffer);
 }
-
+ 
 RaScatteringRenderingPass::RaScatteringRenderingPass(
     RaSceneSection& scene_section,
-    RaRayGenerator const& ray_caster,
+    RaRayGenerator const& ray_caster, 
     uint8_t num_spectra_pairs_supported,
     float ray_marching_step_size, 
     uint32_t num_scattering_integral_importance_directions):
@@ -133,7 +132,7 @@ uint32_t RaScatteringRenderingPass::getMaxRecursionDepth() const
 {
     unsigned int rv{};
     rtContextGetMaxTraceDepth(nativeOptiXContextHandle(), &rv);
-    return static_cast<uint32_t>(rv);
+    return static_cast<uint32_t>(rv); 
 }
 
 void RaScatteringRenderingPass::setMaxRecursionDepth(uint32_t max_recursion_depth)

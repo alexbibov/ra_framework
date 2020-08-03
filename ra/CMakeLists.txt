@@ -55,7 +55,7 @@ find_package(Python COMPONENTS Interpreter REQUIRED)
 add_custom_command(
     TARGET ${_target}
     PRE_BUILD
-    COMMAND ${Python_EXECUTABLE} "${_src_root_path}/compile_ptx.py" --sources "\"${_cuda_sources_list}\"" --ccbin \"${CUDA_HOST_COMPILER}\" --nvcc "\"${CUDA_TOOLKIT_ROOT_DIR}/bin/nvcc.exe\"" --nvcc-opts \"-arch=compute_30 -code=sm_30 -m64 -dc\" --include-directories "\"${OptiX_INSTALL_DIR}/include;${_src_root_path}/src/\"" --header "\"${_src_root_path}/src/ptx.h\"" --settings "\"${_src_root_path}/settings.json\"" --build-path \"${CMAKE_BINARY_DIR}\"
+    COMMAND ${Python_EXECUTABLE} "${_src_root_path}/compile_ptx.py" --sources "\"${_cuda_sources_list}\"" --ccbin \"${CUDA_HOST_COMPILER}\" --nvcc "\"${CUDA_TOOLKIT_ROOT_DIR}/bin/nvcc.exe\"" --nvcc-opts \"-arch=compute_60 -code=sm_60 -m64 -dc\" --include-directories "\"${OptiX_INSTALL_DIR}/include;${_src_root_path}/src/\"" --header "\"${_src_root_path}/src/ptx.h\"" --settings "\"${_src_root_path}/settings.json\"" --build-path \"${CMAKE_BINARY_DIR}\"
     COMMENT "Compiling OptiX Shaders"
 )
 

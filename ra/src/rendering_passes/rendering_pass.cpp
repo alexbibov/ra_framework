@@ -4,7 +4,7 @@
 using namespace ra;
 using namespace ra::rendering_passes;
 
-RaRenderingPass::RaRenderingPass(RaSceneSection& scene_section):
+RaRenderingPass::RaRenderingPass(RaSceneSection& scene_section): 
     RaContractWithRaContext{ scene_section.context() }
     , m_scene_section{ scene_section }
     , m_rendering_pass_ready{ false }
@@ -24,7 +24,7 @@ void RaRenderingPass::render() const
     {
         THROW_RA_ERROR("Unable to run rendering pass for scene section \""
             + m_scene_section.getStringName() + "\": the rendering pass is not ready")
-    }
+    } 
 
     render_impl();
 }
