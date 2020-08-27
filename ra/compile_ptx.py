@@ -4,6 +4,8 @@ import argparse
 import json
 import os
 
+EXTRA_COMPILATION_CONFIG_NAME = "nvcc_compiler.config"
+
 # parse input arguments
 parser = argparse.ArgumentParser(description="PTX compilation script")
 parser.add_argument("--sources", required=True, dest="sources", help="List of CUDA sources to compile")
@@ -21,6 +23,8 @@ args = parser.parse_args()
 sources = [Path(p) for p in args.sources.split(sep=";")]
 build_path = Path(args.build_path)
 destinations = []
+extra_compilation_flags = {}
+ptx_directories = set()
 for s in sources:
     d = Path("ptx").joinpath(s.parents[0].relative_to(s.parents[1]))
     d = build_path.joinpath(d)
@@ -30,6 +34,19 @@ for s in sources:
     
     d = d.joinpath(Path(s.stem + ".ptx"))
     destinations.append(d)
+
+    if s.parent not in ptx_directories:
+        ptx_directories.add(s.parent)
+        extra_compilation_config = s.parent / EXTRA_COMPILATION_CONFIG_NAME
+        if extra_compilation_config.exists():
+            with open(extra_compilation_config.as_posix()) as f:
+                lines = f.readlines()
+
+            for l in lines:
+                tokens = l.split(' ')
+                if (s.parent / tokens[0]).exists():
+                    extra_compilation_flags[Path(tokens[0]).stem] = tokens[1:]
+    
 
 # configure library settings JSON
 settings_source = Path(args.settings)
@@ -89,6 +106,17 @@ for idx, d in enumerate(destinations):
 
     if hasattr(args, "nvcc_opts"):
         cmd += ' ' + args.nvcc_opts.strip()
+
+    if d.stem in extra_compilation_flags:
+        extra_flags = ''
+        for f in extra_compilation_flags[d.stem]:
+            extra_flags += ' ' + f
+        cmd += extra_flags
+
+    special_compilation_config_file = d.parent / "nvcc_compilation.config"
+    if special_compilation_config_file.exists() is True:
+        with open(special_compilation_config_file.as_posix()) as f:
+            lines = f.rea
 
     if hasattr(args, "xcompiler"):
         cmd += ' -Xcompiler "' + args.xcompiler.lstrip() + '"'

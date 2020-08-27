@@ -34,21 +34,21 @@ RaMaterial::RaMaterial(
     );
 
     m_native_material.reset(native_material_handle,
-        [this](RTmaterial m) -> void
+        [this](RTmaterial m) -> void 
     {
-        LOG_OPTIX_ERROR(
-            nativeOptiXContextHandle(),
-            rtMaterialDestroy(m)
-        );
+        LOG_OPTIX_ERROR( 
+            nativeOptiXContextHandle(), 
+            rtMaterialDestroy(m) 
+        ); 
     });
 
     if(closest_hit_shader.isValid())
-    {
-        for(auto ray_type : m_supported_ray_types)
+    {  
+        for(auto ray_type : m_supported_ray_types) 
         {
             THROW_OPTIX_ERROR(
                 nativeOptiXContextHandle(),
-                rtMaterialSetClosestHitProgram(
+                rtMaterialSetClosestHitProgram( 
                     native_material_handle,
                     static_cast<unsigned int>(ray_type),
                     nativeOptiXProgramHandle(m_closest_hit_program_offset))
