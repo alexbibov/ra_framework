@@ -21,9 +21,9 @@ rtBuffer<ra::RaRayRadiancePayload, 1> ra_output_buffer;
 
 /*! The buffer is organized as follows:
  for each element of the emitter the buffer must contain M = MIN(constants::max_spectra_pairs_supported, num_spectra_pairs_supported)
- float2-elements, where each component (x and y) of each of these elements 
- defines spectral radiant exitance of the corresponding part of the spectrum. 
- All these values together therefore determine radiant exitance of single emission element of the emitter, 
+ float2-elements, where each component (x and y) of each of these elements
+ defines spectral radiant exitance of the corresponding part of the spectrum.
+ All these values together therefore determine radiant exitance of single emission element of the emitter,
  and the whole buffer determines the corresponding radiant flux
 */
 rtBuffer<optix::float2, 1> ra_init_flux_buffer;
@@ -49,18 +49,22 @@ RT_PROGRAM void __ra_generate__(void)
     optix::float3 origin{ -emitter_size / 2.f + emitter_size / (num_rays - 1) * index + emitter_position, 0.f, 0.f };
 
     optix::float2 cs = optix::make_float2(cosf(emitter_rotation), sinf(emitter_rotation));
-    optix::float2 rotated_point = rotate_point_2d(optix::float2{ origin.x, origin.y }, optix::float2{ emitter_position, 0 }, cs);
+    optix::float2 rotated_point = rotate_point_2d(optix::float2{ origin.x, 0 }, optix::float2{ emitter_position, 0 }, cs);
     optix::float2 rotated_tip = rotate_point_2d(optix::float2{ origin.x, 1 }, optix::float2{ emitter_position, 0 }, cs);
-    
+
     origin.x = rotated_point.x; origin.y = rotated_point.y;
     optix::float3 direction = optix::normalize(optix::make_float3(rotated_tip - rotated_point, 0));
     optix::Ray ray = optix::make_Ray(origin, direction, static_cast<unsigned int>(ra::RaRayType::unknown), 0.f, RT_DEFAULT_MAX);
+<<<<<<< HEAD
     optix::Ray ray0 = optix::make_Ray(origin, direction, static_cast<unsigned int>(ra::RaRayType::scattered), 0.f, RT_DEFAULT_MAX);
     
+=======
+
+>>>>>>> 4859c6e... Begin implementation of textures
     unsigned int const ns{ MIN(ra::constants::max_spectra_pairs_supported, num_spectra_pairs_supported) };
 
     ra::RaRayRadiancePayload payload{};
-    memcpy(payload.spectral_radiance, &ra_init_flux_buffer[ns*index], sizeof(optix::float2)*ns);
+    memcpy(payload.spectral_radiance, &ra_init_flux_buffer[ns * index], sizeof(optix::float2) * ns);
     payload.tracing_depth_and_aux = make_uint4(0U, 0U, 0U, 0U);
     
     rtTrace(ra_entry_node, ray, payload);
