@@ -7,6 +7,7 @@
 #include "vector_types.h"
 
 #include "util/log.h"
+#include "util/optix_format_traits.h"
 #include "ra_fwd.h"
 #include "contract_with_context.h"
 #include "entity.h"
@@ -143,7 +144,7 @@ private:
     }
 
 public:
-    T * map(RaBufferMapKind map_kind, unsigned int mipmap_level = 0U) const
+    T* map(RaBufferMapKind map_kind, unsigned int mipmap_level = 0U) const
     {
         void* rv{ nullptr };
         THROW_OPTIX_ERROR(nativeOptiXContextHandle(), rtBufferMapEx(nativeOptiXBufferHandle(), static_cast<unsigned>(map_kind), mipmap_level, nullptr, &rv));

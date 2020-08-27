@@ -5,7 +5,6 @@
 
 namespace ra {
 
-<<<<<<< HEAD
 enum class RaRayPayloadType : unsigned int
 {
     radiance = 0,
@@ -24,30 +23,7 @@ enum class RaRayType : unsigned int
 };
 
 using RaRayTypeCollection = util::StaticVector<RaRayType, static_cast<size_t>(RaRayType::count)>;
-
 uint64_t rayTypeCollectionTo64BitMask(RaRayTypeCollection const& ray_type_collection);
-=======
-    enum class RaRayPayloadType : unsigned int
-    {
-        radiance = 0,
-        radiance_simple = 1,
-        monochromatic = 2,
-        occlusion = 3
-    };
-
-    enum class RaRayType : unsigned int
-    {
-        unknown = 0U,
-        shadow = 1U,
-        scattered = 2U,
-        reflected = 3U,
-        count
-    };
-
-    using RaRayTypeCollection = util::StaticVector<RaRayType, static_cast<size_t>(RaRayType::count)>;
-
-    uint64_t rayTypeCollectionTo64BitMask(RaRayTypeCollection const& ray_type_collection);
->>>>>>> 4859c6e... Begin implementation of textures
 
 }
 

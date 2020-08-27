@@ -9,22 +9,23 @@
 
 namespace ra {
 
-    class RaTexture2D : public RaTexture
-    {
-    public:
-        RaTexture2D(RaContext const& context, std::string const& filename,
-            RaTextureFilteringMode filtering_mode = RaTextureFilteringMode::linear,
-            RaTextureWrappingMode wrapping_mode = RaTextureWrappingMode::clamp_to_edge);
+template<typename T>
+class RaTexture2D : public RaTexture<T>
+{
+public:
+    RaTexture2D(RaContext const& context, std::string const& filename,
+        RaTextureFilteringMode filtering_mode = RaTextureFilteringMode::linear,
+        RaTextureWrappingMode wrapping_mode = RaTextureWrappingMode::clamp_to_edge);
 
-        RaTexture2D(RaContext const& context, uint32_t width, uint32_t height, RaTexturePixelFormat pixel_format,
-            RaTextureFilteringMode filtering_mode = RaTextureFilteringMode::linear,
-            RaTextureWrappingMode wrapping_mode = RaTextureWrappingMode::clamp_to_edge);
+    RaTexture2D(RaContext const& context, uint32_t width, uint32_t height, RaTexturePixelFormat pixel_format,
+        RaTextureFilteringMode filtering_mode = RaTextureFilteringMode::linear,
+        RaTextureWrappingMode wrapping_mode = RaTextureWrappingMode::clamp_to_edge);
 
-        RaBuffer& buffer();
+    RaAbstractBuffer& buffer();
 
-        int id() const;
+    int id() const;
 
-    };
+};
 
 }
 

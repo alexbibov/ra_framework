@@ -1,11 +1,13 @@
 #ifndef RA_UTIL_LUA_SUPPORT_H
 #define RA_UTIL_LUA_SUPPORT_H
 
-#include "sol.hpp"
+#include "sol/sol.hpp"
 #include "static_vector.h"
 
 
-namespace ra { namespace util { namespace lua_support {
+namespace ra {
+namespace util {
+namespace lua_support {
 
 template<typename ... Args>
 struct Constructor
@@ -25,7 +27,8 @@ struct ListOfBaseClasses
     template<typename ... Args>
     static sol::bases<typename Args::type...>
         make_initializer(Args...)
-    {return sol::bases<typename Args::type...>{};
+    {
+        return sol::bases<typename Args::type...>{};
     }
 };
 
@@ -103,7 +106,7 @@ class LuaTable
     friend class LuaState;
 
 public:
-    
+
     using table_type = sol::table;
 
 
@@ -126,7 +129,7 @@ public:
         util::StaticVector<T, capacity> rv{};
         for (size_t i = 0; i < table.size(); ++i)
             rv.push_back(table[i + 1]);
-        
+
         return rv;
     }
 
@@ -153,7 +156,7 @@ public:
 
     template<typename ... Args>
     void registerFunction(std::string const& name, Args const& ... args)
-    { 
+    {
         m_table.set_function(name, args...);
     }
 
@@ -223,7 +226,7 @@ public:
         sol::table table = (*m_lua_state)[name];
         return LuaTable{ std::move(table) };
     }
-    
+
     template<typename ... MemberArgs>
     static LuaTable registerEnum(std::string const& name, MemberArgs ... args)
     {
@@ -257,7 +260,9 @@ private:
 };
 
 
-}}}
+}
+}
+}
 
 
 #endif

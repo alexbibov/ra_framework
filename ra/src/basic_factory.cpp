@@ -54,7 +54,7 @@ template<> struct buffer_format_to_cpp_format<RaBasicBufferFormat::RAY_OCCLUSION
 void luaRegisterGeneralTypes()
 {
     lua_support::LuaState::registerType<float2>(
-        "float2", 
+        "float2",
         lua_support::ListOfFactories::make_initializer(
             [](float x, float y) {return float2{ x, y }; }
         ),
@@ -63,7 +63,7 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<float3>(
-        "float3", 
+        "float3",
         lua_support::ListOfFactories::make_initializer(
             [](float x, float y, float z) {return float3{ x, y, z }; },
             [](float2 const& xy, float z) {return float3{ xy.x, xy.y, z }; },
@@ -75,7 +75,7 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<float4>(
-        "float4", 
+        "float4",
         lua_support::ListOfFactories::make_initializer(
             [](float x, float y, float z, float w) {return float4{ x, y, z, w }; },
             [](float2 const& xy, float z, float w) {return float4{ xy.x, xy.y, z, w }; },
@@ -91,7 +91,7 @@ void luaRegisterGeneralTypes()
 
 
     lua_support::LuaState::registerType<int2>(
-        "int2", 
+        "int2",
         lua_support::ListOfFactories::make_initializer(
             [](int x, int y) {return int2{ x, y }; }
         ),
@@ -100,7 +100,7 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<int3>(
-        "int3", 
+        "int3",
         lua_support::ListOfFactories::make_initializer(
             [](int x, int y, int z) {return int3{ x, y, z }; },
             [](int2 const& xy, int z) {return int3{ xy.x, xy.y, z }; },
@@ -112,7 +112,7 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<int4>(
-        "int4", 
+        "int4",
         lua_support::ListOfFactories::make_initializer(
             [](int x, int y, int z, int w) {return int4{ x, y, z, w }; },
             [](int2 const& xy, int z, int w) {return int4{ xy.x, xy.y, z, w }; },
@@ -128,7 +128,7 @@ void luaRegisterGeneralTypes()
 
 
     lua_support::LuaState::registerType<uint2>(
-        "uint2", 
+        "uint2",
         lua_support::ListOfFactories::make_initializer(
             [](unsigned int x, unsigned int y) {return uint2{ x, y }; }
         ),
@@ -137,7 +137,7 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<uint3>(
-        "uint3", 
+        "uint3",
         lua_support::ListOfFactories::make_initializer(
             [](unsigned int x, unsigned int y, unsigned int z) {return uint3{ x, y, z }; },
             [](uint2 const& xy, unsigned int z) {return uint3{ xy.x, xy.y, z }; },
@@ -149,7 +149,7 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<uint4>(
-        "uint4", 
+        "uint4",
         lua_support::ListOfFactories::make_initializer(
             [](unsigned int x, unsigned int y, unsigned int z, unsigned int w) {return uint4{ x, y, z, w }; },
             [](uint2 const& xy, unsigned int z, unsigned int w) {return uint4{ xy.x, xy.y, z, w }; },
@@ -167,19 +167,19 @@ void luaRegisterGeneralTypes()
     lua_support::LuaState::registerType<mat2x2>(
         "mat2x2",
         lua_support::ListOfFactories::make_initializer(
-            [](float m11, float m12, 
+            [](float m11, float m12,
                 float m21, float m22)
-            {
-                return mat2x2{ 
-                    m11, m12, 
-                    m21, m22 };
-            },
+    {
+        return mat2x2{
+            m11, m12,
+            m21, m22 };
+    },
             [](float2 const& r1, float2 const& r2)
-            {
-                return mat2x2{ 
-                    r1.x, r1.y,
-                    r2.x, r2.y };
-            }
+    {
+        return mat2x2{
+            r1.x, r1.y,
+            r2.x, r2.y };
+    }
         ),
         "m11", &mat2x2::_11,
         "m12", &mat2x2::_12,
@@ -188,21 +188,21 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<mat2x3>(
-        "mat2x3", 
+        "mat2x3",
         lua_support::ListOfFactories::make_initializer(
             [](float m11, float m12, float m13,
                 float m21, float m22, float m23)
-            {
-                return mat2x3{ 
-                    m11, m12, m13, 
-                    m21, m22, m23 };
-            },
+    {
+        return mat2x3{
+            m11, m12, m13,
+            m21, m22, m23 };
+    },
             [](float3 const& r1, float3 const& r2)
-            {
-                return mat2x3{ 
-                    r1.x, r1.y, r1.z,
-                    r2.x, r2.y, r2.z };
-            }
+    {
+        return mat2x3{
+            r1.x, r1.y, r1.z,
+            r2.x, r2.y, r2.z };
+    }
         ),
         "m11", &mat2x3::_11,
         "m12", &mat2x3::_12,
@@ -213,21 +213,21 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<mat2x4>(
-        "mat2x4", 
+        "mat2x4",
         lua_support::ListOfFactories::make_initializer(
             [](float m11, float m12, float m13, float m14,
                 float m21, float m22, float m23, float m24)
-            {
-                return mat2x4{
-                    m11, m12, m13, m14,
-                    m21, m22, m23, m24 };
-            },
+    {
+        return mat2x4{
+            m11, m12, m13, m14,
+            m21, m22, m23, m24 };
+    },
             [](float4 const& r1, float4 const& r2)
-            {
-                return mat2x4{
-                    r1.x, r1.y, r1.z, r1.w,
-                    r2.x, r2.y, r2.z, r2.w };
-            }
+    {
+        return mat2x4{
+            r1.x, r1.y, r1.z, r1.w,
+            r2.x, r2.y, r2.z, r2.w };
+    }
         ),
         "m11", &mat2x4::_11,
         "m12", &mat2x4::_12,
@@ -241,25 +241,25 @@ void luaRegisterGeneralTypes()
 
 
     lua_support::LuaState::registerType<mat3x2>(
-        "mat3x2", 
+        "mat3x2",
         lua_support::ListOfFactories::make_initializer(
             [](float m11, float m12,
                 float m21, float m22,
                 float m31, float m32)
-            {
-                return mat3x2{
-                    m11, m12,
-                    m21, m22,
-                    m31, m32 };
-            },
-            
+    {
+        return mat3x2{
+            m11, m12,
+            m21, m22,
+            m31, m32 };
+    },
+
             [](float2 const& r1, float2 const& r2, float2 const& r3)
-            {
-                return mat3x2{
-                    r1.x, r1.y,
-                    r2.x, r2.y,
-                    r3.x, r3.y };
-            }
+    {
+        return mat3x2{
+            r1.x, r1.y,
+            r2.x, r2.y,
+            r3.x, r3.y };
+    }
         ),
 
         "m11", &mat3x2::_11,
@@ -276,20 +276,20 @@ void luaRegisterGeneralTypes()
             [](float m11, float m12, float m13,
                 float m21, float m22, float m23,
                 float m31, float m32, float m33)
-            {
-                return mat3x3{
-                    m11, m12, m13,
-                    m21, m22, m23,
-                    m31, m32, m33 };
-            },
+    {
+        return mat3x3{
+            m11, m12, m13,
+            m21, m22, m23,
+            m31, m32, m33 };
+    },
 
             [](float3 const& r1, float3 const& r2, float3 const& r3)
-            {
-                return mat3x3{
-                    r1.x, r1.y, r1.z,
-                    r2.x, r2.y, r2.z,
-                    r3.x, r3.y, r3.z };
-            }
+    {
+        return mat3x3{
+            r1.x, r1.y, r1.z,
+            r2.x, r2.y, r2.z,
+            r3.x, r3.y, r3.z };
+    }
         ),
         "m11", &mat3x3::_11,
         "m12", &mat3x3::_12,
@@ -303,25 +303,25 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<mat3x4>(
-        "mat3x4", 
+        "mat3x4",
         lua_support::ListOfFactories::make_initializer(
             [](float m11, float m12, float m13, float m14,
                 float m21, float m22, float m23, float m24,
                 float m31, float m32, float m33, float m34)
-            {
-                return mat3x4{
-                    m11, m12, m13, m14,
-                    m21, m22, m23, m24,
-                    m31, m32, m33, m34 };
-            },
+    {
+        return mat3x4{
+            m11, m12, m13, m14,
+            m21, m22, m23, m24,
+            m31, m32, m33, m34 };
+    },
 
             [](float4 const& r1, float4 const& r2, float4 const& r3)
-            {
-                return mat3x4{
-                    r1.x, r1.y, r1.z, r1.w,
-                    r2.x, r2.y, r2.z, r2.w,
-                    r3.x, r3.y, r3.z, r3.w };
-            }
+    {
+        return mat3x4{
+            r1.x, r1.y, r1.z, r1.w,
+            r2.x, r2.y, r2.z, r2.w,
+            r3.x, r3.y, r3.z, r3.w };
+    }
         ),
 
         "m11", &mat3x4::_11,
@@ -340,28 +340,28 @@ void luaRegisterGeneralTypes()
 
 
     lua_support::LuaState::registerType<mat4x2>(
-        "mat4x2", 
+        "mat4x2",
         lua_support::ListOfFactories::make_initializer(
-            [](float m11, float m12, 
+            [](float m11, float m12,
                 float m21, float m22,
                 float m31, float m32,
                 float m41, float m42)
-            {
-                return mat4x2{
-                    m11, m12,
-                    m21, m22,
-                    m31, m32,
-                    m41, m42 };
-            },
+    {
+        return mat4x2{
+            m11, m12,
+            m21, m22,
+            m31, m32,
+            m41, m42 };
+    },
 
             [](float2 const& r1, float2 const& r2, float2 const& r3, float2 const& r4)
-            {
-                return mat4x2{
-                    r1.x, r1.y,
-                    r2.x, r2.y,
-                    r3.x, r3.y,
-                    r4.x, r4.y };
-            }
+    {
+        return mat4x2{
+            r1.x, r1.y,
+            r2.x, r2.y,
+            r3.x, r3.y,
+            r4.x, r4.y };
+    }
         ),
 
         "m11", &mat4x2::_11,
@@ -375,28 +375,28 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<mat4x3>(
-        "mat4x3", 
+        "mat4x3",
         lua_support::ListOfFactories::make_initializer(
             [](float m11, float m12, float m13,
                 float m21, float m22, float m23,
                 float m31, float m32, float m33,
                 float m41, float m42, float m43)
-            {
-                return mat4x3{
-                    m11, m12, m13,
-                    m21, m22, m23,
-                    m31, m32, m33,
-                    m41, m42, m43 };
-            },
+    {
+        return mat4x3{
+            m11, m12, m13,
+            m21, m22, m23,
+            m31, m32, m33,
+            m41, m42, m43 };
+    },
 
             [](float3 const& r1, float3 const& r2, float3 const& r3, float3 const& r4)
-            {
-                return mat4x3{
-                    r1.x, r1.y, r1.z,
-                    r2.x, r2.y, r2.z,
-                    r3.x, r3.y, r3.z,
-                    r4.x, r4.y, r4.z };
-            }
+    {
+        return mat4x3{
+            r1.x, r1.y, r1.z,
+            r2.x, r2.y, r2.z,
+            r3.x, r3.y, r3.z,
+            r4.x, r4.y, r4.z };
+    }
         ),
 
         "m11", &mat4x3::_11,
@@ -414,28 +414,28 @@ void luaRegisterGeneralTypes()
         );
 
     lua_support::LuaState::registerType<mat4x4>(
-        "mat4x4", 
+        "mat4x4",
         lua_support::ListOfFactories::make_initializer(
             [](float m11, float m12, float m13, float m14,
                 float m21, float m22, float m23, float m24,
                 float m31, float m32, float m33, float m34,
                 float m41, float m42, float m43, float m44)
-            {
-                return mat4x4{
-                    m11, m12, m13, m14,
-                    m21, m22, m23, m24,
-                    m31, m32, m33, m34,
-                    m41, m42, m43, m44 };
-            },
+    {
+        return mat4x4{
+            m11, m12, m13, m14,
+            m21, m22, m23, m24,
+            m31, m32, m33, m34,
+            m41, m42, m43, m44 };
+    },
 
             [](float4 const& r1, float4 const& r2, float4 const& r3, float4 const& r4)
-            {
-                return mat4x4{
-                    r1.x, r1.y, r1.z, r1.w,
-                    r2.x, r2.y, r2.z, r2.w,
-                    r3.x, r3.y, r3.z, r3.w,
-                    r4.x, r4.y, r4.z, r4.w };
-            }
+    {
+        return mat4x4{
+            r1.x, r1.y, r1.z, r1.w,
+            r2.x, r2.y, r2.z, r2.w,
+            r3.x, r3.y, r3.z, r3.w,
+            r4.x, r4.y, r4.z, r4.w };
+    }
         ),
 
         "m11", &mat4x4::_11,
@@ -482,8 +482,8 @@ void luaRegisterRayPayloadTypes()
             rv[i] = p->spectral_radiance[i];
         return rv;
     },
-        "depth", &RaRayRadiancePayload::depth,
-        "tracing_depth_and_aux", &RaRayRadiancePayload::tracing_depth_and_aux
+        "depth", & RaRayRadiancePayload::depth,
+        "tracing_depth_and_aux", & RaRayRadiancePayload::tracing_depth_and_aux
         );
 
     lua_support::LuaState::registerType<RaRayRadiancePayloadSimple>(
@@ -552,16 +552,16 @@ void luaRegisterShaderTypes()
 
         lua_support::ListOfBaseClasses::make_initializer(
             lua_support::BaseClass<RaEntity>{}
-        ),
+    ),
 
         lua_support::ListOfFactories::make_initializer(
             [](std::string const& source, RaProgram::Source source_type, std::string const& program_name)
-            {
-                return p_basic_factory_instance->createProgram(source, source_type, program_name);
-            }
+    {
+        return p_basic_factory_instance->createProgram(source, source_type, program_name);
+    }
         ),
 
-        "getId", &RaProgram::getId,
+        "getId", & RaProgram::getId,
 
         "setVariableValue", lua_support::ListOfOverloads::make_initializer(
             static_cast<void(RaProgram::*)(std::string const&, float)>(&RaProgram::setVariableValue),
@@ -625,10 +625,10 @@ void luaRegisterShaderTypes()
         "getVariableValueObj", [](RaProgram* p, std::string const& name) { RaObjectHandle val; p->getVariableValue(name, val); return val; },
 
 
-        "isValid", &RaProgram::isValid,
-        "assignBuffer", &RaProgram::assignBuffer,
-        "assignProgram", &RaProgram::assignProgram,
-        "checkVariableExistance", &RaProgram::checkVariableExistance
+        "isValid", & RaProgram::isValid,
+        "assignBuffer", & RaProgram::assignBuffer,
+        "assignProgram", & RaProgram::assignProgram,
+        "checkVariableExistance", & RaProgram::checkVariableExistance
         );
 }
 
@@ -637,7 +637,7 @@ template<typename T>
 void writeDataToBuffer(RaAbstractBuffer* p_buffer, size_t first_element, std::vector<T> const& data)
 {
     T* p_buffer_data = static_cast<T*>(p_buffer->map(RaBufferMapKind::write)) + first_element;
-    memcpy(p_buffer_data, data.data(), sizeof(T)*data.size());
+    memcpy(p_buffer_data, data.data(), sizeof(T) * data.size());
     p_buffer->unmap();
 }
 
@@ -646,7 +646,7 @@ void readDataFromBuffer(RaAbstractBuffer* p_buffer, size_t first_element, size_t
 {
     T* p_out_data = static_cast<T*>(p_buffer->map(RaBufferMapKind::read)) + first_element;
     out_data.resize(num_elements);
-    memcpy(out_data.data(), p_out_data, sizeof(T)*num_elements);
+    memcpy(out_data.data(), p_out_data, sizeof(T) * num_elements);
     p_buffer->unmap();
 }
 
@@ -690,43 +690,43 @@ void luaRegisterBufferTypes()
         "input", RaBufferKind::input,
         "output", RaBufferKind::output,
         "input_output", RaBufferKind::input_output
-        );
+    );
 
     lua_support::LuaState::registerEnum(
         "RaBufferDimension",
         "_1D", RaBufferDimension::_1D,
         "_2D", RaBufferDimension::_2D,
         "_3D", RaBufferDimension::_3D
-        );
+    );
 
     lua_support::LuaState::registerSubType<RaAbstractBuffer>(
         "RaBuffer",
 
         lua_support::ListOfBaseClasses::make_initializer(
             lua_support::BaseClass<RaEntity>{}
-        ),
+    ),
 
         lua_support::ListOfFactories::make_initializer(
             [](RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width)
-            {
-                return p_basic_factory_instance->createBuffer(buffer_format, 
-                    buffer_kind, width);
-            },
+    {
+        return p_basic_factory_instance->createBuffer(buffer_format,
+            buffer_kind, width);
+    },
 
             [](RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width, size_t height)
-            {
-                return p_basic_factory_instance->createBuffer(buffer_format, 
-                    buffer_kind, width, height);
-            },
+    {
+        return p_basic_factory_instance->createBuffer(buffer_format,
+            buffer_kind, width, height);
+    },
 
-            [](RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width, size_t height, size_t depth)
-            {
-                return p_basic_factory_instance->createBuffer(buffer_format, 
-                    buffer_kind, width, height, depth);
-            }
+        [](RaBasicBufferFormat buffer_format, RaBufferKind buffer_kind, size_t width, size_t height, size_t depth)
+    {
+        return p_basic_factory_instance->createBuffer(buffer_format,
+            buffer_kind, width, height, depth);
+    }
         ),
 
-        "getId", &RaAbstractBuffer::getId,
+        "getId", & RaAbstractBuffer::getId,
 
         "writeData", lua_support::ListOfOverloads::make_initializer(
             &writeDataToBuffer<float>, &writeDataToBuffer<float2>, &writeDataToBuffer<float3>, &writeDataToBuffer<float4>,
@@ -746,14 +746,14 @@ void luaRegisterBufferTypes()
             &readDataFromBuffer<RaRayRadiancePayload>, &readDataFromBuffer<RaRayRadiancePayloadSimple>,
             &readDataFromBuffer<RaRayRadiancePayloadMonochromatic>, &readDataFromBuffer<RaRayOcclusionPayload>
         ),
-        "RaBufferDimension", &RaAbstractBuffer::getDimension,
-        "getWidth", &RaAbstractBuffer::getWidth,
-        "getHeight", &RaAbstractBuffer::getHeight,
-        "getDepth", &RaAbstractBuffer::getDepth,
-        "getElementSize", &RaAbstractBuffer::getElementSize,
-        "getCapacityInBytes", &RaAbstractBuffer::getCapacityInBytes,
-        "isValid", &RaAbstractBuffer::isValid
-    );
+        "RaBufferDimension", & RaAbstractBuffer::getDimension,
+        "getWidth", & RaAbstractBuffer::getWidth,
+        "getHeight", & RaAbstractBuffer::getHeight,
+        "getDepth", & RaAbstractBuffer::getDepth,
+        "getElementSize", & RaAbstractBuffer::getElementSize,
+        "getCapacityInBytes", & RaAbstractBuffer::getCapacityInBytes,
+        "isValid", & RaAbstractBuffer::isValid
+        );
 }
 
 void luaRegisterMaterialTypes()
@@ -763,79 +763,79 @@ void luaRegisterMaterialTypes()
 
         lua_support::ListOfBaseClasses::make_initializer(
             lua_support::BaseClass<RaEntity>{}
-        ),
+    ),
 
         lua_support::ListOfFactories::make_initializer(
-            [](RaProgram closest_hit_shader, RaProgram any_hit_shader, 
+            [](RaProgram closest_hit_shader, RaProgram any_hit_shader,
                 lua_support::LuaTable::table_type const& supported_ray_types)
-            {
-                return p_basic_factory_instance->
-                    createMaterial(closest_hit_shader, any_hit_shader, 
-                        lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
-            },
+    {
+        return p_basic_factory_instance->
+            createMaterial(closest_hit_shader, any_hit_shader,
+                lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
+    },
 
-            [](sol::nil_t, RaProgram any_hit_shader, 
+            [](sol::nil_t, RaProgram any_hit_shader,
                 lua_support::LuaTable::table_type const& supported_ray_types)
-            {
-                return p_basic_factory_instance->
-                    createMaterial(util::Optional<RaProgram>{}, any_hit_shader, 
-                        lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
-            },
+    {
+        return p_basic_factory_instance->
+            createMaterial(util::Optional<RaProgram>{}, any_hit_shader,
+                lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
+    },
 
-            [](RaProgram closest_hit_shader, sol::nil_t, 
-                lua_support::LuaTable::table_type const& supported_ray_types)
-            {
-                return p_basic_factory_instance->
-                    createMaterial(closest_hit_shader, util::Optional<RaProgram>{}, 
-                        lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
-            },
+        [](RaProgram closest_hit_shader, sol::nil_t,
+            lua_support::LuaTable::table_type const& supported_ray_types)
+    {
+        return p_basic_factory_instance->
+            createMaterial(closest_hit_shader, util::Optional<RaProgram>{},
+                lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
+    },
 
-            [](RaProgram closest_hit_shader, RaProgram any_hit_shader)
-            {
-                return p_basic_factory_instance->
-                    createMaterial(closest_hit_shader, any_hit_shader);
-            },
+        [](RaProgram closest_hit_shader, RaProgram any_hit_shader)
+    {
+        return p_basic_factory_instance->
+            createMaterial(closest_hit_shader, any_hit_shader);
+    },
 
-            [](sol::nil_t, RaProgram any_hit_shader)
-            {
-                return p_basic_factory_instance->
-                    createMaterial(util::Optional<RaProgram>{}, any_hit_shader);
-            },
+        [](sol::nil_t, RaProgram any_hit_shader)
+    {
+        return p_basic_factory_instance->
+            createMaterial(util::Optional<RaProgram>{}, any_hit_shader);
+    },
 
-            [](RaProgram closest_hit_shader, sol::nil_t)
-            {
-                return p_basic_factory_instance->
-                    createMaterial(closest_hit_shader, util::Optional<RaProgram>{});
-            }
+        [](RaProgram closest_hit_shader, sol::nil_t)
+    {
+        return p_basic_factory_instance->
+            createMaterial(closest_hit_shader, util::Optional<RaProgram>{});
+    }
         ),
 
         "getClosestHitShader",
-            [](RaMaterial* p)
-            {
-                util::Optional<RaProgram> rv = p->getClosestHitShader();
-                if (rv.isValid()) return sol::optional<RaProgram>{static_cast<RaProgram&>(rv)};
-                else return sol::optional<RaProgram>{};
-            },
+        [](RaMaterial* p)
+    {
+        util::Optional<RaProgram> rv = p->getClosestHitShader();
+        if (rv.isValid()) return sol::optional<RaProgram>{static_cast<RaProgram&>(rv)};
+        else return sol::optional<RaProgram>{};
+    },
 
         "getAnyHitShader",
-            [](RaMaterial* p)
-            {
-                util::Optional<RaProgram> rv = p->getAnyHitShader();
-                if (rv.isValid()) return sol::optional<RaProgram>{static_cast<RaProgram&>(rv)};
-                else return sol::optional<RaProgram>{};
-            },
+        [](RaMaterial* p)
+    {
+        util::Optional<RaProgram> rv = p->getAnyHitShader();
+        if (rv.isValid()) return sol::optional<RaProgram>{static_cast<RaProgram&>(rv)};
+        else return sol::optional<RaProgram>{};
+    },
 
         "supportedRayTypes",
-            [](RaMaterial* p) -> lua_support::LuaTable::table_type
-            {
-                auto supported_ray_types = p->supportedRayTypes();
-                return lua_support::LuaTable::staticVectorToTable(supported_ray_types);
-            },
+        [](RaMaterial* p) -> lua_support::LuaTable::table_type
+    {
+        auto supported_ray_types = p->supportedRayTypes();
+        return lua_support::LuaTable::staticVectorToTable(supported_ray_types);
+    },
 
-        "supportsRayType", &RaMaterial::supportsRayType,
+        "supportsRayType", & RaMaterial::supportsRayType,
 
-        "isValid", &RaMaterial::isValid
-    );
+        "isValid", & RaMaterial::isValid
+        );
 
 
     lua_support::LuaState::registerSubType<RaMaterialAssembly>(
@@ -843,48 +843,48 @@ void luaRegisterMaterialTypes()
 
         lua_support::ListOfBaseClasses::make_initializer(
             lua_support::BaseClass<RaEntity>{}
-        ),
+    ),
 
         lua_support::ListOfFactories::make_initializer(
             [](lua_support::LuaTable::table_type const& materials)
-            {
-                return p_basic_factory_instance->createMaterialAssembly(
-                    lua_support::LuaTable::toVector<RaMaterial>(materials));
-            },
+    {
+        return p_basic_factory_instance->createMaterialAssembly(
+            lua_support::LuaTable::toVector<RaMaterial>(materials));
+    },
 
             [](void)
-            {
-                return p_basic_factory_instance->createDummyMaterialAssembly();
-            }
+    {
+        return p_basic_factory_instance->createDummyMaterialAssembly();
+    }
         ),
 
         "getMaterialById",
-            [](RaMaterialAssembly* p, RaEntityId id)
-        {
-            util::Optional<RaMaterial> rv = p->getMaterialById(id);
-            if (rv.isValid()) return sol::optional<RaMaterial>{static_cast<RaMaterial&>(rv)};
-            else return sol::optional<RaMaterial>{};
-        },
+        [](RaMaterialAssembly* p, RaEntityId id)
+    {
+        util::Optional<RaMaterial> rv = p->getMaterialById(id);
+        if (rv.isValid()) return sol::optional<RaMaterial>{static_cast<RaMaterial&>(rv)};
+        else return sol::optional<RaMaterial>{};
+    },
 
         "getMaterialByName",
-            [](RaMaterialAssembly* p, std::string const& name)
-        {
-            util::Optional<RaMaterial> rv = p->getMaterialByName(name);
-            if (rv.isValid()) return sol::optional<RaMaterial>{static_cast<RaMaterial&>(rv)};
-            else return sol::optional<RaMaterial>{};
-        },
+        [](RaMaterialAssembly* p, std::string const& name)
+    {
+        util::Optional<RaMaterial> rv = p->getMaterialByName(name);
+        if (rv.isValid()) return sol::optional<RaMaterial>{static_cast<RaMaterial&>(rv)};
+        else return sol::optional<RaMaterial>{};
+    },
 
         "getMaterialByRayType",
-            [](RaMaterialAssembly* p, RaRayType ray_type)
-        {
-            util::Optional<RaMaterial> rv = p->getMaterialByRayType(ray_type);
-            if (rv.isValid()) return sol::optional<RaMaterial>{static_cast<RaMaterial&>(rv)};
-            else return sol::optional<RaMaterial>{};
-        },
+        [](RaMaterialAssembly* p, RaRayType ray_type)
+    {
+        util::Optional<RaMaterial> rv = p->getMaterialByRayType(ray_type);
+        if (rv.isValid()) return sol::optional<RaMaterial>{static_cast<RaMaterial&>(rv)};
+        else return sol::optional<RaMaterial>{};
+    },
 
-        "getMaterialCount", &RaMaterialAssembly::getMaterialCount,
-        "isValid", &RaMaterialAssembly::isValid
-    );
+        "getMaterialCount", & RaMaterialAssembly::getMaterialCount,
+        "isValid", & RaMaterialAssembly::isValid
+        );
 }
 
 void luaRegisterGeometryTypes()
@@ -894,30 +894,30 @@ void luaRegisterGeometryTypes()
 
         lua_support::ListOfBaseClasses::make_initializer(
             lua_support::BaseClass<RaEntity>{}
-        ),
+    ),
 
         lua_support::ListOfConstructors::make_initializer(
             lua_support::Constructor<RaProgram const&, RaProgram const&>{},
             lua_support::Constructor<RaProgram const&, RaProgram const&, RaMaterialAssembly const&>{}
-        ),
+    ),
 
-        "getMaterialAssembly", 
-            [](RaGeometry* p)
-        {
-            util::Optional<RaMaterialAssembly> rv = p->getMaterialAssembly();
-            if (rv.isValid()) return sol::optional<RaMaterialAssembly>{static_cast<RaMaterialAssembly&>(rv)};
-            else return sol::optional<RaMaterialAssembly>{};
-        },
+        "getMaterialAssembly",
+        [](RaGeometry* p)
+    {
+        util::Optional<RaMaterialAssembly> rv = p->getMaterialAssembly();
+        if (rv.isValid()) return sol::optional<RaMaterialAssembly>{static_cast<RaMaterialAssembly&>(rv)};
+        else return sol::optional<RaMaterialAssembly>{};
+    },
 
-        "setMaterialAssembly", &RaGeometry::setMaterialAssembly,
-        "getAABBShader", &RaGeometry::getAABBShader,
-        "getIntersectionShader", &RaGeometry::getIntersectionShader,
-        "getPrimitiveCount", &RaGeometry::getPrimitiveCount,
-        "isValid", &RaGeometry::isValid
-    );
+        "setMaterialAssembly", & RaGeometry::setMaterialAssembly,
+        "getAABBShader", & RaGeometry::getAABBShader,
+        "getIntersectionShader", & RaGeometry::getIntersectionShader,
+        "getPrimitiveCount", & RaGeometry::getPrimitiveCount,
+        "isValid", & RaGeometry::isValid
+        );
 
     lua_support::LuaState::registerEnum(
-        "RaBVHAlgorithm", 
+        "RaBVHAlgorithm",
         "trbvh", RaBVHAlgorithm::trbvh,
         "sbvh", RaBVHAlgorithm::sbvh,
         "bvh", RaBVHAlgorithm::bvh,
@@ -929,7 +929,7 @@ void luaRegisterGeometryTypes()
         lua_support::NoConstructor::make_initializer(),
         "applyTransform", &RaTransformable::applyTransform,
         "getTransform", &RaTransformable::getTransform
-    );
+        );
 
     lua_support::LuaState::registerSubType<RaGeometryGroup>(
         "RaGeometryGroup",
@@ -937,25 +937,25 @@ void luaRegisterGeometryTypes()
         lua_support::ListOfBaseClasses::make_initializer(
             lua_support::BaseClass<RaEntity>{},
             lua_support::BaseClass<RaTransformable>{}
-        ),
+    ),
 
         lua_support::ListOfFactories::make_initializer(
             [](RaBVHAlgorithm acceleration_structure_construction_algorithm)
-            {
-                return p_basic_factory_instance->createGeometryGroup(acceleration_structure_construction_algorithm);
-            }
+    {
+        return p_basic_factory_instance->createGeometryGroup(acceleration_structure_construction_algorithm);
+    }
         ),
 
-        "getNumberOfGeometries", &RaGeometryGroup::getNumberOfGeometries,
+        "getNumberOfGeometries", & RaGeometryGroup::getNumberOfGeometries,
 
-        "beginConstruction", &RaGeometryGroup::beginConstruction,
-        "addGeometry", &RaGeometryGroup::addGeometry,
-        "endConstruction", &RaGeometryGroup::endConstruction,
+        "beginConstruction", & RaGeometryGroup::beginConstruction,
+        "addGeometry", & RaGeometryGroup::addGeometry,
+        "endConstruction", & RaGeometryGroup::endConstruction,
 
-        "geometries", &RaGeometryGroup::geometries,
+        "geometries", & RaGeometryGroup::geometries,
 
-        "isValid", &RaGeometryGroup::isValid
-    );
+        "isValid", & RaGeometryGroup::isValid
+        );
 }
 
 void luaRegisterMissShaderTypes()
@@ -965,79 +965,79 @@ void luaRegisterMissShaderTypes()
 
         lua_support::ListOfBaseClasses::make_initializer(
             lua_support::BaseClass<RaEntity>{}
-        ),
+    ),
 
         lua_support::ListOfFactories::make_initializer(
             [](RaProgram const& miss_shader,
                 lua_support::LuaTable::table_type const& supported_ray_types)
-            {
-                return p_basic_factory_instance->createMissShader(miss_shader, 
-                    lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
-            },
+    {
+        return p_basic_factory_instance->createMissShader(miss_shader,
+            lua_support::LuaTable::toStaticVector<RaRayTypeCollection::value_type, RaRayTypeCollection::capacity()>(supported_ray_types));
+    },
 
             [](RaProgram const& miss_shader)
-            {
-                return p_basic_factory_instance->createMissShader(miss_shader);
-            }
+    {
+        return p_basic_factory_instance->createMissShader(miss_shader);
+    }
         ),
 
-        "getProgram", &RaMissShader::getProgram,
-        
+        "getProgram", & RaMissShader::getProgram,
+
         "supportedRayTypes",
         [](RaMissShader* p)
-        {
-            auto supported_ray_types = p->supportedRayTypes();
-            return lua_support::LuaTable::staticVectorToTable(supported_ray_types);
-        },
+    {
+        auto supported_ray_types = p->supportedRayTypes();
+        return lua_support::LuaTable::staticVectorToTable(supported_ray_types);
+    },
 
-        "supportsRayType", &RaMissShader::supportsRayType,
+        "supportsRayType", & RaMissShader::supportsRayType,
 
-        "isValid", &RaMissShader::isValid
-    );
+        "isValid", & RaMissShader::isValid
+        );
 
     lua_support::LuaState::registerSubType<RaMissShaderAssembly>(
         "RaMissShaderAssembly",
 
         lua_support::ListOfBaseClasses::make_initializer(
             lua_support::BaseClass<RaEntity>{}
-        ),
+    ),
 
         lua_support::ListOfFactories::make_initializer(
             [](lua_support::LuaTable::table_type const& table)
-            {
-                return p_basic_factory_instance->createMissShaderAssembly(
-                    lua_support::LuaTable::toVector<RaMissShader>(table)
-                );
-            }
+    {
+        return p_basic_factory_instance->createMissShaderAssembly(
+            lua_support::LuaTable::toVector<RaMissShader>(table)
+        );
+    }
         ),
 
         "getMissShaderById",
-            [](RaMissShaderAssembly* p, RaEntityId const& id)
-        {
-            util::Optional<RaMissShader> rv = p->getMissShaderById(id);
-            if (rv.isValid()) return sol::optional<RaMissShader>{static_cast<RaMissShader&>(rv)};
-            else return sol::optional<RaMissShader>{};
-        },
+        [](RaMissShaderAssembly* p, RaEntityId const& id)
+    {
+        util::Optional<RaMissShader> rv = p->getMissShaderById(id);
+        if (rv.isValid()) return sol::optional<RaMissShader>{static_cast<RaMissShader&>(rv)};
+        else return sol::optional<RaMissShader>{};
+    },
 
         "getMissShaderByName",
-            [](RaMissShaderAssembly* p, std::string const& name)
-        {
-            util::Optional<RaMissShader> rv = p->getMissShaderByName(name);
-            if (rv.isValid()) return sol::optional<RaMissShader>{static_cast<RaMissShader&>(rv)};
-            else return sol::optional<RaMissShader>{};
-        },
+        [](RaMissShaderAssembly* p, std::string const& name)
+    {
+        util::Optional<RaMissShader> rv = p->getMissShaderByName(name);
+        if (rv.isValid()) return sol::optional<RaMissShader>{static_cast<RaMissShader&>(rv)};
+        else return sol::optional<RaMissShader>{};
+    },
 
         "getMissShaderByRayType",
-            [](RaMissShaderAssembly* p, RaRayType ray_type)
-        {
-            util::Optional<RaMissShader> rv = p->getMissShaderByRayType(ray_type);
-            if (rv.isValid()) return sol::optional<RaMissShader>{static_cast<RaMissShader&>(rv)};
-            else return sol::optional<RaMissShader>{};
-        },
+        [](RaMissShaderAssembly* p, RaRayType ray_type)
+    {
+        util::Optional<RaMissShader> rv = p->getMissShaderByRayType(ray_type);
+        if (rv.isValid()) return sol::optional<RaMissShader>{static_cast<RaMissShader&>(rv)};
+        else return sol::optional<RaMissShader>{};
+    },
 
-        "isValid", &RaMissShaderAssembly::isValid
-    );
-   
+        "isValid", & RaMissShaderAssembly::isValid
+        );
+
 }
 
 void luaRegisterRayGeneratorTypes()
@@ -1047,11 +1047,11 @@ void luaRegisterRayGeneratorTypes()
 
         lua_support::ListOfBaseClasses::make_initializer(
             lua_support::BaseClass<RaEntity>{}
-        ),
+    ),
 
         lua_support::ListOfConstructors::make_initializer(
             lua_support::Constructor<RaProgram const&, RaAbstractBuffer const&,
-                std::string const&, uint32_t, uint32_t, uint32_t, uint32_t>{},
+            std::string const&, uint32_t, uint32_t, uint32_t, uint32_t>{},
             lua_support::Constructor<RaProgram const&, RaAbstractBuffer const&,
             std::string const&, uint32_t, uint32_t, uint32_t>{},
             lua_support::Constructor<RaProgram const&, RaAbstractBuffer const&,
@@ -1059,8 +1059,8 @@ void luaRegisterRayGeneratorTypes()
             lua_support::Constructor<RaProgram const&, RaAbstractBuffer const&,
             std::string const&, uint32_t>{},
 
-            lua_support::Constructor<RaProgram const&, 
-                RaMissShaderAssembly const&, RaAbstractBuffer const&,
+            lua_support::Constructor<RaProgram const&,
+            RaMissShaderAssembly const&, RaAbstractBuffer const&,
             std::string const&, uint32_t, uint32_t, uint32_t, uint32_t>{},
             lua_support::Constructor<RaProgram const&,
             RaMissShaderAssembly const&, RaAbstractBuffer const&,
@@ -1071,22 +1071,22 @@ void luaRegisterRayGeneratorTypes()
             lua_support::Constructor<RaProgram const&,
             RaMissShaderAssembly const&, RaAbstractBuffer const&,
             std::string const&, uint32_t>{}
-        ),
+    ),
 
-        "getRayGenerationShader", &RaRayGenerator::getRayGenerationShader,
-        "getMissShaderAssembly", 
-            [](RaRayGeneratorWithOutputBuffer* p)
-            {
-                util::Optional<RaMissShaderAssembly> rv = p->getMissShaderAssembly();
-                if (rv.isValid()) return sol::optional<RaMissShaderAssembly>{static_cast<RaMissShaderAssembly&>(rv)};
-                else return sol::optional<RaMissShaderAssembly>{};
-            },
-        "setMissShaderAssembly", &RaRayGenerator::setMissShaderAssembly,
-        "isValid", &RaRayGenerator::isValid,
-        "getGeneratorDimensions", &RaRayGenerator::getGeneratorDimensions,
-        "numberOfRays", &RaRayGenerator::numberOfRays,
-        "outputBuffer", &RaRayGeneratorWithOutputBuffer::outputBuffer
-    );
+        "getRayGenerationShader", & RaRayGenerator::getRayGenerationShader,
+        "getMissShaderAssembly",
+        [](RaRayGeneratorWithOutputBuffer* p)
+    {
+        util::Optional<RaMissShaderAssembly> rv = p->getMissShaderAssembly();
+        if (rv.isValid()) return sol::optional<RaMissShaderAssembly>{static_cast<RaMissShaderAssembly&>(rv)};
+        else return sol::optional<RaMissShaderAssembly>{};
+    },
+        "setMissShaderAssembly", & RaRayGenerator::setMissShaderAssembly,
+        "isValid", & RaRayGenerator::isValid,
+        "getGeneratorDimensions", & RaRayGenerator::getGeneratorDimensions,
+        "numberOfRays", & RaRayGenerator::numberOfRays,
+        "outputBuffer", & RaRayGeneratorWithOutputBuffer::outputBuffer
+        );
 }
 
 void luaRegisterSceneTypes()
@@ -1097,24 +1097,24 @@ void luaRegisterSceneTypes()
         lua_support::ListOfBaseClasses::make_initializer(
             lua_support::BaseClass<RaEntity>{},
             lua_support::BaseClass<RaTransformable>{}
-        ),
+    ),
 
         lua_support::ListOfFactories::make_initializer(
             [](RaBVHAlgorithm bvh_algorithm)
-            {
-                return p_basic_factory_instance->createSceneSection(bvh_algorithm); 
-            }
+    {
+        return p_basic_factory_instance->createSceneSection(bvh_algorithm);
+    }
         ),
 
-        "beginConstruction", &RaSceneSection::beginConstruction,
-        "addGeometryGroup", &RaSceneSection::addGeometryGroup,
-        "addSceneSection", &RaSceneSection::addSceneSection,
-        "endConstruction", &RaSceneSection::endConstruction,
+        "beginConstruction", & RaSceneSection::beginConstruction,
+        "addGeometryGroup", & RaSceneSection::addGeometryGroup,
+        "addSceneSection", & RaSceneSection::addSceneSection,
+        "endConstruction", & RaSceneSection::endConstruction,
 
-        "sceneSections", &RaSceneSection::sceneSections,
-        "geometryGroups", &RaSceneSection::geometryGroups,
+        "sceneSections", & RaSceneSection::sceneSections,
+        "geometryGroups", & RaSceneSection::geometryGroups,
 
-        "isValid", &RaSceneSection::isValid,
+        "isValid", & RaSceneSection::isValid,
         "trace", [](RaSceneSection* p_this, RaRayGeneratorWithOutputBuffer const& ray_generator) {p_this->trace(ray_generator); }
     );
 
@@ -1123,16 +1123,16 @@ void luaRegisterSceneTypes()
 
         lua_support::ListOfBaseClasses::make_initializer(
             lua_support::BaseClass<RaEntity>{}
-        ),
+    ),
 
         lua_support::ListOfConstructors::make_initializer(
             lua_support::Constructor<void>{}
-        ),
+    ),
 
-        "addSceneSection", &RaScene::addSceneSection,
-        "isValid", &RaScene::isValid,
-        "trace", &RaScene::trace
-    );
+        "addSceneSection", & RaScene::addSceneSection,
+        "isValid", & RaScene::isValid,
+        "trace", & RaScene::trace
+        );
 }
 
 }
@@ -1346,8 +1346,8 @@ RaAbstractBuffer RaBasicFactory::createBuffer(RaBasicBufferFormat buffer_format,
 }
 
 RaMaterial RaBasicFactory::createMaterial(
-    util::Optional<RaProgram> const& closest_hit_shader, 
-    util::Optional<RaProgram> const& any_hit_shader, 
+    util::Optional<RaProgram> const& closest_hit_shader,
+    util::Optional<RaProgram> const& any_hit_shader,
     RaRayTypeCollection const& supported_ray_types) const
 {
     return RaMaterial{ closest_hit_shader, any_hit_shader, supported_ray_types };
@@ -1368,7 +1368,7 @@ RaGeometry RaBasicFactory::createGeometry(RaProgram const& intersection_shader, 
     return RaGeometry{ intersection_shader, aabb_shader };
 }
 
-RaGeometry RaBasicFactory::createGeometry(RaProgram const& intersection_shader, 
+RaGeometry RaBasicFactory::createGeometry(RaProgram const& intersection_shader,
     RaProgram const& aabb_shader, RaMaterialAssembly const& material_assembly) const
 {
     return RaGeometry{ intersection_shader, aabb_shader, material_assembly };
@@ -1379,7 +1379,7 @@ RaGeometryGroup RaBasicFactory::createGeometryGroup(RaBVHAlgorithm acceleration_
     return RaGeometryGroup{ m_context, acceleration_structure_construction_algorithm };
 }
 
-RaMissShader RaBasicFactory::createMissShader(RaProgram const& miss_shader, 
+RaMissShader RaBasicFactory::createMissShader(RaProgram const& miss_shader,
     RaRayTypeCollection const& supported_ray_types/* = RaRayTypeCollection{ RaRayType::unknown }*/) const
 {
     return RaMissShader{ miss_shader, supported_ray_types };
@@ -1390,17 +1390,17 @@ RaMissShaderAssembly RaBasicFactory::createMissShaderAssembly(std::vector<RaMiss
     return RaMissShaderAssembly{ miss_shaders };
 }
 
-RaRayGeneratorWithOutputBuffer RaBasicFactory::createRayGenerator(RaProgram const& ray_generation_shader, 
-    RaAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name, 
+RaRayGeneratorWithOutputBuffer RaBasicFactory::createRayGenerator(RaProgram const& ray_generation_shader,
+    RaAbstractBuffer const& output_buffer, std::string const& output_buffer_binding_name,
     uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z, uint32_t entry_point_index) const
 {
     return RaRayGeneratorWithOutputBuffer{ ray_generation_shader, output_buffer, output_buffer_binding_name,
     num_rays_x, num_rays_y, num_rays_z, entry_point_index };
 }
 
-RaRayGeneratorWithOutputBuffer RaBasicFactory::createRayGenerator(RaProgram const& ray_generation_shader, 
-    RaMissShaderAssembly const& miss_shader_assembly, RaAbstractBuffer const& output_buffer, 
-    std::string const& output_buffer_binding_name, 
+RaRayGeneratorWithOutputBuffer RaBasicFactory::createRayGenerator(RaProgram const& ray_generation_shader,
+    RaMissShaderAssembly const& miss_shader_assembly, RaAbstractBuffer const& output_buffer,
+    std::string const& output_buffer_binding_name,
     uint32_t num_rays_x, uint32_t num_rays_y, uint32_t num_rays_z,
     uint32_t entry_point_index) const
 {
@@ -1418,7 +1418,7 @@ RaScene RaBasicFactory::createScene() const
     return RaScene{};
 }
 
-RaBasicFactory::RaBasicFactory(RaContext const& context):
+RaBasicFactory::RaBasicFactory(RaContext const& context) :
     m_context{ context }
 {
     setStringName("RaBasicFactory");
