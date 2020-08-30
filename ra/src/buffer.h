@@ -60,6 +60,7 @@ template<typename T> class RaAbstractBufferAttorney;
 class RaAbstractBuffer : public RaContractWithRaContext, public RaEntity
 {
     friend class RaAbstractBufferAttorney<RaProgram>;
+    friend class RaAbstractBufferAttorney<RaTexture>;
 
 public:
     virtual ~RaAbstractBuffer() = default;
@@ -97,6 +98,17 @@ template<> class RaAbstractBufferAttorney<RaProgram>
     static RTbuffer getNativeOptiXBufferHandle(RaAbstractBuffer const& parent_abstract_buffer)
     {
         return parent_abstract_buffer.nativeOptiXBufferHandle();
+    }
+};
+
+
+template<> class RaAbstractBufferAttorney<RaTexture>
+{
+    friend class RaTexture;
+
+    static RTbuffer getNativeOptiXBufferHandle(RaAbstractBuffer const& parent_buffer)
+    {
+        return parent_buffer.m_native_optix_buffer.get();
     }
 };
 

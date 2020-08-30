@@ -9,6 +9,7 @@
 #include "program.h"
 #include "buffer.h"
 #include "entity.h"
+#include "texture.h"
 
 namespace ra {
 
@@ -49,6 +50,9 @@ public:
     {
         return RaBufferAttorney<RaContext>::createOptiXBuffer<T>(*this, buffer_kind, width, height, depth);
     }
+
+    //! Creates texture from given image file
+    std::shared_ptr<RaTexture> createTextureFromFile(std::string& filename, bool* is_hdr_texture, uint8_t *number_of_channels);
 
     //! Returns 'true' in case if OptiX context is NOT in error state; returns 'false' otherwise
     operator bool() const;

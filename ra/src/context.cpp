@@ -1,10 +1,15 @@
+#include <fstream>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
+
 #include "context.h"
+#include "texture2d.h"
 #include "exception.h"
 #include "ray_payloads.h"
 #include "util/optional.h"
 #include "util/misc.h"
 
-#include <fstream>
 
 using namespace ra;
 
@@ -102,6 +107,89 @@ RaProgram RaContext::createProgram(std::string const& source, RaProgram::Source 
     }
 
     return RaProgramAttorney<RaContext>::createOptiXProgram(*this, source, source_type, program_name);
+}
+
+std::shared_ptr<RaTexture> RaContext::createTextureFromFile(std::string& filename, bool* is_hdr_texture, uint8_t* number_of_channels)
+{
+    bool is_hdr = stbi_is_hdr(filename.c_str()) != 0;
+    if (is_hdr_texture)
+    {
+        *is_hdr_texture = is_hdr;
+    }
+
+    int width{}, height{}, num_channels{};
+    
+
+    std::shared_ptr<RaTexture> texture{};
+    size_t data_chunk_size{};
+    void* src_data{};
+    if (!is_hdr)
+    {
+        src_data = stbi_load(filename.c_str(), &width, &height, &num_channels, 0);
+        if (!src_data) return nullptr;
+
+        switch (num_channels)
+        {
+        case 1:
+            texture.reset(new RaTexture2D<unsigned char>{ *this, static_cast<uint32_t>(width), static_cast<uint32_t>(height) });
+            break;
+
+        case 2:
+            texture.reset(new RaTexture2D<uchar2>{ *this, static_cast<uint32_t>(width), static_cast<uint32_t>(height) });
+            break;
+
+        case 3:
+            texture.reset(new RaTexture2D<uchar3>{ *this, static_cast<uint32_t>(width), static_cast<uint32_t>(height) });
+            break;
+
+        case 4:
+            texture.reset(new RaTexture2D<uchar4>{ *this, static_cast<uint32_t>(width), static_cast<uint32_t>(height) });
+            break;
+
+        default:
+            __assume(false);
+        }
+
+        data_chunk_size = num_channels * width * height;
+    }
+    else
+    {
+        src_data = stbi_loadf(filename.c_str(), &width, &height, &num_channels, 0);
+        if (!src_data) return nullptr;
+
+        switch (num_channels)
+        {
+        case 1:
+            texture.reset(new RaTexture2D<float>{ *this, static_cast<uint32_t>(width), static_cast<uint32_t>(height) });
+            break;
+
+        case 2:
+            texture.reset(new RaTexture2D<float2>{ *this, static_cast<uint32_t>(width), static_cast<uint32_t>(height) });
+            break;
+
+        case 3:
+            texture.reset(new RaTexture2D<float3>{ *this, static_cast<uint32_t>(width), static_cast<uint32_t>(height) });
+            break;
+
+        case 4:
+            texture.reset(new RaTexture2D<float4>{ *this, static_cast<uint32_t>(width), static_cast<uint32_t>(height) });
+            break;
+
+        default:
+            __assume(false);
+        }
+
+        data_chunk_size = sizeof(float) * num_channels * width * height;
+    }
+    
+    if (number_of_channels)
+    {
+        *number_of_channels = static_cast<uint8_t>(num_channels);
+    }
+
+
+    RaBufferMapSentry<void> mapping{ texture->buffer(), RaBufferMapKind::write };
+    memcpy(mapping.address(), src_data, data_chunk_size);
 }
 
 RaContext::operator bool() const

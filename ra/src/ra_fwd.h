@@ -27,6 +27,9 @@ class RaFactoryInitializerSentinel;
 class RaBasicFactory;
 class RaRayGeneratorWithOutputBuffer;
 class RaTraverseBackupBuffer;
+class RaTexture;
+template<typename T> class RaTypedTexture;
+template<typename T> class RaTexture2D;
 }
 
 #endif
