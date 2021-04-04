@@ -37,20 +37,23 @@ if(MSVC)
     target_compile_definitions(${_target} PRIVATE UNICODE)
 endif()
 
-target_include_directories(${_target} PRIVATE "${_src_root_path}/src")
-target_include_directories(${_target} PRIVATE "${CMAKE_SOURCE_DIR}/_3rd_party/")
-target_include_directories(${_target} PRIVATE "${CMAKE_SOURCE_DIR}/_3rd_party/lua")
-
-target_link_directories(${_target} INTERFACE "${CMAKE_BINARY_DIR}/_3rd_party/lua/$<CONFIG>")
-target_link_libraries(${_target} INTERFACE lua)
-
 find_package(CUDA 10.1 REQUIRED)
-target_include_directories(${_target} PRIVATE "${CUDA_TOOLKIT_ROOT_DIR}/include")
-
 find_package(OptiX 6.5.0 REQUIRED)
+find_package(Python COMPONENTS Interpreter REQUIRED)
+
+target_include_directories(${_target} PRIVATE "${_src_root_path}/src")
+target_include_directories(${_target} PUBLIC "${CMAKE_SOURCE_DIR}/_3rd_party/")
+target_include_directories(${_target} PUBLIC "${CMAKE_SOURCE_DIR}/_3rd_party/lua")
+target_include_directories(${_target} PUBLIC "${CUDA_TOOLKIT_ROOT_DIR}/include")
 target_include_directories(${_target} PUBLIC "${OptiX_INCLUDE}")
 
-find_package(Python COMPONENTS Interpreter REQUIRED)
+
+target_link_directories(${_target} INTERFACE "${CUDA_TOOLKIT_ROOT_DIR}/lib/x64/")
+target_link_directories(${_target} INTERFACE "${CMAKE_BINARY_DIR}/_3rd_party/lua/$<CONFIG>")
+target_link_libraries(${_target} INTERFACE "cuda.lib" "cudart.lib")
+target_link_libraries(${_target} INTERFACE "${optix_LIBRARY}")
+target_link_libraries(${_target} INTERFACE lua)
+target_link_libraries(${_target} INTERFACE )
 
 add_custom_command(
     TARGET ${_target}
