@@ -7,13 +7,13 @@ set(_target ra_library)
 
 file(
     GLOB_RECURSE _cpp_sources_list
-    CONFIGURE_DEPENDS TRUE
+    CONFIGURE_DEPENDS
     "${_src_root_path}/src/*.cpp"
 )
 
 file(
     GLOB_RECURSE _cuda_sources_list
-    CONFIGURE_DEPENDS TRUE
+    CONFIGURE_DEPENDS
     "${_src_root_path}/src/*.cu"
 )
 
@@ -58,7 +58,7 @@ target_link_libraries(${_target} INTERFACE )
 add_custom_command(
     TARGET ${_target}
     PRE_BUILD
-    COMMAND ${Python_EXECUTABLE} "${_src_root_path}/compile_ptx.py" --sources "\"${_cuda_sources_list}\"" --ccbin \"${CUDA_HOST_COMPILER}\" --nvcc "\"${CUDA_TOOLKIT_ROOT_DIR}/bin/nvcc.exe\"" --nvcc-opts \"-arch=compute_60 -code=sm_60 -m64\" --include-directories "\"${OptiX_INSTALL_DIR}/include;${_src_root_path}/src/\"" --header "\"${_src_root_path}/src/ptx.h\"" --settings "\"${_src_root_path}/settings.json\"" --build-path \"${CMAKE_BINARY_DIR}\"
+    COMMAND ${Python_EXECUTABLE} "${CMAKE_SOURCE_DIR}/compile_ptx.py" --sources "\"${_cuda_sources_list}\"" --ccbin \"${CUDA_HOST_COMPILER}\" --nvcc "\"${CUDA_TOOLKIT_ROOT_DIR}/bin/nvcc.exe\"" --nvcc-opts \"-arch=compute_60 -code=sm_60 -m64\" --include-directories "\"${OptiX_INSTALL_DIR}/include;${_src_root_path}/src/\"" --header "\"${_src_root_path}/src/ptx.h\"" --settings "\"${CMAKE_SOURCE_DIR}/settings.json\"" --build-path \"${CMAKE_BINARY_DIR}\"
     COMMENT "Compiling OptiX Shaders"
 )
 

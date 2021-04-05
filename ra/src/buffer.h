@@ -190,7 +190,7 @@ template<> class RaBufferAttorney<RaContext>
 template<typename T>
 util::Optional<RaBuffer<T>> castBufferToType(RaAbstractBuffer& source_buffer)
 {
-    RaBuffer<T>* p_dest_buffer = static_cast<RaBuffer<T>*>(&source_buffer);
+    RaBuffer<T>* p_dest_buffer = dynamic_cast<RaBuffer<T>*>(&source_buffer);
     if (p_dest_buffer)
         return util::Optional<RaBuffer<T>>{*p_dest_buffer};
 

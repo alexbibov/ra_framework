@@ -36,7 +36,7 @@ private:
         bool operator()(RaMissShader const& ms1, RaMissShader const& ms2) const;
     };
 
-    using miss_shader_collection = std::unordered_set<RaMissShader, 
+    using miss_shader_collection = std::unordered_set<RaMissShader,
         miss_shader_hasher, miss_shader_hasher>;
 
 private:
@@ -61,7 +61,7 @@ class RaMissShaderAssemblyAttorney<RaRayGenerator>
 {
     friend class RaRayGenerator;
 
-    static void applyMissShaderAssembly(RaMissShaderAssembly const& parent_miss_shader_assembly, 
+    static void applyMissShaderAssembly(RaMissShaderAssembly const& parent_miss_shader_assembly,
         RaObjectHandle top_scene_object)
     {
         parent_miss_shader_assembly.apply(top_scene_object);

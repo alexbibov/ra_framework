@@ -17,4 +17,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(${CMAKE_SOURCE_DIR}/_3rd_party/lua)
 add_subdirectory(${CMAKE_SOURCE_DIR}/ra)
 add_subdirectory(${CMAKE_SOURCE_DIR}/ra_processor)
+add_subdirectory(${CMAKE_SOURCE_DIR}/pget)
 

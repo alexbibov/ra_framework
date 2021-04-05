@@ -5,13 +5,13 @@
 #include "../buffer.h"
 #include "../ray_radiance_payload.h"
 
-namespace ra { namespace ray_casters {
+namespace ra::ray_casters {
 
 class RaParallelRayGenerator : public RaRayGeneratorWithOutputBuffer
 {
 public:
-    RaParallelRayGenerator(RaContext const& context, uint32_t num_rays, 
-        float emitter_size, float emitter_position = 0.f, float emitter_rotation = 0.f, 
+    RaParallelRayGenerator(RaContext const& context, uint32_t num_rays,
+        float emitter_size, float emitter_position = 0.f, float emitter_rotation = 0.f,
         uint8_t num_spectra_pairs_supported = constants::max_spectra_pairs_supported, uint32_t entry_point_index = 0U);
 
     void setEmitterSize(float emitter_size);
@@ -35,6 +35,6 @@ private:
     uint8_t m_num_spectra_pairs_supported;
 };
 
-}}
+}
 
 #endif
